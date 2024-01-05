@@ -222,7 +222,7 @@ class _HiredState extends State<Hired> {
                     SizedBox(
                         height: 200,
                         width: 200,
-                        child: Image(image: AssetImage('imgman.jpg'))),
+                        child: Image.asset('assets/imgman.jpg')),
                     SizedBox(
                       height: 2,
                     ),
@@ -231,13 +231,7 @@ class _HiredState extends State<Hired> {
                         height: 40,
                         child: CustomButton(
                           text: translation(context).blueCollerJobs,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Registration()),
-                            );
-                          },
+                          onPressed: () {},
                         ))
                   ],
                 ),
@@ -255,10 +249,8 @@ class _HiredState extends State<Hired> {
                         width: 200,
                         height: 40,
                         child: CustomButton(
-                          text: translation(context).blueCollerJobs,
-                          onPressed: () {
-                            Registration();
-                          },
+                          text: translation(context).greyCollerJobs,
+                          onPressed: () {},
                         ))
                   ],
                 ),
