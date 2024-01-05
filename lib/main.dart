@@ -8,7 +8,6 @@ import 'package:hiremeinindiaapp/homepage.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:hiremeinindiaapp/newuserupload.dart';
 import 'package:hiremeinindiaapp/newuserupload.dart';
-import 'package:hiremeinindiaapp/registration.dart';
 import 'package:hiremeinindiaapp/userpayment.dart';
 
 import 'classes/language_constants.dart';
@@ -29,6 +28,7 @@ void main() async {
     measurementId: 'G-KVMWVJ99JL',
   ));
   print("Firebase initialized successfully!");
+
   runApp(HireApp());
 }
 

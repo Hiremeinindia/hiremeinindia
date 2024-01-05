@@ -1,7 +1,8 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:hiremeinindiaapp/widgets/textstylebutton.dart';
-import 'classes/columnView.dart';
+
+import 'Candidate/columnView.dart';
 import 'classes/language_constants.dart';
 import 'classes/language.dart';
 import 'classes/multipleFilter.dart';
@@ -445,9 +446,9 @@ class _AdminDashboard extends State<CorporateConsole> {
                     SizedBox(
                       height: 50,
                     ),
-                    isPressed ? MultipleFilter() : ColumnView(),
                   ]),
             ),
+            isPressed ? MultipleFilter() : ColumnView(),
           ],
         ));
   }

@@ -8,23 +8,30 @@ import 'package:get/get_instance/get_instance.dart';
 import 'package:get/route_manager.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
+import 'package:hiremeinindiaapp/Candidate/candidate_form_state.dart';
+import 'package:hiremeinindiaapp/Models/candidated.dart';
 import 'package:hiremeinindiaapp/Models/register_model.dart';
 import 'package:hiremeinindiaapp/newuserupload.dart';
 import 'package:hiremeinindiaapp/userpayment.dart';
 import 'package:hiremeinindiaapp/widgets/textstylebutton.dart';
 import 'package:super_tag_editor/tag_editor.dart';
 import 'package:super_tag_editor/widgets/rich_text_widget.dart';
-import 'classes/language.dart';
-import 'classes/language_constants.dart';
-import 'controllers/signupcontroller.dart';
-import 'gen_l10n/app_localizations.dart';
-import 'main.dart';
-import 'widgets/custombutton.dart';
-import 'widgets/customtextfield.dart';
-import 'widgets/hiremeinindia.dart';
+import '../Providers/session.dart';
+import '../classes/language.dart';
+import '../classes/language_constants.dart';
+import '../controllers/signupcontroller.dart';
+import '../gen_l10n/app_localizations.dart';
+import '../main.dart';
+import '../widgets/custombutton.dart';
+import '../widgets/customtextfield.dart';
+import '../widgets/hiremeinindia.dart';
+import 'candidate_controller.dart';
 
 class Registration extends StatefulWidget {
-  const Registration();
+  const Registration({Key? key, this.candidate}) : super(key: key);
+
+  final Candidate? candidate;
+
   @override
   State<Registration> createState() => _RegistrationState();
 }
@@ -44,12 +51,13 @@ class _RegistrationState extends State<Registration> {
   bool greyChecked = false;
   bool focusTagEnabled = false;
 
+  late final Candidate? candidate;
   var isLoading = false;
 
   final FocusNode _focusNode = FocusNode();
-  final controller = Get.put(SignUpController());
   final _formKey = GlobalKey<FormState>();
   EmailOTP myauth = EmailOTP();
+  CandidateFormController controller = CandidateFormController();
   final DatabaseReference _userRef =
       FirebaseDatabase.instance.reference().child('users');
 
@@ -1041,11 +1049,22 @@ class _RegistrationState extends State<Registration> {
                         Expanded(
                             child: CustomTextfield(
                                 controller: controller.email,
-                                validator: MultiValidator([
-                                  RequiredValidator(errorText: "* Required"),
-                                  EmailValidator(
-                                      errorText: "Enter valid email id"),
-                                ]))),
+                                validator: (val) {
+                                  if (AppSession()
+                                      .candidates
+                                      .where((element) =>
+                                          element.email!.toLowerCase() ==
+                                          val?.toLowerCase())
+                                      .isNotEmpty) {
+                                    return "Already User Exist";
+                                  }
+                                  ;
+                                  MultiValidator([
+                                    RequiredValidator(errorText: "* Required"),
+                                    EmailValidator(
+                                        errorText: "Enter valid email id"),
+                                  ]);
+                                })),
                         SizedBox(
                           height: 30,
                           child: ElevatedButton(
@@ -1426,19 +1445,16 @@ class _RegistrationState extends State<Registration> {
                             text: translation(context).next,
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                final user = RegisterModal(
-                                    name: controller.name.text.trim(),
-                                    gender: controller.gender.text.trim(),
-                                    workexp: controller.workexp.text.trim(),
-                                    worktitle: controller.worktitle.text.trim(),
-                                    aadharno: controller.aadharno.text.trim(),
-                                    state: controller.state.text.trim(),
-                                    address: controller.address.text.trim(),
-                                    mobile: controller.mobile.text.trim(),
-                                    email: controller.email.text.trim(),
-                                    skills: controller.skills.text.trim(),
-                                    workin: controller.workin.text.trim());
-                                _userRef.push().set(user.tojson());
+                                var future;
+                                var candidateController = CandidateController(
+                                    formController: controller);
+                                if (widget.candidate == null) {}
+                                if (widget.candidate == null) {
+                                  future = candidateController.addCandidate();
+                                } else {
+                                  future =
+                                      candidateController.updateCandidate();
+                                }
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (_) => NewUserUpload(),

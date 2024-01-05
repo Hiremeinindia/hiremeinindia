@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:hiremeinindiaapp/homepage.dart';
 import 'package:hiremeinindiaapp/widgets/customtextfield.dart';
 import 'controllers/signupcontroller.dart';
-import 'registration.dart';
 import 'widgets/custombutton.dart';
 import 'widgets/hiremeinindia.dart';
 

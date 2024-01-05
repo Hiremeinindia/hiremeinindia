@@ -15,7 +15,6 @@ class AdminConsole extends StatefulWidget {
 
 class _AdminDashboard extends State<AdminConsole> {
   @override
-  bool isChecked = false;
   final List<String> items = [
     'Item1',
     'Item2',

@@ -28,73 +28,75 @@ final class MultipleFilter extends StatelessWidget {
         border: Border.all(color: Colors.black12),
         color: Colors.white,
       ),
-      child: DataTable(
-        headingRowColor: MaterialStateColor.resolveWith(
-            (states) => Color.fromARGB(255, 104, 104, 208)),
-        columns: [
-          DataColumn(
-              label: Text(
-            translation(context).candidates,
-            style: CustomTextStyle.nameOfHeading,
-          )),
-          DataColumn(
-              label: Text(translation(context).verified,
-                  style: CustomTextStyle.nameOfHeading)),
-          DataColumn(
-              label: Text(translation(context).qualification,
-                  style: CustomTextStyle.nameOfHeading)),
-          DataColumn(
-              label: Text(translation(context).jobClassification,
-                  style: CustomTextStyle.nameOfHeading)),
-          DataColumn(
-              label: Text(translation(context).jobClassifications,
-                  style: CustomTextStyle.nameOfHeading)),
-          DataColumn(
-              label: Text(translation(context).label,
-                  style: CustomTextStyle.nameOfHeading)),
-          DataColumn(
-              label: Text(translation(context).noOfDaysOpen,
-                  style: CustomTextStyle.nameOfHeading)),
-          DataColumn(
-              label: Text(translation(context).cvDoc,
-                  style: CustomTextStyle.nameOfHeading)),
-        ],
-        rows: [
-          DataRow(cells: [
-            DataCell(Text(
-              'xxxxxxxxxxxxxxx',
-              style: CustomTextStyle.nameOflist,
+      child: Expanded(
+        child: DataTable(
+          headingRowColor: MaterialStateColor.resolveWith(
+              (states) => Color.fromARGB(255, 104, 104, 208)),
+          columns: [
+            DataColumn(
+                label: Text(
+              translation(context).candidates,
+              style: CustomTextStyle.nameOfHeading,
             )),
-            DataCell(Text(
-              '',
-              style: CustomTextStyle.nameOflist,
-            )),
-            DataCell(Text(
-              'xxxxxxxxxxxxxxx',
-              style: CustomTextStyle.nameOflist,
-            )),
-            DataCell(Text(
-              'Senior plumber',
-              style: CustomTextStyle.nameOflist,
-            )),
-            DataCell(Text(
-              'Senior plumber',
-              style: CustomTextStyle.nameOflist,
-            )),
-            DataCell(Text(
-              'blue',
-              style: CustomTextStyle.nameOflist,
-            )),
-            DataCell(Text(
-              '60',
-              style: CustomTextStyle.nameOflist,
-            )),
-            DataCell(Text(
-              'xxxxxxxxxxxxxxx',
-              style: CustomTextStyle.nameOflist,
-            )),
-          ]),
-        ],
+            DataColumn(
+                label: Text(translation(context).verified,
+                    style: CustomTextStyle.nameOfHeading)),
+            DataColumn(
+                label: Text(translation(context).qualification,
+                    style: CustomTextStyle.nameOfHeading)),
+            DataColumn(
+                label: Text(translation(context).jobClassification,
+                    style: CustomTextStyle.nameOfHeading)),
+            DataColumn(
+                label: Text(translation(context).jobClassifications,
+                    style: CustomTextStyle.nameOfHeading)),
+            DataColumn(
+                label: Text(translation(context).label,
+                    style: CustomTextStyle.nameOfHeading)),
+            DataColumn(
+                label: Text(translation(context).noOfDaysOpen,
+                    style: CustomTextStyle.nameOfHeading)),
+            DataColumn(
+                label: Text(translation(context).cvDoc,
+                    style: CustomTextStyle.nameOfHeading)),
+          ],
+          rows: [
+            DataRow(cells: [
+              DataCell(Text(
+                'xxxxxxxxxxxxxxx',
+                style: CustomTextStyle.nameOflist,
+              )),
+              DataCell(Text(
+                '',
+                style: CustomTextStyle.nameOflist,
+              )),
+              DataCell(Text(
+                'xxxxxxxxxxxxxxx',
+                style: CustomTextStyle.nameOflist,
+              )),
+              DataCell(Text(
+                'Senior plumber',
+                style: CustomTextStyle.nameOflist,
+              )),
+              DataCell(Text(
+                'Senior plumber',
+                style: CustomTextStyle.nameOflist,
+              )),
+              DataCell(Text(
+                'blue',
+                style: CustomTextStyle.nameOflist,
+              )),
+              DataCell(Text(
+                '60',
+                style: CustomTextStyle.nameOflist,
+              )),
+              DataCell(Text(
+                'xxxxxxxxxxxxxxx',
+                style: CustomTextStyle.nameOflist,
+              )),
+            ]),
+          ],
+        ),
       ),
     );
   }

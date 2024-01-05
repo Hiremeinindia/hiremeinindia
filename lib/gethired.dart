@@ -1,8 +1,8 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:hiremeinindiaapp/registration.dart';
 import 'package:hiremeinindiaapp/widgets/hiremeinindia.dart';
 
+import 'Candidate/registration.dart';
 import 'widgets/custombutton.dart';
 import 'package:hiremeinindiaapp/main.dart';
 import 'classes/language.dart';
