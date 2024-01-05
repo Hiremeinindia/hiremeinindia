@@ -14,7 +14,6 @@ import 'controllers/signupcontroller.dart';
 import 'gen_l10n/app_localizations.dart';
 import 'homepage.dart';
 import 'widgets/custombutton.dart';
-import 'widgets/hiremeinindia.dart';
 import 'widgets/textstylebutton.dart';
 
 class LoginPage extends StatefulWidget {
@@ -49,7 +48,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: HireMeInIndia(),
         centerTitle: false,
         toolbarHeight: 80,
         backgroundColor: Colors.transparent,
@@ -172,8 +170,7 @@ class _LoginPageState extends State<LoginPage> {
                       decoration: BoxDecoration(
                         color: Colors.indigo.shade900,
                       ),
-                      child: DropdownButton2<String>(
-                        isExpanded: true,
+                      child: DropdownButton<String>(
                         items: [
                           DropdownMenuItem<String>(
                             value: 'Option 1',
@@ -192,49 +189,11 @@ class _LoginPageState extends State<LoginPage> {
                           AppLocalizations.of(context)!.findaJob,
                           style: TextStyle(color: Colors.white),
                         ),
-                        buttonStyleData: ButtonStyleData(
-                          height: 30,
-                          width: 200,
-                          elevation: 1,
-                          padding: const EdgeInsets.only(left: 14, right: 14),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(
-                              color: Colors.black26,
-                            ),
-                            color: Colors.indigo.shade900,
-                          ),
+                        icon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.white,
                         ),
-                        iconStyleData: const IconStyleData(
-                          icon: Icon(
-                            Icons.arrow_drop_down_sharp,
-                          ),
-                          iconSize: 25,
-                          iconEnabledColor: Colors.white,
-                          iconDisabledColor: null,
-                        ),
-                        dropdownStyleData: DropdownStyleData(
-                          maxHeight: 210,
-                          width: 156,
-                          elevation: 0,
-                          padding: EdgeInsets.only(
-                              left: 10, right: 10, top: 5, bottom: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Colors.black),
-                            color: Colors.indigo.shade900,
-                          ),
-                          scrollPadding: EdgeInsets.all(5),
-                          scrollbarTheme: ScrollbarThemeData(
-                            thickness: MaterialStateProperty.all<double>(6),
-                            thumbVisibility:
-                                MaterialStateProperty.all<bool>(true),
-                          ),
-                        ),
-                        menuItemStyleData: const MenuItemStyleData(
-                          height: 25,
-                          padding: EdgeInsets.only(left: 14, right: 14),
-                        ),
+                        underline: Container(),
                       ),
                     ),
                   ),
@@ -268,107 +227,61 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          HireMeInIndia(),
-          SizedBox(
-            height: 80,
-          ),
-          Form(
-            key: _formKey,
-            child: Center(
-              child: Container(
-                width: 500,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      translation(context).email,
-                      style: TextStyle(
-                          fontFamily: 'Poppins', fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    CustomTextfield(
-                      text: translation(context).email,
-                      controller: controller.email,
-                      onsaved: (value) {
-                        setState(() {
-                          email = value;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Text(
-                      translation(context).password,
-                      style: TextStyle(
-                          fontFamily: 'Poppins', fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    CustomTextfield(
-                      text: translation(context).password,
-                      validator: validatePassword,
-                      controller: controller.password,
-                      onsaved: (value) {
-                        setState(() {
-                          password = value;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: 50,
-                    ),
-                    CustomButtonLogin(
-                      child: Text(
-                        translation(context).signIn,
-                      ),
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
-                                  email: controller.email.text,
-                                  password: controller.password.text)
-                              .then((value) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomePage()));
-                          });
-                        } else {
-                          AlertDialog(
-                            title: const Text("Incorrect UserName or Password"),
-                            content: const Text(""),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => LoginPage()));
-                                },
-                                child: Container(
-                                  color: Colors.green,
-                                  padding: const EdgeInsets.all(14),
-                                  child: const Text("okay"),
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                      },
-                    )
-                  ],
-                ),
+      body: Form(
+        key: _formKey,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                translation(context).name,
+                style: TextStyle(
+                    fontFamily: 'Poppins', fontWeight: FontWeight.bold),
               ),
-            ),
+              CustomTextfield(
+                text: translation(context).name,
+                controller: controller.email,
+                onsaved: (value) {
+                  setState(() {
+                    email = value;
+                  });
+                },
+              ),
+              Text(
+                translation(context).password,
+                style: TextStyle(
+                    fontFamily: 'Poppins', fontWeight: FontWeight.bold),
+              ),
+              CustomTextfield(
+                text: translation(context).password,
+                validator: validatePassword,
+                controller: controller.password,
+                onsaved: (value) {
+                  setState(() {
+                    password = value;
+                  });
+                },
+              ),
+              CustomButtonLogin(
+                child: Text(
+                  login ? 'Login' : translation(context).signIn,
+                ),
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    FirebaseAuth.instance
+                        .signInWithEmailAndPassword(
+                            email: controller.email.text,
+                            password: controller.password.text)
+                        .then((value) {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => HomePage()));
+                    });
+                  }
+                },
+              )
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

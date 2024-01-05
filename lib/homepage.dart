@@ -1,6 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:hiremeinindiaapp/Candidate/registration.dart';
 import 'package:hiremeinindiaapp/gethired.dart';
 import 'package:hiremeinindiaapp/main.dart';
 import 'package:hiremeinindiaapp/widgets/customtextfield.dart';
@@ -290,13 +289,7 @@ class _HomePageState extends State<HomePage> {
                       height: 40,
                       child: CustomButton(
                         text: translation(context).hireNow,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Hired()),
-                          );
-                        },
+                        onPressed: () {},
                       ),
                     )
                   ],
@@ -317,7 +310,7 @@ class _HomePageState extends State<HomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const Registration()),
+                                  builder: (context) => const Hired()),
                             );
                           },
                         ))

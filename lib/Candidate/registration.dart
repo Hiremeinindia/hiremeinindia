@@ -1,5 +1,4 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:easy_radio/easy_radio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -48,8 +47,8 @@ class _RegistrationState extends State<Registration> {
   List<String> _values = [];
   List<String> _value = [];
 
-  //bool blueChecked = false;
-  //bool greyChecked = false;
+  bool blueChecked = false;
+  bool greyChecked = false;
   bool focusTagEnabled = false;
 
   late final Candidate? candidate;
@@ -82,8 +81,6 @@ class _RegistrationState extends State<Registration> {
     'Junior Electrician',
     'Skill 2',
   ];
-
-  int coller_type = 1;
 
   _onDelete(index) {
     setState(() {
@@ -762,38 +759,50 @@ class _RegistrationState extends State<Registration> {
                 padding: const EdgeInsets.only(left: 160),
                 child: Row(
                   children: [
-                    EasyRadio(
-                      value: 1,
-                      dotColor: Colors.indigo.shade900,
-                      activeBorderColor: Colors.indigo.shade900,
-                      inactiveBorderColor:
-                          const Color.fromARGB(255, 76, 84, 180),
-                      groupValue: coller_type,
-                      onChanged: (int? value) {
+                    Checkbox(
+                      value: blueChecked,
+                      onChanged: (bool? value) {
                         setState(() {
-                          coller_type = value!;
+                          blueChecked = value ?? false;
                         });
                       },
-                      dotStyle: const DotStyle.check(),
-                      shape: const RadioShape.square(),
+                      fillColor: MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.selected)) {
+                            return Colors.indigo.shade900;
+                          }
+                          return Colors.transparent;
+                        },
+                      ),
+                      checkColor: Colors.white,
+                      side: BorderSide(
+                        color: Colors.indigo.shade900,
+                        width: 3.5,
+                      ),
                     ),
                     Text(
                       translation(context).blueColler,
                     ),
-                    EasyRadio(
-                      value: 2,
-                      activeBorderColor: Colors.indigo.shade900,
-                      inactiveBorderColor:
-                          const Color.fromARGB(255, 76, 84, 180),
-                      dotColor: Colors.indigo.shade900,
-                      groupValue: coller_type,
-                      onChanged: (int? value) {
+                    Checkbox(
+                      value: greyChecked,
+                      onChanged: (bool? value) {
                         setState(() {
-                          coller_type = value!;
+                          greyChecked = value ?? false;
                         });
                       },
-                      dotStyle: const DotStyle.check(),
-                      shape: const RadioShape.square(),
+                      fillColor: MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.selected)) {
+                            return Colors.indigo.shade900;
+                          }
+                          return Colors.transparent;
+                        },
+                      ),
+                      checkColor: Colors.white,
+                      side: BorderSide(
+                        color: Colors.indigo.shade900,
+                        width: 3.5,
+                      ),
                     ),
                     Text(
                       translation(context).greyColler,
@@ -996,7 +1005,10 @@ class _RegistrationState extends State<Registration> {
 
                               // If the verification is successful, show the "Verified" button
                               if (!isUserRegistered) {
-                                isVerified = true;
+                                // Proceed with OTP verification logic here...
+                                // When OTP is successfully verified, set isVerified to true
+                                // Example:
+                                // isVerified = true;
                               }
                             },
                             child: isVerified
