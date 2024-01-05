@@ -14,7 +14,6 @@ import 'widgets/custombutton.dart';
 import 'widgets/hiremeinindia.dart';
 import 'widgets/textstylebutton.dart';
 import 'package:file_picker/file_picker.dart';
-
 import 'package:firebase_storage/firebase_storage.dart';
 
 class NewUserUpload extends StatefulWidget {
@@ -28,48 +27,20 @@ class _NewUserUpload extends State<NewUserUpload> {
   bool isChecked = false;
   String? uploadedMessage;
   String? uploadedImageUrl;
-  String? downloadURL;
-  PlatformFile? pickedFile;
-  UploadTask? uploadTask;
 
   Future<void> uploadFile(String filePath) async {
     print("file4");
-    final path = 'uploads/${pickedFile!.name}';
-    final file = File(filePath);
-    final ref = FirebaseStorage.instance.ref().child(path);
-
-    // Use putFile to upload the file and get the UploadTask
-    setState(() {
-      uploadTask = ref.putFile(file);
-    });
-    final snapshot = await uploadTask!.whenComplete(() {});
-    final urlDownload = await ref.getDownloadURL();
-    print('Download Link: $urlDownload');
-    setState(() {
-      uploadTask = null;
-    });
-
-    // Wait for the upload to complete
-  }
-
-// Function to upload file from bytes (for web platform)
-  Future<void> uploadFileFromBytes({
-    required Uint8List fileBytes,
-    required String originalFileName,
-  }) async {
-    print("file3");
-
-    Reference storageReference =
-        FirebaseStorage.instance.ref().child('uploads/$originalFileName');
-    UploadTask uploadTask = storageReference.putData(fileBytes);
-    await uploadFile(pickedFile!.path!);
+    Reference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('uploads/${DateTime.now().millisecondsSinceEpoch}');
+    UploadTask uploadTask = storageReference.putFile(File(filePath));
 
     try {
       await uploadTask;
       print('File uploaded successfully');
 
-      // Get the download URL after a successful upload
-      downloadURL = await storageReference.getDownloadURL();
+      // Get the download URL after successful upload
+      String downloadURL = await storageReference.getDownloadURL();
       print('Download URL: $downloadURL');
     } catch (e) {
       print('Error uploading file: $e');
@@ -77,12 +48,26 @@ class _NewUserUpload extends State<NewUserUpload> {
     }
   }
 
-// Then, you can use the downloadURL to display the image:
+// Function to upload file from bytes (for web platform)
+  Future<void> uploadFileFromBytes(
+      Uint8List fileBytes, String originalFileName) async {
+    print("file3");
+    Reference storageReference = FirebaseStorage.instance.ref().child(
+        'uploads/${DateTime.now().millisecondsSinceEpoch}_$originalFileName');
+    UploadTask uploadTask = storageReference.putData(fileBytes);
 
-// Assuming this is within a StatelessWidget or StatefulWidget
-// and downloadURL is a property of that class.
+    try {
+      await uploadTask;
+      print('File uploaded successfully');
 
-// Use Image.network to display the image from the URL
+      // Get the download URL after a successful upload
+      String downloadURL = await storageReference.getDownloadURL();
+      print('Download URL: $downloadURL');
+    } catch (e) {
+      print('Error uploading file: $e');
+      // Handle the error, e.g., show a message to the user
+    }
+  }
 
 // Function to display the uploaded file
   void displayUploadedFile(String downloadURL, String originalFileName) {
@@ -394,19 +379,17 @@ class _NewUserUpload extends State<NewUserUpload> {
                                 // Upload the file using file.bytes
                                 // Inside onPressed callback
                                 await uploadFileFromBytes(
-                                    fileBytes: file.bytes!,
-                                    originalFileName: file.name);
+                                    file.bytes!, file.name);
                               } else {
                                 // Use path for non-web platforms
                                 print('File Path: ${file.path}');
                                 // Upload the file using file.path
                                 await uploadFile(file.path!);
                               }
-                              buildProgress();
+
                               // Display success message with file name and format
                               setState(() {
-                                // uploadedImageUrl =
-                                //     downloadURL; // Remove this line
+                                // uploadedImageUrl = downloadURL; // Remove this line
                                 // Set the download URL to null after displaying the image
                                 uploadedImageUrl = null;
                               });
@@ -451,9 +434,7 @@ class _NewUserUpload extends State<NewUserUpload> {
                               String.fromCharCodes(file.bytes!);
                           print('Original String: $originalString');
                           // Upload the file using file.bytes
-                          await uploadFileFromBytes(
-                              fileBytes: file.bytes!,
-                              originalFileName: file.name);
+                          await uploadFileFromBytes(file.bytes!, file.name);
                         } else {
                           // Use path for non-web platforms
                           print('File Path: ${file.path}');
@@ -498,9 +479,7 @@ class _NewUserUpload extends State<NewUserUpload> {
                               String.fromCharCodes(file.bytes!);
                           print('Original String: $originalString');
                           // Upload the file using file.bytes
-                          await uploadFileFromBytes(
-                              fileBytes: file.bytes!,
-                              originalFileName: file.name);
+                          await uploadFileFromBytes(file.bytes!, file.name);
                         } else {
                           // Use path for non-web platforms
                           print('File Path: ${file.path}');
@@ -545,9 +524,7 @@ class _NewUserUpload extends State<NewUserUpload> {
                               String.fromCharCodes(file.bytes!);
                           print('Original String: $originalString');
                           // Upload the file using file.bytes
-                          await uploadFileFromBytes(
-                              fileBytes: file.bytes!,
-                              originalFileName: file.name);
+                          await uploadFileFromBytes(file.bytes!, file.name);
                         } else {
                           // Use path for non-web platforms
                           print('File Path: ${file.path}');
@@ -592,9 +569,7 @@ class _NewUserUpload extends State<NewUserUpload> {
                                 String.fromCharCodes(file.bytes!);
                             print('Original String: $originalString');
                             // Upload the file using file.bytes
-                            await uploadFileFromBytes(
-                                fileBytes: file.bytes!,
-                                originalFileName: file.name);
+                            await uploadFileFromBytes(file.bytes!, file.name);
                           } else {
                             // Use path for non-web platforms
                             print('File Path: ${file.path}');
@@ -736,37 +711,4 @@ class _NewUserUpload extends State<NewUserUpload> {
       ),
     );
   }
-
-  Widget buildProgress() => StreamBuilder<TaskSnapshot>(
-      stream:
-          uploadTask?.snapshotEvents, // Use uploadTask instead of UploadTask
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final data = snapshot.data!;
-          double progress = data.bytesTransferred / data.totalBytes;
-          return SizedBox(
-            height: 50,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                LinearProgressIndicator(
-                  value: progress,
-                  backgroundColor: Colors.grey,
-                  color: Colors.green,
-                ),
-                Center(
-                  child: Text(
-                    '${(100 * progress).roundToDouble()}%',
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                )
-              ],
-            ),
-          );
-        } else {
-          return const SizedBox(
-            height: 50,
-          );
-        }
-      });
 }
