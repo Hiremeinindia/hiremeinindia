@@ -65,6 +65,12 @@ class _RegistrationState extends State<Registration> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  List<String> selectedSkill = [];
+  List<String> selectedWorkin = [];
+
+  String? skillvalue;
+
+  String? wokinvalue;
   static const Skill = [
     'Plumber',
     'Senior Plumber',
@@ -742,12 +748,20 @@ class _RegistrationState extends State<Registration> {
                   ),
                 ),
                 SizedBox(width: 8.0),
-                SizedBox(
-                  width: 50,
-                  child: Text(
-                    '${updatedUser.displayName}',
-                    maxLines: 2,
-                    style: TextStyle(color: Colors.black),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Guest',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      Text(
+                        'User',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -1158,142 +1172,125 @@ class _RegistrationState extends State<Registration> {
                           Text(
                             translation(context).skills,
                             style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: Container(
-                              height: 35,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(1),
-                                  border: Border(
-                                      bottom: BorderSide(color: Colors.black))),
-                              child: ListView(
-                                children: <Widget>[
-                                  TagEditor<String>(
-                                    length: _value.length,
-                                    controller: controller.skills,
-                                    focusNode: _focusNode,
-                                    delimiters: [',', ' '],
-                                    resetTextOnSubmitted: true,
-                                    // This is set to grey just to illustrate the textStyle prop
-                                    textStyle:
-                                        const TextStyle(color: Colors.black),
-                                    onSubmitted: (outstandingValue) {
-                                      setState(() {
-                                        _value.add(outstandingValue);
-                                      });
-                                    },
-                                    inputDecoration: const InputDecoration(
-                                      border: InputBorder.none,
+                          SizedBox(
+                            width: 120,
+                          ),
+                          Wrap(
+                            spacing: 8.0,
+                            runSpacing: 8.0,
+                            children: controller.selectedSkills
+                                .map(
+                                  (value) => Chip(
+                                    backgroundColor: Colors.indigo.shade900,
+                                    label: Text(
+                                      value,
+                                      style: TextStyle(color: Colors.white),
                                     ),
-                                    onTagChanged: (newValue) {
+                                    onDeleted: () {
                                       setState(() {
-                                        _value.add(newValue);
+                                        controller.selectedSkills.remove(value);
                                       });
-                                    },
-                                    tagBuilder: (context, index) => Container(
-                                      color: focusTagEnabled &&
-                                              index == _value.length - 1
-                                          ? Colors.redAccent
-                                          : Colors.white,
-                                      child: _Chip(
-                                        index: index,
-                                        label: _value[index],
-                                        onDeleted: _onDeletee,
-                                      ),
-                                    ),
-                                    // InputFormatters example, this disallow \ and /
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.deny(
-                                          RegExp(r'[/\\]'))
-                                    ],
-                                    suggestionBuilder: (context,
-                                        state,
-                                        data,
-                                        index,
-                                        length,
-                                        highlight,
-                                        suggestionValid) {
-                                      var borderRadius = const BorderRadius.all(
-                                          Radius.circular(30));
-                                      if (index == 0) {
-                                        borderRadius = const BorderRadius.only(
-                                          topLeft: Radius.circular(30),
-                                          topRight: Radius.circular(30),
-                                        );
-                                      } else if (index == length - 1) {
-                                        borderRadius = const BorderRadius.only(
-                                          bottomRight: Radius.circular(30),
-                                          bottomLeft: Radius.circular(30),
-                                        );
-                                      }
-                                      return InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            _value.add(data);
-                                          });
-                                          state.resetTextField();
-                                          state.closeSuggestionBox();
-                                        },
-                                        child: Container(
-                                            width: 600,
-                                            decoration: highlight
-                                                ? BoxDecoration(
-                                                    color: Theme.of(context)
-                                                        .focusColor,
-                                                    borderRadius: borderRadius)
-                                                : null,
-                                            padding: const EdgeInsets.all(16),
-                                            child: RichTextWidget(
-                                              wordSearched:
-                                                  suggestionValid ?? '',
-                                              textOrigin: data,
-                                            )),
-                                      );
-                                    },
-                                    onFocusTagAction: (focused) {
-                                      setState(() {
-                                        focusTagEnabled = focused;
-                                      });
-                                    },
-                                    onDeleteTagAction: () {
-                                      if (_value.isNotEmpty) {
-                                        setState(() {
-                                          _value.removeLast();
-                                        });
-                                      }
-                                    },
-                                    onSelectOptionAction: (item) {
-                                      setState(() {
-                                        _value.add(item);
-                                      });
-                                    },
-                                    suggestionsBoxElevation: 5,
-                                    findSuggestions: (String query) {
-                                      if (query.isNotEmpty) {
-                                        var lowercaseQuery =
-                                            query.toLowerCase();
-                                        return Skill.where((profile) {
-                                          return profile.toLowerCase().contains(
-                                                  query.toLowerCase()) ||
-                                              profile.toLowerCase().contains(
-                                                  query.toLowerCase());
-                                        }).toList(growable: false)
-                                          ..sort((a, b) => a
-                                              .toLowerCase()
-                                              .indexOf(lowercaseQuery)
-                                              .compareTo(b
-                                                  .toLowerCase()
-                                                  .indexOf(lowercaseQuery)));
-                                      }
-                                      return [];
                                     },
                                   ),
-                                ],
-                              ),
-                            ),
+                                )
+                                .toList(),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Expanded(
+                            child: Container(
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(1),
+                                  border: Border.all(color: Colors.black),
+                                ),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton2<String>(
+                                    value: skillvalue,
+                                    buttonStyleData: ButtonStyleData(
+                                      height: 30,
+                                      width: 200,
+                                      elevation: 1,
+                                      padding: const EdgeInsets.only(
+                                          left: 14, right: 14),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(4),
+                                        border: Border.all(
+                                          color: Colors.black26,
+                                        ),
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    iconStyleData: const IconStyleData(
+                                      icon: Icon(
+                                        Icons.arrow_drop_down_sharp,
+                                      ),
+                                      iconSize: 25,
+                                      iconEnabledColor: Colors.white,
+                                      iconDisabledColor: null,
+                                    ),
+                                    dropdownStyleData: DropdownStyleData(
+                                      maxHeight: 210,
+                                      width: 300,
+                                      elevation: 0,
+                                      padding: EdgeInsets.only(
+                                          left: 10,
+                                          right: 10,
+                                          top: 5,
+                                          bottom: 15),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        border: Border.all(color: Colors.black),
+                                        color: Colors.indigo.shade900,
+                                      ),
+                                      scrollPadding: EdgeInsets.all(5),
+                                      scrollbarTheme: ScrollbarThemeData(
+                                        thickness:
+                                            MaterialStateProperty.all<double>(
+                                                6),
+                                        thumbVisibility:
+                                            MaterialStateProperty.all<bool>(
+                                                true),
+                                      ),
+                                    ),
+                                    menuItemStyleData: const MenuItemStyleData(
+                                      height: 25,
+                                      padding:
+                                          EdgeInsets.only(left: 14, right: 14),
+                                    ),
+                                    style: const TextStyle(color: Colors.white),
+                                    underline: Container(
+                                      height: 0,
+                                    ),
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        int selectionLimit = 2;
+                                        if (newValue != null &&
+                                            controller.selectedSkills.length <
+                                                selectionLimit) {
+                                          if (!controller.selectedSkills
+                                              .contains(newValue)) {
+                                            controller.selectedSkills
+                                                .add(newValue);
+                                          }
+                                        }
+                                      });
+                                    },
+                                    items: Skill.map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      },
+                                    ).toList(),
+                                  ),
+                                )),
                           ),
                         ],
                       ),
@@ -1309,136 +1306,110 @@ class _RegistrationState extends State<Registration> {
                                 fontWeight: FontWeight.bold),
                           ),
                           SizedBox(width: 10),
-                          Expanded(
-                            child: Container(
-                              height: 35,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(1),
-                                  border: Border(
-                                      bottom: BorderSide(color: Colors.black))),
-                              child: ListView(
-                                children: <Widget>[
-                                  TagEditor<String>(
-                                    length: _values.length,
-                                    controller: controller.workin,
-                                    focusNode: _focusNode,
-                                    delimiters: [',', ' '],
-                                    resetTextOnSubmitted: true,
-                                    // This is set to grey just to illustrate the textStyle prop
-                                    textStyle:
-                                        const TextStyle(color: Colors.black),
-                                    onSubmitted: (outstandingValue) {
-                                      setState(() {
-                                        _values.add(outstandingValue);
-                                      });
-                                    },
-                                    inputDecoration: const InputDecoration(
-                                      border: InputBorder.none,
+                          Wrap(
+                            spacing: 8.0,
+                            runSpacing: 8.0,
+                            children: controller.selectedWorkins
+                                .map(
+                                  (value) => Chip(
+                                    backgroundColor: Colors.indigo.shade900,
+                                    label: Text(
+                                      value,
+                                      style: TextStyle(color: Colors.white),
                                     ),
-                                    onTagChanged: (newValue) {
+                                    onDeleted: () {
                                       setState(() {
-                                        _values.add(newValue);
+                                        controller.selectedWorkins
+                                            .remove(value);
                                       });
-                                    },
-                                    tagBuilder: (context, index) => Container(
-                                      color: focusTagEnabled &&
-                                              index == _values.length - 1
-                                          ? Colors.redAccent
-                                          : Colors.white,
-                                      child: _Chip(
-                                        index: index,
-                                        label: _values[index],
-                                        onDeleted: _onDelete,
-                                      ),
-                                    ),
-                                    // InputFormatters example, this disallow \ and /
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.deny(
-                                          RegExp(r'[/\\]'))
-                                    ],
-                                    suggestionBuilder: (context,
-                                        state,
-                                        data,
-                                        index,
-                                        length,
-                                        highlight,
-                                        suggestionValid) {
-                                      var borderRadius = const BorderRadius.all(
-                                          Radius.circular(30));
-                                      if (index == 0) {
-                                        borderRadius = const BorderRadius.only(
-                                          topLeft: Radius.circular(30),
-                                          topRight: Radius.circular(30),
-                                        );
-                                      } else if (index == length - 1) {
-                                        borderRadius = const BorderRadius.only(
-                                          bottomRight: Radius.circular(30),
-                                          bottomLeft: Radius.circular(30),
-                                        );
-                                      }
-                                      return InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            _values.add(data);
-                                          });
-                                          state.resetTextField();
-                                          state.closeSuggestionBox();
-                                        },
-                                        child: Container(
-                                            width: 600,
-                                            decoration: highlight
-                                                ? BoxDecoration(
-                                                    color: Theme.of(context)
-                                                        .focusColor,
-                                                    borderRadius: borderRadius)
-                                                : null,
-                                            padding: const EdgeInsets.all(16),
-                                            child: RichTextWidget(
-                                              wordSearched:
-                                                  suggestionValid ?? '',
-                                              textOrigin: data,
-                                            )),
-                                      );
-                                    },
-                                    onFocusTagAction: (focused) {
-                                      setState(() {
-                                        focusTagEnabled = focused;
-                                      });
-                                    },
-                                    onDeleteTagAction: () {
-                                      if (_values.isNotEmpty) {
-                                        setState(() {
-                                          _values.removeLast();
-                                        });
-                                      }
-                                    },
-                                    onSelectOptionAction: (item) {
-                                      setState(() {
-                                        _values.add(item);
-                                      });
-                                    },
-                                    suggestionsBoxElevation: 5,
-                                    findSuggestions: (String query) {
-                                      if (query.isNotEmpty) {
-                                        var lowercaseQuery =
-                                            query.toLowerCase();
-                                        return Workin.where((profile) {
-                                          return profile.toLowerCase().contains(
-                                                  query.toLowerCase()) ||
-                                              profile.toLowerCase().contains(
-                                                  query.toLowerCase());
-                                        }).toList(growable: false)
-                                          ..sort((a, b) => a
-                                              .toLowerCase()
-                                              .indexOf(lowercaseQuery)
-                                              .compareTo(b
-                                                  .toLowerCase()
-                                                  .indexOf(lowercaseQuery)));
-                                      }
-                                      return [];
                                     },
                                   ),
-                                ],
+                                )
+                                .toList(),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Expanded(
+                            child: Container(
+                              height: 30,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(1),
+                                  border: Border.all(color: Colors.black)),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton2<String>(
+                                  value: wokinvalue,
+                                  buttonStyleData: ButtonStyleData(
+                                    height: 30,
+                                    width: 200,
+                                    elevation: 1,
+                                    padding: const EdgeInsets.only(
+                                        left: 14, right: 14),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      border: Border.all(
+                                        color: Colors.black26,
+                                      ),
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  iconStyleData: const IconStyleData(
+                                    icon: Icon(
+                                      Icons.arrow_drop_down_sharp,
+                                    ),
+                                    iconSize: 25,
+                                    iconEnabledColor: Colors.white,
+                                    iconDisabledColor: null,
+                                  ),
+                                  dropdownStyleData: DropdownStyleData(
+                                    maxHeight: 210,
+                                    width: 300,
+                                    elevation: 0,
+                                    padding: EdgeInsets.only(
+                                        left: 10,
+                                        right: 10,
+                                        top: 5,
+                                        bottom: 15),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(color: Colors.black),
+                                      color: Colors.indigo.shade900,
+                                    ),
+                                    scrollPadding: EdgeInsets.all(5),
+                                    scrollbarTheme: ScrollbarThemeData(
+                                      thickness:
+                                          MaterialStateProperty.all<double>(6),
+                                      thumbVisibility:
+                                          MaterialStateProperty.all<bool>(true),
+                                    ),
+                                  ),
+                                  menuItemStyleData: const MenuItemStyleData(
+                                    height: 25,
+                                    padding:
+                                        EdgeInsets.only(left: 14, right: 14),
+                                  ),
+                                  style: const TextStyle(color: Colors.white),
+                                  underline: Container(
+                                    height: 0,
+                                  ),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      if (newValue != null &&
+                                          !controller.selectedWorkins
+                                              .contains(newValue)) {
+                                        controller.selectedWorkins
+                                            .add(newValue);
+                                      }
+                                    });
+                                  },
+                                  items: Workin.map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
                               ),
                             ),
                           ),
@@ -1459,41 +1430,34 @@ class _RegistrationState extends State<Registration> {
                             text: translation(context).next,
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                var future;
                                 var candidateController = CandidateController(
-                                    formController: controller);
-                                if (widget.candidate == null) {}
+                                  formController: controller,
+                                );
+
                                 if (widget.candidate == null) {
-                                  future = candidateController.addCandidate();
+                                  await candidateController
+                                      .addCandidate(controller);
                                 } else {
-                                  future =
-                                      candidateController.updateCandidate();
+                                  await candidateController.updateCandidate();
                                 }
-                              }
-                              FirebaseAuth.instance
-                                  .createUserWithEmailAndPassword(
-                                      email: controller.email.text,
-                                      password: controller.password.text)
-                                  .then((value) {
-                                Navigator.push(
+
+                                try {
+                                  await FirebaseAuth.instance
+                                      .createUserWithEmailAndPassword(
+                                    email: controller.email.text,
+                                    password: controller.password.text,
+                                  );
+
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            GreyUserUpload()));
-                              }).onError((error, stackTrace) {
-                                print("Error ${error.toString()}");
-                              });
-                              UserCredential userCredential =
-                                  await _auth.signInAnonymously();
-
-                              // Update the user's display name in Firestore
-                              await _firestore
-                                  .collection('users')
-                                  .doc(userCredential.user?.uid)
-                                  .set({
-                                'displayName':
-                                    'User', // Set a default display name
-                              });
+                                        builder: (context) => GreyUserUpload()),
+                                  );
+                                } catch (error) {
+                                  print("Error: $error");
+                                  // Handle the error as needed
+                                }
+                              }
                             },
                           ),
                         ],

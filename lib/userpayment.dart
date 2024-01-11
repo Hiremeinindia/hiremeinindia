@@ -8,7 +8,6 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'classes/language.dart';
 import 'gen_l10n/app_localizations.dart';
 import 'main.dart';
-import 'package:pay/pay.dart';
 
 class NewUserPayment extends StatefulWidget {
   const NewUserPayment();
