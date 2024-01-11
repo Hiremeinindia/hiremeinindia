@@ -10,9 +10,7 @@ class Candidate {
   final String? workexp;
   final String? state;
   final String? address;
-  final List<String>? selectedSkills;
-
-  final List<String>? selectedWorkins;
+  final List<String>? selectedSkill;
   final String? workin;
   final String? password;
   final String? otpm;
@@ -31,8 +29,7 @@ class Candidate {
     this.workexp,
     this.state,
     this.address,
-    this.selectedSkills,
-    this.selectedWorkins,
+    this.selectedSkill,
     this.workin,
     this.password,
     this.otpm,
@@ -53,8 +50,7 @@ class Candidate {
         "workexp": workexp,
         "state": state,
         "address": address,
-        "selectedSkill": selectedSkills,
-        "selectedWorkin": selectedWorkins,
+        "selectedSkill": selectedSkill,
         "workin": workin,
         "password": password,
         "otpm": otpm,
@@ -76,8 +72,7 @@ class Candidate {
         worktitle: data["worktitle"],
         state: data["state"],
         address: data["address"],
-        selectedSkills: List<String>.from(data["selectedSkills"] ?? []),
-        selectedWorkins: List<String>.from(data["selectedWorkins"] ?? []),
+        selectedSkill: data["selectedSkill"],
         workin: data["workin"],
         password: data["password"],
         otpm: data["otpm"],
@@ -98,8 +93,7 @@ class Candidate {
         worktitle: data["worktitle"],
         state: data["state"],
         address: data["address"],
-        selectedSkills: List<String>.from(data["selectedSkills"] ?? []),
-        selectedWorkins: List<String>.from(data["selectedWorkins"] ?? []),
+        selectedSkill: data["selectedSkill"],
         workin: data["workin"],
         password: data["password"],
         otpm: data["otpm"],
@@ -125,7 +119,6 @@ class BlueCandidate {
   final String? state;
   final String? address;
   final List<String>? selectedSkills;
-  final List<String>? selectedWorkins;
   final String? workin;
   final String? password;
   final String? otpm;
@@ -146,7 +139,6 @@ class BlueCandidate {
     this.state,
     this.address,
     this.selectedSkills,
-    this.selectedWorkins,
     this.workin,
     this.password,
     this.otpm,
@@ -167,7 +159,6 @@ class BlueCandidate {
         "state": state,
         "address": address,
         "selectedSkills": selectedSkills,
-        "selectedWorkin": selectedWorkins,
         "workin": workin,
         "password": password,
         "otpm": otpm,
@@ -190,7 +181,6 @@ class BlueCandidate {
         state: data["state"],
         address: data["address"],
         selectedSkills: List<String>.from(data["selectedSkills"] ?? []),
-        selectedWorkins: List<String>.from(data["selectedWorkins"] ?? []),
         workin: data["workin"],
         password: data["password"],
         otpm: data["otpm"],
@@ -212,7 +202,6 @@ class BlueCandidate {
         state: data["state"],
         address: data["address"],
         selectedSkills: List<String>.from(data["selectedSkills"] ?? []),
-        selectedWorkins: List<String>.from(data["selectedWorkins"] ?? []),
         workin: data["workin"],
         password: data["password"],
         otpm: data["otpm"],
