@@ -5,7 +5,7 @@ name: Deploy to Firebase Hosting on merge
 'on':
   push:
     branches:
-      - kbharathi32k
+      - main
 
 jobs:
   build_and_deploy:
