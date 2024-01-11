@@ -421,7 +421,11 @@ class _BlueRegistrationState extends State<BlueRegistration> {
                       auth.signInWithCredential(_credential).then((result) {
                         if (result != null) {
                           Navigator.pop(context);
-
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BlueRegistration()),
+                          );
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -1195,6 +1199,29 @@ class _BlueRegistrationState extends State<BlueRegistration> {
                                     );
                                   },
                                 );
+                              } else {
+                                // Show success status (update this part based on your logic)
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text("Success"),
+                                      content: Text("OTP sent successfully!"),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                            // Update the state to keep the email in the text field
+                                            setState(() {});
+                                          },
+                                          child: Text("OK"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                                // You can optionally clear the email field here if needed
+                                // bluecontroller.email.text = '';
                               }
                             },
                             child: isVerified
@@ -1352,7 +1379,7 @@ class _BlueRegistrationState extends State<BlueRegistration> {
                         ],
                       ),
                       SizedBox(
-                        height: 40,
+                        height: 60,
                       ),
                       Row(
                         children: [
@@ -1451,14 +1478,11 @@ class _BlueRegistrationState extends State<BlueRegistration> {
                                   ),
                                   onChanged: (String? newValue) {
                                     setState(() {
-                                      int selectionLimit = 2;
                                       if (newValue != null &&
                                           !bluecontroller.selectedWorkins
                                               .contains(newValue)) {
                                         bluecontroller.selectedWorkins
                                             .add(newValue);
-                                        updateSkillsInFirestore(
-                                            bluecontroller.selectedSkills);
                                       }
                                     });
                                   },

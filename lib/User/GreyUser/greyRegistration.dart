@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -9,20 +8,27 @@ import 'package:get/get_instance/get_instance.dart';
 import 'package:get/route_manager.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
-import 'package:hiremeinindiaapp/User/candidate_form_state.dart';
+
 import 'package:hiremeinindiaapp/Models/candidated.dart';
-import 'package:hiremeinindiaapp/User/GreyUser/greyuserupload.dart';
+import 'package:hiremeinindiaapp/Models/register_model.dart';
+import 'package:hiremeinindiaapp/Providers/session.dart';
+import 'package:hiremeinindiaapp/User/candidate_form_state.dart';
+import 'package:hiremeinindiaapp/classes/language.dart';
+import 'package:hiremeinindiaapp/classes/language_constants.dart';
+import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
+import 'package:hiremeinindiaapp/main.dart';
+
+import 'package:hiremeinindiaapp/userpayment.dart';
+import 'package:hiremeinindiaapp/widgets/customtextfield.dart';
+import 'package:hiremeinindiaapp/widgets/customtextstyle.dart';
+import 'package:hiremeinindiaapp/widgets/hiremeinindia.dart';
+
 import 'package:super_tag_editor/tag_editor.dart';
 import 'package:super_tag_editor/widgets/rich_text_widget.dart';
-import '../../Widgets/customtextstyle.dart';
-import '../../classes/language.dart';
-import '../../classes/language_constants.dart';
-import '../../gen_l10n/app_localizations.dart';
-import '../../main.dart';
-import '../../widgets/custombutton.dart';
-import '../../widgets/customtextfield.dart';
-import '../../widgets/hiremeinindia.dart';
+
 import '../../controllers/candidate_controller.dart';
+import '../../homepage.dart';
+import '../../widgets/custombutton.dart';
 
 class Registration extends StatefulWidget {
   const Registration({Key? key, this.candidate}) : super(key: key);
@@ -38,19 +44,13 @@ class _RegistrationState extends State<Registration> {
   String smscode = "";
   String phoneNumber = "", data = "", phone = "";
   bool isVerified = false;
-  TextEditingController otpController = TextEditingController();
   bool isOtpValid = true; // Replace this line with actual verification logic
 
-  final List<String> items = ['Tamil', 'English', 'French', 'Malayalam'];
-  String? selectedValue;
-  String email = '';
-  bool login = false;
-  final _formKey = GlobalKey<FormState>();
   List<String> _values = [];
   List<String> _value = [];
 
   bool blueChecked = false;
-  bool greyChecked = true;
+  bool greyChecked = false;
   bool focusTagEnabled = false;
   String password = '';
 
@@ -58,12 +58,16 @@ class _RegistrationState extends State<Registration> {
   var isLoading = false;
 
   final FocusNode _focusNode = FocusNode();
+  final _formKey = GlobalKey<FormState>();
   EmailOTP myauth = EmailOTP();
   CandidateFormController controller = CandidateFormController();
   final DatabaseReference _userRef =
       FirebaseDatabase.instance.reference().child('users');
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  List<String> selectedSkill = [];
+  List<String> selectedWorkin = [];
+
+  String? skillvalue;
 
   List<String> selectedSkill = [];
   List<String> selectedWorkin = [];
@@ -151,7 +155,7 @@ class _RegistrationState extends State<Registration> {
         return AlertDialog(
           title: Text("Enter OTP"),
           content: TextField(
-            controller: otpController,
+            controller: controller.otp,
             keyboardType: TextInputType.number,
             maxLength: 4,
           ),
@@ -162,17 +166,11 @@ class _RegistrationState extends State<Registration> {
                 Navigator.of(context).pop();
 
                 // Verify entered OTP
-                print("Entered OTP: ${otpController.text}");
+                print("Entered OTP: ${controller.otp.text}");
 
-                if (await myauth.verifyOTP(otp: otpController.text.trim())) {
+                if (await myauth.verifyOTP(otp: controller.otp.text.trim())) {
                   print("OTP verification success");
                   // Navigate to registration page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Registration(),
-                    ),
-                  );
                 } else {
                   print("OTP verification failed");
                   // Display error pop-up for invalid OTP
@@ -204,7 +202,7 @@ class _RegistrationState extends State<Registration> {
 
   Future<void> _verifyOtp() async {
     // Perform OTP verification here using myauth.verifyOTP(otpController.text)
-    bool isOtpValid = await myauth.verifyOTP(otp: otpController.text);
+    bool isOtpValid = await myauth.verifyOTP(otp: controller.otp.text);
 
     if (isOtpValid) {
       // Navigate to registration page
@@ -321,10 +319,7 @@ class _RegistrationState extends State<Registration> {
           phoneNumber: "+91${controller.mobile.text}",
           verificationCompleted: (PhoneAuthCredential authCredential) async {
             await _auth.signInWithCredential(authCredential).then((value) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Registration()),
-              );
+              Navigator.pop(context);
               setState(() {
                 isVerified = true;
               });
@@ -366,11 +361,7 @@ class _RegistrationState extends State<Registration> {
                       auth.signInWithCredential(_credential).then((result) {
                         if (result != null) {
                           Navigator.pop(context);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Registration()),
-                          );
+
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -539,7 +530,6 @@ class _RegistrationState extends State<Registration> {
   Widget build(BuildContext context) {
     bool _validate = false;
 
-    var updatedUser;
     return Scaffold(
       appBar: AppBar(
         title: HireMeInIndia(),
@@ -779,12 +769,16 @@ class _RegistrationState extends State<Registration> {
                 child: Row(
                   children: [
                     Checkbox(
-                      value: false,
-                      onChanged: null,
+                      value: blueChecked,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          blueChecked = value ?? false;
+                        });
+                      },
                       fillColor: MaterialStateProperty.resolveWith<Color>(
                         (Set<MaterialState> states) {
                           if (states.contains(MaterialState.selected)) {
-                            return const Color.fromARGB(255, 90, 97, 168);
+                            return Colors.indigo.shade900;
                           }
                           return Colors.transparent;
                         },
@@ -920,7 +914,7 @@ class _RegistrationState extends State<Registration> {
                               ),
                               SizedBox(height: 60),
                               Text(
-                                translation(context).state,
+                                translation(context).qualification,
                                 style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.bold),
@@ -949,7 +943,7 @@ class _RegistrationState extends State<Registration> {
                                 ),
                                 CustomTextfield(
                                   validator: nameValidator,
-                                  controller: controller.state,
+                                  controller: controller.qualification,
                                 ),
                               ],
                             ),
@@ -1088,11 +1082,22 @@ class _RegistrationState extends State<Registration> {
                         Expanded(
                             child: CustomTextfield(
                                 controller: controller.email,
-                                validator: MultiValidator([
-                                  RequiredValidator(errorText: "* Required"),
-                                  EmailValidator(
-                                      errorText: "Enter valid email id"),
-                                ]))),
+                                validator: (val) {
+                                  if (AppSession()
+                                      .candidates
+                                      .where((element) =>
+                                          element.email!.toLowerCase() ==
+                                          val?.toLowerCase())
+                                      .isNotEmpty) {
+                                    return "Already User Exist";
+                                  }
+                                  ;
+                                  MultiValidator([
+                                    RequiredValidator(errorText: "* Required"),
+                                    EmailValidator(
+                                        errorText: "Enter valid email id"),
+                                  ]);
+                                })),
                         SizedBox(
                           height: 30,
                           child: ElevatedButton(
@@ -1428,7 +1433,7 @@ class _RegistrationState extends State<Registration> {
                           SizedBox(width: 50),
                           CustomButton(
                             text: translation(context).next,
-                            onPressed: () async {
+                            onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 var candidateController = CandidateController(
                                   formController: controller,
