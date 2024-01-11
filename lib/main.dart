@@ -5,6 +5,7 @@ import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:hiremeinindiaapp/userdashboard.dart';
 
 import 'User/BlueUser/blueregistration.dart';
+import 'User/GreyUser/greyRegistration.dart';
 import 'classes/language_constants.dart';
 
 void main() async {
@@ -59,7 +60,7 @@ class _HireAppState extends State<HireApp> {
       supportedLocales: AppLocalizations.supportedLocales,
       locale: _locale,
       debugShowCheckedModeBanner: false,
-      home: BlueRegistration(),
+      home: Registration(),
     );
   }
 }
