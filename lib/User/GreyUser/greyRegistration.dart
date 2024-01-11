@@ -29,6 +29,7 @@ import 'package:super_tag_editor/widgets/rich_text_widget.dart';
 import '../../controllers/candidate_controller.dart';
 import '../../homepage.dart';
 import '../../widgets/custombutton.dart';
+import 'greyuserupload.dart';
 
 class Registration extends StatefulWidget {
   const Registration({Key? key, this.candidate}) : super(key: key);
@@ -63,11 +64,6 @@ class _RegistrationState extends State<Registration> {
   CandidateFormController controller = CandidateFormController();
   final DatabaseReference _userRef =
       FirebaseDatabase.instance.reference().child('users');
-
-  List<String> selectedSkill = [];
-  List<String> selectedWorkin = [];
-
-  String? skillvalue;
 
   List<String> selectedSkill = [];
   List<String> selectedWorkin = [];
@@ -1433,7 +1429,7 @@ class _RegistrationState extends State<Registration> {
                           SizedBox(width: 50),
                           CustomButton(
                             text: translation(context).next,
-                            onPressed: () {
+                            onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 var candidateController = CandidateController(
                                   formController: controller,
