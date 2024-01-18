@@ -24,7 +24,7 @@ class _NewUserPayment extends State<NewUserPayment> {
 
   Future<void> sendCashNotification() async {
     print("cash2");
-    final String serverUrl = 'http://localhost:3006';
+    final String serverUrl = 'http://localhost:3008';
     final String endpoint = '/cashNotification';
 
     try {
