@@ -243,4 +243,10 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get currentCountry => 'Current Country';
+
+  @override
+  String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get companyName => 'Company Name';
 }

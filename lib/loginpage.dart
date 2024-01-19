@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hiremeinindiaapp/CorporateConsole/corporateDashboard.dart';
+import 'package:hiremeinindiaapp/authservice.dart';
 import 'package:hiremeinindiaapp/main.dart';
 import 'package:hiremeinindiaapp/userdashboard.dart';
 import 'package:hiremeinindiaapp/widgets/customtextfield.dart';
@@ -33,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   CandidateFormController controller = CandidateFormController();
-
+  AuthService authService = AuthService();
   String? selectedValue;
   String email = '';
   String password = '';
@@ -290,21 +293,35 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       onPressed: () async {
-                        UserCredential user = await FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
-                                email: controller.email.text,
-                                password: controller.password.text);
+                        User? user =
+                            await authService.signInWithEmailAndPassword(
+                          controller.email.text,
+                          controller.password.text,
+                        );
+
                         if (user != null) {
-                          email = controller.email.text;
-                          name = controller.name.text;
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) {
-                              return UserDashboard();
-                            }),
-                          );
+                          // Navigate to another page based on the user role
+                          if (userRole(user) == 'Blue' ||
+                              userRole(user) == 'Grey') {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UserDashboard(user),
+                              ),
+                            );
+                          } else {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CorporateDashboard(user),
+                              ),
+                            );
+                          }
                         } else {
-                          print('user does not exist');
+                          // Handle login failure
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Login failed')),
+                          );
                         }
                       },
                     )
@@ -316,5 +333,41 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future<String> userRole(User user) async {
+    String label = 'Unknown';
+
+    try {
+      // Assuming you have different collections for admins and users
+      String adminCollection = 'corporateuser';
+      String userCollection = 'greycollaruser';
+
+      // Check if the user is an admin
+      DocumentSnapshot adminSnapshot = await FirebaseFirestore.instance
+          .collection(adminCollection)
+          .doc(user.uid)
+          .get();
+
+      if (adminSnapshot.exists) {
+        label = 'Admin';
+      } else {
+        // Check if the user is a regular user
+        DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+            .collection(userCollection)
+            .doc(user.uid)
+            .get();
+
+        if (userSnapshot.exists) {
+          label = 'Grey';
+        } else {
+          label = 'Blue';
+        }
+      }
+    } catch (e) {
+      print('Error determining user role: $e');
+    }
+
+    return label;
   }
 }

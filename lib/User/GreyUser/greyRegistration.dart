@@ -66,7 +66,7 @@ class _RegistrationState extends State<Registration> {
 
   List<String> selectedSkill = [];
   List<String> selectedWorkin = [];
-
+  var label = 'Grey';
   String? skillvalue;
 
   String selectedOption = '';

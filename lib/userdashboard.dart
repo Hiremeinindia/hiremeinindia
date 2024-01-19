@@ -14,7 +14,8 @@ import 'gen_l10n/app_localizations.dart';
 import 'main.dart';
 
 class UserDashboard extends StatefulWidget {
-  const UserDashboard();
+  final User user;
+  const UserDashboard(this.user);
   @override
   State<UserDashboard> createState() => _UserDashboard();
 }
