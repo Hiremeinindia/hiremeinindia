@@ -65,7 +65,7 @@ class _NewUserPayment extends State<NewUserPayment> {
     }
   }
 
-  Widget _buildSendingCashDialog() {
+  Widget _buildSendingCashDialog(BuildContext context) {
     return Stack(
       children: [
         Positioned.fill(
@@ -99,7 +99,7 @@ class _NewUserPayment extends State<NewUserPayment> {
     setState(() {
       isProcessing = true; // Set the flag to indicate processing
     });
-    final String serverUrl = 'http://localhost:3010';
+    final String serverUrl = 'http://localhost:3011';
     final String endpoint = '/cashNotification';
 
     try {
@@ -118,6 +118,10 @@ class _NewUserPayment extends State<NewUserPayment> {
         print('Waiting for 3 minutes before showing verification result...');
         // Wait for 3 minutes before showing verification result
         await Future.delayed(Duration(minutes: 3));
+
+        // Dismiss the "Sending Cash Notification" dialog
+        Navigator.of(context).pop();
+
         setState(() {
           isProcessing = false;
         });
@@ -473,7 +477,7 @@ class _NewUserPayment extends State<NewUserPayment> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return _buildSendingCashDialog();
+                              return _buildSendingCashDialog(context);
                             },
                           );
 
