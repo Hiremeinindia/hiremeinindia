@@ -21,10 +21,14 @@ class NewUserPayment extends StatefulWidget {
 class _NewUserPayment extends State<NewUserPayment> {
   @override
   bool isChecked = false;
+  bool isProcessing = false;
 
   Future<void> sendCashNotification() async {
     print("cash2");
-    final String serverUrl = 'http://localhost:3006';
+    setState(() {
+      isProcessing = true; // Set the flag to indicate processing
+    });
+    final String serverUrl = 'http://localhost:3010';
     final String endpoint = '/cashNotification';
 
     try {
@@ -43,6 +47,9 @@ class _NewUserPayment extends State<NewUserPayment> {
         print('Waiting for 3 minutes before showing verification result...');
         // Wait for 3 minutes before showing verification result
         await Future.delayed(Duration(minutes: 3));
+        setState(() {
+          isProcessing = false;
+        });
 
         // Display a popup message
         showDialog(
@@ -66,9 +73,15 @@ class _NewUserPayment extends State<NewUserPayment> {
         print(
           'Failed to send notification. Status code: ${response.statusCode}',
         );
+        setState(() {
+          isProcessing = false; // Set the flag to indicate processing is done
+        });
       }
     } catch (error) {
       print('Error sending notification: $error');
+      setState(() {
+        isProcessing = false; // Set the flag to indicate processing is done
+      });
     }
   }
 
@@ -380,30 +393,21 @@ class _NewUserPayment extends State<NewUserPayment> {
                       text: translation(context).cash,
                       onPressed: () async {
                         print("cash1");
-                        // Call the method to send cash notification
-                        await sendCashNotification();
 
-                        // Instead of navigating back immediately, you can handle the response here
-                        // For example, you can show a message or navigate to another page based on the response
+                        // Display the pop-up dialog
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Cash Received and Verified'),
-                              content: Text(
-                                  'The cash payment has been received and verified@@@.'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .pop(); // Close the dialog
-                                  },
-                                  child: Text('OK'),
-                                ),
-                              ],
-                            );
+                            return _buildSendingCashDialog(); // Call the method to build the pop-up dialog
                           },
                         );
+
+                        // Call the method to send cash notification
+                        await sendCashNotification();
+
+                        // The pop-up dialog will be dismissed automatically when the process is complete
+                        // Instead of navigating back immediately, you can handle the response here
+                        // For example, you can show a message or navigate to another page based on the response
                       },
                     ),
                   ),
@@ -439,4 +443,33 @@ class _NewUserPayment extends State<NewUserPayment> {
               )
             ])));
   }
+}
+
+Widget _buildSendingCashDialog() {
+  return Stack(
+    children: [
+      Positioned.fill(
+        child: Container(
+          color: Colors.transparent,
+        ),
+      ),
+      Positioned(
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        child: AlertDialog(
+          title: Text('Sending Cash Notification'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 10),
+              Text('Please wait...'),
+            ],
+          ),
+        ),
+      ),
+    ],
+  );
 }

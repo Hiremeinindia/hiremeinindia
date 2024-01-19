@@ -3,6 +3,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hiremeinindiaapp/User/GreyUser/greyRegistration.dart';
+import 'package:hiremeinindiaapp/adminconsole.dart';
+import 'package:hiremeinindiaapp/admintest.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:hiremeinindiaapp/userdashboard.dart';
@@ -80,15 +82,15 @@ class _HireAppState extends State<HireApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {
-        '/newUserPayment': (context) => const NewUserPayment(),
-      },
-      initialRoute: '/newUserPayment', // Change the initialRoute
+      // routes: {
+      //   '/newUserPayment': (context) => const NewUserPayment(),
+      // },
+      // initialRoute: '/newUserPayment', // Change the initialRoute
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: _locale,
       debugShowCheckedModeBanner: false,
-      home: const NewUserPayment(),
+      home: NewUserPayment(),
     );
   }
 }
