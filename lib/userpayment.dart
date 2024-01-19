@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import 'Widgets/customtextstyle.dart';
@@ -22,6 +23,76 @@ class _NewUserPayment extends State<NewUserPayment> {
   @override
   bool isChecked = false;
   bool isProcessing = false;
+  PlatformFile? _cashReceipt;
+  Future<void> showFileUploadSuccessDialog() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('File Upload Successful'),
+          content: Text('The cash receipt has been uploaded successfully.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> uploadCashReceipt() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+      if (result != null) {
+        setState(() {
+          _cashReceipt = result.files.first;
+        });
+
+        print('Cash receipt uploaded: ${_cashReceipt!.name}');
+
+        // Show the file upload success dialog
+        await showFileUploadSuccessDialog();
+      } else {
+        print('No file selected');
+      }
+    } catch (e) {
+      print('Error picking file: $e');
+    }
+  }
+
+  Widget _buildSendingCashDialog() {
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: Container(
+            color: Colors.transparent,
+          ),
+        ),
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: AlertDialog(
+            title: Text('Sending Cash Notification'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 10),
+                Text('Please wait...'),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   Future<void> sendCashNotification() async {
     print("cash2");
@@ -394,20 +465,25 @@ class _NewUserPayment extends State<NewUserPayment> {
                       onPressed: () async {
                         print("cash1");
 
-                        // Display the pop-up dialog
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return _buildSendingCashDialog(); // Call the method to build the pop-up dialog
-                          },
-                        );
+                        // Call the method to upload cash receipt
+                        await uploadCashReceipt();
 
-                        // Call the method to send cash notification
-                        await sendCashNotification();
+                        // Display the pop-up dialog only if the receipt is uploaded successfully
+                        if (_cashReceipt != null) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return _buildSendingCashDialog();
+                            },
+                          );
 
-                        // The pop-up dialog will be dismissed automatically when the process is complete
-                        // Instead of navigating back immediately, you can handle the response here
-                        // For example, you can show a message or navigate to another page based on the response
+                          // Call the method to send cash notification
+                          await sendCashNotification();
+
+                          // The pop-up dialog will be dismissed automatically when the process is complete
+                          // Instead of navigating back immediately, you can handle the response here
+                          // For example, you can show a message or navigate to another page based on the response
+                        }
                       },
                     ),
                   ),
