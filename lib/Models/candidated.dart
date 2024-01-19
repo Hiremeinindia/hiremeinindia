@@ -17,6 +17,7 @@ class Candidate {
   final String? password;
   final String? otpm;
   final String? code;
+  final String? selectedOption;
   final String? country;
   final String? confirmPassword;
   final DocumentReference reference;
@@ -40,6 +41,7 @@ class Candidate {
     this.confirmPassword,
     this.country,
     required this.reference,
+    this.selectedOption,
   });
 
   Map<String, dynamic> toJson() => {
@@ -59,6 +61,7 @@ class Candidate {
         "password": password,
         "otpm": otpm,
         "code": code,
+        "selectedOption": selectedOption,
         "country": country,
         "confirmPassword": confirmPassword,
       };
@@ -73,6 +76,7 @@ class Candidate {
         workexp: data["workexp"],
         aadharno: data["aadharno"],
         gender: data["gender"],
+        selectedOption: data["selectedOption"],
         worktitle: data["worktitle"],
         state: data["state"],
         address: data["address"],
@@ -95,6 +99,7 @@ class Candidate {
         workexp: data["workexp"],
         aadharno: data["aadharno"],
         gender: data["gender"],
+        selectedOption: data["selectedOption"],
         worktitle: data["worktitle"],
         state: data["state"],
         address: data["address"],

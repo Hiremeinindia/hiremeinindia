@@ -32,6 +32,7 @@ class CandidateController {
         "city": controller.city.text,
         "country": controller.country.text,
         'selectedSkills': controller.selectedSkills ?? [],
+        "label": controller.selectedOption.text,
       }, SetOptions(merge: true));
 
       print('Candidate added successfully');
