@@ -37,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
 
   CandidateFormController controller = CandidateFormController();
   AuthService authService = AuthService();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   String? selectedValue;
   String email = '';
   String password = '';
@@ -293,35 +294,46 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       onPressed: () async {
-                        User? user =
-                            await authService.signInWithEmailAndPassword(
-                          controller.email.text,
-                          controller.password.text,
-                        );
+                        try {
+                          // Sign in with email and password
+                          UserCredential userCredential =
+                              await _auth.signInWithEmailAndPassword(
+                            email: controller.email.text,
+                            password: controller.password.text,
+                          );
 
-                        if (user != null) {
-                          // Navigate to another page based on the user role
-                          if (userRole(user) == 'Blue' ||
-                              userRole(user) == 'Grey') {
+                          // Check the user's role after successful sign-in
+                          String userRole =
+                              await getUserRole(userCredential.user!.uid);
+
+                          // Navigate to the appropriate dashboard based on the user's role
+                          if (userRole == 'Admin') {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => UserDashboard(user),
+                                builder: (context) => CorporateDashboard(
+                                    user: userCredential.user!),
+                              ),
+                            );
+                            print('User role$userRole');
+                          } else if (userRole == 'Blue' || userRole == 'Grey') {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    UserDashboard(user: userCredential.user!),
                               ),
                             );
                           } else {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CorporateDashboard(user),
-                              ),
-                            );
+                            print('Unknown user role');
                           }
-                        } else {
-                          // Handle login failure
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Login failed')),
-                          );
+                        } on FirebaseAuthException catch (e) {
+                          // Handle authentication exceptions
+                          if (e.code == 'user-not-found') {
+                            print('No user found for that email.');
+                          } else if (e.code == 'wrong-password') {
+                            print('Wrong password provided.');
+                          }
                         }
                       },
                     )
@@ -335,39 +347,38 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<String> userRole(User user) async {
-    String label = 'Unknown';
-
+  Future<String> getUserRole(String uid) async {
     try {
-      // Assuming you have different collections for admins and users
       String adminCollection = 'corporateuser';
       String userCollection = 'greycollaruser';
 
       // Check if the user is an admin
-      DocumentSnapshot adminSnapshot = await FirebaseFirestore.instance
-          .collection(adminCollection)
-          .doc(user.uid)
-          .get();
+      DocumentSnapshot<Map<String, dynamic>> adminSnapshot =
+          await FirebaseFirestore.instance
+              .collection(adminCollection)
+              .doc(uid)
+              .get();
 
       if (adminSnapshot.exists) {
-        label = 'Admin';
+        print('User is admin.');
+        return 'Admin';
       } else {
         // Check if the user is a regular user
-        DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-            .collection(userCollection)
-            .doc(user.uid)
-            .get();
+        DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+            await FirebaseFirestore.instance
+                .collection(userCollection)
+                .doc(uid)
+                .get();
 
         if (userSnapshot.exists) {
-          label = 'Grey';
-        } else {
-          label = 'Blue';
+          print('User is a regular user with Blue role.');
+          return 'Blue';
         }
       }
     } catch (e) {
       print('Error determining user role: $e');
     }
 
-    return label;
+    return 'Unknown';
   }
 }

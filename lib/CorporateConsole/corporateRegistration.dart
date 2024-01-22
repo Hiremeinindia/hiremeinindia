@@ -4,13 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/corporate.dart';
-import 'package:hiremeinindiaapp/CorporateConsole/corporateDashboard.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/corporateFormState.dart';
 import 'package:hiremeinindiaapp/Widgets/customTextstyle.dart';
 import 'package:hiremeinindiaapp/classes/language.dart';
 import 'package:hiremeinindiaapp/controllers/corporateController.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
-import 'package:hiremeinindiaapp/homepage.dart';
 import 'package:hiremeinindiaapp/main.dart';
 
 import '../classes/language_constants.dart';
@@ -30,12 +28,19 @@ class CorporateRegistration extends StatefulWidget {
 class _CorporateRegistrationState extends State<CorporateRegistration> {
   var isLoading = false;
 
-  CorporateFormController corporateController = CorporateFormController();
+  CorporateFormController controller = CorporateFormController();
   var label = 'Admin';
   bool isValidName(String name) {
     final RegExp nameRegExp = RegExp(r"^[A-Za-z']+([- ][A-Za-z']+)*$");
     return nameRegExp.hasMatch(name);
   }
+
+  dispose() {
+    controller.name.dispose();
+    super.dispose();
+  }
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String? validatePassword(String? value) {
     RegExp regex =
@@ -346,14 +351,14 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
                               children: [
                                 CustomTextfield(
                                   validator: nameValidator,
-                                  controller: corporateController.name,
+                                  controller: controller.name,
                                 ),
                                 SizedBox(
                                   height: 40,
                                 ),
                                 CustomTextfield(
                                   validator: nameValidator,
-                                  controller: corporateController.companyName,
+                                  controller: controller.companyName,
                                 ),
                                 SizedBox(
                                   height: 40,
@@ -364,7 +369,7 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
                                     EmailValidator(
                                         errorText: "Enter valid email id"),
                                   ]),
-                                  controller: corporateController.email,
+                                  controller: controller.email,
                                 ),
                               ],
                             ),
@@ -399,31 +404,28 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
                               children: [
                                 CustomTextfield(
                                   validator: validatePassword,
-                                  controller: corporateController.password,
+                                  controller: controller.password,
                                 ),
                                 SizedBox(
                                   height: 40,
                                 ),
                                 CustomTextfield(
                                   validator: (value) {
-                                    if (corporateController.password.text !=
-                                        corporateController
-                                            .confirmPassword.text) {
+                                    if (controller.password.text !=
+                                        controller.confirmPassword.text) {
                                       return "Password did not match";
                                     } else {
                                       return null;
                                     }
                                   },
-                                  controller:
-                                      corporateController.confirmPassword,
+                                  controller: controller.confirmPassword,
                                 ),
                                 Radio(
                                   value: 'Admin',
-                                  groupValue:
-                                      corporateController.selectedOption.text,
+                                  groupValue: controller.selectedOption.text,
                                   onChanged: (value) {
                                     setState(() {
-                                      corporateController.selectedOption.text =
+                                      controller.selectedOption.text =
                                           value.toString();
                                     });
                                   },
@@ -445,29 +447,32 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 var corporatecontroller = CorporateController(
-                                  formController: corporateController,
+                                  formController: controller,
                                 );
 
                                 if (widget.corporate == null) {
-                                  await corporatecontroller
-                                      .addCorporate(corporateController);
+                                  corporatecontroller.addCorporate(controller);
                                 }
                                 try {
-                                  await FirebaseAuth.instance
+                                  // Sign up with email and password
+                                  UserCredential userCredential = await _auth
                                       .createUserWithEmailAndPassword(
-                                    email: corporateController.email.text,
-                                    password: corporateController.password.text,
+                                    email: controller.email.text,
+                                    password: controller.password.text,
                                   );
 
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => HomePage(),
-                                    ),
-                                  );
-                                } catch (error) {
-                                  print("Error: $error");
-                                  // Handle the error as needed
+                                  // Assign the admin role to the user
+                                  await assignUserRole(
+                                      userCredential.user!.uid, 'Admin');
+
+                                  // Navigate back to the login page after successful signup
+                                  Navigator.pop(context);
+                                } on FirebaseAuthException catch (e) {
+                                  // Handle authentication exceptions
+                                  if (e.code == 'email-already-in-use') {
+                                    print(
+                                        'The account already exists for that email.');
+                                  }
                                 }
                               }
                             },
@@ -486,5 +491,22 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
         ),
       ),
     );
+  }
+
+  Future<void> assignUserRole(String uid, String role) async {
+    try {
+      String adminCollection = 'corporateuser';
+
+      // Assign the admin role to the user
+      await FirebaseFirestore.instance
+          .collection(adminCollection)
+          .doc(uid)
+          .set({
+        'label': 'Admin',
+        // Add additional admin-related fields as needed
+      });
+    } catch (e) {
+      print('Error assigning admin role: $e');
+    }
   }
 }

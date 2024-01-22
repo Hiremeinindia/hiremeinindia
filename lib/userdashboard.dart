@@ -15,7 +15,7 @@ import 'main.dart';
 
 class UserDashboard extends StatefulWidget {
   final User user;
-  const UserDashboard(this.user);
+  UserDashboard({required this.user});
   @override
   State<UserDashboard> createState() => _UserDashboard();
 }
@@ -25,28 +25,39 @@ class _UserDashboard extends State<UserDashboard> {
   bool dropdownValue = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  late User _user;
-  late String _userName;
+  String? userName;
 
   @override
   void initState() {
     super.initState();
-    _user = _auth.currentUser!;
-    _retrieveUserName();
+    _retrieveUserName(widget.user.uid); // Pass the userId from the widget
   }
 
-  Future<void> _retrieveUserName() async {
+  Future<void> _retrieveUserName(String userId) async {
     try {
-      DocumentSnapshot<Map<String, dynamic>> userDoc =
-          await _firestore.collection('users').doc(_user.uid).get();
+      // Get the reference to the user document in Firestore
+      DocumentSnapshot<Map<String, dynamic>> userDoc = await FirebaseFirestore
+          .instance
+          .collection('greycollaruser')
+          .doc(userId)
+          .get();
 
+      // Check if the document exists
       if (userDoc.exists) {
+        // Retrieve the username from the document
+        String? username = userDoc.data()?['name'];
+
+        // Update the state with the retrieved username
         setState(() {
-          _userName = userDoc.get('name');
+          userName = username;
         });
+      } else {
+        // Document doesn't exist
+        print('User not found in Firestore.');
       }
-    } catch (error) {
-      print('Error retrieving user information: $error');
+    } catch (e) {
+      // Handle errors
+      print('Error retrieving username: $e');
     }
   }
 
@@ -266,7 +277,7 @@ class _UserDashboard extends State<UserDashboard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _userName ?? "Guest",
+                          userName ?? "Guest",
                           style: TextStyle(color: Colors.black),
                         ),
                         Text(

@@ -28,10 +28,10 @@ class CandidateController {
         "qualification": controller.qualification.text,
         "state": controller.state.text,
         "address": controller.address.text,
-        'selectedWorkins': controller.selectedWorkins ?? [],
+        'selectedWorkins': controller.selectedWorkins,
         "city": controller.city.text,
         "country": controller.country.text,
-        'selectedSkills': controller.selectedSkills ?? [],
+        'selectedSkills': controller.selectedSkills,
         "label": controller.selectedOption.text,
       }, SetOptions(merge: true));
 
@@ -94,10 +94,10 @@ class BlueCandidateController {
         "qualification": bluecontroller.qualification.text,
         "state": bluecontroller.state.text,
         "address": bluecontroller.address.text,
-        'selectedWorkins': bluecontroller.selectedWorkins ?? [],
+        'selectedWorkins': bluecontroller.selectedWorkins,
         "city": bluecontroller.city.text,
         "country": bluecontroller.country.text,
-        'selectedSkills': bluecontroller.selectedSkills ?? [],
+        'selectedSkills': bluecontroller.selectedSkills,
       }, SetOptions(merge: true));
 
       print('Candidate added successfully');

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -68,6 +69,7 @@ class _RegistrationState extends State<Registration> {
   List<String> selectedWorkin = [];
   var label = 'Grey';
   String? skillvalue;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String selectedOption = '';
   String? wokinvalue;
@@ -1776,32 +1778,36 @@ class _RegistrationState extends State<Registration> {
                           SizedBox(width: 50),
                           CustomButton(
                             text: translation(context).next,
-                            onPressed: () {
+                            onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                var future;
                                 var candidateController = CandidateController(
                                     formController: controller);
-                                if (widget.candidate == null) {}
+
                                 if (widget.candidate == null) {
-                                  future = candidateController
-                                      .addCandidate(controller);
-                                } else {
-                                  future =
-                                      candidateController.updateCandidate();
+                                  candidateController.addCandidate(controller);
                                 }
 
-                                FirebaseAuth.instance
-                                    .createUserWithEmailAndPassword(
-                                        email: controller.email.text,
-                                        password: controller.password.text)
-                                    .then((value) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => HomePage()));
-                                }).onError((error, stackTrace) {
-                                  print("Error ${error.toString()}");
-                                });
+                                try {
+                                  // Sign up with email and password
+                                  UserCredential userCredential = await _auth
+                                      .createUserWithEmailAndPassword(
+                                    email: controller.email.text,
+                                    password: controller.password.text,
+                                  );
+
+                                  // Assign the user role to the user
+                                  await assignUserRole(
+                                      userCredential.user!.uid, 'Blue');
+
+                                  // Navigate back to the login page after successful signup
+                                  Navigator.pop(context);
+                                } on FirebaseAuthException catch (e) {
+                                  // Handle authentication exceptions
+                                  if (e.code == 'email-already-in-use') {
+                                    print(
+                                        'The account already exists for that email.');
+                                  }
+                                }
                               }
                             },
                           ),
@@ -1819,6 +1825,20 @@ class _RegistrationState extends State<Registration> {
         ),
       ),
     );
+  }
+
+  Future<void> assignUserRole(String uid, String role) async {
+    try {
+      String userCollection = 'greycollaruser';
+
+      // Assign the user role to the user
+      await FirebaseFirestore.instance.collection(userCollection).doc(uid).set({
+        'label': 'Blue',
+        // Add additional user-related fields as needed
+      });
+    } catch (e) {
+      print('Error assigning user role: $e');
+    }
   }
 
   String? validatePassword(String? value) {

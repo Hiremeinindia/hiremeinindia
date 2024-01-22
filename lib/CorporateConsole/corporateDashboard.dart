@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,13 +13,12 @@ import '../main.dart';
 
 class CorporateDashboard extends StatefulWidget {
   final User user;
-  const CorporateDashboard(this.user);
+  CorporateDashboard({required this.user});
   @override
   State<CorporateDashboard> createState() => _CorporateDashboard();
 }
 
 class _CorporateDashboard extends State<CorporateDashboard> {
-  @override
   final List<String> items = [
     'Item1',
     'Item2',
@@ -36,6 +36,42 @@ class _CorporateDashboard extends State<CorporateDashboard> {
   bool val1 = false;
 
   bool isPressed = false;
+  String? userName;
+
+  @override
+  void initState() {
+    super.initState();
+    _retrieveUserName(widget.user.uid); // Pass the userId from the widget
+  }
+
+  Future<void> _retrieveUserName(String userId) async {
+    try {
+      // Get the reference to the user document in Firestore
+      DocumentSnapshot<Map<String, dynamic>> userDoc = await FirebaseFirestore
+          .instance
+          .collection('corporateuser')
+          .doc(userId)
+          .get();
+
+      // Check if the document exists
+      if (userDoc.exists) {
+        // Retrieve the username from the document
+        String? username = userDoc.data()?['name'];
+
+        // Update the state with the retrieved username
+        setState(() {
+          userName = username;
+        });
+      } else {
+        // Document doesn't exist
+        print('User not found in Firestore.');
+      }
+    } catch (e) {
+      // Handle errors
+      print('Error retrieving username: $e');
+    }
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
