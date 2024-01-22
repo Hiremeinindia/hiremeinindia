@@ -66,7 +66,7 @@ class Candidate {
         "confirmPassword": confirmPassword,
       };
 
-  static Candidate fromSnapshot(DocumentSnapshot snapshot) {
+  factory Candidate.fromSnapshot(DocumentSnapshot snapshot) {
     var data = snapshot.data() as Map<String, dynamic>;
     return Candidate(
         name: data["name"],

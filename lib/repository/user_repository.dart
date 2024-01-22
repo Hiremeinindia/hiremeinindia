@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:hiremeinindiaapp/Models/candidated.dart';
 import 'package:hiremeinindiaapp/Models/register_model.dart';
 
 class UserRepository extends GetxController {
@@ -10,7 +11,7 @@ class UserRepository extends GetxController {
   final _db = FirebaseFirestore.instance;
   createUser(RegisterModal user) async {
     await _db
-        .collection("Users")
+        .collection("greycollarusers")
         .add(user.tojson())
         .whenComplete(
           () => Get.snackbar(("success"), "Your account has been created",
@@ -25,5 +26,21 @@ class UserRepository extends GetxController {
           colorText: Colors.red);
       print(error.toString());
     });
+  }
+
+  Future<Candidate> getUserDetails(String email) async {
+    final snapshot = await _db
+        .collection("greycollaruser")
+        .where("name", isEqualTo: email)
+        .get();
+    final userData = snapshot.docs.map((e) => Candidate.fromSnapshot(e)).single;
+    return userData;
+  }
+
+  Future<List<Candidate>> allUser() async {
+    final snapshot = await _db.collection("greycollaruser").get();
+    final userData =
+        snapshot.docs.map((e) => Candidate.fromSnapshot(e)).toList();
+    return userData;
   }
 }
