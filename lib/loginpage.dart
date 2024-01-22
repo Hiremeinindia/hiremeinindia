@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hiremeinindiaapp/CorporateConsole/corporateDashboard.dart';
+import 'package:hiremeinindiaapp/authservice.dart';
 import 'package:hiremeinindiaapp/main.dart';
 import 'package:hiremeinindiaapp/userdashboard.dart';
 import 'package:hiremeinindiaapp/widgets/customtextfield.dart';
@@ -33,7 +36,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   CandidateFormController controller = CandidateFormController();
-
+  AuthService authService = AuthService();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   String? selectedValue;
   String email = '';
   String password = '';
@@ -290,21 +294,46 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       onPressed: () async {
-                        UserCredential user = await FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
-                                email: controller.email.text,
-                                password: controller.password.text);
-                        if (user != null) {
-                          email = controller.email.text;
-                          name = controller.name.text;
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) {
-                              return UserDashboard();
-                            }),
+                        try {
+                          // Sign in with email and password
+                          UserCredential userCredential =
+                              await _auth.signInWithEmailAndPassword(
+                            email: controller.email.text,
+                            password: controller.password.text,
                           );
-                        } else {
-                          print('user does not exist');
+
+                          // Check the user's role after successful sign-in
+                          String userRole =
+                              await getUserRole(userCredential.user!.uid);
+
+                          // Navigate to the appropriate dashboard based on the user's role
+                          if (userRole == 'Admin') {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CorporateDashboard(
+                                    user: userCredential.user!),
+                              ),
+                            );
+                            print('User role$userRole');
+                          } else if (userRole == 'Blue' || userRole == 'Grey') {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    UserDashboard(user: userCredential.user!),
+                              ),
+                            );
+                          } else {
+                            print('Unknown user role');
+                          }
+                        } on FirebaseAuthException catch (e) {
+                          // Handle authentication exceptions
+                          if (e.code == 'user-not-found') {
+                            print('No user found for that email.');
+                          } else if (e.code == 'wrong-password') {
+                            print('Wrong password provided.');
+                          }
                         }
                       },
                     )
@@ -316,5 +345,40 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future<String> getUserRole(String uid) async {
+    try {
+      String adminCollection = 'corporateuser';
+      String userCollection = 'greycollaruser';
+
+      // Check if the user is an admin
+      DocumentSnapshot<Map<String, dynamic>> adminSnapshot =
+          await FirebaseFirestore.instance
+              .collection(adminCollection)
+              .doc(uid)
+              .get();
+
+      if (adminSnapshot.exists) {
+        print('User is admin.');
+        return 'Admin';
+      } else {
+        // Check if the user is a regular user
+        DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+            await FirebaseFirestore.instance
+                .collection(userCollection)
+                .doc(uid)
+                .get();
+
+        if (userSnapshot.exists) {
+          print('User is a regular user with Blue role.');
+          return 'Blue';
+        }
+      }
+    } catch (e) {
+      print('Error determining user role: $e');
+    }
+
+    return 'Unknown';
   }
 }

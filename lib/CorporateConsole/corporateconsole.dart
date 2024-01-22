@@ -16,7 +16,6 @@ class CorporateConsole extends StatefulWidget {
 }
 
 class _AdminDashboard extends State<CorporateConsole> {
-  @override
   final List<String> items = [
     'Item1',
     'Item2',

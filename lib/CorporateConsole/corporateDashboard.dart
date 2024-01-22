@@ -1,30 +1,41 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hiremeinindiaapp/CorporateConsole/multipleFilter.dart';
+import '../Classes/language.dart';
+import '../Classes/language_constants.dart';
+import '../Widgets/hiremeinindia.dart';
+import 'columnView.dart';
+import '../Widgets/customTextstyle.dart';
+import '../gen_l10n/app_localizations.dart';
+import '../main.dart';
 
-import 'package:hiremeinindiaapp/widgets/customcard.dart';
-
-import 'Widgets/customtextstyle.dart';
-import 'widgets/custombutton.dart';
-import 'widgets/hiremeinindia.dart';
-import 'classes/language_constants.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'classes/language.dart';
-import 'gen_l10n/app_localizations.dart';
-import 'main.dart';
-
-class UserDashboard extends StatefulWidget {
+class CorporateDashboard extends StatefulWidget {
   final User user;
-  UserDashboard({required this.user});
+  CorporateDashboard({required this.user});
   @override
-  State<UserDashboard> createState() => _UserDashboard();
+  State<CorporateDashboard> createState() => _CorporateDashboard();
 }
 
-class _UserDashboard extends State<UserDashboard> {
-  bool isChecked = false;
+class _CorporateDashboard extends State<CorporateDashboard> {
+  final List<String> items = [
+    'Item1',
+    'Item2',
+    'Item3',
+    'Item4',
+    'Item5',
+    'Item6',
+    'Item7',
+    'Item8',
+  ];
+  String? selectedValue;
+
   bool dropdownValue = false;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  bool val1 = false;
+
+  bool isPressed = false;
   String? userName;
 
   @override
@@ -38,7 +49,7 @@ class _UserDashboard extends State<UserDashboard> {
       // Get the reference to the user document in Firestore
       DocumentSnapshot<Map<String, dynamic>> userDoc = await FirebaseFirestore
           .instance
-          .collection('greycollaruser')
+          .collection('corporateuser')
           .doc(userId)
           .get();
 
@@ -271,20 +282,12 @@ class _UserDashboard extends State<UserDashboard> {
                     ),
                   ),
                   SizedBox(width: 8.0),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          userName ?? "Guest",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        Text(
-                          'User',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ],
+                  SizedBox(
+                    width: 50,
+                    child: Text(
+                      'Guest User',
+                      maxLines: 2,
+                      style: TextStyle(color: Colors.black),
                     ),
                   ),
                 ],
@@ -292,96 +295,197 @@ class _UserDashboard extends State<UserDashboard> {
             ),
           ],
         ),
-        body: Container(
-            padding:
-                EdgeInsets.only(left: 125, right: 125, top: 20, bottom: 20),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              CircleAvatar(
-                backgroundColor: Colors.indigo.shade900,
-                maxRadius: 68,
-                minRadius: 67.5,
-                child: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  maxRadius: 66,
-                  minRadius: 60,
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage('imguser.jpg'),
-                    maxRadius: 59,
-                    minRadius: 56,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              DropdownButtonFormField<String>(
-                icon: const Icon(Icons.arrow_drop_down_sharp),
-                iconSize: 40,
-                iconEnabledColor: Colors.indigo,
-                decoration: InputDecoration(border: InputBorder.none),
-                hint: const Text(
-                  'Hello Saravanan',
-                  style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 20,
-                      color: Colors.indigo,
-                      fontWeight: FontWeight.w900),
-                ),
-                dropdownColor: Colors.indigo,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    dropdownValue = newValue! as bool;
-                  });
-                },
-                items: <String>['Apple', 'Mango', 'Banana', 'Peach']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: TextStyle(color: Colors.white),
+        body: Column(
+          children: [
+            Container(
+              padding:
+                  EdgeInsets.only(left: 170, right: 170, top: 20, bottom: 20),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 10,
                     ),
-                  );
-                }).toList(),
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              Row(
-                children: [
-                  CustomCard(
-                    color: Color.fromARGB(255, 153, 51, 49),
-                    title1: translation(context).noOfOffers,
-                    title2: '1',
-                  ),
-                  SizedBox(
-                    width: 60,
-                  ),
-                  CustomCard(
-                    color: Color.fromARGB(224, 92, 181, 95),
-                    title1: translation(context).noOfProfileVisits,
-                    title2: '100',
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 75,
-              ),
-              Flexible(
-                  child: Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: CustomButton(
-                  text: translation(context).registerforOther,
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => const AdminConsole()),
-                    // );
-                  },
-                ),
-              ))
-            ])));
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        isPressed ? 'Multiple View' : 'Column View',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DropdownButtonHideUnderline(
+                              child: DropdownButton2<String>(
+                                isExpanded: true,
+                                hint: const Row(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        'Hello Krithick',
+                                        style: CustomTextStyle.nameOfUser,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                items: items
+                                    .map((String item) =>
+                                        DropdownMenuItem<String>(
+                                          value: item,
+                                          child: Text(
+                                            item,
+                                            style: CustomTextStyle.nameOflist,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ))
+                                    .toList(),
+                                value: selectedValue,
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    selectedValue = value;
+                                  });
+                                },
+                                buttonStyleData: ButtonStyleData(
+                                  height: 50,
+                                  width: 270,
+                                  elevation: 1,
+                                ),
+                                iconStyleData: const IconStyleData(
+                                  icon: Icon(
+                                    Icons.arrow_drop_down_sharp,
+                                  ),
+                                  iconSize: 45,
+                                  iconEnabledColor: Colors.indigo,
+                                  iconDisabledColor: null,
+                                ),
+                                dropdownStyleData: DropdownStyleData(
+                                  maxHeight: 210,
+                                  width: 270,
+                                  elevation: 0,
+                                  padding: EdgeInsets.only(
+                                      left: 10, right: 10, top: 5, bottom: 15),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(color: Colors.black),
+                                    color: Colors.white,
+                                  ),
+                                  scrollPadding: EdgeInsets.all(5),
+                                  scrollbarTheme: ScrollbarThemeData(
+                                    thickness:
+                                        MaterialStateProperty.all<double>(6),
+                                    thumbVisibility:
+                                        MaterialStateProperty.all<bool>(true),
+                                  ),
+                                ),
+                                menuItemStyleData: const MenuItemStyleData(
+                                  height: 50,
+                                  padding: EdgeInsets.only(left: 14, right: 14),
+                                ),
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  'HR Manager',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.indigo.shade900,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Poppins'),
+                                ),
+                                Text('|'),
+                                Text(
+                                  'Tata Salt',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.indigo.shade900,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Poppins'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                SizedBox(
+                                  height: 40,
+                                  width: 73,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: isPressed
+                                          ? Colors.indigo.shade900
+                                          : Colors.grey,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            7), // Adjust border radius as needed
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        isPressed = !isPressed;
+                                      });
+                                    },
+                                    child: ImageIcon(
+                                      AssetImage("filter.png"),
+                                      size: 25,
+                                      color: isPressed
+                                          ? Colors.white
+                                          : Colors.indigo.shade900,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 40,
+                                  width: 73,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: isPressed
+                                          ? Colors.white
+                                          : Colors.indigo.shade900,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            7), // Adjust border radius as needed
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        isPressed = !isPressed;
+                                      });
+                                    },
+                                    child: ImageIcon(
+                                      AssetImage("column.png"),
+                                      size: 25,
+                                      color: isPressed
+                                          ? Colors.indigo.shade900
+                                          : Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    isPressed ? MultipleFilter() : ColumnView(),
+                  ]),
+            ),
+          ],
+        ));
   }
 }

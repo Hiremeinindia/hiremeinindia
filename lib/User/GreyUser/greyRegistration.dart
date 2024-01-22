@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -66,11 +67,13 @@ class _RegistrationState extends State<Registration> {
 
   List<String> selectedSkill = [];
   List<String> selectedWorkin = [];
-
+  var label = 'Grey';
   String? skillvalue;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  String selectedOption = '';
   String? wokinvalue;
-  static const Skill = [
+  static const GreySkill = [
     'Plumber',
     'Senior Plumber',
     'Junior Plumber',
@@ -80,7 +83,7 @@ class _RegistrationState extends State<Registration> {
     'Junior Electrician',
     'Skill 2',
   ];
-  static const Workin = [
+  static const GreyWorkin = [
     'Plumber',
     'Senior Plumber',
     'Junior Plumber',
@@ -90,7 +93,72 @@ class _RegistrationState extends State<Registration> {
     'Junior Electrician',
     'Skill 2',
   ];
-
+  List<String> BlueSkill = [
+    'Electrician',
+    'Mechanic',
+    'Construction Helper ',
+    'Meson ',
+    'Ac Technician',
+    'Telecom Technician',
+    'Plumber',
+    'Construction Worker',
+    'Welder',
+    'Fitter',
+    'Carpenter',
+    'Machine Operators',
+    'Operator',
+    'Drivers',
+    'Painter ',
+    'Aircraft mechanic',
+    'Security',
+    'Logistics Labours',
+    'Airport Ground workers',
+    'Delivery Workers',
+    'Cleaners',
+    'Cook',
+    'Office Boy',
+    'Maid',
+    'Collection Staff',
+    'Shop Keepers',
+    'Electronic repair Technicians ',
+    'Barber',
+    'Beautician',
+    'Catering Workers',
+    'Pest Control'
+  ];
+  List<String> BlueWorkin = [
+    'Electrician',
+    'Mechanic',
+    'Construction Helper ',
+    'Meson ',
+    'Ac Technician',
+    'Telecom Technician',
+    'Plumber',
+    'Construction Worker',
+    'Welder',
+    'Fitter',
+    'Carpenter',
+    'Machine Operators',
+    'Operator',
+    'Drivers',
+    'Painter ',
+    'Aircraft mechanic',
+    'Security',
+    'Logistics Labours',
+    'Airport Ground workers',
+    'Delivery Workers',
+    'Cleaners',
+    'Cook',
+    'Office Boy',
+    'Maid',
+    'Collection Staff',
+    'Shop Keepers',
+    'Electronic repair Technicians ',
+    'Barber',
+    'Beautician',
+    'Catering Workers',
+    'Pest Control'
+  ];
   _onDelete(index) {
     setState(() {
       _values.removeAt(index);
@@ -755,54 +823,25 @@ class _RegistrationState extends State<Registration> {
                 padding: const EdgeInsets.only(left: 160),
                 child: Row(
                   children: [
-                    Checkbox(
-                      value: blueChecked,
-                      onChanged: (bool? value) {
+                    Radio(
+                      value: 'Blue',
+                      groupValue: controller.selectedOption.text,
+                      onChanged: (value) {
                         setState(() {
-                          blueChecked = value ?? false;
+                          controller.selectedOption.text = value.toString();
                         });
                       },
-                      fillColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.selected)) {
-                            return Colors.indigo.shade900;
-                          }
-                          return Colors.transparent;
-                        },
-                      ),
-                      checkColor: Colors.white,
-                      side: BorderSide(
-                        color: Colors.indigo.shade900,
-                        width: 3.5,
-                      ),
                     ),
-                    Text(
-                      translation(context).blueColler,
-                    ),
-                    Checkbox(
-                      value: greyChecked,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          greyChecked = value ?? false;
-                        });
-                      },
-                      fillColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.selected)) {
-                            return Colors.indigo.shade900;
-                          }
-                          return Colors.transparent;
-                        },
-                      ),
-                      checkColor: Colors.white,
-                      side: BorderSide(
-                        color: Colors.indigo.shade900,
-                        width: 3.5,
-                      ),
-                    ),
-                    Text(
-                      translation(context).greyColler,
-                    ),
+                    Text('Blue Collar'),
+                    Radio(
+                        value: 'Grey',
+                        groupValue: controller.selectedOption.text,
+                        onChanged: (value) {
+                          setState(() {
+                            controller.selectedOption.text = value.toString();
+                          });
+                        }),
+                    Text('Grey Collar'),
                   ],
                 ),
               ),
@@ -1159,254 +1198,573 @@ class _RegistrationState extends State<Registration> {
                       SizedBox(
                         height: 40,
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            translation(context).skills,
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 120,
-                          ),
-                          Wrap(
-                            spacing: 8.0,
-                            runSpacing: 8.0,
-                            children: controller.selectedSkills
-                                .map(
-                                  (value) => Chip(
-                                    backgroundColor: Colors.indigo.shade900,
-                                    label: Text(
-                                      value,
-                                      style: TextStyle(color: Colors.white),
+                      controller.selectedOption.text == 'Blue'
+                          ? Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      translation(context).skills,
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                    onDeleted: () {
-                                      setState(() {
-                                        controller.selectedSkills.remove(value);
-                                      });
-                                    },
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Expanded(
-                            child: Container(
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(1),
-                                  border: Border.all(color: Colors.black),
+                                    SizedBox(
+                                      width: 120,
+                                    ),
+                                    Wrap(
+                                      spacing: 8.0,
+                                      runSpacing: 8.0,
+                                      children: controller.selectedSkills
+                                          .map(
+                                            (value) => Chip(
+                                              backgroundColor:
+                                                  Colors.indigo.shade900,
+                                              label: Text(
+                                                value,
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              onDeleted: () {
+                                                setState(() {
+                                                  controller.selectedSkills
+                                                      .remove(value);
+                                                });
+                                              },
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(1),
+                                            border:
+                                                Border.all(color: Colors.black),
+                                          ),
+                                          child: DropdownButtonHideUnderline(
+                                            child: DropdownButton2<String>(
+                                              value: skillvalue,
+                                              buttonStyleData: ButtonStyleData(
+                                                height: 30,
+                                                width: 200,
+                                                elevation: 1,
+                                                padding: const EdgeInsets.only(
+                                                    left: 14, right: 14),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                  border: Border.all(
+                                                    color: Colors.black26,
+                                                  ),
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              iconStyleData:
+                                                  const IconStyleData(
+                                                icon: Icon(
+                                                  Icons.arrow_drop_down_sharp,
+                                                ),
+                                                iconSize: 25,
+                                                iconEnabledColor: Colors.white,
+                                                iconDisabledColor: null,
+                                              ),
+                                              dropdownStyleData:
+                                                  DropdownStyleData(
+                                                maxHeight: 210,
+                                                width: 300,
+                                                elevation: 0,
+                                                padding: EdgeInsets.only(
+                                                    left: 10,
+                                                    right: 10,
+                                                    top: 5,
+                                                    bottom: 15),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  border: Border.all(
+                                                      color: Colors.black),
+                                                  color: Colors.indigo.shade900,
+                                                ),
+                                                scrollPadding:
+                                                    EdgeInsets.all(5),
+                                                scrollbarTheme:
+                                                    ScrollbarThemeData(
+                                                  thickness:
+                                                      MaterialStateProperty.all<
+                                                          double>(6),
+                                                  thumbVisibility:
+                                                      MaterialStateProperty.all<
+                                                          bool>(true),
+                                                ),
+                                              ),
+                                              menuItemStyleData:
+                                                  const MenuItemStyleData(
+                                                height: 25,
+                                                padding: EdgeInsets.only(
+                                                    left: 14, right: 14),
+                                              ),
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              underline: Container(
+                                                height: 0,
+                                              ),
+                                              onChanged: (String? newValue) {
+                                                setState(() {
+                                                  int selectionLimit = 2;
+                                                  if (newValue != null &&
+                                                      controller.selectedSkills
+                                                              .length <
+                                                          selectionLimit) {
+                                                    if (!controller
+                                                        .selectedSkills
+                                                        .contains(newValue)) {
+                                                      controller.selectedSkills
+                                                          .add(newValue);
+                                                    }
+                                                  }
+                                                });
+                                              },
+                                              items: BlueSkill.map<
+                                                  DropdownMenuItem<String>>(
+                                                (String value) {
+                                                  return DropdownMenuItem<
+                                                      String>(
+                                                    value: value,
+                                                    child: Text(value),
+                                                  );
+                                                },
+                                              ).toList(),
+                                            ),
+                                          )),
+                                    ),
+                                  ],
                                 ),
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton2<String>(
-                                    value: skillvalue,
-                                    buttonStyleData: ButtonStyleData(
-                                      height: 30,
-                                      width: 200,
-                                      elevation: 1,
-                                      padding: const EdgeInsets.only(
-                                          left: 14, right: 14),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(4),
-                                        border: Border.all(
-                                          color: Colors.black26,
+                                SizedBox(
+                                  height: 40,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      translation(context).lookingWork,
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Wrap(
+                                      spacing: 8.0,
+                                      runSpacing: 8.0,
+                                      children: controller.selectedWorkins
+                                          .map(
+                                            (value) => Chip(
+                                              backgroundColor:
+                                                  Colors.indigo.shade900,
+                                              label: Text(
+                                                value,
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              onDeleted: () {
+                                                setState(() {
+                                                  controller.selectedWorkins
+                                                      .remove(value);
+                                                });
+                                              },
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(1),
+                                            border: Border.all(
+                                                color: Colors.black)),
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton2<String>(
+                                            value: wokinvalue,
+                                            buttonStyleData: ButtonStyleData(
+                                              height: 30,
+                                              width: 200,
+                                              elevation: 1,
+                                              padding: const EdgeInsets.only(
+                                                  left: 14, right: 14),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                                border: Border.all(
+                                                  color: Colors.black26,
+                                                ),
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            iconStyleData: const IconStyleData(
+                                              icon: Icon(
+                                                Icons.arrow_drop_down_sharp,
+                                              ),
+                                              iconSize: 25,
+                                              iconEnabledColor: Colors.white,
+                                              iconDisabledColor: null,
+                                            ),
+                                            dropdownStyleData:
+                                                DropdownStyleData(
+                                              maxHeight: 210,
+                                              width: 300,
+                                              elevation: 0,
+                                              padding: EdgeInsets.only(
+                                                  left: 10,
+                                                  right: 10,
+                                                  top: 5,
+                                                  bottom: 15),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                border: Border.all(
+                                                    color: Colors.black),
+                                                color: Colors.indigo.shade900,
+                                              ),
+                                              scrollPadding: EdgeInsets.all(5),
+                                              scrollbarTheme:
+                                                  ScrollbarThemeData(
+                                                thickness: MaterialStateProperty
+                                                    .all<double>(6),
+                                                thumbVisibility:
+                                                    MaterialStateProperty.all<
+                                                        bool>(true),
+                                              ),
+                                            ),
+                                            menuItemStyleData:
+                                                const MenuItemStyleData(
+                                              height: 25,
+                                              padding: EdgeInsets.only(
+                                                  left: 14, right: 14),
+                                            ),
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                            underline: Container(
+                                              height: 0,
+                                            ),
+                                            onChanged: (String? newValue) {
+                                              setState(() {
+                                                if (newValue != null &&
+                                                    !controller.selectedWorkins
+                                                        .contains(newValue)) {
+                                                  controller.selectedWorkins
+                                                      .add(newValue);
+                                                }
+                                              });
+                                            },
+                                            items: BlueWorkin.map<
+                                                    DropdownMenuItem<String>>(
+                                                (String value) {
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value),
+                                              );
+                                            }).toList(),
+                                          ),
                                         ),
-                                        color: Colors.white,
                                       ),
                                     ),
-                                    iconStyleData: const IconStyleData(
-                                      icon: Icon(
-                                        Icons.arrow_drop_down_sharp,
-                                      ),
-                                      iconSize: 25,
-                                      iconEnabledColor: Colors.white,
-                                      iconDisabledColor: null,
-                                    ),
-                                    dropdownStyleData: DropdownStyleData(
-                                      maxHeight: 210,
-                                      width: 300,
-                                      elevation: 0,
-                                      padding: EdgeInsets.only(
-                                          left: 10,
-                                          right: 10,
-                                          top: 5,
-                                          bottom: 15),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        border: Border.all(color: Colors.black),
-                                        color: Colors.indigo.shade900,
-                                      ),
-                                      scrollPadding: EdgeInsets.all(5),
-                                      scrollbarTheme: ScrollbarThemeData(
-                                        thickness:
-                                            MaterialStateProperty.all<double>(
-                                                6),
-                                        thumbVisibility:
-                                            MaterialStateProperty.all<bool>(
-                                                true),
-                                      ),
-                                    ),
-                                    menuItemStyleData: const MenuItemStyleData(
-                                      height: 25,
-                                      padding:
-                                          EdgeInsets.only(left: 14, right: 14),
-                                    ),
-                                    style: const TextStyle(color: Colors.white),
-                                    underline: Container(
-                                      height: 0,
-                                    ),
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        int selectionLimit = 2;
-                                        if (newValue != null &&
-                                            controller.selectedSkills.length <
-                                                selectionLimit) {
-                                          if (!controller.selectedSkills
-                                              .contains(newValue)) {
-                                            controller.selectedSkills
-                                                .add(newValue);
-                                          }
-                                        }
-                                      });
-                                    },
-                                    items: Skill.map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      },
-                                    ).toList(),
-                                  ),
-                                )),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 40,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            translation(context).lookingWork,
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(width: 10),
-                          Wrap(
-                            spacing: 8.0,
-                            runSpacing: 8.0,
-                            children: controller.selectedWorkins
-                                .map(
-                                  (value) => Chip(
-                                    backgroundColor: Colors.indigo.shade900,
-                                    label: Text(
-                                      value,
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    onDeleted: () {
-                                      setState(() {
-                                        controller.selectedWorkins
-                                            .remove(value);
-                                      });
-                                    },
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Expanded(
-                            child: Container(
-                              height: 30,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(1),
-                                  border: Border.all(color: Colors.black)),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton2<String>(
-                                  value: wokinvalue,
-                                  buttonStyleData: ButtonStyleData(
-                                    height: 30,
-                                    width: 200,
-                                    elevation: 1,
-                                    padding: const EdgeInsets.only(
-                                        left: 14, right: 14),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
-                                      border: Border.all(
-                                        color: Colors.black26,
-                                      ),
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  iconStyleData: const IconStyleData(
-                                    icon: Icon(
-                                      Icons.arrow_drop_down_sharp,
-                                    ),
-                                    iconSize: 25,
-                                    iconEnabledColor: Colors.white,
-                                    iconDisabledColor: null,
-                                  ),
-                                  dropdownStyleData: DropdownStyleData(
-                                    maxHeight: 210,
-                                    width: 300,
-                                    elevation: 0,
-                                    padding: EdgeInsets.only(
-                                        left: 10,
-                                        right: 10,
-                                        top: 5,
-                                        bottom: 15),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(color: Colors.black),
-                                      color: Colors.indigo.shade900,
-                                    ),
-                                    scrollPadding: EdgeInsets.all(5),
-                                    scrollbarTheme: ScrollbarThemeData(
-                                      thickness:
-                                          MaterialStateProperty.all<double>(6),
-                                      thumbVisibility:
-                                          MaterialStateProperty.all<bool>(true),
-                                    ),
-                                  ),
-                                  menuItemStyleData: const MenuItemStyleData(
-                                    height: 25,
-                                    padding:
-                                        EdgeInsets.only(left: 14, right: 14),
-                                  ),
-                                  style: const TextStyle(color: Colors.white),
-                                  underline: Container(
-                                    height: 0,
-                                  ),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      if (newValue != null &&
-                                          !controller.selectedWorkins
-                                              .contains(newValue)) {
-                                        controller.selectedWorkins
-                                            .add(newValue);
-                                      }
-                                    });
-                                  },
-                                  items: Workin.map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
+                                  ],
                                 ),
-                              ),
+                              ],
+                            )
+                          : Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      translation(context).skills,
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 120,
+                                    ),
+                                    Wrap(
+                                      spacing: 8.0,
+                                      runSpacing: 8.0,
+                                      children: controller.selectedSkills
+                                          .map(
+                                            (value) => Chip(
+                                              backgroundColor:
+                                                  Colors.indigo.shade900,
+                                              label: Text(
+                                                value,
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              onDeleted: () {
+                                                setState(() {
+                                                  controller.selectedSkills
+                                                      .remove(value);
+                                                });
+                                              },
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(1),
+                                            border:
+                                                Border.all(color: Colors.black),
+                                          ),
+                                          child: DropdownButtonHideUnderline(
+                                            child: DropdownButton2<String>(
+                                              value: skillvalue,
+                                              buttonStyleData: ButtonStyleData(
+                                                height: 30,
+                                                width: 200,
+                                                elevation: 1,
+                                                padding: const EdgeInsets.only(
+                                                    left: 14, right: 14),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                  border: Border.all(
+                                                    color: Colors.black26,
+                                                  ),
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              iconStyleData:
+                                                  const IconStyleData(
+                                                icon: Icon(
+                                                  Icons.arrow_drop_down_sharp,
+                                                ),
+                                                iconSize: 25,
+                                                iconEnabledColor: Colors.white,
+                                                iconDisabledColor: null,
+                                              ),
+                                              dropdownStyleData:
+                                                  DropdownStyleData(
+                                                maxHeight: 210,
+                                                width: 300,
+                                                elevation: 0,
+                                                padding: EdgeInsets.only(
+                                                    left: 10,
+                                                    right: 10,
+                                                    top: 5,
+                                                    bottom: 15),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  border: Border.all(
+                                                      color: Colors.black),
+                                                  color: Colors.indigo.shade900,
+                                                ),
+                                                scrollPadding:
+                                                    EdgeInsets.all(5),
+                                                scrollbarTheme:
+                                                    ScrollbarThemeData(
+                                                  thickness:
+                                                      MaterialStateProperty.all<
+                                                          double>(6),
+                                                  thumbVisibility:
+                                                      MaterialStateProperty.all<
+                                                          bool>(true),
+                                                ),
+                                              ),
+                                              menuItemStyleData:
+                                                  const MenuItemStyleData(
+                                                height: 25,
+                                                padding: EdgeInsets.only(
+                                                    left: 14, right: 14),
+                                              ),
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              underline: Container(
+                                                height: 0,
+                                              ),
+                                              onChanged: (String? newValue) {
+                                                setState(() {
+                                                  int selectionLimit = 2;
+                                                  if (newValue != null &&
+                                                      controller.selectedSkills
+                                                              .length <
+                                                          selectionLimit) {
+                                                    if (!controller
+                                                        .selectedSkills
+                                                        .contains(newValue)) {
+                                                      controller.selectedSkills
+                                                          .add(newValue);
+                                                    }
+                                                  }
+                                                });
+                                              },
+                                              items: GreySkill.map<
+                                                  DropdownMenuItem<String>>(
+                                                (String value) {
+                                                  return DropdownMenuItem<
+                                                      String>(
+                                                    value: value,
+                                                    child: Text(value),
+                                                  );
+                                                },
+                                              ).toList(),
+                                            ),
+                                          )),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 40,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      translation(context).lookingWork,
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Wrap(
+                                      spacing: 8.0,
+                                      runSpacing: 8.0,
+                                      children: controller.selectedWorkins
+                                          .map(
+                                            (value) => Chip(
+                                              backgroundColor:
+                                                  Colors.indigo.shade900,
+                                              label: Text(
+                                                value,
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              onDeleted: () {
+                                                setState(() {
+                                                  controller.selectedWorkins
+                                                      .remove(value);
+                                                });
+                                              },
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(1),
+                                            border: Border.all(
+                                                color: Colors.black)),
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton2<String>(
+                                            value: wokinvalue,
+                                            buttonStyleData: ButtonStyleData(
+                                              height: 30,
+                                              width: 200,
+                                              elevation: 1,
+                                              padding: const EdgeInsets.only(
+                                                  left: 14, right: 14),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                                border: Border.all(
+                                                  color: Colors.black26,
+                                                ),
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            iconStyleData: const IconStyleData(
+                                              icon: Icon(
+                                                Icons.arrow_drop_down_sharp,
+                                              ),
+                                              iconSize: 25,
+                                              iconEnabledColor: Colors.white,
+                                              iconDisabledColor: null,
+                                            ),
+                                            dropdownStyleData:
+                                                DropdownStyleData(
+                                              maxHeight: 210,
+                                              width: 300,
+                                              elevation: 0,
+                                              padding: EdgeInsets.only(
+                                                  left: 10,
+                                                  right: 10,
+                                                  top: 5,
+                                                  bottom: 15),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                border: Border.all(
+                                                    color: Colors.black),
+                                                color: Colors.indigo.shade900,
+                                              ),
+                                              scrollPadding: EdgeInsets.all(5),
+                                              scrollbarTheme:
+                                                  ScrollbarThemeData(
+                                                thickness: MaterialStateProperty
+                                                    .all<double>(6),
+                                                thumbVisibility:
+                                                    MaterialStateProperty.all<
+                                                        bool>(true),
+                                              ),
+                                            ),
+                                            menuItemStyleData:
+                                                const MenuItemStyleData(
+                                              height: 25,
+                                              padding: EdgeInsets.only(
+                                                  left: 14, right: 14),
+                                            ),
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                            underline: Container(
+                                              height: 0,
+                                            ),
+                                            onChanged: (String? newValue) {
+                                              setState(() {
+                                                if (newValue != null &&
+                                                    !controller.selectedWorkins
+                                                        .contains(newValue)) {
+                                                  controller.selectedWorkins
+                                                      .add(newValue);
+                                                }
+                                              });
+                                            },
+                                            items: GreyWorkin.map<
+                                                    DropdownMenuItem<String>>(
+                                                (String value) {
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value),
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
                       SizedBox(
                         height: 35,
                       ),
@@ -1420,32 +1778,36 @@ class _RegistrationState extends State<Registration> {
                           SizedBox(width: 50),
                           CustomButton(
                             text: translation(context).next,
-                            onPressed: () {
+                            onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                var future;
                                 var candidateController = CandidateController(
                                     formController: controller);
-                                if (widget.candidate == null) {}
+
                                 if (widget.candidate == null) {
-                                  future = candidateController
-                                      .addCandidate(controller);
-                                } else {
-                                  future =
-                                      candidateController.updateCandidate();
+                                  candidateController.addCandidate(controller);
                                 }
 
-                                FirebaseAuth.instance
-                                    .createUserWithEmailAndPassword(
-                                        email: controller.email.text,
-                                        password: controller.password.text)
-                                    .then((value) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => HomePage()));
-                                }).onError((error, stackTrace) {
-                                  print("Error ${error.toString()}");
-                                });
+                                try {
+                                  // Sign up with email and password
+                                  UserCredential userCredential = await _auth
+                                      .createUserWithEmailAndPassword(
+                                    email: controller.email.text,
+                                    password: controller.password.text,
+                                  );
+
+                                  // Assign the user role to the user
+                                  await assignUserRole(
+                                      userCredential.user!.uid, 'Blue');
+
+                                  // Navigate back to the login page after successful signup
+                                  Navigator.pop(context);
+                                } on FirebaseAuthException catch (e) {
+                                  // Handle authentication exceptions
+                                  if (e.code == 'email-already-in-use') {
+                                    print(
+                                        'The account already exists for that email.');
+                                  }
+                                }
                               }
                             },
                           ),
@@ -1463,6 +1825,20 @@ class _RegistrationState extends State<Registration> {
         ),
       ),
     );
+  }
+
+  Future<void> assignUserRole(String uid, String role) async {
+    try {
+      String userCollection = 'greycollaruser';
+
+      // Assign the user role to the user
+      await FirebaseFirestore.instance.collection(userCollection).doc(uid).set({
+        'label': 'Blue',
+        // Add additional user-related fields as needed
+      });
+    } catch (e) {
+      print('Error assigning user role: $e');
+    }
   }
 
   String? validatePassword(String? value) {

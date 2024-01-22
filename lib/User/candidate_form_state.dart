@@ -28,6 +28,7 @@ class CandidateFormController {
   final confirmPassword = TextEditingController();
   List<String> selectedSkills = [];
   List<String> selectedWorkins = [];
+  late final selectedOption = TextEditingController();
 
   // String get newDocId => FirebaseFirestore.instance.collection('Candidates').doc().id;
 
@@ -55,6 +56,7 @@ class CandidateFormController {
         password: password.text,
         otpm: otpm.text,
         code: code.text,
+        selectedOption: selectedOption.text,
         confirmPassword: confirmPassword.text,
         country: country.text,
       );

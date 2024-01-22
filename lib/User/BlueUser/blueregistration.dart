@@ -10,8 +10,6 @@ import 'package:email_otp/email_otp.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:hiremeinindiaapp/User/candidate_form_state.dart';
 import 'package:hiremeinindiaapp/Models/candidated.dart';
-import 'package:super_tag_editor/tag_editor.dart';
-import 'package:super_tag_editor/widgets/rich_text_widget.dart';
 import '../../Widgets/customtextstyle.dart';
 import 'blueuserupload.dart';
 import '../../classes/language.dart';
@@ -85,12 +83,9 @@ class _BlueRegistrationState extends State<BlueRegistration> {
 
   var isLoading = false;
 
-  final FocusNode _focusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   EmailOTP myauth = EmailOTP();
   BlueCandidateFormController bluecontroller = BlueCandidateFormController();
-  final DatabaseReference _blueuserRef =
-      FirebaseDatabase.instance.reference().child('bluecollarusers');
 
   List<String> Workin = [
     'Electrician',

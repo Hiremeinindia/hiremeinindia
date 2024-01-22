@@ -38,7 +38,6 @@ class _HiredState extends State<Hired> {
 
   @override
   Widget build(BuildContext context) {
-    var query;
     return Scaffold(
       appBar: AppBar(
         title: HireMeInIndia(),

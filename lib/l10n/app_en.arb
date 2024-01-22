@@ -80,5 +80,7 @@
   "hire": "Hire",
   "meIn": "mein",
   "india": "India",
-  "currentCountry": "Current Country"
+  "currentCountry": "Current Country",
+  "confirmPassword": "Confirm Password",
+  "companyName": "Company Name"
 }

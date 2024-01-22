@@ -1,16 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:hiremeinindiaapp/User/GreyUser/greyRegistration.dart';
-import 'package:hiremeinindiaapp/adminconsole.dart';
-import 'package:hiremeinindiaapp/admintest.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
-import 'package:hiremeinindiaapp/userdashboard.dart';
-import 'package:hiremeinindiaapp/userpayment.dart';
-
-import 'User/BlueUser/blueregistration.dart';
 import 'classes/language_constants.dart';
 
 const String channelId = 'cash_notification_channel';
@@ -90,7 +82,7 @@ class _HireAppState extends State<HireApp> {
       supportedLocales: AppLocalizations.supportedLocales,
       locale: _locale,
       debugShowCheckedModeBanner: false,
-      home: NewUserPayment(),
+      home: LoginPage(),
     );
   }
 }

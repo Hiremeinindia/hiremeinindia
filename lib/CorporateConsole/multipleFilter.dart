@@ -2,7 +2,8 @@ import '../Widgets/customtextstyle.dart';
 import '../classes/language_constants.dart';
 import 'package:flutter/material.dart';
 
-final class MultipleFilter extends StatelessWidget {
+// ignore: must_be_immutable
+class MultipleFilter extends StatelessWidget {
   Widget? child;
   final Function()? onPressed;
   IconData? icon;
