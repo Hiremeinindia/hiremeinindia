@@ -6,14 +6,14 @@ import '../Models/results.dart';
 
 class CandidateController {
   CandidateController({
-    required this.formController,
+    this.formController,
   });
-  final CandidateFormController formController;
+  final CandidateFormController? formController;
 
   static final candidateRef =
       FirebaseFirestore.instance.collection('greycollaruser');
 
-  Candidate get candidate => formController.candidate;
+  Candidate get candidate => formController!.candidate;
 
   Future<void> addCandidate(CandidateFormController controller) async {
     try {
@@ -28,10 +28,10 @@ class CandidateController {
         "qualification": controller.qualification.text,
         "state": controller.state.text,
         "address": controller.address.text,
-        'selectedWorkins': controller.selectedWorkins,
+        'selectedWorkins': controller.selectedWorkins ?? [],
         "city": controller.city.text,
         "country": controller.country.text,
-        'selectedSkills': controller.selectedSkills,
+        'selectedSkills': controller.selectedSkills ?? [],
         "label": controller.selectedOption.text,
       }, SetOptions(merge: true));
 
@@ -94,10 +94,10 @@ class BlueCandidateController {
         "qualification": bluecontroller.qualification.text,
         "state": bluecontroller.state.text,
         "address": bluecontroller.address.text,
-        'selectedWorkins': bluecontroller.selectedWorkins,
+        'selectedWorkins': bluecontroller.selectedWorkins ?? [],
         "city": bluecontroller.city.text,
         "country": bluecontroller.country.text,
-        'selectedSkills': bluecontroller.selectedSkills,
+        'selectedSkills': bluecontroller.selectedSkills ?? [],
       }, SetOptions(merge: true));
 
       print('Candidate added successfully');

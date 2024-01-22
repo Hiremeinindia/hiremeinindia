@@ -15,6 +15,7 @@ import 'main.dart';
 
 class UserDashboard extends StatefulWidget {
   final User user;
+  String _userName = '';
   UserDashboard({required this.user});
   @override
   State<UserDashboard> createState() => _UserDashboard();
@@ -23,43 +24,6 @@ class UserDashboard extends StatefulWidget {
 class _UserDashboard extends State<UserDashboard> {
   bool isChecked = false;
   bool dropdownValue = false;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  String? userName;
-
-  @override
-  void initState() {
-    super.initState();
-    _retrieveUserName(widget.user.uid); // Pass the userId from the widget
-  }
-
-  Future<void> _retrieveUserName(String userId) async {
-    try {
-      // Get the reference to the user document in Firestore
-      DocumentSnapshot<Map<String, dynamic>> userDoc = await FirebaseFirestore
-          .instance
-          .collection('greycollaruser')
-          .doc(userId)
-          .get();
-
-      // Check if the document exists
-      if (userDoc.exists) {
-        // Retrieve the username from the document
-        String? username = userDoc.data()?['name'];
-
-        // Update the state with the retrieved username
-        setState(() {
-          userName = username;
-        });
-      } else {
-        // Document doesn't exist
-        print('User not found in Firestore.');
-      }
-    } catch (e) {
-      // Handle errors
-      print('Error retrieving username: $e');
-    }
-  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -271,22 +235,44 @@ class _UserDashboard extends State<UserDashboard> {
                     ),
                   ),
                   SizedBox(width: 8.0),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          userName ?? "Guest",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        Text(
-                          'User',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ],
-                    ),
-                  ),
+                  StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                    stream: FirebaseFirestore.instance
+                        .collection('greycollaruser')
+                        .doc(
+                            'SPECIFIC_USER_UID') // Replace 'SPECIFIC_USER_UID' with the actual UID of the user you want to fetch
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                            snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Something went wrong');
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text("Loading");
+                      }
+
+                      Map<String, dynamic>? userData = snapshot.data?.data();
+
+                      if (userData != null) {
+                        // Access the user's details from the 'userData' map
+                        String userName = userData['name'];
+                        String userEmail = userData['email'];
+
+                        // Use the user details as needed
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('User Name: $userName'),
+                            Text('User Email: $userEmail'),
+                            // Add other widgets as needed
+                          ],
+                        );
+                      } else {
+                        // Handle the case where user data is null
+                        return Text('User data is null');
+                      }
+                    },
+                  )
                 ],
               ),
             ),

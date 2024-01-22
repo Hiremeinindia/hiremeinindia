@@ -317,13 +317,12 @@ class _LoginPageState extends State<LoginPage> {
                             );
                             print('User role$userRole');
                           } else if (userRole == 'Blue' || userRole == 'Grey') {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    UserDashboard(user: userCredential.user!),
-                              ),
-                            );
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      UserDashboard(user: userCredential.user!),
+                                ));
                           } else {
                             print('Unknown user role');
                           }
