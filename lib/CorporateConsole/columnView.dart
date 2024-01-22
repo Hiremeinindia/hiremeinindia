@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hiremeinindiaapp/homepage.dart';
 
-import 'corporateconsole.dart';
 import '../Models/candidated.dart';
 import '../classes/language_constants.dart';
 import '../widgets/customcard.dart';
@@ -19,8 +19,24 @@ class _ColumnViewState extends State<ColumnView> {
     super.initState();
   }
 
-  final agentsRef = FirebaseFirestore.instance.collection("users");
   late Query<Map<String, dynamic>> query;
+  Future<int> totalCandidatesCount() async {
+    int blueCount = await greycountDocuments();
+    int greyCount = await greycountDocuments();
+
+    return blueCount + greyCount;
+  }
+
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  Future<int> greycountDocuments() async {
+    QuerySnapshot<Map<String, dynamic>> myDoc =
+        await firestore.collection('greycollaruser').get();
+    List<DocumentSnapshot<Map<String, dynamic>>> myDocCount = myDoc.docs;
+    return myDocCount.length; // Return the count of documents in the collection
+  }
+
+  final agentsRef = FirebaseFirestore.instance.collection("greycollaruser");
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,31 +45,178 @@ class _ColumnViewState extends State<ColumnView> {
         padding: const EdgeInsets.only(left: 170, right: 170),
         child: Row(
           children: [
-            Expanded(
-              child: CustomCard(
-                color: Color.fromARGB(255, 153, 51, 49),
-                title1: translation(context).noOfCandidates,
-                title2: '200',
+            InkWell(
+              onTap: () {},
+              child: Container(
+                height: 100,
+                width: 200,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color.fromARGB(255, 140, 138, 138),
+                      spreadRadius: 0.5, //spread radius
+                      blurRadius: 4, // blu
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Color.fromARGB(255, 153, 51, 49),
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        translation(context).noOfCandidates,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      FutureBuilder<int>(
+                        future: totalCandidatesCount(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            int totalDocCount = snapshot.data ?? 0;
+                            return Text(
+                              ' $totalDocCount',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
             SizedBox(
               width: 60,
             ),
-            Expanded(
-              child: CustomCard(
-                color: Color.fromARGB(255, 14, 75, 206),
-                title1: translation(context).blueColler,
-                title2: '100',
+            InkWell(
+              onTap: () {},
+              child: Container(
+                height: 100,
+                width: 200,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color.fromARGB(255, 140, 138, 138),
+                      spreadRadius: 0.5, //spread radius
+                      blurRadius: 4, // blu
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.indigo.shade900,
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        translation(context).blueColler,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      FutureBuilder<int>(
+                        future: greycountDocuments(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            int docCount = snapshot.data ?? 0;
+                            return Text(
+                              '$docCount',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
             SizedBox(
               width: 60,
             ),
-            Expanded(
-              child: CustomCard(
-                color: Color.fromARGB(228, 178, 186, 178),
-                title1: translation(context).greyColler,
-                title2: '100',
+            InkWell(
+              onTap: () {},
+              child: Container(
+                height: 100,
+                width: 200,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color.fromARGB(255, 140, 138, 138),
+                      spreadRadius: 0.5, //spread radius
+                      blurRadius: 4, // blu
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.indigo.shade900,
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        translation(context).greyColler,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      FutureBuilder<int>(
+                        future: greycountDocuments(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            int docCount = snapshot.data ?? 0;
+                            return Text(
+                              ' $docCount',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
             SizedBox(
@@ -77,8 +240,7 @@ class _ColumnViewState extends State<ColumnView> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const CorporateConsole()),
+                    MaterialPageRoute(builder: (context) => HomePage()),
                   );
                 },
               ),
@@ -183,11 +345,15 @@ class CandidateListSource extends DataTableSource {
         // DataCell(Text((index + 1).toString())),
         DataCell(Text(e.name.toString())),
         DataCell(Text(e.mobile.toString())),
-        DataCell(Text(e.mobile.toString())),
         DataCell(Text(e.email.toString())),
-        DataCell(Text(e.name.toString())),
-        DataCell(Text(e.name.toString())),
-        DataCell(Text(e.name.toString())),
+        DataCell(
+          Text(e.selectedSkills!.isNotEmpty ? e.selectedSkills![0] : ''),
+        ),
+        DataCell(
+          Text(e.selectedSkills!.isNotEmpty ? e.selectedSkills![1] : ''),
+        ),
+        DataCell(Text(e.selectedOption.toString())),
+        DataCell(Text(e.mobile.toString())),
         DataCell(Text(e.name.toString())),
       ],
     );

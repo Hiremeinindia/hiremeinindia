@@ -36,39 +36,42 @@ class _CorporateDashboard extends State<CorporateDashboard> {
   bool val1 = false;
 
   bool isPressed = false;
-  String? userName;
+
+  String? _userName;
+  late Stream<DocumentSnapshot<Map<String, dynamic>>> userStream;
 
   @override
   void initState() {
     super.initState();
-    _retrieveUserName(widget.user.uid); // Pass the userId from the widget
+    userStream = FirebaseFirestore.instance
+        .collection('greycollaruser')
+        .doc(widget.user.uid)
+        .snapshots();
   }
 
-  Future<void> _retrieveUserName(String userId) async {
+  Stream<Map<String, dynamic>?> fetchData() {
     try {
-      // Get the reference to the user document in Firestore
-      DocumentSnapshot<Map<String, dynamic>> userDoc = await FirebaseFirestore
-          .instance
-          .collection('corporateuser')
-          .doc(userId)
-          .get();
-
-      // Check if the document exists
-      if (userDoc.exists) {
-        // Retrieve the username from the document
-        String? username = userDoc.data()?['name'];
-
-        // Update the state with the retrieved username
-        setState(() {
-          userName = username;
-        });
-      } else {
-        // Document doesn't exist
-        print('User not found in Firestore.');
-      }
+      // Replace 'your_collection' and 'your_document' with your actual collection and document names
+      return FirebaseFirestore.instance
+          .collection('greycollaruser')
+          .doc(widget.user.uid)
+          .snapshots()
+          .map((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+        if (documentSnapshot.exists) {
+          // Access the data using documentSnapshot.data()
+          Map<String, dynamic> data = documentSnapshot.data()!;
+          String name = data['name'];
+          print('Name: $name');
+          _userName = name;
+          return data;
+        } else {
+          print('Document does not exist');
+          return null;
+        }
+      });
     } catch (e) {
-      // Handle errors
-      print('Error retrieving username: $e');
+      print('Error fetching data: $e');
+      return Stream.value(null);
     }
   }
 
@@ -282,13 +285,24 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                     ),
                   ),
                   SizedBox(width: 8.0),
-                  SizedBox(
-                    width: 50,
-                    child: Text(
-                      'Guest User',
-                      maxLines: 2,
-                      style: TextStyle(color: Colors.black),
-                    ),
+                  StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                    stream: userStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        String? userName = snapshot.data?.data()?['name'];
+                        return Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            'Hello, $userName',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        );
+                      }
+                    },
                   ),
                 ],
               ),

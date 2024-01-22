@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hiremeinindiaapp/Models/candidated.dart';
 
 import 'package:hiremeinindiaapp/widgets/customcard.dart';
 
@@ -14,9 +15,10 @@ import 'gen_l10n/app_localizations.dart';
 import 'main.dart';
 
 class UserDashboard extends StatefulWidget {
-  final User user;
-  String _userName = '';
-  UserDashboard({required this.user});
+  final User? user;
+
+  UserDashboard({Key? key, this.user}) : super(key: key);
+
   @override
   State<UserDashboard> createState() => _UserDashboard();
 }
@@ -24,6 +26,46 @@ class UserDashboard extends StatefulWidget {
 class _UserDashboard extends State<UserDashboard> {
   bool isChecked = false;
   bool dropdownValue = false;
+  String? _userName;
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch the user name when the widget is initialized
+    getData();
+  }
+
+  void getData() async {
+    try {
+      // Fetch the user document from Firestore
+      DocumentSnapshot<Map<String, dynamic>> userDoc = await FirebaseFirestore
+          .instance
+          .collection('greycollaruser')
+          .doc(widget.user!.uid)
+          .get();
+
+      // Check if the document exists
+      if (userDoc.exists) {
+        // Retrieve the username from the document
+        String? username = userDoc.data()?['name'];
+
+        // Update the state with the retrieved username
+        setState(() {
+          if (username != null && username.isNotEmpty) {
+            _userName = username;
+          } else {
+            _userName = 'Name not available';
+          }
+        });
+      } else {
+        // Document doesn't exist
+        print('User not found in Firestore.');
+      }
+    } catch (e) {
+      // Handle errors
+      print('Error retrieving username: $e');
+    }
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -235,44 +277,15 @@ class _UserDashboard extends State<UserDashboard> {
                     ),
                   ),
                   SizedBox(width: 8.0),
-                  StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                    stream: FirebaseFirestore.instance
-                        .collection('greycollaruser')
-                        .doc(
-                            'SPECIFIC_USER_UID') // Replace 'SPECIFIC_USER_UID' with the actual UID of the user you want to fetch
-                        .snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
-                            snapshot) {
-                      if (snapshot.hasError) {
-                        return Text('Something went wrong');
-                      }
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text("Loading");
-                      }
-
-                      Map<String, dynamic>? userData = snapshot.data?.data();
-
-                      if (userData != null) {
-                        // Access the user's details from the 'userData' map
-                        String userName = userData['name'];
-                        String userEmail = userData['email'];
-
-                        // Use the user details as needed
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('User Name: $userName'),
-                            Text('User Email: $userEmail'),
-                            // Add other widgets as needed
-                          ],
-                        );
-                      } else {
-                        // Handle the case where user data is null
-                        return Text('User data is null');
-                      }
-                    },
-                  )
+                  Text(
+                    'Hello $_userName', // Display the fetched username
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 20,
+                      color: Colors.indigo,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
                 ],
               ),
             ),

@@ -315,7 +315,6 @@ class _LoginPageState extends State<LoginPage> {
                                     user: userCredential.user!),
                               ),
                             );
-                            print('User role$userRole');
                           } else if (userRole == 'Blue' || userRole == 'Grey') {
                             Navigator.push(
                                 context,
@@ -359,7 +358,7 @@ class _LoginPageState extends State<LoginPage> {
               .get();
 
       if (adminSnapshot.exists) {
-        print('User is admin.');
+        print('Login as admin');
         return 'Admin';
       } else {
         // Check if the user is a regular user
@@ -370,7 +369,7 @@ class _LoginPageState extends State<LoginPage> {
                 .get();
 
         if (userSnapshot.exists) {
-          print('User is a regular user with Blue role.');
+          print('Login as user');
           return 'Blue';
         }
       }
