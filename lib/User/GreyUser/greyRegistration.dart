@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/route_manager.dart';
 import 'package:email_otp/email_otp.dart';
@@ -32,8 +33,9 @@ import '../../homepage.dart';
 import '../../widgets/custombutton.dart';
 
 class Registration extends StatefulWidget {
-  const Registration({Key? key, this.candidate}) : super(key: key);
-
+  const Registration({Key? key, this.candidate, this.selectedOption})
+      : super(key: key);
+  final String? selectedOption;
   final Candidate? candidate;
 
   @override
@@ -41,38 +43,38 @@ class Registration extends StatefulWidget {
 }
 
 class _RegistrationState extends State<Registration> {
+  bool isGreyEnabled = false;
+  bool isBlueEnabled = false;
+  void initState() {
+    super.initState();
+    controller =
+        CandidateFormController(initialSelectedOption: widget.selectedOption);
+    isBlueEnabled = widget.selectedOption == 'Blue';
+    isGreyEnabled = widget.selectedOption == 'Grey';
+  }
+
   String enteredOTP = '';
   String smscode = "";
   String phoneNumber = "", data = "", phone = "";
   bool isVerified = false;
   bool isOtpValid = true; // Replace this line with actual verification logic
-
   List<String> _values = [];
   List<String> _value = [];
-
   bool blueChecked = false;
   bool greyChecked = false;
   bool focusTagEnabled = false;
   String password = '';
-
   late final Candidate? candidate;
   var isLoading = false;
-
-  final FocusNode _focusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   EmailOTP myauth = EmailOTP();
   CandidateFormController controller = CandidateFormController();
-  final DatabaseReference _userRef =
-      FirebaseDatabase.instance.reference().child('users');
-
   List<String> selectedSkill = [];
   List<String> selectedWorkin = [];
   var label = 'Grey';
   String? skillvalue;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  String selectedOption = '';
   String? wokinvalue;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   static const GreySkill = [
     'Plumber',
     'Senior Plumber',
@@ -591,8 +593,6 @@ class _RegistrationState extends State<Registration> {
 
   @override
   Widget build(BuildContext context) {
-    bool _validate = false;
-
     return Scaffold(
       appBar: AppBar(
         title: HireMeInIndia(),
@@ -823,24 +823,40 @@ class _RegistrationState extends State<Registration> {
                 padding: const EdgeInsets.only(left: 160),
                 child: Row(
                   children: [
-                    Radio(
-                      value: 'Blue',
-                      groupValue: controller.selectedOption.text,
-                      onChanged: (value) {
-                        setState(() {
-                          controller.selectedOption.text = value.toString();
-                        });
-                      },
-                    ),
-                    Text('Blue Collar'),
-                    Radio(
-                        value: 'Grey',
+                    if (widget.selectedOption == 'Grey')
+                      IgnorePointer(
+                        child: Radio(
+                            value: widget.selectedOption,
+                            groupValue: widget.selectedOption,
+                            onChanged: null),
+                      )
+                    else if (widget.selectedOption == 'Blue')
+                      Radio(
+                        value: 'Blue',
                         groupValue: controller.selectedOption.text,
                         onChanged: (value) {
+                          // Handle radio button state change if needed
                           setState(() {
                             controller.selectedOption.text = value.toString();
                           });
-                        }),
+                        },
+                      ),
+                    Text('Blue Collar'),
+                    if (widget.selectedOption == 'Grey')
+                      Radio(
+                          value: 'Grey',
+                          groupValue: controller.selectedOption.text,
+                          onChanged: (value) {
+                            setState(() {
+                              controller.selectedOption.text = value.toString();
+                            });
+                          })
+                    else if (widget.selectedOption == 'Blue')
+                      IgnorePointer(
+                          child: Radio(
+                              value: widget.selectedOption,
+                              groupValue: widget.selectedOption,
+                              onChanged: null)),
                     Text('Grey Collar'),
                   ],
                 ),
@@ -1198,7 +1214,7 @@ class _RegistrationState extends State<Registration> {
                       SizedBox(
                         height: 40,
                       ),
-                      controller.selectedOption.text == 'Blue'
+                      widget.selectedOption == 'Blue'
                           ? Column(
                               children: [
                                 Row(
@@ -1795,10 +1811,6 @@ class _RegistrationState extends State<Registration> {
                                     password: controller.password.text,
                                   );
 
-                                  // Assign the user role to the user
-                                  await assignUserRole(
-                                      userCredential.user!.uid, 'Blue');
-
                                   // Navigate back to the login page after successful signup
                                   Navigator.pop(context);
                                 } on FirebaseAuthException catch (e) {
@@ -1873,39 +1885,5 @@ class DatabaseService {
 
   Future<bool> yourBlocklistQueryToCheckUser(String mobileNumber) async {
     return false;
-  }
-}
-
-class _Chip extends StatelessWidget {
-  const _Chip({
-    required this.label,
-    required this.onDeleted,
-    required this.index,
-  });
-
-  final String label;
-  final ValueChanged<int> onDeleted;
-  final int index;
-
-  @override
-  Widget build(BuildContext context) {
-    return Chip(
-      backgroundColor: Colors.indigo.shade900,
-      labelPadding: const EdgeInsets.only(left: 5.0),
-      label: Container(
-          height: 17,
-          child: Text(
-            label,
-            style: TextStyle(color: Colors.white),
-          )),
-      deleteIcon: const Icon(
-        Icons.close,
-        size: 18,
-        color: Colors.white,
-      ),
-      onDeleted: () {
-        onDeleted(index);
-      },
-    );
   }
 }

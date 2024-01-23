@@ -4,6 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/corporateRegistration.dart';
 import 'package:hiremeinindiaapp/User/GreyUser/greyRegistration.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
+import 'package:hiremeinindiaapp/gethired.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import 'classes/language_constants.dart';
 
@@ -84,7 +85,7 @@ class _HireAppState extends State<HireApp> {
       supportedLocales: AppLocalizations.supportedLocales,
       locale: _locale,
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: Hired(),
     );
   }
 }

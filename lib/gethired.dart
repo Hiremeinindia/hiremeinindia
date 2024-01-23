@@ -358,7 +358,10 @@ class _HiredState extends State<Hired> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => BlueRegistration()),
+                  MaterialPageRoute(
+                      builder: (context) => Registration(
+                            selectedOption: 'Blue',
+                          )),
                 );
               },
             )
@@ -393,7 +396,11 @@ void _showgreyDialog(BuildContext context) {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Registration()),
+                MaterialPageRoute(
+                  builder: (context) => Registration(
+                    selectedOption: 'Grey',
+                  ),
+                ),
               );
             },
           )
