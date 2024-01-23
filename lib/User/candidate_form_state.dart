@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import '../Models/candidated.dart';
 
 class CandidateFormController {
-  CandidateFormController();
+  CandidateFormController({String? initialSelectedOption}) {
+    selectedOption = TextEditingController(text: initialSelectedOption);
+  }
   final name = TextEditingController();
   final mobile = TextEditingController();
   final email = TextEditingController();
@@ -28,9 +30,7 @@ class CandidateFormController {
   final confirmPassword = TextEditingController();
   List<String> selectedSkills = [];
   List<String> selectedWorkins = [];
-  late final selectedOption = TextEditingController();
-
-  // String get newDocId => FirebaseFirestore.instance.collection('Candidates').doc().id;
+  late TextEditingController selectedOption;
 
   DocumentReference? _reference;
 
