@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hiremeinindiaapp/User/GreyUser/greyRegistration.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:hiremeinindiaapp/widgets/hiremeinindia.dart';
-
-import 'User/BlueUser/blueregistration.dart';
 import 'widgets/custombutton.dart';
 import 'package:hiremeinindiaapp/main.dart';
 import 'classes/language.dart';
@@ -24,14 +22,14 @@ class _HiredState extends State<Hired> {
 
   Future<int> greycountDocuments() async {
     QuerySnapshot<Map<String, dynamic>> myDoc =
-        await firestore.collection('bluecollaruser').get();
+        await firestore.collection('greycollaruser').get();
     List<DocumentSnapshot<Map<String, dynamic>>> myDocCount = myDoc.docs;
     return myDocCount.length; // Return the count of documents in the collection
   }
 
   Future<int> bluecountDocuments() async {
     QuerySnapshot<Map<String, dynamic>> myDoc =
-        await firestore.collection('users').get();
+        await firestore.collection('greycollaruser').get();
     List<DocumentSnapshot<Map<String, dynamic>>> myDocCount = myDoc.docs;
     return myDocCount.length; // Return the count of documents in the collection
   }

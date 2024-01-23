@@ -82,5 +82,6 @@
   "india": "India",
   "currentCountry": "Current Country",
   "confirmPassword": "Confirm Password",
-  "companyName": "Company Name"
+  "companyName": "Company Name",
+  "designation": "Designation"
 }

@@ -29,7 +29,6 @@ import 'package:super_tag_editor/tag_editor.dart';
 import 'package:super_tag_editor/widgets/rich_text_widget.dart';
 
 import '../../controllers/candidate_controller.dart';
-import '../../homepage.dart';
 import '../../widgets/custombutton.dart';
 
 class Registration extends StatefulWidget {
@@ -1796,30 +1795,14 @@ class _RegistrationState extends State<Registration> {
                             text: translation(context).next,
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                var candidateController = CandidateController(
-                                    formController: controller);
-
-                                if (widget.candidate == null) {
-                                  candidateController.addCandidate(controller);
-                                }
-
-                                try {
-                                  // Sign up with email and password
-                                  UserCredential userCredential = await _auth
-                                      .createUserWithEmailAndPassword(
-                                    email: controller.email.text,
-                                    password: controller.password.text,
-                                  );
-
-                                  // Navigate back to the login page after successful signup
-                                  Navigator.pop(context);
-                                } on FirebaseAuthException catch (e) {
-                                  // Handle authentication exceptions
-                                  if (e.code == 'email-already-in-use') {
-                                    print(
-                                        'The account already exists for that email.');
-                                  }
-                                }
+                                // Sign up with email and password
+                                UserCredential userCredential =
+                                    await _auth.createUserWithEmailAndPassword(
+                                  email: controller.email.text,
+                                  password: controller.password.text,
+                                );
+                                await assignUserRole(
+                                    userCredential.user!.uid, 'Blue');
                               }
                             },
                           ),
@@ -1845,7 +1828,21 @@ class _RegistrationState extends State<Registration> {
 
       // Assign the user role to the user
       await FirebaseFirestore.instance.collection(userCollection).doc(uid).set({
-        'label': 'Blue',
+        'name': controller.name.text,
+        'email': controller.email.text,
+        'mobile': controller.mobile.text,
+        'worktitle': controller.worktitle.text,
+        "aadharno": controller.aadharno.text,
+        "gender": controller.gender.text,
+        "workexp": controller.workexp.text,
+        "qualification": controller.qualification.text,
+        "state": controller.state.text,
+        "address": controller.address.text,
+        'selectedWorkins': controller.selectedWorkins ?? [],
+        "city": controller.city.text,
+        "country": controller.country.text,
+        'selectedSkills': controller.selectedSkills ?? [],
+        'label': controller.selectedOption.text,
         // Add additional user-related fields as needed
       });
     } catch (e) {
