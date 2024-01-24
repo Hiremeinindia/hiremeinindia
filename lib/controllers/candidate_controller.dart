@@ -42,26 +42,6 @@ class CandidateController {
     }
   }
 
-  Future<Result> updateCandidate() {
-    return candidate.reference
-        .set(candidate.toJson())
-        .then((value) => Result(
-            tilte: Result.success,
-            message: "Staff record updated successfully"))
-        .onError((error, stackTrace) => Result(
-            tilte: Result.failure, message: "Staff record update failed"));
-  }
-
-  Future<Result> deleteStaff() {
-    return candidate.reference
-        .delete()
-        .then((value) => Result(
-            tilte: Result.success,
-            message: "Staff record updated successfully"))
-        .onError((error, stackTrace) => Result(
-            tilte: Result.failure, message: "Staff record update failed"));
-  }
-
   static Future<List<Candidate>> loadStaffs(String search) {
     return candidateRef
         .where('search', arrayContains: search)

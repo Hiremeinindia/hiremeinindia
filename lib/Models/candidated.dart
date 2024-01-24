@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+enum CandidateStatus { verified, notVerified }
+
 class Candidate {
   final String? name;
   final String? email;
@@ -20,7 +22,7 @@ class Candidate {
   final String? selectedOption;
   final String? country;
   final String? confirmPassword;
-  final DocumentReference reference;
+  final DocumentReference? reference;
 
   Candidate({
     this.name,
@@ -41,7 +43,7 @@ class Candidate {
     this.code,
     this.confirmPassword,
     this.country,
-    required this.reference,
+    this.reference,
     this.selectedOption,
   });
 
@@ -117,8 +119,23 @@ class Candidate {
         confirmPassword: data["confirmPassword"]);
   }
 
-  static Future<List<Candidate>> getCandidates() {
+  static Future<List<Candidate>> getCandidates({Candidate? candidate}) {
     return FirebaseFirestore.instance.collection('greycollaruser').get().then(
         (value) => value.docs.map((e) => Candidate.fromSnapshot(e)).toList());
+  }
+
+  static Stream<List<Candidate>> getSkills({
+    Candidate? candidate,
+  }) {
+    var query = FirebaseFirestore.instance
+        .collectionGroup('greycollaruser')
+        .where('leadStatus', isEqualTo: CandidateStatus.verified.index);
+    if (candidate != null) {
+      query = query.where("selectedSkills", isEqualTo: candidate.reference);
+    }
+
+    return query.snapshots().map((event) {
+      return event.docs.map((e) => Candidate.fromSnapshot(e)).toList();
+    });
   }
 }
