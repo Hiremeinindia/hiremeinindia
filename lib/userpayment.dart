@@ -1,6 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import 'Widgets/customtextstyle.dart';
@@ -20,10 +24,11 @@ class NewUserPayment extends StatefulWidget {
 }
 
 class _NewUserPayment extends State<NewUserPayment> {
-  @override
   bool isChecked = false;
   bool isProcessing = false;
   PlatformFile? _cashReceipt;
+  String? _uploadedImageURL; // New variable to store uploaded image URL
+
   Future<void> showFileUploadSuccessDialog() async {
     await showDialog(
       context: context,
@@ -44,6 +49,38 @@ class _NewUserPayment extends State<NewUserPayment> {
     );
   }
 
+  Future<void> uploadImageToFirebase(
+      List<int> fileBytes, String fileName) async {
+    try {
+      Reference reference = FirebaseStorage.instance.ref().child(fileName);
+      await reference.putData(Uint8List.fromList(fileBytes));
+      print('Image uploaded to Firebase Storage with filename: $fileName');
+    } catch (error) {
+      print('Error uploading image: $error');
+    }
+  }
+
+  Future<void> getCashReceipt() async {
+    final String serverUrl = 'http://localhost:3013';
+    final String endpoint = '/getCashReceipt';
+
+    try {
+      final response = await http.get(Uri.parse('$serverUrl$endpoint'));
+
+      if (response.statusCode == 200) {
+        String cashReceiptData = response.body;
+        // Display or process the received cash receipt data as needed
+        print('Received Cash Receipt: $cashReceiptData');
+      } else {
+        print(
+          'Failed to retrieve cash receipt. Status code: ${response.statusCode}',
+        );
+      }
+    } catch (error) {
+      print('Error retrieving cash receipt: $error');
+    }
+  }
+
   Future<void> uploadCashReceipt() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -55,14 +92,39 @@ class _NewUserPayment extends State<NewUserPayment> {
 
         print('Cash receipt uploaded: ${_cashReceipt!.name}');
 
-        // Show the file upload success dialog
-        await showFileUploadSuccessDialog();
+        // Check if the path is not null before proceeding
+        // Check if the path is not null before proceeding
+        if (_cashReceipt!.path != null) {
+          // For non-web platforms, use the path property
+          List<int> fileBytes;
+          if (kIsWeb) {
+            // For web, use the bytes property
+            fileBytes = _cashReceipt!.bytes!;
+          } else {
+            fileBytes = await _readFileAsBytes(_cashReceipt!.path!);
+          }
+
+          // Upload the cash receipt image to Firebase Storage
+          await uploadImageToFirebase(fileBytes, 'cash_receipt.jpg');
+
+          // Show the file upload success dialog
+          await showFileUploadSuccessDialog();
+        } else {
+          print('File path is null');
+        }
       } else {
         print('No file selected');
       }
     } catch (e) {
       print('Error picking file: $e');
     }
+  }
+
+  Future<List<int>> _readFileAsBytes(String path) async {
+    // Read the content of the file as bytes
+    final file = File(path);
+    List<int> fileBytes = await file.readAsBytes();
+    return fileBytes;
   }
 
   Widget _buildSendingCashDialog(BuildContext context) {
@@ -99,7 +161,7 @@ class _NewUserPayment extends State<NewUserPayment> {
     setState(() {
       isProcessing = true; // Set the flag to indicate processing
     });
-    final String serverUrl = 'http://localhost:3011';
+    final String serverUrl = 'http://localhost:3013';
     final String endpoint = '/cashNotification';
 
     try {
@@ -117,7 +179,7 @@ class _NewUserPayment extends State<NewUserPayment> {
         print("cash3");
         print('Waiting for 3 minutes before showing verification result...');
         // Wait for 3 minutes before showing verification result
-        await Future.delayed(Duration(minutes: 3));
+        await Future.delayed(Duration(minutes: 1));
 
         // Dismiss the "Sending Cash Notification" dialog
         Navigator.of(context).pop();
@@ -481,12 +543,20 @@ class _NewUserPayment extends State<NewUserPayment> {
                             },
                           );
 
-                          // Call the method to send cash notification
-                          await sendCashNotification();
+                          try {
+                            // Call the method to send cash notification
+                            await sendCashNotification();
 
-                          // The pop-up dialog will be dismissed automatically when the process is complete
-                          // Instead of navigating back immediately, you can handle the response here
-                          // For example, you can show a message or navigate to another page based on the response
+                            // Call the method to retrieve cash receipt after the notification is sent
+                            await getCashReceipt();
+
+                            // The pop-up dialog will be dismissed automatically when the process is complete
+                            // Instead of navigating back immediately, you can handle the response here
+                            // For example, you can show a message or navigate to another page based on the response
+                          } catch (error) {
+                            print('Error handling cash notification: $error');
+                            // Handle the error scenario, e.g., show an error message to the user
+                          }
                         }
                       },
                     ),
