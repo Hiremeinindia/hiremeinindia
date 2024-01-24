@@ -4,13 +4,42 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hiremeinindiaapp/CorporateConsole/corporate.dart';
 import 'package:hiremeinindiaapp/Models/candidated.dart';
 import '../Models/results.dart';
 
 class AppSession extends ChangeNotifier {
   List<Candidate> candidates = [];
-
+  List<Corporate> console = [];
   Candidate? candidate;
+  static final AppSession _instance = AppSession._internal();
+  factory AppSession() {
+    return _instance;
+  }
+  AppSession._internal() {
+    firbaseAuth.authStateChanges().listen((event) async {
+      if (event != null) {
+        FirebaseFirestore.instance
+            .collection('greycollaruser')
+            .snapshots()
+            .listen((value) {
+          candidates =
+              value.docs.map((e) => Candidate.fromSnapshot(e)).toList();
+        });
+        FirebaseFirestore.instance
+            .collection('corporateuser')
+            .snapshots()
+            .listen((value) {
+          console = value.docs.map((e) => Corporate.fromSnapshot(e)).toList();
+        });
+      }
+      notifyListeners();
+    });
+
+    pageController.addListener(() {
+      notifyListeners();
+    });
+  }
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late List<Candidate> _items;

@@ -15,64 +15,77 @@ import 'gen_l10n/app_localizations.dart';
 import 'widgets/custombutton.dart';
 
 class SamplePage extends StatefulWidget {
-  const SamplePage();
   @override
-  State<SamplePage> createState() => _SamplePageState();
+  _SamplePageState createState() => _SamplePageState();
 }
 
 class _SamplePageState extends State<SamplePage> {
-  CorporateFormController controller = CorporateFormController();
-  AuthService authService = AuthService();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  String email = '';
-  String password = '';
-  String name = '';
-
-  String? skill = "Electrician";
-  List<String> jobClassification = [
-    'Electrician',
-    'Mechanic',
-    'Construction Helper ',
-    'Meson ',
+  List<Map<String, String>> items = [
+    {'Name': 'John', 'Age': '25', 'Country': 'USA'},
+    {'Name': 'Alice', 'Age': '30', 'Country': 'Canada'},
+    {'Name': 'Bob', 'Age': '22', 'Country': 'UK'},
+    // Add more items as needed
   ];
-  bool login = false;
-  final _formKey = GlobalKey<FormState>();
+
+  List<Map<String, String>> filteredItems = [];
+
+  String selectedCountry = 'All';
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize filteredItems with all items initially
+    filteredItems = List.from(items);
+  }
+
+  void filterItems() {
+    setState(() {
+      if (selectedCountry == 'All') {
+        // If 'All' is selected, show all items
+        filteredItems = List.from(items);
+      } else {
+        // Filter items based on the selected country
+        filteredItems =
+            items.where((item) => item['Country'] == selectedCountry).toList();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child: SizedBox(
-          height: 30,
-          width: 200,
-          child: DropdownButton<String>(
-            value: skill,
-            isExpanded: true,
-            items: jobClassification
-                .map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ))
-                .toList(),
-            onChanged: (item) {
-              setState(() {
-                skill = item!;
-              });
-            },
-            icon: Icon(
-              Icons.arrow_drop_down_sharp,
-              size: 25,
-              color: Colors.black,
-            ),
-            iconEnabledColor: Colors.black,
-            iconDisabledColor: Colors.black,
-            dropdownColor: Colors.white,
-          ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        DropdownButton<String>(
+          value: selectedCountry,
+          items: ['All', 'USA', 'Canada', 'UK']
+              .map((String country) => DropdownMenuItem<String>(
+                    value: country,
+                    child: Text(country),
+                  ))
+              .toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedCountry = newValue ?? 'All';
+              filterItems();
+            });
+          },
         ),
-      ),
+        DataTable(
+          columns: [
+            DataColumn(label: Text('Name')),
+            DataColumn(label: Text('Age')),
+            DataColumn(label: Text('Country')),
+          ],
+          rows: filteredItems
+              .map((item) => DataRow(cells: [
+                    DataCell(Text(item['Name'] ?? '')),
+                    DataCell(Text(item['Age'] ?? '')),
+                    DataCell(Text(item['Country'] ?? '')),
+                  ]))
+              .toList(),
+        ),
+      ],
     );
   }
 }

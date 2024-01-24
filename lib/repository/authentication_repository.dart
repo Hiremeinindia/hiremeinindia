@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:hiremeinindiaapp/CorporateConsole/corporate.dart';
 import 'package:hiremeinindiaapp/homepage.dart';
 
 class AuthenticationRepository extends GetxController {
@@ -8,6 +10,12 @@ class AuthenticationRepository extends GetxController {
   //Variables
   final _auth = FirebaseAuth.instance;
   late final Rx<User?> firebaseUser;
+
+  get event => null;
+  getUserInfo() {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    FirebaseFirestore.instance.collection('corporateuser').doc(uid).snapshots();
+  }
 
   //Will be load when app launches this func will be called and set the firebaseUser state
   @override
