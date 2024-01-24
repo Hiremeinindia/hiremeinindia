@@ -21,18 +21,31 @@ class _ColumnViewState extends State<ColumnView> {
 
   late Query<Map<String, dynamic>> query;
   Future<int> totalCandidatesCount() async {
-    int blueCount = await greycountDocuments();
-    int greyCount = await greycountDocuments();
+    int blueCount = await BlueResult();
+    int greyCount = await GreyResult();
 
     return blueCount + greyCount;
   }
 
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  Future<int> greycountDocuments() async {
-    QuerySnapshot<Map<String, dynamic>> myDoc =
-        await firestore.collection('greycollaruser').get();
-    List<DocumentSnapshot<Map<String, dynamic>>> myDocCount = myDoc.docs;
-    return myDocCount.length; // Return the count of documents in the collection
+  final fireStore =
+      FirebaseFirestore.instance.collection('greycollaruser').snapshots();
+
+  Future<int> BlueResult() async {
+    var query = await FirebaseFirestore.instance
+        .collection("greycollaruser")
+        .where('label', isEqualTo: 'Blue');
+    var snapshot = await query.get();
+    var count = snapshot.size;
+    return count; // Add this line to return the count
+  }
+
+  Future<int> GreyResult() async {
+    var query = await FirebaseFirestore.instance
+        .collection("greycollaruser")
+        .where('label', isEqualTo: 'Grey');
+    var snapshot = await query.get();
+    var count = snapshot.size;
+    return count; // Add this line to return the count
   }
 
   final agentsRef = FirebaseFirestore.instance.collection("greycollaruser");
@@ -135,7 +148,7 @@ class _ColumnViewState extends State<ColumnView> {
                         height: 5,
                       ),
                       FutureBuilder<int>(
-                        future: greycountDocuments(),
+                        future: BlueResult(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -194,7 +207,7 @@ class _ColumnViewState extends State<ColumnView> {
                         height: 5,
                       ),
                       FutureBuilder<int>(
-                        future: greycountDocuments(),
+                        future: GreyResult(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -345,14 +358,14 @@ class CandidateListSource extends DataTableSource {
         // DataCell(Text((index + 1).toString())),
         DataCell(Text(e.name.toString())),
         DataCell(Text(e.mobile.toString())),
-        DataCell(Text(e.email.toString())),
+        DataCell(Text(e.qualification.toString())),
         DataCell(
           Text(e.selectedSkills!.isNotEmpty ? e.selectedSkills![0] : ''),
         ),
         DataCell(
           Text(e.selectedSkills!.isNotEmpty ? e.selectedSkills![1] : ''),
         ),
-        DataCell(Text(e.selectedOption.toString())),
+        DataCell(Text(e.selectedOption?.toString() ?? 'No Option')),
         DataCell(Text(e.mobile.toString())),
         DataCell(Text(e.name.toString())),
       ],

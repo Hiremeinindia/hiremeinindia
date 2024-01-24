@@ -588,6 +588,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Company Name'**
   String get companyName;
+
+  /// No description provided for @designation.
+  ///
+  /// In en, this message translates to:
+  /// **'Designation'**
+  String get designation;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

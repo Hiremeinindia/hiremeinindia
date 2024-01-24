@@ -9,6 +9,7 @@ import 'package:hiremeinindiaapp/Widgets/customTextstyle.dart';
 import 'package:hiremeinindiaapp/classes/language.dart';
 import 'package:hiremeinindiaapp/controllers/corporateController.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
+import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:hiremeinindiaapp/main.dart';
 
 import '../classes/language_constants.dart';
@@ -381,6 +382,13 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
+                                translation(context).designation,
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 60),
+                              Text(
                                 translation(context).password,
                                 style: TextStyle(
                                     fontFamily: 'Poppins',
@@ -403,6 +411,13 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
                             child: Column(
                               children: [
                                 CustomTextfield(
+                                  validator: nameValidator,
+                                  controller: controller.designation,
+                                ),
+                                SizedBox(
+                                  height: 40,
+                                ),
+                                CustomTextfield(
                                   validator: validatePassword,
                                   controller: controller.password,
                                 ),
@@ -420,16 +435,6 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
                                   },
                                   controller: controller.confirmPassword,
                                 ),
-                                Radio(
-                                  value: 'Admin',
-                                  groupValue: controller.selectedOption.text,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      controller.selectedOption.text =
-                                          value.toString();
-                                    });
-                                  },
-                                ),
                               ],
                             ),
                           ),
@@ -446,34 +451,22 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
                             text: translation(context).next,
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                var corporatecontroller = CorporateController(
-                                  formController: controller,
+                                // Sign up with email and password
+                                UserCredential userCredential =
+                                    await _auth.createUserWithEmailAndPassword(
+                                  email: controller.email.text,
+                                  password: controller.password.text,
                                 );
 
-                                if (widget.corporate == null) {
-                                  corporatecontroller.addCorporate(controller);
-                                }
-                                try {
-                                  // Sign up with email and password
-                                  UserCredential userCredential = await _auth
-                                      .createUserWithEmailAndPassword(
-                                    email: controller.email.text,
-                                    password: controller.password.text,
-                                  );
+                                // Assign the admin role to the user
+                                await assignUserRole(
+                                    userCredential.user!.uid, 'Admin');
 
-                                  // Assign the admin role to the user
-                                  await assignUserRole(
-                                      userCredential.user!.uid, 'Admin');
-
-                                  // Navigate back to the login page after successful signup
-                                  Navigator.pop(context);
-                                } on FirebaseAuthException catch (e) {
-                                  // Handle authentication exceptions
-                                  if (e.code == 'email-already-in-use') {
-                                    print(
-                                        'The account already exists for that email.');
-                                  }
-                                }
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()),
+                                );
                               }
                             },
                           ),
@@ -503,6 +496,9 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
           .doc(uid)
           .set({
         'label': 'Admin',
+        'name': controller.name.text,
+        'email': controller.email.text,
+        'designation': controller.designation.text,
         // Add additional admin-related fields as needed
       });
     } catch (e) {

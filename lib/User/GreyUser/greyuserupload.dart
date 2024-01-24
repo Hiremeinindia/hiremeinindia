@@ -63,7 +63,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
   List<StateModel> _stateSubList = [];
   List<CityModel> _citySubList = [];
   String _title = '';
-  BlueCandidateFormController bluecontroller = BlueCandidateFormController();
+  CandidateFormController controller = CandidateFormController();
   void initState() {
     _getCountry();
     super.initState();
@@ -122,8 +122,8 @@ class _GreyUserUpload extends State<GreyUserUpload> {
   @override
   void dispose() {
     // Dispose controllers when the widget is disposed
-    bluecontroller.bluecoller.dispose();
-    bluecontroller.state.dispose();
+    controller.bluecoller.dispose();
+    controller.state.dispose();
     super.dispose();
   }
 
@@ -881,7 +881,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                       width: 400,
                       height: 40,
                       child: TextField(
-                        controller: bluecontroller.country,
+                        controller: controller.country,
                         onTap: () {
                           setState(() => _title = 'Country');
                           _showDialog(context);
@@ -896,10 +896,10 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                       width: 400,
                       height: 40,
                       child: TextField(
-                        controller: bluecontroller.state,
+                        controller: controller.state,
                         onTap: () {
                           setState(() => _title = 'State');
-                          if (bluecontroller.country.text.isNotEmpty) {
+                          if (controller.country.text.isNotEmpty) {
                             _showDialog(context);
                           } else {
                             _showSnackBar('Select Country');
@@ -915,10 +915,10 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                       width: 400,
                       height: 40,
                       child: TextField(
-                        controller: bluecontroller.city,
+                        controller: controller.city,
                         onTap: () {
                           setState(() => _title = 'City');
-                          if (bluecontroller.state.text.isNotEmpty) {
+                          if (controller.state.text.isNotEmpty) {
                             _showDialog(context);
                           } else {
                             _showSnackBar('Select State');
@@ -962,8 +962,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                       width: 400,
                       height: 40,
                       child: TextField(
-                        controller:
-                            bluecontroller.expectedWage, // Set controller
+                        controller: controller.expectedWage, // Set controller
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                         ),
@@ -974,8 +973,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                       width: 400,
                       height: 40,
                       child: TextField(
-                        controller:
-                            bluecontroller.currentWage, // Set controller
+                        controller: controller.currentWage, // Set controller
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                         ),
@@ -1052,7 +1050,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
     final TextEditingController controller2 = TextEditingController();
     final TextEditingController controller3 = TextEditingController();
 
-    BlueCandidateFormController bluecontroller = BlueCandidateFormController();
+    CandidateFormController controller = CandidateFormController();
 
     showGeneralDialog(
       barrierLabel: _title,
@@ -1141,20 +1139,20 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                               onTap: () async {
                                 setState(() {
                                   if (_title == "Country") {
-                                    bluecontroller.country.text =
+                                    controller.country.text =
                                         _countrySubList[index].name;
                                     _getState(_countrySubList[index].id);
                                     _countrySubList = _countryList;
-                                    bluecontroller.state.clear();
-                                    bluecontroller.city.clear();
+                                    controller.state.clear();
+                                    controller.city.clear();
                                   } else if (_title == 'State') {
-                                    bluecontroller.state.text =
+                                    controller.state.text =
                                         _stateSubList[index].name;
                                     _getCity(_stateSubList[index].id);
                                     _stateSubList = _stateList;
-                                    bluecontroller.city.clear();
+                                    controller.city.clear();
                                   } else if (_title == 'City') {
-                                    bluecontroller.city.text =
+                                    controller.city.text =
                                         _citySubList[index].name;
                                     _citySubList = _cityList;
                                   }
@@ -1184,7 +1182,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                                 borderRadius: BorderRadius.circular(50.0))),
                         onPressed: () {
                           if (_title == 'City' && _citySubList.isEmpty) {
-                            bluecontroller.city.text = controller3.text;
+                            controller.city.text = controller3.text;
                           }
                           _countrySubList = _countryList;
                           _stateSubList = _stateList;

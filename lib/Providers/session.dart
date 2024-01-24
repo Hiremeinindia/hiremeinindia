@@ -8,36 +8,29 @@ import 'package:hiremeinindiaapp/Models/candidated.dart';
 import '../Models/results.dart';
 
 class AppSession extends ChangeNotifier {
-  static final AppSession _instance = AppSession._internal();
-
   List<Candidate> candidates = [];
 
   Candidate? candidate;
 
-  AppSession._internal() {
-    firbaseAuth.authStateChanges().listen((event) async {
-      if (event != null) {
-        FirebaseFirestore.instance
-            .collection('users')
-            .snapshots()
-            .listen((value) {
-          candidates =
-              value.docs.map((e) => Candidate.fromSnapshot(e)).toList();
-        });
-        candidate = candidates
-            .firstWhereOrNull((element) => element.reference.id == event.uid);
-      }
-      notifyListeners();
-    });
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late List<Candidate> _items;
 
-    pageController.addListener(() {
-      notifyListeners();
-    });
+  Future<void> loadItems(String category) async {
+    QuerySnapshot snapshot = await _firestore
+        .collection('your_collection')
+        .where('category', isEqualTo: category)
+        .get();
+
+    _items = snapshot.docs
+        .map((doc) => Candidate(
+              name: doc['name'].toString(),
+              selectedSkills: List<String>.from(doc["selectedSkills"] ?? []),
+              selectedWorkins: List<String>.from(doc["selectedWorkins"] ?? []),
+            ))
+        .toList();
   }
 
-  factory AppSession() {
-    return _instance;
-  }
+  List<Candidate> get items => _items;
 
   Future<Result> signIn({required String email, required String password}) {
     return firbaseAuth

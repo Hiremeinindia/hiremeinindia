@@ -249,4 +249,7 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get companyName => 'Company Name';
+
+  @override
+  String get designation => 'Designation';
 }
