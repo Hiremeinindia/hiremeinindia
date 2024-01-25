@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/corporateRegistration.dart';
 import 'package:hiremeinindiaapp/User/GreyUser/greyRegistration.dart';
+import 'package:hiremeinindiaapp/User/GreyUser/greyuserupload.dart';
 import 'package:hiremeinindiaapp/functions/firestoreservice.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
 import 'package:hiremeinindiaapp/gethired.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
+import 'package:hiremeinindiaapp/unknownRoutePage.dart';
+import 'package:hiremeinindiaapp/userpayment.dart';
 import 'package:provider/provider.dart';
 import 'classes/language_constants.dart';
 
@@ -83,16 +86,28 @@ class _HireAppState extends State<HireApp> {
         ChangeNotifierProvider(create: (_) => FirebaseService()),
       ],
       child: MaterialApp(
-        // routes: {
-        //   '/newUserPayment': (context) => const NewUserPayment(),
-        // },
-        // initialRoute: '/newUserPayment', // Change the initialRoute
+        initialRoute: '/',
+        routes: {
+          '/document': (context) => GreyUserUpload(),
+          '/payment': (context) => NewUserPayment(),
+        },
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: _locale,
         debugShowCheckedModeBanner: false,
-        home: NewUserPayment(),
+        home: GreyUserUpload(),
       ),
     );
+  }
+}
+
+class MyImageWidget extends StatelessWidget {
+  final String imageUrl;
+
+  const MyImageWidget({required this.imageUrl, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(imageUrl);
   }
 }

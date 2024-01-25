@@ -1796,13 +1796,27 @@ class _RegistrationState extends State<Registration> {
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 // Sign up with email and password
-                                UserCredential userCredential =
-                                    await _auth.createUserWithEmailAndPassword(
-                                  email: controller.email.text,
-                                  password: controller.password.text,
+                                Navigator.pushNamed(
+                                  context,
+                                  '/document',
+                                  arguments: [
+                                    'name',
+                                    'email',
+                                    'mobile',
+                                    'worktitle',
+                                    "aadharno",
+                                    "gender",
+                                    "workexp",
+                                    "qualification",
+                                    "state",
+                                    "address",
+                                    'selectedWorkins',
+                                    "city",
+                                    "country",
+                                    'selectedSkills',
+                                    'label'
+                                  ], // Pass only keys to the next page
                                 );
-                                await assignUserRole(
-                                    userCredential.user!.uid, 'Blue');
                               }
                             },
                           ),
