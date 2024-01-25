@@ -3,32 +3,19 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:get/get_instance/get_instance.dart';
-import 'package:get/route_manager.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
-
 import 'package:hiremeinindiaapp/Models/candidated.dart';
-import 'package:hiremeinindiaapp/Models/register_model.dart';
 import 'package:hiremeinindiaapp/Providers/session.dart';
 import 'package:hiremeinindiaapp/User/candidate_form_state.dart';
 import 'package:hiremeinindiaapp/classes/language.dart';
 import 'package:hiremeinindiaapp/classes/language_constants.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
 import 'package:hiremeinindiaapp/main.dart';
-
-import 'package:hiremeinindiaapp/userpayment.dart';
 import 'package:hiremeinindiaapp/widgets/customtextfield.dart';
 import 'package:hiremeinindiaapp/widgets/customtextstyle.dart';
 import 'package:hiremeinindiaapp/widgets/hiremeinindia.dart';
-
-import 'package:super_tag_editor/tag_editor.dart';
-import 'package:super_tag_editor/widgets/rich_text_widget.dart';
-
-import '../../controllers/candidate_controller.dart';
 import '../../widgets/custombutton.dart';
 
 class Registration extends StatefulWidget {
@@ -423,18 +410,16 @@ class _RegistrationState extends State<Registration> {
                       );
 
                       auth.signInWithCredential(_credential).then((result) {
-                        if (result != null) {
-                          Navigator.pop(context);
+                        Navigator.pop(context);
 
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.check, color: Colors.green),
-                              SizedBox(width: 8),
-                              Text('Verified'),
-                            ],
-                          );
-                        }
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.check, color: Colors.green),
+                            SizedBox(width: 8),
+                            Text('Verified'),
+                          ],
+                        );
                       }).catchError((e) {
                         print("Error signing in with credential: $e");
                         showErrorDialog(
@@ -924,7 +909,7 @@ class _RegistrationState extends State<Registration> {
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return '*Required';
-                                    } else if (value!.length != 12) {
+                                    } else if (value.length != 12) {
                                       return 'Aadhar Number must be of 12 digit';
                                     }
                                     return null;
@@ -982,9 +967,93 @@ class _RegistrationState extends State<Registration> {
                                 SizedBox(
                                   height: 40,
                                 ),
-                                CustomTextfield(
-                                  validator: nameValidator,
-                                  controller: controller.qualification,
+                                SizedBox(
+                                  width: 700,
+                                  height: 35,
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton2<String>(
+                                      value: controller
+                                              .qualification.text.isNotEmpty
+                                          ? controller.qualification.text
+                                          : 'Nill', // Provide a default value if it's empty
+                                      items: <String>[
+                                        'Nill',
+                                        'ITI',
+                                        'Diploma',
+                                        '10th Pass',
+                                        '12th Pass',
+                                        'Under Graduate',
+                                        'Post Graduate'
+                                      ].map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          // Step 2: Update controller when dropdown value changes
+                                          controller.qualification.text =
+                                              newValue!;
+                                        });
+                                      },
+                                      buttonStyleData: ButtonStyleData(
+                                        height: 30,
+                                        width: 200,
+                                        padding: const EdgeInsets.only(
+                                            left: 14, right: 14),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                          border: Border.all(
+                                            color: Colors.black26,
+                                          ),
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      iconStyleData: const IconStyleData(
+                                        icon: Icon(
+                                          Icons.arrow_drop_down_sharp,
+                                        ),
+                                        iconSize: 25,
+                                        iconEnabledColor: Colors.black,
+                                        iconDisabledColor: null,
+                                      ),
+                                      dropdownStyleData: DropdownStyleData(
+                                        maxHeight: 210,
+                                        width: 250,
+                                        elevation: 1,
+                                        padding: EdgeInsets.only(
+                                            left: 5,
+                                            right: 5,
+                                            top: 5,
+                                            bottom: 5),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          border:
+                                              Border.all(color: Colors.black),
+                                          color: Colors.white,
+                                        ),
+                                        scrollPadding: EdgeInsets.all(5),
+                                        scrollbarTheme: ScrollbarThemeData(
+                                          thickness:
+                                              MaterialStateProperty.all<double>(
+                                                  6),
+                                          thumbVisibility:
+                                              MaterialStateProperty.all<bool>(
+                                                  true),
+                                        ),
+                                      ),
+                                      menuItemStyleData:
+                                          const MenuItemStyleData(
+                                        height: 25,
+                                        padding: EdgeInsets.only(
+                                            left: 14, right: 14),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1138,6 +1207,7 @@ class _RegistrationState extends State<Registration> {
                                     EmailValidator(
                                         errorText: "Enter valid email id"),
                                   ]);
+                                  return null;
                                 })),
                         SizedBox(
                           height: 30,
@@ -1838,10 +1908,10 @@ class _RegistrationState extends State<Registration> {
         "qualification": controller.qualification.text,
         "state": controller.state.text,
         "address": controller.address.text,
-        'selectedWorkins': controller.selectedWorkins ?? [],
+        'selectedWorkins': controller.selectedWorkins,
         "city": controller.city.text,
         "country": controller.country.text,
-        'selectedSkills': controller.selectedSkills ?? [],
+        'selectedSkills': controller.selectedSkills,
         'label': controller.selectedOption.text,
         // Add additional user-related fields as needed
       });
