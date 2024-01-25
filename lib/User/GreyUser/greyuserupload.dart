@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:country_state_city_picker/country_state_city_picker.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
 import 'package:hiremeinindiaapp/userpayment.dart';
-import 'package:hiremeinindiaapp/widgets/customtextfield.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../candidate_form_state.dart';
@@ -18,7 +15,6 @@ import '../../classes/language_constants.dart';
 import '../../Widgets/customtextstyle.dart';
 import '../../main.dart';
 import '../../widgets/custombutton.dart';
-import '../../widgets/hiremeinindia.dart';
 import 'package:file_picker/file_picker.dart';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -32,7 +28,6 @@ class GreyUserUpload extends StatefulWidget {
 }
 
 class _GreyUserUpload extends State<GreyUserUpload> {
-  @override
   bool isChecked = false;
   String? uploadedMessage;
   String? uploadedImageUrlAadhar;
@@ -137,7 +132,6 @@ class _GreyUserUpload extends State<GreyUserUpload> {
     setState(() {
       uploadTask = ref.putFile(file);
     });
-    final snapshot = await uploadTask!.whenComplete(() {});
     final urlDownload = await ref.getDownloadURL();
     print('Download Link: $urlDownload');
     setState(() {

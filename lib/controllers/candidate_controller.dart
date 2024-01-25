@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hiremeinindiaapp/User/candidate_form_state.dart';
-
 import '../Models/candidated.dart';
-import '../Models/results.dart';
 
 class CandidateController {
   CandidateController({
@@ -28,10 +26,10 @@ class CandidateController {
         "qualification": controller.qualification.text,
         "state": controller.state.text,
         "address": controller.address.text,
-        'selectedWorkins': controller.selectedWorkins ?? [],
+        'selectedWorkins': controller.selectedWorkins,
         "city": controller.city.text,
         "country": controller.country.text,
-        'selectedSkills': controller.selectedSkills ?? [],
+        'selectedSkills': controller.selectedSkills,
         "label": controller.selectedOption.text,
       }, SetOptions(merge: true));
 

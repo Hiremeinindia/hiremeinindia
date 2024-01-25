@@ -280,7 +280,7 @@ class _ColumnViewState extends State<ColumnView> {
                 return const Center(
                   child: Padding(
                     padding: EdgeInsets.all(32.0),
-                    child: Text("No candidates are added yet"),
+                    child: Text("No staffs are added yet"),
                   ),
                 );
               } else {
@@ -290,34 +290,17 @@ class _ColumnViewState extends State<ColumnView> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  offset: Offset(0.0, 1.0), //(x,y)
-                                  blurRadius: 2,
-                                ),
-                              ],
-                              borderRadius: BorderRadius.circular(1),
-                              border: Border.all(color: Colors.black12),
-                              color: Colors.white,
-                            ),
-                            child: SizedBox(
-                              // height: double.maxFinite,
-                              width: double.maxFinite,
-                              child: PaginatedDataTable(
-                                headingRowColor: MaterialStateColor.resolveWith(
-                                    (states) =>
-                                        Color.fromARGB(255, 104, 104, 208)),
-                                showFirstLastButtons: true,
-                                rowsPerPage: 20,
-                                // (Get.height ~/ kMinInteractiveDimension) -
-                                //     4,
-                                columns: CandidateListSource.getColumns(),
-
-                                source: CandidateListSource(candidates,
-                                    context: context),
-                              ),
+                          SizedBox(
+                            // height: double.maxFinite,
+                            width: double.maxFinite,
+                            child: PaginatedDataTable(
+                              showFirstLastButtons: true,
+                              rowsPerPage: 20,
+                              // (Get.height ~/ kMinInteractiveDimension) -
+                              //     4,
+                              columns: CandidateListSource.getColumns(),
+                              source: CandidateListSource(candidates,
+                                  context: context),
                             ),
                           ),
                         ],

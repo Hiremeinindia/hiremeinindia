@@ -124,14 +124,16 @@ class Candidate {
         (value) => value.docs.map((e) => Candidate.fromSnapshot(e)).toList());
   }
 
-  static Stream<List<Candidate>> getSkills({
-    Candidate? candidate,
-  }) {
-    var query = FirebaseFirestore.instance
-        .collectionGroup('greycollaruser')
-        .where('leadStatus', isEqualTo: CandidateStatus.verified.index);
-    if (candidate != null) {
-      query = query.where("selectedSkills", isEqualTo: candidate.reference);
+  static Stream<List<Candidate>> getSkills(
+      {Candidate? selectedSkills, Candidate? qualification}) {
+    Query<Map<String, dynamic>> query =
+        FirebaseFirestore.instance.collection('greycollaruser');
+    if (selectedSkills != null) {
+      query =
+          query.where("selectedSkills"[0], isEqualTo: selectedSkills.reference);
+    }
+    if (qualification != null) {
+      query = query.where("qualification", isEqualTo: qualification.reference);
     }
 
     return query.snapshots().map((event) {
