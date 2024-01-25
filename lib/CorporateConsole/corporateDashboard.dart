@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:hiremeinindiaapp/CorporateConsole/corporate.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/multipleFilter.dart';
 import 'package:hiremeinindiaapp/Providers/session.dart';
 import '../Classes/language.dart';
@@ -40,7 +38,6 @@ class _CorporateDashboard extends State<CorporateDashboard> {
 
   bool isPressed = false;
 
-  String? _userName;
   late Stream<DocumentSnapshot<Map<String, dynamic>>> userStream;
 
   @override
@@ -65,7 +62,6 @@ class _CorporateDashboard extends State<CorporateDashboard> {
           Map<String, dynamic> data = documentSnapshot.data()!;
           String name = data['name'];
           print('Name: $name');
-          _userName = name;
           return data;
         } else {
           print('Document does not exist');
@@ -484,7 +480,9 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                     SizedBox(
                       height: 50,
                     ),
-                    isPressed ? MultipleFilter() : ColumnView(),
+                    isPressed
+                        ? Container(child: MultipleFilter())
+                        : ColumnView(),
                   ]),
             ),
           ],

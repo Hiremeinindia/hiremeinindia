@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -27,7 +26,6 @@ class _NewUserPayment extends State<NewUserPayment> {
   bool isChecked = false;
   bool isProcessing = false;
   PlatformFile? _cashReceipt;
-  String? _uploadedImageURL; // New variable to store uploaded image URL
 
   Future<void> showFileUploadSuccessDialog() async {
     await showDialog(

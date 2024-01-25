@@ -1,11 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:hiremeinindiaapp/CorporateConsole/corporateRegistration.dart';
-import 'package:hiremeinindiaapp/User/GreyUser/greyRegistration.dart';
+import 'package:hiremeinindiaapp/User/GreyUser/greyuserupload.dart';
 import 'package:hiremeinindiaapp/functions/firestoreservice.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
-import 'package:hiremeinindiaapp/gethired.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:provider/provider.dart';
 import 'classes/language_constants.dart';
@@ -19,7 +17,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   print("Initializing Firebase...");
   await Firebase.initializeApp(
-      options: FirebaseOptions(
+      options: const FirebaseOptions(
     apiKey: 'AIzaSyBKUuhUeiA2DpvZD4od15RdHEBZyjsuVlA',
     appId: '1:316659430730:web:1afaddd5a3f41be5cffdb3',
     messagingSenderId: '316659430730',
@@ -91,7 +89,7 @@ class _HireAppState extends State<HireApp> {
         supportedLocales: AppLocalizations.supportedLocales,
         locale: _locale,
         debugShowCheckedModeBanner: false,
-        home: LoginPage(),
+        home: GreyUserUpload(),
       ),
     );
   }

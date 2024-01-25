@@ -1,18 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hiremeinindiaapp/CorporateConsole/corporateDashboard.dart';
-import 'package:hiremeinindiaapp/CorporateConsole/corporateFormState.dart';
-import 'package:hiremeinindiaapp/authservice.dart';
-import 'package:hiremeinindiaapp/main.dart';
-import 'package:hiremeinindiaapp/userdashboard.dart';
-import 'package:hiremeinindiaapp/widgets/customtextfield.dart';
-import 'Widgets/customtextstyle.dart';
-import 'classes/language.dart';
-import 'classes/language_constants.dart';
-import 'gen_l10n/app_localizations.dart';
-import 'widgets/custombutton.dart';
 
 class SamplePage extends StatefulWidget {
   @override

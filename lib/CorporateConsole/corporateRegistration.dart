@@ -7,7 +7,6 @@ import 'package:hiremeinindiaapp/CorporateConsole/corporate.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/corporateFormState.dart';
 import 'package:hiremeinindiaapp/Widgets/customTextstyle.dart';
 import 'package:hiremeinindiaapp/classes/language.dart';
-import 'package:hiremeinindiaapp/controllers/corporateController.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:hiremeinindiaapp/main.dart';
