@@ -30,7 +30,7 @@ class _NewUserPayment extends State<NewUserPayment> {
   String? _uploadedImageURL; // New variable to store uploaded image URL
 
   Future<void> showFileUploadSuccessDialog() async {
-    await showDialog(
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -61,7 +61,7 @@ class _NewUserPayment extends State<NewUserPayment> {
   }
 
   Future<void> getCashReceipt() async {
-    final String serverUrl = 'http://localhost:3013';
+    final String serverUrl = 'http://localhost:3014';
     final String endpoint = '/getCashReceipt';
 
     try {
@@ -92,26 +92,17 @@ class _NewUserPayment extends State<NewUserPayment> {
 
         print('Cash receipt uploaded: ${_cashReceipt!.name}');
 
-        // Check if the path is not null before proceeding
-        // Check if the path is not null before proceeding
-        if (_cashReceipt!.path != null) {
-          // For non-web platforms, use the path property
-          List<int> fileBytes;
-          if (kIsWeb) {
-            // For web, use the bytes property
-            fileBytes = _cashReceipt!.bytes!;
-          } else {
-            fileBytes = await _readFileAsBytes(_cashReceipt!.path!);
-          }
+        // For non-web platforms, use the path property
+        // For web, use the bytes property
+        List<int> fileBytes = kIsWeb
+            ? _cashReceipt!.bytes!
+            : await _readFileAsBytes(_cashReceipt!.path!);
 
-          // Upload the cash receipt image to Firebase Storage
-          await uploadImageToFirebase(fileBytes, 'cash_receipt.jpg');
+        // Upload the cash receipt image to Firebase Storage
+        await uploadImageToFirebase(fileBytes, 'cash_receipt.jpg');
 
-          // Show the file upload success dialog
-          await showFileUploadSuccessDialog();
-        } else {
-          print('File path is null');
-        }
+        // Show the file upload success dialog
+        await showFileUploadSuccessDialog();
       } else {
         print('No file selected');
       }
@@ -161,7 +152,7 @@ class _NewUserPayment extends State<NewUserPayment> {
     setState(() {
       isProcessing = true; // Set the flag to indicate processing
     });
-    final String serverUrl = 'http://localhost:3013';
+    final String serverUrl = 'http://localhost:3014';
     final String endpoint = '/cashNotification';
 
     try {

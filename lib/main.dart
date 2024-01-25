@@ -6,6 +6,7 @@ import 'package:hiremeinindiaapp/User/GreyUser/greyRegistration.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
 import 'package:hiremeinindiaapp/gethired.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
+import 'package:hiremeinindiaapp/userpayment.dart';
 import 'classes/language_constants.dart';
 
 const String channelId = 'cash_notification_channel';
@@ -85,7 +86,7 @@ class _HireAppState extends State<HireApp> {
       supportedLocales: AppLocalizations.supportedLocales,
       locale: _locale,
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: NewUserPayment(),
     );
   }
 }
