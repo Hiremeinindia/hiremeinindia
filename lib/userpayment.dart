@@ -1,10 +1,13 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hiremeinindiaapp/User/candidate_form_state.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import 'Widgets/customtextstyle.dart';
 import 'classes/language_constants.dart';
@@ -23,12 +26,44 @@ class NewUserPayment extends StatefulWidget {
 }
 
 class _NewUserPayment extends State<NewUserPayment> {
+  Map<String, dynamic> dataMap = {};
   bool isChecked = false;
   bool isProcessing = false;
   PlatformFile? _cashReceipt;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final _formKey = GlobalKey<FormState>();
+  CandidateFormController controller = CandidateFormController();
+  String? _uploadedImageURL; // New variable to store uploaded image URL
+  Future<void> assignUserRole(String uid, String role) async {
+    try {
+      String userCollection = 'greycollaruser';
+
+      // Assign the user role to the user
+      await FirebaseFirestore.instance.collection(userCollection).doc(uid).set({
+        'name': controller.name.text,
+        'email': controller.email.text,
+        'mobile': controller.mobile.text,
+        'worktitle': controller.worktitle.text,
+        "aadharno": controller.aadharno.text,
+        "gender": controller.gender.text,
+        "workexp": controller.workexp.text,
+        "qualification": controller.qualification.text,
+        "state": controller.state.text,
+        "address": controller.address.text,
+        'selectedWorkins': controller.selectedWorkins ?? [],
+        "city": controller.city.text,
+        "country": controller.country.text,
+        'selectedSkills': controller.selectedSkills ?? [],
+        'label': controller.selectedOption.text,
+        // Add additional user-related fields as needed
+      });
+    } catch (e) {
+      print('Error assigning user role: $e');
+    }
+  }
 
   Future<void> showFileUploadSuccessDialog() async {
-    await showDialog(
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -59,7 +94,7 @@ class _NewUserPayment extends State<NewUserPayment> {
   }
 
   Future<void> getCashReceipt() async {
-    final String serverUrl = 'http://localhost:3013';
+    final String serverUrl = 'http://localhost:3014';
     final String endpoint = '/getCashReceipt';
 
     try {
@@ -88,33 +123,74 @@ class _NewUserPayment extends State<NewUserPayment> {
           _cashReceipt = result.files.first;
         });
 
-        print('Cash receipt uploaded: ${_cashReceipt!.name}');
+        // For non-web platforms, use the path property
+        // For web, use the bytes property
+        List<int> fileBytes = kIsWeb
+            ? _cashReceipt!.bytes!
+            : await _readFileAsBytes(_cashReceipt!.path!);
 
-        // Check if the path is not null before proceeding
-        // Check if the path is not null before proceeding
-        if (_cashReceipt!.path != null) {
-          // For non-web platforms, use the path property
-          List<int> fileBytes;
-          if (kIsWeb) {
-            // For web, use the bytes property
-            fileBytes = _cashReceipt!.bytes!;
-          } else {
-            fileBytes = await _readFileAsBytes(_cashReceipt!.path!);
-          }
+        // Upload the cash receipt image to Firebase Storage
+        await uploadImageToFirebase(fileBytes, 'cash_receipt.jpg');
 
-          // Upload the cash receipt image to Firebase Storage
-          await uploadImageToFirebase(fileBytes, 'cash_receipt.jpg');
-
-          // Show the file upload success dialog
-          await showFileUploadSuccessDialog();
-        } else {
-          print('File path is null');
-        }
+        // Show success dialog or handle success scenario as needed
       } else {
         print('No file selected');
       }
     } catch (e) {
       print('Error picking file: $e');
+      // Handle error scenario
+    }
+  }
+
+  Future<void> uploadUserData() async {
+    try {
+      // Prepare user registration data
+      Set<String> registrationData = {
+        'name',
+        'email',
+        'mobile',
+        'worktitle',
+        "aadharno",
+        "gender",
+        "workexp",
+        "qualification",
+        "state",
+        "address",
+        'selectedWorkins',
+        "city",
+        "country",
+        'selectedSkills',
+        'label'
+        // Add other registration data fields as needed
+      };
+
+      // Prepare documentation upload data
+      // Example:
+      Map<String, dynamic> documentationData = {
+        'document1Url': 'url_to_document1.pdf',
+        'document2Url': 'url_to_document2.pdf',
+        // Add other documentation data fields as needed
+      };
+
+      // Prepare payment receipt data
+      // Example:
+      Map<String, dynamic> paymentReceiptData = {
+        'receiptUrl': 'url_to_receipt.pdf',
+        'amountPaid': 100,
+        // Add other payment receipt data fields as needed
+      };
+
+      // Upload all data to Firestore
+      await FirebaseFirestore.instance.collection('greyusercollar').add({
+        'registrationData': registrationData,
+        'documentationData': documentationData,
+        'paymentReceiptData': paymentReceiptData,
+      });
+
+      print('User data uploaded successfully');
+    } catch (e) {
+      print('Error uploading user data: $e');
+      // Handle error scenario
     }
   }
 
@@ -159,7 +235,7 @@ class _NewUserPayment extends State<NewUserPayment> {
     setState(() {
       isProcessing = true; // Set the flag to indicate processing
     });
-    final String serverUrl = 'http://localhost:3013';
+    final String serverUrl = 'http://localhost:3014';
     final String endpoint = '/cashNotification';
 
     try {
@@ -221,6 +297,13 @@ class _NewUserPayment extends State<NewUserPayment> {
   }
 
   Widget build(BuildContext context) {
+    final Object? data = ModalRoute.of(context)?.settings.arguments;
+    final Map<String, dynamic> dataMap = {
+      'data': data,
+    };
+
+// Now you can store this map in Firestore
+    FirebaseFirestore.instance.collection('greyusercollar').add(dataMap);
     return Scaffold(
         appBar: AppBar(
           title: HireMeInIndia(),
@@ -580,11 +663,49 @@ class _NewUserPayment extends State<NewUserPayment> {
                 children: [
                   CustomButton(
                     text: translation(context).next,
-                    onPressed: () {
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        // Sign up with email and password
+                        Navigator.pushNamed(
+                          context,
+                          '/document',
+                          arguments: [
+                            'name',
+                            'email',
+                            'mobile',
+                            'worktitle',
+                            "aadharno",
+                            "gender",
+                            "workexp",
+                            "qualification",
+                            "state",
+                            "address",
+                            'selectedWorkins',
+                            "city",
+                            "country",
+                            'selectedSkills',
+                            'label'
+                          ], // Pass only keys to the next page
+                        );
+                        UserCredential userCredential =
+                            await _auth.createUserWithEmailAndPassword(
+                          email: controller.email.text,
+                          password: controller.password.text,
+                        );
+                        await assignUserRole(userCredential.user!.uid, 'Blue');
+                      }
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => LoginPage()),
                       );
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  CustomButton(
+                    text: 'Complete Payment',
+                    onPressed: () async {
+                      // Call the method to upload all user data to Firestore
+                      await uploadUserData();
                     },
                   ),
                 ],
