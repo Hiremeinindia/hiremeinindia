@@ -1,24 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Corporate {
-  final String? name;
-  final String? companyName;
-  final String? designation;
-  final String? email;
-  final String? password;
-  final String? confirmPassword;
-  final DocumentReference reference;
-  final String? selectedOption;
+  String name;
+  String? companyName;
+  String? designation;
+  String? email;
+  String? password;
+  String? confirmPassword;
+  DocumentReference? reference;
+  String? selectedOption;
 
   Corporate({
-    this.name,
+    required this.name,
     this.companyName,
     this.designation,
     this.email,
     this.password,
     this.confirmPassword,
     this.selectedOption,
-    required this.reference,
+    this.reference,
   });
 
   Map<String, dynamic> toJson() => {
@@ -48,9 +48,9 @@ class Corporate {
     return Corporate(
         name: data["name"],
         companyName: data["companyName"],
+        designation: data["designation"],
         email: data["email"],
         reference: data["reference"],
-        designation: data["designation"],
         password: data["password"],
         selectedOption: data["selectedOption"],
         confirmPassword: data["confirmPassword"]);

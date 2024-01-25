@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/corporateRegistration.dart';
 import 'package:hiremeinindiaapp/User/GreyUser/greyRegistration.dart';
+import 'package:hiremeinindiaapp/functions/firestoreservice.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
 import 'package:hiremeinindiaapp/gethired.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
-import 'package:hiremeinindiaapp/userpayment.dart';
+import 'package:provider/provider.dart';
 import 'classes/language_constants.dart';
 
 const String channelId = 'cash_notification_channel';
@@ -77,16 +78,21 @@ class _HireAppState extends State<HireApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // routes: {
-      //   '/newUserPayment': (context) => const NewUserPayment(),
-      // },
-      // initialRoute: '/newUserPayment', // Change the initialRoute
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      locale: _locale,
-      debugShowCheckedModeBanner: false,
-      home: NewUserPayment(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => FirebaseService()),
+      ],
+      child: MaterialApp(
+        // routes: {
+        //   '/newUserPayment': (context) => const NewUserPayment(),
+        // },
+        // initialRoute: '/newUserPayment', // Change the initialRoute
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: _locale,
+        debugShowCheckedModeBanner: false,
+        home: NewUserPayment(),
+      ),
     );
   }
 }

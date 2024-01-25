@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hiremeinindiaapp/CorporateConsole/corporate.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/multipleFilter.dart';
+import 'package:hiremeinindiaapp/Providers/session.dart';
 import '../Classes/language.dart';
 import '../Classes/language_constants.dart';
 import '../Widgets/hiremeinindia.dart';
@@ -285,24 +288,9 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                     ),
                   ),
                   SizedBox(width: 8.0),
-                  StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                    stream: userStream,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        String? userName = snapshot.data?.data()?['name'];
-                        return Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            'Hello, $userName',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        );
-                      }
-                    },
+                  Text(
+                    AppSession().candidate?.name ?? "No Username",
+                    style: TextStyle(fontSize: 18),
                   ),
                 ],
               ),
