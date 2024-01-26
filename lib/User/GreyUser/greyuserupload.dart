@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:country_state_city_pro/country_state_city_pro.dart';
-import 'package:csc_picker/csc_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -832,6 +831,22 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                 ),
                 SizedBox(
                   width: 20,
+                ),
+                SizedBox(
+                  width: 200,
+                  child: CountryStateCityPicker(
+                      country: controller.country,
+                      state: controller.state,
+                      city: controller.city,
+                      textFieldDecoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          suffixIcon: const Icon(
+                            Icons.arrow_downward_rounded,
+                            size: 20,
+                          ),
+                          border: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black)))),
                 ),
                 SizedBox(
                   width: 20,
