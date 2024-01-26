@@ -341,7 +341,7 @@ class CandidateListSource extends DataTableSource {
         // DataCell(Text((index + 1).toString())),
         DataCell(Text(e.name.toString())),
         DataCell(Text(e.mobile.toString())),
-        DataCell(Text(e.qualification.toString())),
+        DataCell(Text(e.qualification?.toString() ?? 'nill')),
         DataCell(
           Text(e.selectedSkills!.isNotEmpty ? e.selectedSkills![0] : ''),
         ),
