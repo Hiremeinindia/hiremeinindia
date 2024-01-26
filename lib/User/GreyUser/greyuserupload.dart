@@ -3,10 +3,13 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:hiremeinindiaapp/Models/candidated.dart';
+import 'package:hiremeinindiaapp/User/GreyUser/greyRegistration.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
 import 'package:hiremeinindiaapp/userpayment.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -44,6 +47,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
   String? downloadURL5;
   PlatformFile? pickedFile;
   UploadTask? uploadTask;
+  final _formKey = GlobalKey<FormState>();
   final List<String> items = ['Tamil', 'English', 'French', 'Malayalam'];
   String? selectedValue;
   String email = '';
@@ -52,6 +56,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
   String? countryValue;
   String? stateValue;
   String? cityValue;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String _title = '';
   CandidateFormController controller = CandidateFormController();
@@ -62,6 +67,52 @@ class _GreyUserUpload extends State<GreyUserUpload> {
     controller.bluecoller.dispose();
     controller.state.dispose();
     super.dispose();
+  }
+
+  Future<List<String>> uploadImages(CandidateFormController controller) async {
+    List<String> imageUrls = [];
+    try {
+      for (File image in controller.images) {
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('candidate_images/${DateTime.now().millisecondsSinceEpoch}');
+        await ref.putFile(image);
+        final urlDownload = await ref.getDownloadURL();
+        imageUrls.add(urlDownload);
+      }
+    } catch (error) {
+      print('Error uploading images: $error');
+      throw error;
+    }
+    return imageUrls;
+  }
+
+  Future<void> assignUserRole(String uid, String role) async {
+    try {
+      String userCollection = 'greycollaruser';
+
+      // Assign the user role to the user
+      await FirebaseFirestore.instance.collection(userCollection).doc(uid).set({
+        'name': controller.name.text,
+        'email': controller.email.text,
+        'mobile': controller.mobile.text,
+        'worktitle': controller.worktitle.text,
+        "aadharno": controller.aadharno.text,
+        "gender": controller.gender.text,
+        "workexp": controller.workexp.text,
+        "qualification": controller.qualification.text,
+        "state": controller.state.text,
+        "address": controller.address.text,
+        'selectedWorkins': controller.selectedWorkins ?? [],
+        "city": controller.city.text,
+        "country": controller.country.text,
+        'selectedSkills': controller.selectedSkills ?? [],
+        'label': controller.selectedOption.text,
+        // Add additional user-related fields as needed
+      });
+    } catch (e) {
+      print('Error assigning user role: $e');
+    }
   }
 
   Future<void> uploadFileToFirestore(String filePath) async {
@@ -876,7 +927,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                       width: 400,
                       height: 40,
                       child: TextField(
-                        controller: controller.expectedWage, // Set controller
+                        controller: controller.expectedwage, // Set controller
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                         ),
@@ -887,7 +938,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                       width: 400,
                       height: 40,
                       child: TextField(
-                        controller: controller.currentWage, // Set controller
+                        controller: controller.currentwage, // Set controller
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                         ),
@@ -905,34 +956,63 @@ class _GreyUserUpload extends State<GreyUserUpload> {
               children: [
                 CustomButton(
                   text: translation(context).back,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Registration()),
+                    );
+                  },
                 ),
                 SizedBox(width: 50),
                 CustomButton(
                   text: translation(context).next,
-                  onPressed: () {
-                    final Set<String> data = {
-                      'name',
-                      'email',
-                      'mobile',
-                      'worktitle',
-                      "aadharno",
-                      "gender",
-                      "workexp",
-                      "qualification",
-                      "state",
-                      "address",
-                      'selectedWorkins',
-                      "city",
-                      "country",
-                      'selectedSkills',
-                      'label'
-                    };
-                    Navigator.pushNamed(
-                      context,
-                      '/payment',
-                      arguments: data, // Pass data to the payment page
-                    );
+                  onPressed: () async {
+                    try {
+                      // // Sign up with email and password
+                      // UserCredential userCredential =
+                      //     await _auth.createUserWithEmailAndPassword(
+                      //   email: controller.email.text,
+                      //   password: controller.password.text,
+                      // );
+                      List<String> imageUrls = await uploadImages(controller);
+                      final Map<String, Object> data = {
+                        'name': controller.name.text,
+                        'email': controller.email.text,
+                        'mobile': controller.mobile.text,
+                        'worktitle': controller.worktitle.text,
+                        "aadharno": controller.aadharno.text,
+                        "gender": controller.gender.text,
+                        "workexp": controller.workexp.text,
+                        "qualification": controller.qualification.text,
+                        "state": controller.state.text,
+                        "address": controller.address.text,
+                        'selectedWorkins': controller.selectedWorkins,
+                        "city": controller.city.text,
+                        "country": controller.country.text,
+                        'selectedSkills': controller.selectedSkills,
+                        "label": controller.selectedOption.text,
+                        "expectedwage": controller.expectedwage,
+                        "currentwage": controller.currentwage,
+                        "imageUrls": imageUrls,
+                      };
+
+                      // await assignUserRole(userCredential.user!.uid, 'Blue');
+
+                      // Upload images
+
+                      // Prepare data to pass to the payment page
+
+                      // Navigate to the payment page
+                      Navigator.pushNamed(
+                        context,
+                        '/payment',
+                        arguments: data,
+                      );
+                    } catch (e) {
+                      print('Error signing up: $e');
+                      // Handle sign-up error
+                    }
                   },
                 ),
               ],
@@ -975,4 +1055,35 @@ class _GreyUserUpload extends State<GreyUserUpload> {
           );
         }
       });
+
+  Future<void> addCandidate(CandidateFormController controller) async {
+    try {
+      List<String> imageUrls = await uploadImages(controller);
+      await controller.reference.set({
+        'name': controller.name.text,
+        'email': controller.email.text,
+        'mobile': controller.mobile.text,
+        'worktitle': controller.worktitle.text,
+        "aadharno": controller.aadharno.text,
+        "gender": controller.gender.text,
+        "workexp": controller.workexp.text,
+        "qualification": controller.qualification.text,
+        "state": controller.state.text,
+        "address": controller.address.text,
+        'selectedWorkins': controller.selectedWorkins,
+        "city": controller.city.text,
+        "country": controller.country.text,
+        'selectedSkills': controller.selectedSkills,
+        "label": controller.selectedOption.text,
+        "expectedwage": controller.expectedwage,
+        "currentwage": controller.currentwage,
+        "imageUrls": imageUrls,
+      }, SetOptions(merge: true));
+
+      print('Candidate added successfully');
+    } catch (error) {
+      print('Error adding candidate: $error');
+      throw error;
+    }
+  }
 }

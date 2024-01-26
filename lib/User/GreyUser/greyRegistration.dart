@@ -1191,24 +1191,26 @@ class _RegistrationState extends State<Registration> {
                         SizedBox(width: 55),
                         Expanded(
                             child: CustomTextfield(
-                                controller: controller.email,
-                                validator: (val) {
-                                  if (AppSession()
-                                      .candidates
-                                      .where((element) =>
-                                          element.email!.toLowerCase() ==
-                                          val?.toLowerCase())
-                                      .isNotEmpty) {
-                                    return "Already User Exist";
-                                  }
-                                  ;
-                                  MultiValidator([
-                                    RequiredValidator(errorText: "* Required"),
-                                    EmailValidator(
-                                        errorText: "Enter valid email id"),
-                                  ]);
-                                  return null;
-                                })),
+                          controller: controller.email,
+                          validator: emailValidator,
+                          //(val) {
+                          //   if (AppSession()
+                          //       .candidates
+                          //       .where((element) =>
+                          //           element.email!.toLowerCase() ==
+                          //           val?.toLowerCase())
+                          //       .isNotEmpty) {
+                          //     return "Already User Exist";
+                          //   }
+                          //   ;
+                          //   MultiValidator([
+                          //     RequiredValidator(errorText: "* Required"),
+                          //     EmailValidator(
+                          //         errorText: "Enter valid email id"),
+                          //   ]);
+                          //   return null;
+                          // }
+                        )),
                         SizedBox(
                           height: 30,
                           child: ElevatedButton(
@@ -1219,32 +1221,52 @@ class _RegistrationState extends State<Registration> {
                               ),
                             ),
                             onPressed: () async {
-                              print("otp1");
-                              // Set OTP configuration
-                              myauth.setConfig(
-                                appEmail: "contact@hdevcoder.com",
-                                appName: "OTP for Registration",
-                                userEmail: controller.email.text,
-                                otpLength: 4,
-                                otpType: OTPType.digitsOnly,
-                              );
-                              _showOtpDialog();
+                              if (isValidEmail(controller.email.text)) {
+                                print("otp1");
+                                // Set OTP configuration
+                                myauth.setConfig(
+                                  appEmail: "contact@hdevcoder.com",
+                                  appName: "OTP for Registration",
+                                  userEmail: controller.email.text,
+                                  otpLength: 4,
+                                  otpType: OTPType.digitsOnly,
+                                );
+                                _showOtpDialog();
 
-                              // Send OTP to email
-                              bool otpSent = await myauth.sendOTP();
+                                // Send OTP to email
+                                bool otpSent = await myauth.sendOTP();
 
-                              // Show OTP entry dialog
-
-                              // Check if OTP sending is successful
-                              if (!otpSent) {
-                                // Display error pop-up for failed OTP sending
+                                // Check if OTP sending is successful
+                                if (!otpSent) {
+                                  // Display error pop-up for failed OTP sending
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text("Error"),
+                                        content:
+                                            Text("Oops, OTP sending failed."),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text("OK"),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              } else {
+                                // Display error message for invalid email format
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                       title: Text("Error"),
-                                      content:
-                                          Text("Oops, OTP sending failed."),
+                                      content: Text(
+                                          "Please enter a valid email address."),
                                       actions: <Widget>[
                                         TextButton(
                                           onPressed: () {
@@ -1869,23 +1891,22 @@ class _RegistrationState extends State<Registration> {
                                 Navigator.pushNamed(
                                   context,
                                   '/document',
-                                  arguments: [
-                                    'name',
-                                    'email',
-                                    'mobile',
-                                    'worktitle',
-                                    "aadharno",
-                                    "gender",
-                                    "workexp",
-                                    "qualification",
-                                    "state",
-                                    "address",
-                                    'selectedWorkins',
-                                    "city",
-                                    "country",
-                                    'selectedSkills',
-                                    'label'
-                                  ], // Pass only keys to the next page
+                                  arguments: {
+                                    'name': controller.name.text,
+                                    'email': controller.email.text,
+                                    'mobile': controller.mobile.text,
+                                    'worktitle': controller.worktitle.text,
+                                    "aadharno": controller.aadharno.text,
+                                    "gender": controller.gender.text,
+                                    "workexp": controller.workexp.text,
+                                    "qualification":
+                                        controller.qualification.text,
+                                    "address": controller.address.text,
+                                    'selectedWorkins':
+                                        controller.selectedWorkins,
+                                    'selectedSkills': controller.selectedSkills,
+                                    'label': controller.selectedOption.text,
+                                  }, // Pass only keys to the next page
                                 );
                               }
                             },
@@ -1946,6 +1967,22 @@ class _RegistrationState extends State<Registration> {
         return null;
       }
     }
+  }
+
+  bool isValidEmail(String email) {
+    // Regular expression for basic email validation
+    // This is a simple example and may not cover all valid email formats
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return emailRegex.hasMatch(email);
+  }
+
+  String? emailValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return '*Required';
+    } else if (!isValidEmail(value)) {
+      return 'Invalid email format';
+    }
+    return null;
   }
 }
 

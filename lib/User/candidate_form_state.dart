@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -23,15 +25,16 @@ class CandidateFormController {
   final contry = TextEditingController();
   final qualification = TextEditingController();
   final city = TextEditingController();
-  final expectedWage = TextEditingController();
-  final currentWage = TextEditingController();
+  final expectedwage = TextEditingController();
+  final currentwage = TextEditingController();
   final bluecoller = TextEditingController();
   final country = TextEditingController();
   final confirmPassword = TextEditingController();
+  List<File> images = [];
   List<String> selectedSkills = [];
   List<String> selectedWorkins = [];
   late TextEditingController selectedOption;
-
+  File? image;
   DocumentReference? _reference;
 
   DocumentReference get reference {
@@ -60,5 +63,17 @@ class CandidateFormController {
         selectedOption: selectedOption.text,
         confirmPassword: confirmPassword.text,
         country: country.text,
+        city: city.text,
+        expectedwage: expectedwage.text,
+        currentwage: currentwage.text,
+        imageUrl1: '',
+        imageUrl2: '',
+        imageUrl3: '',
+        imageUrl4: '',
+        imageUrl5: '',
       );
+
+  Future<void> setImage(File imageFile) async {
+    image = imageFile;
+  }
 }
