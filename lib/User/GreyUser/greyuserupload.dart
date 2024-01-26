@@ -834,22 +834,6 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                   width: 20,
                 ),
                 SizedBox(
-                  width: 200,
-                  child: CountryStateCityPicker(
-                      country: controller.country,
-                      state: controller.state,
-                      city: controller.city,
-                      textFieldDecoration: InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          suffixIcon: const Icon(
-                            Icons.arrow_downward_rounded,
-                            size: 20,
-                          ),
-                          border: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black)))),
-                ),
-                SizedBox(
                   width: 20,
                 ),
                 Column(
