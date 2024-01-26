@@ -992,8 +992,8 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                         "country": controller.country.text,
                         'selectedSkills': controller.selectedSkills,
                         "label": controller.selectedOption.text,
-                        "expectedwage": controller.expectedwage,
-                        "currentwage": controller.currentwage,
+                        "expectedwage": controller.expectedwage.text,
+                        "currentwage": controller.currentwage.text,
                         "imageUrls": imageUrls,
                       };
 
