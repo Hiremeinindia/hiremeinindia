@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:csc_picker/csc_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -64,23 +65,43 @@ class _GreyUserUpload extends State<GreyUserUpload> {
     super.dispose();
   }
 
-  Future<void> uploadFile(String filePath) async {
-    print("file4");
-    final path = 'uploads/${pickedFile!.name}';
-    final file = File(filePath);
-    final ref = FirebaseStorage.instance.ref().child(path);
+  Future<void> uploadFileToFirestore(String filePath) async {
+    try {
+      final file = File(filePath);
+      final fileName = _extractFileName(filePath);
 
-    // Use putFile to upload the file and get the UploadTask
-    setState(() {
-      uploadTask = ref.putFile(file);
-    });
-    final urlDownload = await ref.getDownloadURL();
-    print('Download Link: $urlDownload');
-    setState(() {
-      uploadTask = null;
-    });
+      // Reference to Firebase Storage
+      final ref = FirebaseStorage.instance.ref().child('uploads/$fileName');
 
-    // Wait for the upload to complete
+      // Upload file to Firebase Storage
+      await ref.putFile(file);
+
+      // Get download URL
+      final urlDownload = await ref.getDownloadURL();
+
+      // Store file URL in Firestore
+      await FirebaseFirestore.instance
+          .collection('greycollaruser')
+          .doc(fileName)
+          .set({
+        'fileName': fileName,
+        'downloadURL': urlDownload,
+        // Add additional fields as needed
+      });
+
+      print('File uploaded successfully to Firebase Storage and Firestore');
+    } catch (e) {
+      print('Error uploading file to Firebase Storage and Firestore: $e');
+      // Handle the error, e.g., show a message to the user
+    }
+  }
+
+  String _extractFileName(String filePath) {
+    // Split the file path by the platform-specific separator
+    List<String> parts = filePath.split(Platform.pathSeparator);
+    // Get the last part, which represents the file name
+    String fileName = parts.last;
+    return fileName;
   }
 
 // Function to upload file from bytes (for web platform)
@@ -473,7 +494,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                                   originalFileName: file.name,
                                 );
                               } else {
-                                await uploadFile(file.path!);
+                                await uploadFileToFirestore(file.path!);
                               }
 
                               // Retrieve the download URL and display the file
@@ -545,7 +566,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                                     fileBytes: file.bytes!,
                                     originalFileName: file.name);
                               } else {
-                                await uploadFile(file.path!);
+                                await uploadFileToFirestore(file.path!);
                               }
 
                               // Retrieve the download URL and display the file
@@ -616,7 +637,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                                     fileBytes: file.bytes!,
                                     originalFileName: file.name);
                               } else {
-                                await uploadFile(file.path!);
+                                await uploadFileToFirestore(file.path!);
                               }
 
                               // Retrieve the download URL and display the file
@@ -688,7 +709,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                                     fileBytes: file.bytes!,
                                     originalFileName: file.name);
                               } else {
-                                await uploadFile(file.path!);
+                                await uploadFileToFirestore(file.path!);
                               }
 
                               // Retrieve the download URL and display the file
@@ -760,7 +781,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                                     fileBytes: file.bytes!,
                                     originalFileName: file.name);
                               } else {
-                                await uploadFile(file.path!);
+                                await uploadFileToFirestore(file.path!);
                               }
 
                               // Retrieve the download URL and display the file
