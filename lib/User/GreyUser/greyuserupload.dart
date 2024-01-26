@@ -227,6 +227,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
   }
 
   Widget build(BuildContext context) {
+    final Object? keys = ModalRoute.of(context)!.settings.arguments;
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -991,10 +992,27 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                 CustomButton(
                   text: translation(context).next,
                   onPressed: () {
-                    Navigator.push(
+                    final Set<String> data = {
+                      'name',
+                      'email',
+                      'mobile',
+                      'worktitle',
+                      "aadharno",
+                      "gender",
+                      "workexp",
+                      "qualification",
+                      "state",
+                      "address",
+                      'selectedWorkins',
+                      "city",
+                      "country",
+                      'selectedSkills',
+                      'label'
+                    };
+                    Navigator.pushNamed(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => const NewUserPayment()),
+                      '/payment',
+                      arguments: data, // Pass data to the payment page
                     );
                   },
                 ),
