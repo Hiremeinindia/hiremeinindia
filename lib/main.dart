@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/corporateRegistration.dart';
 import 'package:hiremeinindiaapp/User/GreyUser/greyuserupload.dart';
+import 'package:hiremeinindiaapp/User/GreyUser/greyRegistration.dart';
 
 import 'package:hiremeinindiaapp/functions/firestoreservice.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
@@ -94,7 +95,7 @@ class _HireAppState extends State<HireApp> {
         supportedLocales: AppLocalizations.supportedLocales,
         locale: _locale,
         debugShowCheckedModeBanner: false,
-        home: CorporateRegistration(),
+        home: GreyUserUpload(),
       ),
     );
   }
