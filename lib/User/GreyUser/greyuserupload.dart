@@ -969,14 +969,11 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                   text: translation(context).next,
                   onPressed: () async {
                     try {
-                      // // Sign up with email and password
-                      // UserCredential userCredential =
-                      //     await _auth.createUserWithEmailAndPassword(
-                      //   email: controller.email.text,
-                      //   password: controller.password.text,
-                      // );
+                      // Upload images
                       List<String> imageUrls = await uploadImages(controller);
-                      final Map<String, Object> data = {
+
+                      // Prepare data to store in Firestore
+                      Map<String, dynamic> userData = {
                         'name': controller.name.text,
                         'email': controller.email.text,
                         'mobile': controller.mobile.text,
@@ -995,23 +992,23 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                         "expectedwage": controller.expectedwage.text,
                         "currentwage": controller.currentwage.text,
                         "imageUrls": imageUrls,
+                        // Add other fields as needed
                       };
 
-                      // await assignUserRole(userCredential.user!.uid, 'Blue');
+                      // Store data in Firestore
+                      await FirebaseFirestore.instance
+                          .collection('greyusercollar')
+                          .add(userData);
 
-                      // Upload images
-
-                      // Prepare data to pass to the payment page
-
-                      // Navigate to the payment page
+                      // Navigate to the payment page or any other destination
                       Navigator.pushNamed(
                         context,
                         '/payment',
-                        arguments: data,
+                        arguments: userData,
                       );
                     } catch (e) {
-                      print('Error signing up: $e');
-                      // Handle sign-up error
+                      print('Error uploading user data: $e');
+                      // Handle error
                     }
                   },
                 ),
@@ -1075,8 +1072,8 @@ class _GreyUserUpload extends State<GreyUserUpload> {
         "country": controller.country.text,
         'selectedSkills': controller.selectedSkills,
         "label": controller.selectedOption.text,
-        "expectedwage": controller.expectedwage,
-        "currentwage": controller.currentwage,
+        "expectedwage": controller.expectedwage.text,
+        "currentwage": controller.currentwage.text,
         "imageUrls": imageUrls,
       }, SetOptions(merge: true));
 
