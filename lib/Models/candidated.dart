@@ -63,7 +63,7 @@ class Candidate {
     this.imageUrl5,
   });
 
-  Map<String, dynamic> toJson() => {
+  toJson() => {
         "name": name,
         "reference": reference,
         "email": email,
@@ -128,37 +128,28 @@ class Candidate {
     );
   }
 
-  factory Candidate.fromJson(data) {
+  factory Candidate.fromJson(json, DocumentReference reference) {
     return Candidate(
-      name: data["name"],
-      email: data["email"],
-      mobile: data["mobile"],
-      reference: data["reference"],
-      workexp: data["workexp"],
-      aadharno: data["aadharno"],
-      gender: data["gender"],
-      selectedOption: data["selectedOption"],
-      qualification: data["qualification"],
-      worktitle: data["worktitle"],
-      state: data["state"],
-      address: data["address"],
-      selectedSkills: List<String>.from(data["selectedSkills"] ?? []),
-      selectedWorkins: List<String>.from(data["selectedWorkins"] ?? []),
-      workin: data["workin"],
-      password: data["password"],
-      otpm: data["otpm"],
-      code: data["code"],
-      country: data["country"],
-      confirmPassword: data["confirmPassword"],
-      city: data["city"],
-      expectedwage: data["expectedwage"],
-      currentwage: data["currentwage"],
-      imageUrl1: data["imageUrl1"],
-      imageUrl2: data["imageUrl2"],
-      imageUrl3: data["imageUrl3"],
-      imageUrl4: data["imageUrl4"],
-      imageUrl5: data["imageUrl5"],
-    );
+        name: json["name"],
+        email: json["email"],
+        mobile: json["mobile"],
+        reference: json["reference"],
+        workexp: json["workexp"],
+        aadharno: json["aadharno"],
+        gender: json["gender"],
+        selectedOption: json["selectedOption"],
+        qualification: json["qualification"],
+        worktitle: json["worktitle"],
+        state: json["state"],
+        address: json["address"],
+        selectedSkills: List<String>.from(json["selectedSkills"] ?? []),
+        selectedWorkins: List<String>.from(json["selectedWorkins"] ?? []),
+        workin: json["workin"],
+        password: json["password"],
+        otpm: json["otpm"],
+        code: json["code"],
+        country: json["country"],
+        confirmPassword: json["confirmPassword"]);
   }
 
   static Future<List<Candidate>> getCandidates({Candidate? candidate}) {
@@ -166,20 +157,33 @@ class Candidate {
         (value) => value.docs.map((e) => Candidate.fromSnapshot(e)).toList());
   }
 
-  static Stream<List<Candidate>> getSkills(
-      {Candidate? selectedSkills, Candidate? qualification}) {
+  static Stream<List<Candidate>> getQualifications({Candidate? candidate}) {
     Query<Map<String, dynamic>> query =
         FirebaseFirestore.instance.collection('greycollaruser');
-    if (selectedSkills != null) {
-      query =
-          query.where("selectedSkills"[0], isEqualTo: selectedSkills.reference);
-    }
-    if (qualification != null) {
-      query = query.where("qualification", isEqualTo: qualification.reference);
+
+    if (candidate?.qualification != null) {
+      print('Qualification: ${candidate!.qualification}');
+      query = query.where("qualification", isEqualTo: candidate.qualification);
+    } else {
+      print('Qualification or its reference is null');
+      // Handle the case where qualification or its reference is null.
     }
 
     return query.snapshots().map((event) {
-      return event.docs.map((e) => Candidate.fromSnapshot(e)).toList();
+      var list = event.docs.map((e) => Candidate.fromSnapshot(e)).toList();
+
+      if (candidate != null) {
+        print(
+            'Filtering list for candidate with reference: ${candidate.reference}');
+        // Filter the list to include only the specified candidate
+        list = list
+            .where((element) => element.reference == candidate.reference)
+            .toList();
+      }
+
+      print('Final List: $list');
+
+      return list;
     });
   }
 }
