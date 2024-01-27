@@ -229,55 +229,35 @@ class _MultipleFilterState extends State<MultipleFilter> {
           height: 550,
           child: SizedBox(
             child: StreamBuilder<List<Candidate>>(
-              stream: Candidate.getSkills(
-                selectedSkills: selectedSkills,
-                qualification: qualification,
-              ),
-              builder: (context, AsyncSnapshot<List<Candidate>> snapshot) {
-                if (snapshot.connectionState == ConnectionState.active &&
-                    snapshot.hasData) {
-                  print('Data received: ${snapshot.data}');
-                  return Listener(
-                    onPointerSignal: (event) {
-                      if (event is PointerScrollEvent) {
-                        final offset = event.scrollDelta.dy;
-                        _scrollController
-                            .jumpTo(_scrollController.offset + offset);
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Card(
+                stream: Candidate.getQualifications(candidate: qualification),
+                builder: (context, AsyncSnapshot<List<Candidate>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.active &&
+                      snapshot.hasData) {
+                    return Listener(
+                      onPointerSignal: (event) {
+                        if (event is PointerScrollEvent) {
+                          final offset = event.scrollDelta.dy;
+                          _scrollController
+                              .jumpTo(_scrollController.offset + offset);
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
                         child: SingleChildScrollView(
                           child: Column(
                             children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      offset: Offset(0.0, 1.0), //(x,y)
-                                      blurRadius: 2,
-                                    ),
-                                  ],
-                                  borderRadius: BorderRadius.circular(1),
-                                  border: Border.all(color: Colors.black12),
-                                  color: Colors.white,
-                                ),
-                                child: SizedBox(
-                                  width: double.maxFinite,
-                                  child: PaginatedDataTable(
-                                    headingRowColor:
-                                        MaterialStateColor.resolveWith(
-                                      (states) =>
-                                          Color.fromARGB(255, 104, 104, 208),
-                                    ),
-                                    showFirstLastButtons: true,
-                                    rowsPerPage: 8,
-                                    columns: CandidateListSource.getColumns(),
-                                    source: CandidateListSource(
-                                      snapshot.data!,
-                                      context: context,
-                                    ),
+                              SizedBox(
+                                width: double.maxFinite,
+                                child: PaginatedDataTable(
+                                  showFirstLastButtons: true,
+                                  controller: _scrollController,
+                                  rowsPerPage: 20,
+                                  // (Get.height ~/ kMinInteractiveDimension) -
+                                  //     7,
+                                  columns: CandidateListSource.getColumns(),
+                                  source: CandidateListSource(
+                                    snapshot.data!,
+                                    context: context,
                                   ),
                                 ),
                               ),
@@ -285,21 +265,18 @@ class _MultipleFilterState extends State<MultipleFilter> {
                           ),
                         ),
                       ),
-                    ),
-                  );
-                }
-                if (snapshot.hasError) {
-                  return Center(
-                    child: SelectableText(snapshot.error.toString()),
-                  );
-                }
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: SelectableText(snapshot.error.toString()),
+                    );
+                  }
 
-                // If there's no data yet, display a loading indicator.
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-            ),
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }),
           ),
         ),
       ],
@@ -323,14 +300,14 @@ class CandidateListSource extends DataTableSource {
         // DataCell(Text((index + 1).toString())),
         DataCell(Text(e.name.toString())),
         DataCell(Text(e.mobile ?? '')),
-        DataCell(Text(e.name ?? '')),
+        DataCell(Text(e.qualification ?? '')),
         DataCell(
           Text(e.selectedSkills!.isNotEmpty ? e.selectedSkills![0] : ''),
         ),
         DataCell(
-          Text(e.qualification ?? ''),
+          Text(e.selectedSkills!.isNotEmpty ? e.selectedSkills![1] : ''),
         ),
-        DataCell(Text(e.selectedOption ?? '')),
+        DataCell(Text(e.selectedOption ?? '- - - -')),
         DataCell(Text(e.mobile ?? '')),
         DataCell(Text(e.name.toString())),
       ],

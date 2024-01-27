@@ -29,7 +29,7 @@ class FirebaseService with ChangeNotifier {
         mobile: doc['mobile'].toString(),
         qualification: doc['qualification'].toString(),
         selectedSkills: (doc['selectedSkills'] as List<dynamic>).cast<String>(),
-        selectedOption: doc['selectedOption']?.toString(),
+        selectedOption: doc['selectedOption'].toString(),
         // Add other fields as needed
       );
     }).toList();
