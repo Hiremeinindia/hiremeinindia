@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:hiremeinindiaapp/CorporateConsole/corporateRegistration.dart';
 import 'package:hiremeinindiaapp/User/GreyUser/greyuserupload.dart';
 import 'package:hiremeinindiaapp/User/GreyUser/greyRegistration.dart';
 
@@ -95,7 +94,7 @@ class _HireAppState extends State<HireApp> {
         supportedLocales: AppLocalizations.supportedLocales,
         locale: _locale,
         debugShowCheckedModeBanner: false,
-        home: Registration(),
+        home: LoginPage(),
       ),
     );
   }
