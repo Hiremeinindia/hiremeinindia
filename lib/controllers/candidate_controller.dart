@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:hiremeinindiaapp/User/candidate_form_state.dart';
 import '../Models/candidated.dart';
 
@@ -15,6 +18,7 @@ class CandidateController {
 
   Future<void> addCandidate(CandidateFormController controller) async {
     try {
+      List<String> imageUrls = await uploadImages(controller);
       await controller.reference.set({
         'name': controller.name.text,
         'email': controller.email.text,
@@ -31,6 +35,9 @@ class CandidateController {
         "country": controller.country.text,
         'selectedSkills': controller.selectedSkills,
         "label": controller.selectedOption.text,
+        "expectedwage": controller.expectedwage,
+        "currentwage": controller.currentwage,
+        "imageUrls": imageUrls,
       }, SetOptions(merge: true));
 
       print('Candidate added successfully');
@@ -38,6 +45,24 @@ class CandidateController {
       print('Error adding candidate: $error');
       throw error;
     }
+  }
+
+  Future<List<String>> uploadImages(CandidateFormController controller) async {
+    List<String> imageUrls = [];
+    try {
+      for (File image in controller.images) {
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('candidate_images/${DateTime.now().millisecondsSinceEpoch}');
+        await ref.putFile(image);
+        final urlDownload = await ref.getDownloadURL();
+        imageUrls.add(urlDownload);
+      }
+    } catch (error) {
+      print('Error uploading images: $error');
+      throw error;
+    }
+    return imageUrls;
   }
 
   static Future<List<Candidate>> loadStaffs(String search) {

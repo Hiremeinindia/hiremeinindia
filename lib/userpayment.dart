@@ -142,25 +142,47 @@ class _NewUserPayment extends State<NewUserPayment> {
     }
   }
 
+  Future<List<String>> uploadImages(CandidateFormController controller) async {
+    List<String> imageUrls = [];
+    try {
+      for (File image in controller.images) {
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('candidate_images/${DateTime.now().millisecondsSinceEpoch}');
+        await ref.putFile(image);
+        final urlDownload = await ref.getDownloadURL();
+        imageUrls.add(urlDownload);
+      }
+    } catch (error) {
+      print('Error uploading images: $error');
+      throw error;
+    }
+    return imageUrls;
+  }
+
   Future<void> uploadUserData() async {
     try {
+      List<String> imageUrls = await uploadImages(controller);
       // Prepare user registration data
-      Set<String> registrationData = {
-        'name',
-        'email',
-        'mobile',
-        'worktitle',
-        "aadharno",
-        "gender",
-        "workexp",
-        "qualification",
-        "state",
-        "address",
-        'selectedWorkins',
-        "city",
-        "country",
-        'selectedSkills',
-        'label'
+      Map<String, dynamic> registrationData = {
+        'name': controller.name.text,
+        'email': controller.email.text,
+        'mobile': controller.mobile.text,
+        'worktitle': controller.worktitle.text,
+        "aadharno": controller.aadharno.text,
+        "gender": controller.gender.text,
+        "workexp": controller.workexp.text,
+        "qualification": controller.qualification.text,
+        "state": controller.state.text,
+        "address": controller.address.text,
+        'selectedWorkins': controller.selectedWorkins,
+        "city": controller.city.text,
+        "country": controller.country.text,
+        'selectedSkills': controller.selectedSkills,
+        "label": controller.selectedOption.text,
+        "expectedwage": controller.expectedwage,
+        "currentwage": controller.currentwage,
+        "imageUrls": imageUrls,
         // Add other registration data fields as needed
       };
 
@@ -666,33 +688,32 @@ class _NewUserPayment extends State<NewUserPayment> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         // Sign up with email and password
+                        List<String> imageUrls = await uploadImages(controller);
                         Navigator.pushNamed(
                           context,
                           '/document',
-                          arguments: [
-                            'name',
-                            'email',
-                            'mobile',
-                            'worktitle',
-                            "aadharno",
-                            "gender",
-                            "workexp",
-                            "qualification",
-                            "state",
-                            "address",
-                            'selectedWorkins',
-                            "city",
-                            "country",
-                            'selectedSkills',
-                            'label'
-                          ], // Pass only keys to the next page
+                          arguments: {
+                            'name': controller.name.text,
+                            'email': controller.email.text,
+                            'mobile': controller.mobile.text,
+                            'worktitle': controller.worktitle.text,
+                            "aadharno": controller.aadharno.text,
+                            "gender": controller.gender.text,
+                            "workexp": controller.workexp.text,
+                            "qualification": controller.qualification.text,
+                            "state": controller.state.text,
+                            "address": controller.address.text,
+                            'selectedWorkins': controller.selectedWorkins,
+                            "city": controller.city.text,
+                            "country": controller.country.text,
+                            'selectedSkills': controller.selectedSkills,
+                            "label": controller.selectedOption.text,
+                            "expectedwage": controller.expectedwage,
+                            "currentwage": controller.currentwage,
+                            "imageUrls": imageUrls,
+                          }, // Pass only keys to the next page
                         );
-                        UserCredential userCredential =
-                            await _auth.createUserWithEmailAndPassword(
-                          email: controller.email.text,
-                          password: controller.password.text,
-                        );
-                        await assignUserRole(userCredential.user!.uid, 'Blue');
+                        await uploadUserData();
                       }
                       Navigator.push(
                         context,
@@ -705,7 +726,6 @@ class _NewUserPayment extends State<NewUserPayment> {
                     text: 'Complete Payment',
                     onPressed: () async {
                       // Call the method to upload all user data to Firestore
-                      await uploadUserData();
                     },
                   ),
                 ],

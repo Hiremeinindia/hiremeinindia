@@ -21,7 +21,15 @@ class Candidate {
   final String? code;
   final String? selectedOption;
   final String? country;
+  final String? city;
+  final String? expectedwage;
+  final String? currentwage;
   final String? confirmPassword;
+  final String? imageUrl1;
+  final String? imageUrl2;
+  final String? imageUrl3;
+  final String? imageUrl4;
+  final String? imageUrl5;
   final DocumentReference? reference;
 
   Candidate({
@@ -45,6 +53,14 @@ class Candidate {
     this.country,
     this.reference,
     this.selectedOption,
+    this.expectedwage,
+    this.city,
+    this.currentwage,
+    this.imageUrl1,
+    this.imageUrl2,
+    this.imageUrl3,
+    this.imageUrl4,
+    this.imageUrl5,
   });
 
   toJson() => {
@@ -68,31 +84,48 @@ class Candidate {
         "selectedOption": selectedOption,
         "country": country,
         "confirmPassword": confirmPassword,
+        "city": city,
+        "expectedwage": expectedwage,
+        "currentwage": currentwage,
+        "imageUrl1": imageUrl1,
+        "imageUrl2": imageUrl2,
+        "imageUrl3": imageUrl3,
+        "imageUrl4": imageUrl4,
+        "imageUrl5": imageUrl5,
       };
 
   factory Candidate.fromSnapshot(DocumentSnapshot snapshot) {
     var data = snapshot.data() as Map<String, dynamic>;
     return Candidate(
-        name: data["name"],
-        email: data["email"],
-        mobile: data["mobile"],
-        reference: snapshot.reference,
-        workexp: data["workexp"],
-        aadharno: data["aadharno"],
-        gender: data["gender"],
-        selectedOption: data["selectedOption"],
-        worktitle: data["worktitle"],
-        qualification: data["qualification"],
-        state: data["state"],
-        address: data["address"],
-        selectedSkills: List<String>.from(data["selectedSkills"] ?? []),
-        selectedWorkins: List<String>.from(data["selectedWorkins"] ?? []),
-        workin: data["workin"],
-        password: data["password"],
-        otpm: data["otpm"],
-        code: data["code"],
-        country: data["country"],
-        confirmPassword: data["confirmPassword"]);
+      name: data["name"],
+      email: data["email"],
+      mobile: data["mobile"],
+      reference: snapshot.reference,
+      workexp: data["workexp"],
+      aadharno: data["aadharno"],
+      gender: data["gender"],
+      selectedOption: data["selectedOption"],
+      worktitle: data["worktitle"],
+      qualification: data["qualification"],
+      state: data["state"],
+      address: data["address"],
+      selectedSkills: List<String>.from(data["selectedSkills"] ?? []),
+      selectedWorkins: List<String>.from(data["selectedWorkins"] ?? []),
+      workin: data["workin"],
+      password: data["password"],
+      otpm: data["otpm"],
+      code: data["code"],
+      country: data["country"],
+      confirmPassword: data["confirmPassword"],
+      city: data["city"],
+      expectedwage: data["expectedwage"],
+      currentwage: data["currentwage"],
+      imageUrl1: data["imageUrl1"],
+      imageUrl2: data["imageUrl2"],
+      imageUrl3: data["imageUrl3"],
+      imageUrl4: data["imageUrl4"],
+      imageUrl5: data["imageUrl5"],
+    );
   }
 
   factory Candidate.fromJson(json, DocumentReference reference) {
