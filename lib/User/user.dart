@@ -160,43 +160,16 @@ class Candidate {
   }
 
   static Stream<List<Candidate>> getFilteredList({
-    Candidate? selectedSkills,
     Candidate? selectedQualification,
+    Candidate? selectedSkills,
   }) {
-    Query<Map<String, dynamic>> query =
-        FirebaseFirestore.instance.collection('greycollaruser');
-
-    if (selectedQualification?.qualification != null) {
-      print('Qualification: ${selectedQualification!.qualification}');
-      query = query.where(
-        "qualification",
-        isEqualTo: selectedQualification.qualification,
-      );
-    } else {
-      print('Qualification or its reference is null');
-      // Handle the case where qualification or its reference is null.
-    }
-
-    // Filter by selectedSkills if provided
-    if (selectedSkills?.skills != null) {
-      print('Selected Skills: $selectedSkills');
-
-      // Using arrayContainsAll to filter documents where "selectedSkills" contains all skills from the list
-      query = query.where("selectedSkills",
-          arrayContains: selectedSkills?.skills![0]);
-    } else {
-      print('SelectedSkills or its reference is null');
-      // Handle the case where selectedSkills or its reference is null.
-    }
-
-    return query.snapshots().map((event) {
-      var list = event.docs.map((e) => Candidate.fromSnapshot(e)).toList();
-
-      // Additional filtering or processing logic if needed
-
-      print('Final List: $list');
-
-      return list;
+    // You can keep this method for additional filters if needed
+    // Make sure not to apply the skills filter here since it's done in the query
+    return FirebaseFirestore.instance
+        .collection("greycollaruser")
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => Candidate.fromSnapshot(doc)).toList();
     });
   }
 }
