@@ -13,7 +13,7 @@ class MultipleFilter extends StatefulWidget {
 }
 
 class _MultipleFilterState extends State<MultipleFilter> {
-  Candidate? selectedSkills;
+  Candidate? skills;
   Candidate? qualification;
   late String job;
   late Query<Map<String, dynamic>> query;
@@ -46,13 +46,13 @@ class _MultipleFilterState extends State<MultipleFilter> {
                   ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton2<Candidate?>(
-                      value: selectedSkills,
+                      value: skills,
                       isExpanded: true,
                       items: AppSession()
                           .candidates
                           .map((skill1Iterable) => DropdownMenuItem<Candidate?>(
                                 value: skill1Iterable,
-                                child: Text(skill1Iterable.selectedSkills![0]),
+                                child: Text(skill1Iterable.skills![0]),
                               ))
                           .followedBy([
                         const DropdownMenuItem<Candidate?>(
@@ -62,7 +62,7 @@ class _MultipleFilterState extends State<MultipleFilter> {
                       ]).toList(),
                       onChanged: (item) {
                         setState(() {
-                          selectedSkills = item;
+                          skills = item;
                         });
                       },
                       buttonStyleData: ButtonStyleData(
@@ -211,7 +211,7 @@ class _MultipleFilterState extends State<MultipleFilter> {
                 text: 'Clear',
                 onPressed: () {
                   setState(() {
-                    selectedSkills = null;
+                    skills = null;
                     qualification = null;
                   });
                 },
@@ -229,7 +229,9 @@ class _MultipleFilterState extends State<MultipleFilter> {
           height: 550,
           child: SizedBox(
             child: StreamBuilder<List<Candidate>>(
-                stream: Candidate.getQualifications(candidate: qualification),
+                stream: Candidate.getFilteredList(
+                    selectedQualification: qualification,
+                    selectedSkills: skills),
                 builder: (context, AsyncSnapshot<List<Candidate>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.active &&
                       snapshot.hasData) {
@@ -299,13 +301,19 @@ class CandidateListSource extends DataTableSource {
       cells: [
         // DataCell(Text((index + 1).toString())),
         DataCell(Text(e.name.toString())),
-        DataCell(Text(e.mobile ?? '')),
+        DataCell(SizedBox(
+          width: 27,
+          height: 27,
+          child: CircleAvatar(
+            backgroundColor: const Color.fromARGB(255, 51, 116, 53),
+          ),
+        )),
         DataCell(Text(e.qualification ?? '')),
         DataCell(
-          Text(e.selectedSkills!.isNotEmpty ? e.selectedSkills![0] : ''),
+          Text(e.skills!.isNotEmpty ? e.skills![0] : ''),
         ),
         DataCell(
-          Text(e.selectedSkills!.isNotEmpty ? e.selectedSkills![1] : ''),
+          Text(e.skills!.isNotEmpty ? e.skills![1] : ''),
         ),
         DataCell(Text(e.selectedOption ?? '- - - -')),
         DataCell(Text(e.mobile ?? '')),

@@ -35,7 +35,7 @@ class _CorporateDashboard extends State<CorporateDashboard> {
   String? selectedValue;
 
   bool dropdownValue = false;
-
+  bool isArrowClick = false;
   bool val1 = false;
 
   bool isPressed = false;
@@ -369,10 +369,25 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                                       snapshot.data != null) {
                                     // Display the user's name
                                     return Center(
-                                      child: Text(
-                                        'Hello $_userName',
-                                        style: CustomTextStyle.nameOfUser,
-                                        overflow: TextOverflow.ellipsis,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Hello $_userName',
+                                            style: CustomTextStyle.nameOfUser,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          IconButton(
+                                            icon: Icon(
+                                                Icons.arrow_downward_sharp),
+                                            iconSize: 30,
+                                            color: Colors.indigo.shade900,
+                                            onPressed: () {
+                                              setState(() {
+                                                isArrowClick = !isArrowClick;
+                                              });
+                                            },
+                                          ),
+                                        ],
                                       ),
                                     );
                                   } else {
@@ -389,26 +404,29 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                               builder: (context, snapshot) {
                                 if (snapshot.hasData && snapshot.data != null) {
                                   // Display the user's name
-                                  return Row(
-                                    children: [
-                                      Text(
-                                        '$_designation',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.indigo.shade900,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Poppins'),
-                                      ),
-                                      Text('|'),
-                                      Text(
-                                        'Tata Salt',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.indigo.shade900,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Poppins'),
-                                      ),
-                                    ],
+                                  return Visibility(
+                                    visible: isArrowClick,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          '$_designation',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.indigo.shade900,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Poppins'),
+                                        ),
+                                        Text('|'),
+                                        Text(
+                                          'Tata Salt',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.indigo.shade900,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Poppins'),
+                                        ),
+                                      ],
+                                    ),
                                   );
                                 } else {
                                   // Loading or error state

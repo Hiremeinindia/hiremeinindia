@@ -12,9 +12,9 @@ class Candidate {
   final String? workexp;
   final String? state;
   final String? address;
-  final List<String>? selectedSkills;
+  final List<String>? skills;
   final String? qualification;
-  final List<String>? selectedWorkins;
+  final List<String>? workins;
   final String? workin;
   final String? password;
   final String? otpm;
@@ -43,8 +43,8 @@ class Candidate {
     this.state,
     this.address,
     this.qualification,
-    this.selectedSkills,
-    this.selectedWorkins,
+    this.skills,
+    this.workins,
     this.workin,
     this.password,
     this.otpm,
@@ -75,8 +75,8 @@ class Candidate {
         "state": state,
         "address": address,
         "qualification": qualification,
-        "selectedSkills": selectedSkills,
-        "selectedWorkins": selectedWorkins,
+        "skills": skills,
+        "workins": workins,
         "workin": workin,
         "password": password,
         "otpm": otpm,
@@ -109,8 +109,8 @@ class Candidate {
       qualification: data["qualification"],
       state: data["state"],
       address: data["address"],
-      selectedSkills: List<String>.from(data["selectedSkills"] ?? []),
-      selectedWorkins: List<String>.from(data["selectedWorkins"] ?? []),
+      skills: List<String>.from(data["skills"] ?? []),
+      workins: List<String>.from(data["workins"] ?? []),
       workin: data["workin"],
       password: data["password"],
       otpm: data["otpm"],
@@ -143,8 +143,8 @@ class Candidate {
         worktitle: json["worktitle"],
         state: json["state"],
         address: json["address"],
-        selectedSkills: List<String>.from(json["selectedSkills"] ?? []),
-        selectedWorkins: List<String>.from(json["selectedWorkins"] ?? []),
+        skills: List<String>.from(json["skills"] ?? []),
+        workins: List<String>.from(json["workins"] ?? []),
         workin: json["workin"],
         password: json["password"],
         otpm: json["otpm"],
@@ -153,32 +153,46 @@ class Candidate {
         confirmPassword: json["confirmPassword"]);
   }
 
-  static Future<List<Candidate>> getCandidates({Candidate? candidate}) {
+  static Future<List<Candidate>> getCandidates(
+      {Candidate? selectedSkills, Candidate? selectedQualification}) {
     return FirebaseFirestore.instance.collection('greycollaruser').get().then(
         (value) => value.docs.map((e) => Candidate.fromSnapshot(e)).toList());
   }
 
-  static Stream<List<Candidate>> getQualifications({Candidate? candidate}) {
+  static Stream<List<Candidate>> getFilteredList({
+    Candidate? selectedSkills,
+    Candidate? selectedQualification,
+  }) {
     Query<Map<String, dynamic>> query =
         FirebaseFirestore.instance.collection('greycollaruser');
 
-    if (candidate?.qualification != null) {
-      print('Qualification: ${candidate!.qualification}');
-      query = query.where("qualification", isEqualTo: candidate.qualification);
+    if (selectedQualification?.qualification != null) {
+      print('Qualification: ${selectedQualification!.qualification}');
+      query = query.where(
+        "qualification",
+        isEqualTo: selectedQualification.qualification,
+      );
     } else {
       print('Qualification or its reference is null');
       // Handle the case where qualification or its reference is null.
     }
 
+    // Filter by selectedSkills if provided
+    if (selectedSkills?.skills != null) {
+      print('Selected Skills: $selectedSkills');
+
+      // Using arrayContainsAll to filter documents where "selectedSkills" contains all skills from the list
+      query = query.where("selectedSkills",
+          arrayContains: selectedSkills?.skills![0]);
+    } else {
+      print('SelectedSkills or its reference is null');
+      // Handle the case where selectedSkills or its reference is null.
+    }
+
     return query.snapshots().map((event) {
       var list = event.docs.map((e) => Candidate.fromSnapshot(e)).toList();
 
-      if (candidate != null) {
-        // Filter the list to include only the specified candidate
-        list = list
-            .where((element) => element.reference == candidate.reference)
-            .toList();
-      }
+      // Additional filtering or processing logic if needed
 
       print('Final List: $list');
 
