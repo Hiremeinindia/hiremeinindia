@@ -32,8 +32,8 @@ class NewUserPayment extends StatefulWidget {
     this.workexp,
     this.qualification,
     this.address,
-    this.selectedWorkins,
-    this.selectedSkills,
+    this.workins,
+    this.skills,
     this.label,
     this.expectedwage,
     this.currentwage,
@@ -55,8 +55,8 @@ class NewUserPayment extends StatefulWidget {
   final String? workexp;
   final String? qualification;
   final String? address;
-  final String? selectedWorkins;
-  final String? selectedSkills;
+  final String? workins;
+  final String? skills;
   final String? label;
   final String? name;
   final String? expectedwage;
@@ -99,10 +99,10 @@ class _NewUserPayment extends State<NewUserPayment> {
         "qualification": controller.qualification.text,
         "state": controller.state.text,
         "address": controller.address.text,
-        'selectedWorkins': controller.selectedWorkins ?? [],
+        'workins': controller.workins ?? [],
         "city": controller.city.text,
         "country": controller.country.text,
-        'selectedSkills': controller.selectedSkills ?? [],
+        'skills': controller.skills ?? [],
         'label': controller.selectedOption.text,
         // Add additional user-related fields as needed
       });
@@ -224,10 +224,10 @@ class _NewUserPayment extends State<NewUserPayment> {
         "qualification": controller.qualification.text,
         "state": controller.state.text,
         "address": controller.address.text,
-        'selectedWorkins': controller.selectedWorkins,
+        'workins': controller.workins,
         "city": controller.city.text,
         "country": controller.country.text,
-        'selectedSkills': controller.selectedSkills,
+        'skills': controller.skills,
         "label": controller.selectedOption.text,
         "expectedwage": controller.expectedwage,
         "currentwage": controller.currentwage,
@@ -752,10 +752,10 @@ class _NewUserPayment extends State<NewUserPayment> {
                             "qualification": controller.qualification.text,
                             "state": controller.state.text,
                             "address": controller.address.text,
-                            'selectedWorkins': controller.selectedWorkins,
+                            'workins': controller.workins,
                             "city": controller.city.text,
                             "country": controller.country.text,
-                            'selectedSkills': controller.selectedSkills,
+                            'skills': controller.skills,
                             "label": controller.selectedOption.text,
                             "expectedwage": controller.expectedwage,
                             "currentwage": controller.currentwage,

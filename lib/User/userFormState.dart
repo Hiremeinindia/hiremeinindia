@@ -32,8 +32,8 @@ class CandidateFormController {
   final country = TextEditingController();
   final confirmPassword = TextEditingController();
   List<File> images = [];
-  List<String> selectedSkills = [];
-  List<String> selectedWorkins = [];
+  List<String> skills = [];
+  List<String> workins = [];
   late TextEditingController selectedOption;
   File? image;
   DocumentReference? _reference;
@@ -55,9 +55,9 @@ class CandidateFormController {
         workexp: workexp.text,
         state: state.text,
         address: address.text,
-        selectedSkills: selectedSkills,
+        skills: skills,
         qualification: qualification.text,
-        selectedWorkins: selectedWorkins,
+        workins: workins,
         password: password.text,
         otpm: otpm.text,
         code: code.text,

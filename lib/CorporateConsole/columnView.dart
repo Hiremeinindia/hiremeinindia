@@ -340,13 +340,19 @@ class CandidateListSource extends DataTableSource {
       cells: [
         // DataCell(Text((index + 1).toString())),
         DataCell(Text(e.name.toString())),
-        DataCell(Text(e.mobile.toString())),
+        DataCell(SizedBox(
+          width: 27,
+          height: 27,
+          child: CircleAvatar(
+            backgroundColor: const Color.fromARGB(255, 51, 116, 53),
+          ),
+        )),
         DataCell(Text(e.qualification?.toString() ?? 'nill')),
         DataCell(
-          Text(e.selectedSkills!.isNotEmpty ? e.selectedSkills![0] : ''),
+          Text(e.skills!.isNotEmpty ? e.skills![0] : ''),
         ),
         DataCell(
-          Text(e.selectedSkills!.isNotEmpty ? e.selectedSkills![1] : ''),
+          Text(e.skills!.isNotEmpty ? e.skills![1] : ''),
         ),
         DataCell(Text(e.selectedOption?.toString() ?? '- - - -')),
         DataCell(Text(e.mobile.toString())),
