@@ -23,6 +23,7 @@ import '../widgets/custombutton.dart';
 import 'package:file_picker/file_picker.dart';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart' as path;
 
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -51,13 +52,23 @@ class _GreyUserUpload extends State<GreyUserUpload> {
   final List<String> items = ['Tamil', 'English', 'French', 'Malayalam'];
   String? selectedValue;
   String email = '';
+  String name = '';
+  String mobile = '';
+  String worktitle = '';
+
   String password = '';
   bool login = false;
   String? countryValue;
   String? stateValue;
   String? cityValue;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  List<File> images = [];
 
+  List<String> cvImageUrls = [];
+  List<String> expImageUrls = [];
+  List<String> voteImageUrls = [];
+  List<String> pictureImageUrls = [];
+  List<String> aadharImageUrls = [];
   String _title = '';
   CandidateFormController controller = CandidateFormController();
 
@@ -69,22 +80,49 @@ class _GreyUserUpload extends State<GreyUserUpload> {
     super.dispose();
   }
 
-  Future<List<String>> uploadImages(CandidateFormController controller) async {
+  Future<List<String>> uploadImagesAndStoreUrls() async {
+    try {
+      List<String> imageUrls = await uploadImages(images);
+      await updateFirestoreDocument(imageUrls);
+      return imageUrls;
+    } catch (error) {
+      print('Error uploading images and storing URLs: $error');
+      throw error;
+    }
+  }
+
+  Future<List<String>> uploadImages(List<File> images) async {
     List<String> imageUrls = [];
     try {
-      for (File image in controller.images) {
-        final ref = FirebaseStorage.instance
-            .ref()
-            .child('candidate_images/${DateTime.now().millisecondsSinceEpoch}');
-        await ref.putFile(image);
-        final urlDownload = await ref.getDownloadURL();
+      for (File image in images) {
+        String fileName =
+            '${DateTime.now().millisecondsSinceEpoch}_${image.path.split('/').last}';
+        Reference ref =
+            FirebaseStorage.instance.ref().child('candidate_images/$fileName');
+        UploadTask uploadTask = ref.putFile(image);
+        TaskSnapshot snapshot = await uploadTask;
+        String urlDownload = await snapshot.ref.getDownloadURL();
         imageUrls.add(urlDownload);
       }
+      return imageUrls;
     } catch (error) {
       print('Error uploading images: $error');
       throw error;
     }
-    return imageUrls;
+  }
+
+  Future<void> updateFirestoreDocument(List<String> imageUrls) async {
+    try {
+      DocumentReference docRef =
+          FirebaseFirestore.instance.collection('greycollaruser').doc();
+      await docRef.set({
+        'imageUrls': imageUrls,
+      });
+      print('Firestore document updated with image URLs.');
+    } catch (error) {
+      print('Error updating Firestore document with image URLs: $error');
+      throw error;
+    }
   }
 
   Future<void> assignUserRole(String uid, String role) async {
@@ -131,7 +169,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
 
       // Store file URL in Firestore
       await FirebaseFirestore.instance
-          .collection('greycollaruser')
+          .collection('greyusercollar')
           .doc(fileName)
           .set({
         'fileName': fileName,
@@ -155,40 +193,111 @@ class _GreyUserUpload extends State<GreyUserUpload> {
   }
 
 // Function to upload file from bytes (for web platform)
-  Future<void> uploadFileFromBytes({
-    required Uint8List fileBytes,
-    required String originalFileName,
-  }) async {
-    print("file3");
+  Future<String> uploadFileFromBytes(
+      {required Uint8List fileBytes, required String originalFileName}) async {
+    final Reference storageReference =
+        FirebaseStorage.instance.ref().child('uploads/$originalFileName');
+    final UploadTask uploadTask = storageReference.putData(fileBytes);
+    await uploadTask;
+    return await storageReference.getDownloadURL();
+  }
 
+  Future<String> uploadFileToStorage(String filePath) async {
+    final Reference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('uploads/${path.basename(filePath)}');
+    final UploadTask uploadTask = storageReference.putFile(File(filePath));
+    await uploadTask;
+    return await storageReference.getDownloadURL();
+  }
+
+  Future<void> uploadImageUrlToFirestore(String imageUrl1) async {
     try {
-      Reference storageReference =
-          FirebaseStorage.instance.ref().child('uploads/$originalFileName');
-      UploadTask uploadTask = storageReference.putData(fileBytes);
+      final DocumentReference documentReference =
+          FirebaseFirestore.instance.collection('greyusercollar').doc();
+      await documentReference.set({
+        'imageUrl': imageUrl1,
+        // Add additional fields if needed
+      });
+      print('Image URL uploaded to Firestore successfully.');
+    } catch (error) {
+      print('Error uploading image URL to Firestore: $error');
+      throw error;
+    }
+  }
 
-      // Wait for the upload to complete
-      await uploadTask;
+  Future<void> uploadImageUrl1ToFirestore(String imageUrl1) async {
+    try {
+      final DocumentReference documentReference =
+          FirebaseFirestore.instance.collection('greyusercollar').doc();
+      await documentReference.set({
+        'imageUrl': imageUrl1,
+        // Add additional fields if needed
+      });
+      print('Image URL uploaded to Firestore successfully.');
+    } catch (error) {
+      print('Error uploading image URL to Firestore: $error');
+      throw error;
+    }
+  }
 
-      print('File uploaded successfully');
+  Future<void> uploadImageUrl2ToFirestore(String imageUrl2) async {
+    try {
+      final DocumentReference documentReference =
+          FirebaseFirestore.instance.collection('greyusercollar').doc();
+      await documentReference.set({
+        'imageUrl': imageUrl2,
+        // Add additional fields if needed
+      });
+      print('Image URL uploaded to Firestore successfully.');
+    } catch (error) {
+      print('Error uploading image URL to Firestore: $error');
+      throw error;
+    }
+  }
 
-      // Get the download URL after a successful upload
-      String downloadURL = await storageReference.getDownloadURL();
+  Future<void> uploadImageUrl3ToFirestore(String imageUrl3) async {
+    try {
+      final DocumentReference documentReference =
+          FirebaseFirestore.instance.collection('greyusercollar').doc();
+      await documentReference.set({
+        'imageUrl': imageUrl3,
+        // Add additional fields if needed
+      });
+      print('Image URL uploaded to Firestore successfully.');
+    } catch (error) {
+      print('Error uploading image URL to Firestore: $error');
+      throw error;
+    }
+  }
 
-      // Call the function to display the uploaded file
-      if (originalFileName.contains('picture')) {
-        displayUploadedFilePicture(downloadURL, originalFileName);
-      } else if (originalFileName.contains('aadhar')) {
-        displayUploadedFileAadhar(downloadURL, originalFileName);
-      } else if (originalFileName.contains('voterId')) {
-        displayUploadedFileVoterId(downloadURL, originalFileName);
-      } else if (originalFileName.contains('expProof')) {
-        displayUploadedFileExpProof(downloadURL, originalFileName);
-      } else if (originalFileName.contains('cv')) {
-        displayUploadedFileCv(downloadURL, originalFileName);
-      }
-    } catch (e) {
-      print('Error uploading file: $e');
-      // Handle the error, e.g., show a message to the user
+  Future<void> uploadImageUrl4ToFirestore(String imageUrl4) async {
+    try {
+      final DocumentReference documentReference =
+          FirebaseFirestore.instance.collection('greyusercollar').doc();
+      await documentReference.set({
+        'imageUrl': imageUrl4,
+        // Add additional fields if needed
+      });
+      print('Image URL uploaded to Firestore successfully.');
+    } catch (error) {
+      print('Error uploading image URL to Firestore: $error');
+      throw error;
+    }
+  }
+
+  Future<void> uploadImageUrl5ToFirestore(String imageUrl5) async {
+    try {
+      final DocumentReference documentReference =
+          FirebaseFirestore.instance.collection('greyusercollar').doc();
+      await documentReference.set({
+        'imageUrl': imageUrl5,
+        // Add additional fields if needed
+      });
+      print('Image URL uploaded to Firestore successfully.');
+    } catch (error) {
+      print('Error uploading image URL to Firestore: $error');
+      throw error;
     }
   }
 
@@ -536,30 +645,51 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                           );
 
                           if (result != null) {
-                            // Process the selected picture files
-                            for (PlatformFile file in result.files) {
-                              if (kIsWeb) {
-                                await uploadFileFromBytes(
-                                  fileBytes: file.bytes!,
-                                  originalFileName: file.name,
-                                );
-                              } else {
-                                await uploadFileToFirestore(file.path!);
-                              }
+                            try {
+                              for (PlatformFile file in result.files) {
+                                String imageUrl;
+                                if (kIsWeb) {
+                                  // For web, use the bytes property instead of path
+                                  final String fileName = file.name;
+                                  final Uint8List fileBytes = file.bytes!;
 
-                              // Retrieve the download URL and display the file
-                              final urlDownload = await FirebaseStorage.instance
-                                  .ref()
-                                  .child('uploads/${file.name}')
-                                  .getDownloadURL();
-                              displayUploadedFilePicture(
-                                  urlDownload, file.name);
+                                  // Upload file to Firebase Storage
+                                  imageUrl = await uploadFileFromBytes(
+                                    fileBytes: fileBytes,
+                                    originalFileName: fileName,
+                                  );
+                                } else {
+                                  // For other platforms, handle file uploads using path
+                                  final String filePath = file.path!;
+
+                                  // Upload file to Firebase Storage
+                                  imageUrl =
+                                      await uploadFileToStorage(filePath);
+                                }
+
+                                // Store the image URL in Firestore
+                                await uploadImageUrl1ToFirestore(imageUrl);
+                                pictureImageUrls.add(imageUrl);
+
+                                // Display the uploaded file (Aadhar) with its URL
+                                final urlDownload = await FirebaseStorage
+                                    .instance
+                                    .ref()
+                                    .child('uploads/${file.name}')
+                                    .getDownloadURL();
+                                displayUploadedFilePicture(
+                                    urlDownload, file.name);
+                              }
+                            } catch (e) {
+                              print('Error uploading CV: $e');
+                              // Handle error
                             }
+                            // Process the selected files
                           } else {
                             // User canceled the file picker
                           }
                         },
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -594,7 +724,6 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                       CustomButton(
                         text: translation(context).aadhar,
                         onPressed: () async {
-                          await DefaultCacheManager().emptyCache();
                           FilePickerResult? result =
                               await FilePicker.platform.pickFiles(
                             allowMultiple: true,
@@ -610,22 +739,46 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                           );
 
                           if (result != null) {
-                            for (PlatformFile file in result.files) {
-                              if (kIsWeb) {
-                                await uploadFileFromBytes(
-                                    fileBytes: file.bytes!,
-                                    originalFileName: file.name);
-                              } else {
-                                await uploadFileToFirestore(file.path!);
-                              }
+                            try {
+                              for (PlatformFile file in result.files) {
+                                String imageUrl2;
+                                if (kIsWeb) {
+                                  // For web, use the bytes property instead of path
+                                  final String fileName = file.name;
+                                  final Uint8List fileBytes = file.bytes!;
 
-                              // Retrieve the download URL and display the file
-                              final urlDownload = await FirebaseStorage.instance
-                                  .ref()
-                                  .child('uploads/${file.name}')
-                                  .getDownloadURL();
-                              displayUploadedFileAadhar(urlDownload, file.name);
+                                  // Upload file to Firebase Storage
+                                  imageUrl2 = await uploadFileFromBytes(
+                                    fileBytes: fileBytes,
+                                    originalFileName: fileName,
+                                  );
+                                } else {
+                                  // For other platforms, handle file uploads using path
+                                  final String filePath = file.path!;
+
+                                  // Upload file to Firebase Storage
+                                  imageUrl2 =
+                                      await uploadFileToStorage(filePath);
+                                }
+
+                                // Store the image URL in Firestore
+                                await uploadImageUrl2ToFirestore(imageUrl2);
+                                aadharImageUrls.add(imageUrl2);
+
+                                // Display the uploaded file (Aadhar) with its URL
+                                final urlDownload = await FirebaseStorage
+                                    .instance
+                                    .ref()
+                                    .child('uploads/${file.name}')
+                                    .getDownloadURL();
+                                displayUploadedFileAadhar(
+                                    urlDownload, file.name);
+                              }
+                            } catch (e) {
+                              print('Error uploading CV: $e');
+                              // Handle error
                             }
+                            // Process the selected files
                           } else {
                             // User canceled the file picker
                           }
@@ -665,7 +818,6 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                       CustomButton(
                         text: translation(context).voterId,
                         onPressed: () async {
-                          await DefaultCacheManager().emptyCache();
                           FilePickerResult? result =
                               await FilePicker.platform.pickFiles(
                             allowMultiple: true,
@@ -681,16 +833,33 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                           );
 
                           if (result != null) {
+                            // Process the selected files
+                            List<String> imageUrls = [];
                             for (PlatformFile file in result.files) {
+                              String imageUrl;
                               if (kIsWeb) {
-                                await uploadFileFromBytes(
-                                    fileBytes: file.bytes!,
-                                    originalFileName: file.name);
+                                // For web, use the bytes property instead of path
+                                final String fileName = file.name;
+                                final Uint8List fileBytes = file.bytes!;
+
+                                // Upload file to Firebase Storage
+                                imageUrl = await uploadFileFromBytes(
+                                  fileBytes: fileBytes,
+                                  originalFileName: fileName,
+                                );
                               } else {
-                                await uploadFileToFirestore(file.path!);
+                                // For other platforms, handle file uploads using path
+                                final String filePath = file.path!;
+
+                                // Upload file to Firebase Storage
+                                imageUrl = await uploadFileToStorage(filePath);
                               }
 
-                              // Retrieve the download URL and display the file
+                              // Store the image URL in Firestore
+                              await uploadImageUrl3ToFirestore(imageUrl);
+                              voteImageUrls.add(imageUrl);
+
+                              // Display the uploaded file (Voter ID) with its URL
                               final urlDownload = await FirebaseStorage.instance
                                   .ref()
                                   .child('uploads/${file.name}')
@@ -737,7 +906,6 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                       CustomButton(
                         text: translation(context).experienceProof,
                         onPressed: () async {
-                          await DefaultCacheManager().emptyCache();
                           FilePickerResult? result =
                               await FilePicker.platform.pickFiles(
                             allowMultiple: true,
@@ -753,16 +921,32 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                           );
 
                           if (result != null) {
+                            // Process the selected files
                             for (PlatformFile file in result.files) {
+                              String imageUrl;
                               if (kIsWeb) {
-                                await uploadFileFromBytes(
-                                    fileBytes: file.bytes!,
-                                    originalFileName: file.name);
+                                // For web, use the bytes property instead of path
+                                final String fileName = file.name;
+                                final Uint8List fileBytes = file.bytes!;
+
+                                // Upload file to Firebase Storage
+                                imageUrl = await uploadFileFromBytes(
+                                  fileBytes: fileBytes,
+                                  originalFileName: fileName,
+                                );
                               } else {
-                                await uploadFileToFirestore(file.path!);
+                                // For other platforms, handle file uploads using path
+                                final String filePath = file.path!;
+
+                                // Upload file to Firebase Storage
+                                imageUrl = await uploadFileToStorage(filePath);
                               }
 
-                              // Retrieve the download URL and display the file
+                              // Store the image URL in Firestore
+                              await uploadImageUrl4ToFirestore(imageUrl);
+                              expImageUrls.add(imageUrl);
+
+                              // Display the uploaded file (Experience Proof) with its URL
                               final urlDownload = await FirebaseStorage.instance
                                   .ref()
                                   .child('uploads/${file.name}')
@@ -809,7 +993,6 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                       CustomButton(
                         text: translation(context).cv,
                         onPressed: () async {
-                          await DefaultCacheManager().emptyCache();
                           FilePickerResult? result =
                               await FilePicker.platform.pickFiles(
                             allowMultiple: true,
@@ -825,21 +1008,45 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                           );
 
                           if (result != null) {
-                            for (PlatformFile file in result.files) {
-                              if (kIsWeb) {
-                                await uploadFileFromBytes(
-                                    fileBytes: file.bytes!,
-                                    originalFileName: file.name);
-                              } else {
-                                await uploadFileToFirestore(file.path!);
-                              }
+                            try {
+                              // Process the selected files
+                              for (PlatformFile file in result.files) {
+                                String imageUrl;
+                                if (kIsWeb) {
+                                  // For web, use the bytes property instead of path
+                                  final String fileName = file.name;
+                                  final Uint8List fileBytes = file.bytes!;
 
-                              // Retrieve the download URL and display the file
-                              final urlDownload = await FirebaseStorage.instance
-                                  .ref()
-                                  .child('uploads/${file.name}')
-                                  .getDownloadURL();
-                              displayUploadedFileCv(urlDownload, file.name);
+                                  // Upload file to Firebase Storage
+                                  imageUrl = await uploadFileFromBytes(
+                                    fileBytes: fileBytes,
+                                    originalFileName: fileName,
+                                  );
+                                } else {
+                                  // For other platforms, handle file uploads using path
+                                  final String filePath = file.path!;
+
+                                  // Upload file to Firebase Storage
+                                  imageUrl =
+                                      await uploadFileToStorage(filePath);
+                                }
+
+                                // Store the image URL in Firestore
+                                await uploadImageUrl5ToFirestore(imageUrl);
+                                cvImageUrls.add(
+                                    imageUrl); // Add the image URL to cvImageUrls
+
+                                // Display the uploaded file (CV) with its URL
+                                final urlDownload = await FirebaseStorage
+                                    .instance
+                                    .ref()
+                                    .child('uploads/${file.name}')
+                                    .getDownloadURL();
+                                displayUploadedFileCv(urlDownload, file.name);
+                              }
+                            } catch (e) {
+                              print('Error uploading CV: $e');
+                              // Handle error
                             }
                           } else {
                             // User canceled the file picker
@@ -969,13 +1176,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                   text: translation(context).next,
                   onPressed: () async {
                     try {
-                      // // Sign up with email and password
-                      // UserCredential userCredential =
-                      //     await _auth.createUserWithEmailAndPassword(
-                      //   email: controller.email.text,
-                      //   password: controller.password.text,
-                      // );
-                      List<String> imageUrls = await uploadImages(controller);
+                      // Prepare data to pass to the payment page
                       final Map<String, Object> data = {
                         'name': controller.name.text,
                         'email': controller.email.text,
@@ -994,24 +1195,19 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                         "label": controller.selectedOption.text,
                         "expectedwage": controller.expectedwage.text,
                         "currentwage": controller.currentwage.text,
-                        "imageUrls": imageUrls,
+                        "imageUrls":
+                            cvImageUrls, // Use the image URLs obtained from CV button
                       };
 
-                      // await assignUserRole(userCredential.user!.uid, 'Blue');
-
-                      // Upload images
-
-                      // Prepare data to pass to the payment page
-
-                      // Navigate to the payment page
+                      // Navigate to the payment page with user data and image URLs
                       Navigator.pushNamed(
                         context,
                         '/payment',
                         arguments: data,
                       );
                     } catch (e) {
-                      print('Error signing up: $e');
-                      // Handle sign-up error
+                      print('Error navigating to payment page: $e');
+                      // Handle error
                     }
                   },
                 ),
@@ -1058,7 +1254,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
 
   Future<void> addCandidate(CandidateFormController controller) async {
     try {
-      List<String> imageUrls = await uploadImages(controller);
+      List<String> imageUrls = await uploadImages(images);
       await controller.reference.set({
         'name': controller.name.text,
         'email': controller.email.text,
