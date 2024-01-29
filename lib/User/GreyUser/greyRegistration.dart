@@ -8,6 +8,7 @@ import 'package:email_otp/email_otp.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:hiremeinindiaapp/Models/candidated.dart';
 import 'package:hiremeinindiaapp/Providers/session.dart';
+import 'package:hiremeinindiaapp/User/GreyUser/greyuserupload.dart';
 import 'package:hiremeinindiaapp/User/candidate_form_state.dart';
 import 'package:hiremeinindiaapp/classes/language.dart';
 import 'package:hiremeinindiaapp/classes/language_constants.dart';
@@ -19,8 +20,11 @@ import 'package:hiremeinindiaapp/widgets/hiremeinindia.dart';
 import '../../widgets/custombutton.dart';
 
 class Registration extends StatefulWidget {
-  const Registration({Key? key, this.candidate, this.selectedOption})
-      : super(key: key);
+  const Registration({
+    Key? key,
+    this.candidate,
+    this.selectedOption,
+  }) : super(key: key);
   final String? selectedOption;
   final Candidate? candidate;
 
@@ -1888,25 +1892,70 @@ class _RegistrationState extends State<Registration> {
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 // Sign up with email and password
-                                Navigator.pushNamed(
+                                // Navigator.pushNamed(
+                                //   context,
+                                //   '/document',
+                                //   arguments: {
+                                //     'name': controller.name.text,
+                                //     'email': controller.email.text,
+                                //     'mobile': controller.mobile.text,
+                                //     'worktitle': controller.worktitle.text,
+                                //     "aadharno": controller.aadharno.text,
+                                //     "gender": controller.gender.text,
+                                //     "workexp": controller.workexp.text,
+                                //     "qualification":
+                                //         controller.qualification.text,
+                                //     "address": controller.address.text,
+                                //     'selectedWorkins':
+                                //         controller.selectedWorkins,
+                                //     'selectedSkills': controller.selectedSkills,
+                                //     'label': controller.selectedOption.text,
+                                //   }, // Pass only keys to the next page
+                                // );
+                                Map<String, dynamic> userData = {
+                                  'name': controller.name.text,
+                                  'email': controller.email.text,
+                                  'mobile': controller.mobile.text,
+                                  'worktitle': controller.worktitle.text,
+                                  "aadharno": controller.aadharno.text,
+                                  "gender": controller.gender.text,
+                                  "workexp": controller.workexp.text,
+                                  "qualification":
+                                      controller.qualification.text,
+                                  "address": controller.address.text,
+                                  'selectedWorkins': controller.selectedWorkins,
+                                  'selectedSkills': controller.selectedSkills,
+                                  "label": controller.selectedOption.text,
+
+                                  // Add other fields as needed
+                                };
+
+                                // Log the userData for debugging
+                                print('User Data: $userData');
+
+                                // Store data in Firestore
+                                // await FirebaseFirestore.instance
+                                //     .collection('greyusercollar')
+                                //     .add(userData);
+
+                                // Navigate to the payment page or any other destination
+                                Navigator.push(
                                   context,
-                                  '/document',
-                                  arguments: {
-                                    'name': controller.name.text,
-                                    'email': controller.email.text,
-                                    'mobile': controller.mobile.text,
-                                    'worktitle': controller.worktitle.text,
-                                    "aadharno": controller.aadharno.text,
-                                    "gender": controller.gender.text,
-                                    "workexp": controller.workexp.text,
-                                    "qualification":
-                                        controller.qualification.text,
-                                    "address": controller.address.text,
-                                    'selectedWorkins':
-                                        controller.selectedWorkins,
-                                    'selectedSkills': controller.selectedSkills,
-                                    'label': controller.selectedOption.text,
-                                  }, // Pass only keys to the next page
+                                  MaterialPageRoute(
+                                    builder: (context) => GreyUserUpload(
+                                      selectedOption: 'Grey',
+                                      name: controller.name.text,
+                                      mobile: controller.mobile.text,
+                                      worktitle: controller.worktitle.text,
+                                      aadharno: controller.aadharno.text,
+                                      gender: controller.gender.text,
+                                      workexp: controller.workexp.text,
+                                      qualification:
+                                          controller.qualification.text,
+                                      address: controller.address.text,
+                                      label: controller.selectedOption.text,
+                                    ),
+                                  ),
                                 );
                               }
                             },
