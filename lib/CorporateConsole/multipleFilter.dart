@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../User/user.dart';
 import '../Providers/session.dart';
@@ -52,7 +53,8 @@ class _MultipleFilterState extends State<MultipleFilter> {
                           .candidates
                           .map((skill1Iterable) => DropdownMenuItem<Candidate?>(
                                 value: skill1Iterable,
-                                child: Text(skill1Iterable.skills![0]),
+                                child: Text(skill1Iterable
+                                    .skills![0]), // Update this line
                               ))
                           .followedBy([
                         const DropdownMenuItem<Candidate?>(
@@ -122,72 +124,75 @@ class _MultipleFilterState extends State<MultipleFilter> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                   ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton2<Candidate?>(
-                      value: qualification,
-                      isExpanded: true,
-                      items: AppSession()
-                          .candidates
-                          .map((skill2Iterable) => DropdownMenuItem<Candidate?>(
-                                value: skill2Iterable,
-                                child: Text(skill2Iterable.qualification!),
-                              ))
-                          .followedBy([
-                        const DropdownMenuItem<Candidate?>(
-                          value: null,
-                          child: Text('Qualification Set'),
-                        )
-                      ]).toList(),
-                      onChanged: (item) {
-                        setState(() {
-                          qualification = item;
-                        });
-                      },
-                      buttonStyleData: ButtonStyleData(
-                        height: 30,
-                        width: 200,
-                        elevation: 2,
-                        padding: const EdgeInsets.only(left: 14, right: 14),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(
-                            color: Colors.black26,
+                  child: LayoutBuilder(builder: (context, constraints) {
+                    return DropdownButtonHideUnderline(
+                      child: DropdownButton2<Candidate?>(
+                        value: qualification,
+                        isExpanded: true,
+                        items: AppSession()
+                            .candidates
+                            .map((skill2Iterable) =>
+                                DropdownMenuItem<Candidate?>(
+                                  value: skill2Iterable,
+                                  child: Text(skill2Iterable.qualification!),
+                                ))
+                            .followedBy([
+                          const DropdownMenuItem<Candidate?>(
+                            value: null,
+                            child: Text('Qualification Set'),
+                          )
+                        ]).toList(),
+                        onChanged: (item) {
+                          setState(() {
+                            qualification = item;
+                          });
+                        },
+                        buttonStyleData: ButtonStyleData(
+                          height: 30,
+                          width: 200,
+                          elevation: 2,
+                          padding: const EdgeInsets.only(left: 14, right: 14),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                              color: Colors.black26,
+                            ),
+                            color: Colors.white,
                           ),
-                          color: Colors.white,
+                        ),
+                        iconStyleData: const IconStyleData(
+                          icon: Icon(
+                            Icons.arrow_drop_down_sharp,
+                          ),
+                          iconSize: 25,
+                          iconEnabledColor: Colors.black,
+                          iconDisabledColor: null,
+                        ),
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 210,
+                          width: 250,
+                          elevation: 1,
+                          padding: EdgeInsets.only(
+                              left: 5, right: 5, top: 5, bottom: 5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(color: Colors.black),
+                            color: Colors.white,
+                          ),
+                          scrollPadding: EdgeInsets.all(5),
+                          scrollbarTheme: ScrollbarThemeData(
+                            thickness: MaterialStateProperty.all<double>(6),
+                            thumbVisibility:
+                                MaterialStateProperty.all<bool>(true),
+                          ),
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 25,
+                          padding: EdgeInsets.only(left: 14, right: 14),
                         ),
                       ),
-                      iconStyleData: const IconStyleData(
-                        icon: Icon(
-                          Icons.arrow_drop_down_sharp,
-                        ),
-                        iconSize: 25,
-                        iconEnabledColor: Colors.black,
-                        iconDisabledColor: null,
-                      ),
-                      dropdownStyleData: DropdownStyleData(
-                        maxHeight: 210,
-                        width: 250,
-                        elevation: 1,
-                        padding: EdgeInsets.only(
-                            left: 5, right: 5, top: 5, bottom: 5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(color: Colors.black),
-                          color: Colors.white,
-                        ),
-                        scrollPadding: EdgeInsets.all(5),
-                        scrollbarTheme: ScrollbarThemeData(
-                          thickness: MaterialStateProperty.all<double>(6),
-                          thumbVisibility:
-                              MaterialStateProperty.all<bool>(true),
-                        ),
-                      ),
-                      menuItemStyleData: const MenuItemStyleData(
-                        height: 25,
-                        padding: EdgeInsets.only(left: 14, right: 14),
-                      ),
-                    ),
-                  ),
+                    );
+                  }),
                 ),
               ),
               SizedBox(
@@ -202,7 +207,23 @@ class _MultipleFilterState extends State<MultipleFilter> {
               ),
               CustomButton(
                 text: 'Run',
-                onPressed: () {},
+                onPressed: () {
+                  // Check if skills are selected
+                  if (skills != null) {
+                    query = query.where(
+                      "skills",
+                      arrayContainsAny: skills!.skills,
+                    );
+                  }
+                  if (qualification != null) {
+                    query = query.where("qualification",
+                        isEqualTo: qualification!.qualification);
+                  }
+                  // You can add more conditions here for other filters
+
+                  // Update the StreamBuilder to reflect the new query
+                  setState(() {});
+                },
               ),
               SizedBox(
                 width: 15,
@@ -213,6 +234,10 @@ class _MultipleFilterState extends State<MultipleFilter> {
                   setState(() {
                     skills = null;
                     qualification = null;
+
+                    // Reset the query to its initial state
+                    query =
+                        FirebaseFirestore.instance.collection("greycollaruser");
                   });
                 },
               ),
@@ -229,9 +254,11 @@ class _MultipleFilterState extends State<MultipleFilter> {
           height: 550,
           child: SizedBox(
             child: StreamBuilder<List<Candidate>>(
-                stream: Candidate.getFilteredList(
-                    selectedQualification: qualification,
-                    selectedSkills: skills),
+                stream: query.snapshots().map((snapshot) {
+                  return snapshot.docs
+                      .map((doc) => Candidate.fromSnapshot(doc))
+                      .toList();
+                }),
                 builder: (context, AsyncSnapshot<List<Candidate>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.active &&
                       snapshot.hasData) {
@@ -253,7 +280,7 @@ class _MultipleFilterState extends State<MultipleFilter> {
                                 child: PaginatedDataTable(
                                   showFirstLastButtons: true,
                                   controller: _scrollController,
-                                  rowsPerPage: 20,
+                                  rowsPerPage: 8,
                                   // (Get.height ~/ kMinInteractiveDimension) -
                                   //     7,
                                   columns: CandidateListSource.getColumns(),
