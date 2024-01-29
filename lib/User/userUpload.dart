@@ -8,19 +8,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:hiremeinindiaapp/Models/candidated.dart';
-import 'package:hiremeinindiaapp/User/GreyUser/greyRegistration.dart';
+import 'package:hiremeinindiaapp/User/user.dart';
+import 'package:hiremeinindiaapp/User/userRegistration.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
-import 'package:hiremeinindiaapp/loginpage.dart';
-import 'package:hiremeinindiaapp/userpayment.dart';
+import 'package:hiremeinindiaapp/User/userPayment.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import '../candidate_form_state.dart';
-import '../../classes/language.dart';
-import '../../classes/language_constants.dart';
-import '../../Widgets/customtextstyle.dart';
-import '../../main.dart';
-import '../../widgets/custombutton.dart';
+import 'userFormState.dart';
+import '../classes/language.dart';
+import '../classes/language_constants.dart';
+import '../Widgets/customtextstyle.dart';
+import '../main.dart';
+import '../widgets/custombutton.dart';
 import 'package:file_picker/file_picker.dart';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -28,35 +27,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 class GreyUserUpload extends StatefulWidget {
-  const GreyUserUpload(
-      {Key? key,
-      this.selectedOption,
-      this.name,
-      this.email,
-      this.mobile,
-      this.worktitle,
-      this.aadharno,
-      this.gender,
-      this.workexp,
-      this.qualification,
-      this.address,
-      this.selectedWorkins,
-      this.selectedSkills,
-      this.label})
-      : super(key: key);
-  final String? selectedOption;
-  final String? email;
-  final String? mobile;
-  final String? worktitle;
-  final String? aadharno;
-  final String? gender;
-  final String? workexp;
-  final String? qualification;
-  final String? address;
-  final String? selectedWorkins;
-  final String? selectedSkills;
-  final String? label;
-  final String? name;
+  const GreyUserUpload();
   @override
   State<GreyUserUpload> createState() => _GreyUserUpload();
 }
@@ -114,62 +85,6 @@ class _GreyUserUpload extends State<GreyUserUpload> {
       throw error;
     }
     return imageUrls;
-  }
-
-  Future<void> uploadUserData() async {
-    try {
-      List<String> imageUrls = await uploadImages(controller);
-      // Prepare user registration data
-      Map<String, dynamic> registrationData = {
-        'name': controller.name.text,
-        'email': controller.email.text,
-        'mobile': controller.mobile.text,
-        'worktitle': controller.worktitle.text,
-        "aadharno": controller.aadharno.text,
-        "gender": controller.gender.text,
-        "workexp": controller.workexp.text,
-        "qualification": controller.qualification.text,
-        "state": controller.state.text,
-        "address": controller.address.text,
-        'selectedWorkins': controller.selectedWorkins,
-        "city": controller.city.text,
-        "country": controller.country.text,
-        'selectedSkills': controller.selectedSkills,
-        "label": controller.selectedOption.text,
-        "expectedwage": controller.expectedwage,
-        "currentwage": controller.currentwage,
-        "imageUrls": imageUrls,
-        // Add other registration data fields as needed
-      };
-
-      // Prepare documentation upload data
-      // Example:
-      Map<String, dynamic> documentationData = {
-        'document1Url': 'url_to_document1.pdf',
-        'document2Url': 'url_to_document2.pdf',
-        // Add other documentation data fields as needed
-      };
-
-      // Prepare payment receipt data
-      // Example:
-      Map<String, dynamic> paymentReceiptData = {
-        'receiptUrl': 'url_to_receipt.pdf',
-        'amountPaid': 100,
-        // Add other payment receipt data fields as needed
-      };
-
-      // Upload all data to Firestore
-      await FirebaseFirestore.instance.collection('greyusercollar').add({
-        'registrationData': registrationData,
-        'documentationData': documentationData,
-        'paymentReceiptData': paymentReceiptData,
-      });
-
-      print('User data uploaded successfully');
-    } catch (e) {
-      print('Error uploading user data: $e');
-      // Handle error scenario
-    }
   }
 
   Future<void> assignUserRole(String uid, String role) async {
@@ -1053,10 +968,15 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                 CustomButton(
                   text: translation(context).next,
                   onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      // Sign up with email and password
+                    try {
+                      // // Sign up with email and password
+                      // UserCredential userCredential =
+                      //     await _auth.createUserWithEmailAndPassword(
+                      //   email: controller.email.text,
+                      //   password: controller.password.text,
+                      // );
                       List<String> imageUrls = await uploadImages(controller);
-                      Map<String, dynamic> registrationData = {
+                      final Map<String, Object> data = {
                         'name': controller.name.text,
                         'email': controller.email.text,
                         'mobile': controller.mobile.text,
@@ -1072,91 +992,28 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                         "country": controller.country.text,
                         'selectedSkills': controller.selectedSkills,
                         "label": controller.selectedOption.text,
-                        "expectedwage": controller.expectedwage,
-                        "currentwage": controller.currentwage,
+                        "expectedwage": controller.expectedwage.text,
+                        "currentwage": controller.currentwage.text,
                         "imageUrls": imageUrls,
                       };
 
+                      // await assignUserRole(userCredential.user!.uid, 'Blue');
+
+                      // Upload images
+
+                      // Prepare data to pass to the payment page
+
+                      // Navigate to the payment page
                       Navigator.pushNamed(
                         context,
                         '/payment',
-                        arguments: {
-                          'registrationData': registrationData,
-                          // Include any other necessary data here
-                        },
+                        arguments: data,
                       );
-                      await uploadUserData();
+                    } catch (e) {
+                      print('Error signing up: $e');
+                      // Handle sign-up error
                     }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginPage()),
-                    );
                   },
-
-                  // onPressed: () async {
-                  //   try {
-                  //     // Upload images
-                  //     List<String> imageUrls = await uploadImages(controller);
-
-                  //     // Prepare data to store in Firestore
-                  //     Map<String, dynamic> userData = {
-                  //       'name': controller.name.text,
-                  //       'email': controller.email.text,
-                  //       'mobile': controller.mobile.text,
-                  //       'worktitle': controller.worktitle.text,
-                  //       "aadharno": controller.aadharno.text,
-                  //       "gender": controller.gender.text,
-                  //       "workexp": controller.workexp.text,
-                  //       "qualification": controller.qualification.text,
-                  //       "state": controller.state.text,
-                  //       "address": controller.address.text,
-                  //       'selectedWorkins': controller.selectedWorkins,
-                  //       "city": controller.city.text,
-                  //       "country": controller.country.text,
-                  //       'selectedSkills': controller.selectedSkills,
-                  //       "label": controller.selectedOption.text,
-                  //       "expectedwage": controller.expectedwage.text,
-                  //       "currentwage": controller.currentwage.text,
-                  //       "imageUrls": imageUrls,
-                  //       // Add other fields as needed
-                  //     };
-
-                  //     // Log the userData for debugging
-                  //     print('User Data: $userData');
-
-                  //     // Store data in Firestore
-                  //     await FirebaseFirestore.instance
-                  //         .collection('greyusercollar')
-                  //         .add(userData);
-
-                  //     // Navigate to the payment page or any other destination
-                  //     Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //         builder: (context) => NewUserPayment(
-                  //           selectedOption: 'Grey',
-                  //           name: controller.name.text,
-                  //           mobile: controller.mobile.text,
-                  //           worktitle: controller.worktitle.text,
-                  //           aadharno: controller.aadharno.text,
-                  //           gender: controller.gender.text,
-                  //           workexp: controller.workexp.text,
-                  //           qualification: controller.qualification.text,
-                  //           address: controller.address.text,
-                  //           label: controller.selectedOption.text,
-                  //           city: controller.city.text,
-                  //           country: controller.country.text,
-                  //           state: controller.state.text,
-                  //           expectedwage: controller.expectedwage.text,
-                  //           currentwage: controller.currentwage.text,
-                  //         ),
-                  //       ),
-                  //     );
-                  //   } catch (e) {
-                  //     print('Error uploading user data: $e');
-                  //     // Handle error
-                  //   }
-                  // },
                 ),
               ],
             )
@@ -1218,8 +1075,8 @@ class _GreyUserUpload extends State<GreyUserUpload> {
         "country": controller.country.text,
         'selectedSkills': controller.selectedSkills,
         "label": controller.selectedOption.text,
-        "expectedwage": controller.expectedwage.text,
-        "currentwage": controller.currentwage.text,
+        "expectedwage": controller.expectedwage,
+        "currentwage": controller.currentwage,
         "imageUrls": imageUrls,
       }, SetOptions(merge: true));
 

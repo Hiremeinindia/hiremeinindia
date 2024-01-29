@@ -6,10 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
-import 'package:hiremeinindiaapp/Models/candidated.dart';
+import 'package:hiremeinindiaapp/User/user.dart';
 import 'package:hiremeinindiaapp/Providers/session.dart';
-import 'package:hiremeinindiaapp/User/GreyUser/greyuserupload.dart';
-import 'package:hiremeinindiaapp/User/candidate_form_state.dart';
+import 'package:hiremeinindiaapp/User/userFormState.dart';
 import 'package:hiremeinindiaapp/classes/language.dart';
 import 'package:hiremeinindiaapp/classes/language_constants.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
@@ -17,14 +16,11 @@ import 'package:hiremeinindiaapp/main.dart';
 import 'package:hiremeinindiaapp/widgets/customtextfield.dart';
 import 'package:hiremeinindiaapp/widgets/customtextstyle.dart';
 import 'package:hiremeinindiaapp/widgets/hiremeinindia.dart';
-import '../../widgets/custombutton.dart';
+import '../widgets/custombutton.dart';
 
 class Registration extends StatefulWidget {
-  const Registration({
-    Key? key,
-    this.candidate,
-    this.selectedOption,
-  }) : super(key: key);
+  const Registration({Key? key, this.candidate, this.selectedOption})
+      : super(key: key);
   final String? selectedOption;
   final Candidate? candidate;
 
@@ -47,6 +43,7 @@ class _RegistrationState extends State<Registration> {
   String smscode = "";
   String phoneNumber = "", data = "", phone = "";
   bool isVerified = false;
+  bool isVerifiedEmail = false;
   bool isOtpValid = true; // Replace this line with actual verification logic
   List<String> _values = [];
   List<String> _value = [];
@@ -584,6 +581,7 @@ class _RegistrationState extends State<Registration> {
     return Scaffold(
       appBar: AppBar(
         title: HireMeInIndia(),
+        automaticallyImplyLeading: false,
         centerTitle: false,
         toolbarHeight: 80,
         backgroundColor: Colors.transparent,
@@ -775,26 +773,46 @@ class _RegistrationState extends State<Registration> {
                 ),
                 SizedBox(width: 40),
                 SizedBox(
-                  height: 30,
-                  width: 30,
+                  height: 38,
+                  width: 38,
                   child: CircleAvatar(
                     backgroundColor: Colors.black,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.person,
-                        color: Colors.indigo.shade900,
+                    child: SizedBox(
+                      width: 36,
+                      height: 36,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.person_outline_outlined,
+                          size: 35,
+                          color: Colors.indigo.shade900,
+                        ),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8.0),
-                SizedBox(
-                  width: 50,
-                  child: Text(
-                    'Guest User',
-                    maxLines: 2,
-                    style: TextStyle(color: Colors.black),
+                Padding(
+                  padding: EdgeInsets.only(top: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'New',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.indigo.shade900,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'User',
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.indigo.shade900,
+                            height: 0),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -813,50 +831,99 @@ class _RegistrationState extends State<Registration> {
                   children: [
                     if (widget.selectedOption == 'Grey')
                       IgnorePointer(
-                        child: Radio(
-                            value: widget.selectedOption,
-                            groupValue: widget.selectedOption,
-                            onChanged: null),
+                        child: Row(
+                          children: [
+                            Radio(
+                                value: widget.selectedOption,
+                                groupValue: widget.selectedOption,
+                                onChanged: null),
+                            Text(
+                              'Grey Collar',
+                              style: TextStyle(
+                                  color: Colors.grey.shade500,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       )
                     else if (widget.selectedOption == 'Blue')
-                      Radio(
-                        value: 'Blue',
-                        groupValue: controller.selectedOption.text,
-                        onChanged: (value) {
-                          // Handle radio button state change if needed
-                          setState(() {
-                            controller.selectedOption.text = value.toString();
-                          });
-                        },
+                      Row(
+                        children: [
+                          Radio(
+                            value: 'Blue',
+                            groupValue: controller.selectedOption.text,
+                            onChanged: (value) {
+                              // Handle radio button state change if needed
+                              setState(() {
+                                controller.selectedOption.text =
+                                    value.toString();
+                              });
+                            },
+                          ),
+                          Text(
+                            'Grey Collar',
+                            style: TextStyle(
+                                color: Colors.grey.shade800,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
-                    Text('Blue Collar'),
                     if (widget.selectedOption == 'Grey')
-                      Radio(
-                          value: 'Grey',
-                          groupValue: controller.selectedOption.text,
-                          onChanged: (value) {
-                            setState(() {
-                              controller.selectedOption.text = value.toString();
-                            });
-                          })
+                      Row(
+                        children: [
+                          Radio(
+                              value: 'Grey',
+                              groupValue: controller.selectedOption.text,
+                              onChanged: (value) {
+                                setState(() {
+                                  controller.selectedOption.text =
+                                      value.toString();
+                                });
+                              }),
+                          Text(
+                            'Grey Collar',
+                            style: TextStyle(
+                                color: Colors.grey.shade800,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      )
                     else if (widget.selectedOption == 'Blue')
                       IgnorePointer(
-                          child: Radio(
+                          child: Row(
+                        children: [
+                          Radio(
                               value: widget.selectedOption,
                               groupValue: widget.selectedOption,
-                              onChanged: null)),
-                    Text('Grey Collar'),
+                              onChanged: null),
+                          Text(
+                            'Grey Collar',
+                            style: TextStyle(
+                                color: Colors.grey.shade500,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      )),
                   ],
                 ),
               ),
+              SizedBox(height: 37),
               Padding(
-                padding: const EdgeInsets.only(right: 1400),
-                child: Text(
-                  translation(context).registerAsANewUser,
-                  style: TextStyle(fontSize: 30, color: Colors.grey),
+                padding: const EdgeInsets.only(left: 160),
+                child: Row(
+                  children: [
+                    Text(
+                      translation(context).registerAsANewUser,
+                      style: TextStyle(fontSize: 30, color: Colors.grey),
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 45),
+              SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.only(left: 170, right: 170),
                 child: Container(
@@ -1225,66 +1292,25 @@ class _RegistrationState extends State<Registration> {
                               ),
                             ),
                             onPressed: () async {
-                              if (isValidEmail(controller.email.text)) {
-                                print("otp1");
-                                // Set OTP configuration
-                                myauth.setConfig(
-                                  appEmail: "contact@hdevcoder.com",
-                                  appName: "OTP for Registration",
+                              myauth.setConfig(
+                                  appEmail: "me@rohitchouhan.com",
+                                  appName: "Email OTP",
                                   userEmail: controller.email.text,
-                                  otpLength: 4,
-                                  otpType: OTPType.digitsOnly,
-                                );
-                                _showOtpDialog();
-
-                                // Send OTP to email
-                                bool otpSent = await myauth.sendOTP();
-
-                                // Check if OTP sending is successful
-                                if (!otpSent) {
-                                  // Display error pop-up for failed OTP sending
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Text("Error"),
-                                        content:
-                                            Text("Oops, OTP sending failed."),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text("OK"),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                }
+                                  otpLength: 6,
+                                  otpType: OTPType.digitsOnly);
+                              if (await myauth.sendOTP() == true) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                  content: Text("OTP has been sent"),
+                                ));
                               } else {
-                                // Display error message for invalid email format
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text("Error"),
-                                      content: Text(
-                                          "Please enter a valid email address."),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text("OK"),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                  content: Text("Oops, OTP send failed"),
+                                ));
                               }
                             },
-                            child: isVerified
+                            child: isVerifiedEmail
                                 ? Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -1892,70 +1918,25 @@ class _RegistrationState extends State<Registration> {
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 // Sign up with email and password
-                                // Navigator.pushNamed(
-                                //   context,
-                                //   '/document',
-                                //   arguments: {
-                                //     'name': controller.name.text,
-                                //     'email': controller.email.text,
-                                //     'mobile': controller.mobile.text,
-                                //     'worktitle': controller.worktitle.text,
-                                //     "aadharno": controller.aadharno.text,
-                                //     "gender": controller.gender.text,
-                                //     "workexp": controller.workexp.text,
-                                //     "qualification":
-                                //         controller.qualification.text,
-                                //     "address": controller.address.text,
-                                //     'selectedWorkins':
-                                //         controller.selectedWorkins,
-                                //     'selectedSkills': controller.selectedSkills,
-                                //     'label': controller.selectedOption.text,
-                                //   }, // Pass only keys to the next page
-                                // );
-                                Map<String, dynamic> userData = {
-                                  'name': controller.name.text,
-                                  'email': controller.email.text,
-                                  'mobile': controller.mobile.text,
-                                  'worktitle': controller.worktitle.text,
-                                  "aadharno": controller.aadharno.text,
-                                  "gender": controller.gender.text,
-                                  "workexp": controller.workexp.text,
-                                  "qualification":
-                                      controller.qualification.text,
-                                  "address": controller.address.text,
-                                  'selectedWorkins': controller.selectedWorkins,
-                                  'selectedSkills': controller.selectedSkills,
-                                  "label": controller.selectedOption.text,
-
-                                  // Add other fields as needed
-                                };
-
-                                // Log the userData for debugging
-                                print('User Data: $userData');
-
-                                // Store data in Firestore
-                                // await FirebaseFirestore.instance
-                                //     .collection('greyusercollar')
-                                //     .add(userData);
-
-                                // Navigate to the payment page or any other destination
-                                Navigator.push(
+                                Navigator.pushNamed(
                                   context,
-                                  MaterialPageRoute(
-                                    builder: (context) => GreyUserUpload(
-                                      selectedOption: 'Grey',
-                                      name: controller.name.text,
-                                      mobile: controller.mobile.text,
-                                      worktitle: controller.worktitle.text,
-                                      aadharno: controller.aadharno.text,
-                                      gender: controller.gender.text,
-                                      workexp: controller.workexp.text,
-                                      qualification:
-                                          controller.qualification.text,
-                                      address: controller.address.text,
-                                      label: controller.selectedOption.text,
-                                    ),
-                                  ),
+                                  '/document',
+                                  arguments: {
+                                    'name': controller.name.text,
+                                    'email': controller.email.text,
+                                    'mobile': controller.mobile.text,
+                                    'worktitle': controller.worktitle.text,
+                                    "aadharno": controller.aadharno.text,
+                                    "gender": controller.gender.text,
+                                    "workexp": controller.workexp.text,
+                                    "qualification":
+                                        controller.qualification.text,
+                                    "address": controller.address.text,
+                                    'selectedWorkins':
+                                        controller.selectedWorkins,
+                                    'selectedSkills': controller.selectedSkills,
+                                    'label': controller.selectedOption.text,
+                                  }, // Pass only keys to the next page
                                 );
                               }
                             },

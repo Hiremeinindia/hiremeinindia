@@ -7,16 +7,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:hiremeinindiaapp/User/candidate_form_state.dart';
+import 'package:hiremeinindiaapp/User/userFormState.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
-import 'Widgets/customtextstyle.dart';
-import 'classes/language_constants.dart';
-import 'widgets/custombutton.dart';
-import 'widgets/hiremeinindia.dart';
+import '../Widgets/customtextstyle.dart';
+import '../classes/language_constants.dart';
+import '../widgets/custombutton.dart';
+import '../widgets/hiremeinindia.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'classes/language.dart';
-import 'gen_l10n/app_localizations.dart';
-import 'main.dart';
+import '../classes/language.dart';
+import '../gen_l10n/app_localizations.dart';
+import '../main.dart';
 import 'package:http/http.dart' as http;
 
 class NewUserPayment extends StatefulWidget {

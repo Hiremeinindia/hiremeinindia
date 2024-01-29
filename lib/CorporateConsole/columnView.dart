@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hiremeinindiaapp/homepage.dart';
 
-import '../Models/candidated.dart';
+import '../User/user.dart';
 import '../classes/language_constants.dart';
 import '../widgets/customcard.dart';
 

@@ -174,8 +174,6 @@ class Candidate {
       var list = event.docs.map((e) => Candidate.fromSnapshot(e)).toList();
 
       if (candidate != null) {
-        print(
-            'Filtering list for candidate with reference: ${candidate.reference}');
         // Filter the list to include only the specified candidate
         list = list
             .where((element) => element.reference == candidate.reference)

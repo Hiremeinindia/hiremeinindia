@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:hiremeinindiaapp/Models/candidated.dart';
+import 'package:hiremeinindiaapp/User/user.dart';
 import 'package:hiremeinindiaapp/Models/register_model.dart';
 
 class UserRepository extends GetxController {

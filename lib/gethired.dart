@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:hiremeinindiaapp/User/GreyUser/greyRegistration.dart';
+import 'package:hiremeinindiaapp/User/userRegistration.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:hiremeinindiaapp/widgets/hiremeinindia.dart';
 import 'widgets/custombutton.dart';
@@ -39,9 +39,9 @@ class _HiredState extends State<Hired> {
     return Scaffold(
       appBar: AppBar(
         title: HireMeInIndia(),
+        automaticallyImplyLeading: false,
         centerTitle: false,
         toolbarHeight: 80,
-        automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         actions: [
@@ -162,7 +162,8 @@ class _HiredState extends State<Hired> {
                       decoration: BoxDecoration(
                         color: Colors.indigo.shade900,
                       ),
-                      child: DropdownButton<String>(
+                      child: DropdownButton2<String>(
+                        isExpanded: true,
                         items: [
                           DropdownMenuItem<String>(
                             value: 'Option 1',
@@ -181,37 +182,95 @@ class _HiredState extends State<Hired> {
                           AppLocalizations.of(context)!.findaJob,
                           style: TextStyle(color: Colors.white),
                         ),
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.white,
+                        buttonStyleData: ButtonStyleData(
+                          height: 30,
+                          width: 200,
+                          elevation: 1,
+                          padding: const EdgeInsets.only(left: 14, right: 14),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                              color: Colors.black26,
+                            ),
+                            color: Colors.indigo.shade900,
+                          ),
                         ),
-                        underline: Container(),
+                        iconStyleData: const IconStyleData(
+                          icon: Icon(
+                            Icons.arrow_drop_down_sharp,
+                          ),
+                          iconSize: 25,
+                          iconEnabledColor: Colors.white,
+                          iconDisabledColor: null,
+                        ),
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 210,
+                          width: 156,
+                          elevation: 0,
+                          padding: EdgeInsets.only(
+                              left: 10, right: 10, top: 5, bottom: 15),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(color: Colors.black),
+                            color: Colors.indigo.shade900,
+                          ),
+                          scrollPadding: EdgeInsets.all(5),
+                          scrollbarTheme: ScrollbarThemeData(
+                            thickness: MaterialStateProperty.all<double>(6),
+                            thumbVisibility:
+                                MaterialStateProperty.all<bool>(true),
+                          ),
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 25,
+                          padding: EdgeInsets.only(left: 14, right: 14),
+                        ),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(width: 40),
                 SizedBox(
-                  height: 30,
-                  width: 30,
+                  height: 38,
+                  width: 38,
                   child: CircleAvatar(
                     backgroundColor: Colors.black,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.person,
-                        color: Colors.indigo.shade900,
+                    child: SizedBox(
+                      width: 36,
+                      height: 36,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.person_outline_outlined,
+                          size: 35,
+                          color: Colors.indigo.shade900,
+                        ),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8.0),
-                SizedBox(
-                  width: 50,
-                  child: Text(
-                    'Guest User',
-                    maxLines: 2,
-                    style: TextStyle(color: Colors.black),
+                Padding(
+                  padding: EdgeInsets.only(top: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Guest',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.indigo.shade900,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'User',
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.indigo.shade900,
+                            height: 0),
+                      ),
+                    ],
                   ),
                 ),
               ],

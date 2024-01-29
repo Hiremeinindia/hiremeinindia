@@ -5,14 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/corporateDashboard.dart';
 import 'package:hiremeinindiaapp/authservice.dart';
 import 'package:hiremeinindiaapp/main.dart';
-import 'package:hiremeinindiaapp/userdashboard.dart';
+import 'package:hiremeinindiaapp/User/userDashboard.dart';
 import 'package:hiremeinindiaapp/widgets/customtextfield.dart';
-import 'User/candidate_form_state.dart';
+import 'User/userFormState.dart';
 import 'Widgets/customtextstyle.dart';
 import 'classes/language.dart';
 import 'classes/language_constants.dart';
 import 'gen_l10n/app_localizations.dart';
 import 'widgets/custombutton.dart';
+import 'widgets/hiremeinindia.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage();
@@ -49,6 +50,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: HireMeInIndia(),
         centerTitle: false,
         toolbarHeight: 80,
         automaticallyImplyLeading: false,
@@ -172,7 +174,8 @@ class _LoginPageState extends State<LoginPage> {
                       decoration: BoxDecoration(
                         color: Colors.indigo.shade900,
                       ),
-                      child: DropdownButton<String>(
+                      child: DropdownButton2<String>(
+                        isExpanded: true,
                         items: [
                           DropdownMenuItem<String>(
                             value: 'Option 1',
@@ -191,37 +194,95 @@ class _LoginPageState extends State<LoginPage> {
                           AppLocalizations.of(context)!.findaJob,
                           style: TextStyle(color: Colors.white),
                         ),
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.white,
+                        buttonStyleData: ButtonStyleData(
+                          height: 30,
+                          width: 200,
+                          elevation: 1,
+                          padding: const EdgeInsets.only(left: 14, right: 14),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                              color: Colors.black26,
+                            ),
+                            color: Colors.indigo.shade900,
+                          ),
                         ),
-                        underline: Container(),
+                        iconStyleData: const IconStyleData(
+                          icon: Icon(
+                            Icons.arrow_drop_down_sharp,
+                          ),
+                          iconSize: 25,
+                          iconEnabledColor: Colors.white,
+                          iconDisabledColor: null,
+                        ),
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 210,
+                          width: 156,
+                          elevation: 0,
+                          padding: EdgeInsets.only(
+                              left: 10, right: 10, top: 5, bottom: 15),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(color: Colors.black),
+                            color: Colors.indigo.shade900,
+                          ),
+                          scrollPadding: EdgeInsets.all(5),
+                          scrollbarTheme: ScrollbarThemeData(
+                            thickness: MaterialStateProperty.all<double>(6),
+                            thumbVisibility:
+                                MaterialStateProperty.all<bool>(true),
+                          ),
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 25,
+                          padding: EdgeInsets.only(left: 14, right: 14),
+                        ),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(width: 40),
                 SizedBox(
-                  height: 30,
-                  width: 30,
+                  height: 38,
+                  width: 38,
                   child: CircleAvatar(
                     backgroundColor: Colors.black,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.person,
-                        color: Colors.indigo.shade900,
+                    child: SizedBox(
+                      width: 36,
+                      height: 36,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.person_outline_outlined,
+                          size: 35,
+                          color: Colors.indigo.shade900,
+                        ),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8.0),
-                SizedBox(
-                  width: 50,
-                  child: Text(
-                    'Guest User',
-                    maxLines: 2,
-                    style: TextStyle(color: Colors.black),
+                Padding(
+                  padding: EdgeInsets.only(top: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Guest',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.indigo.shade900,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'User',
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.indigo.shade900,
+                            height: 0),
+                      ),
+                    ],
                   ),
                 ),
               ],

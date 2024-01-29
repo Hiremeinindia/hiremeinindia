@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hiremeinindiaapp/widgets/customcard.dart';
 
-import 'Widgets/customtextstyle.dart';
-import 'widgets/custombutton.dart';
-import 'widgets/hiremeinindia.dart';
-import 'classes/language_constants.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'classes/language.dart';
-import 'gen_l10n/app_localizations.dart';
-import 'main.dart';
+import '../Widgets/customtextstyle.dart';
+import '../classes/language.dart';
+import '../classes/language_constants.dart';
+import '../gen_l10n/app_localizations.dart';
+import '../main.dart';
+import '../widgets/custombutton.dart';
+import '../widgets/hiremeinindia.dart';
 
 class UserDashboard extends StatefulWidget {
   final User? user;
