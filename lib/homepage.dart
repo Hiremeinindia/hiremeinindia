@@ -32,14 +32,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<String> items = ['Tamil', 'English', 'French', 'Malayalam'];
-  String? selectedValue;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: HireMeInIndia(),
+        automaticallyImplyLeading: false,
         centerTitle: false,
         toolbarHeight: 80,
         backgroundColor: Colors.transparent,
@@ -231,26 +229,46 @@ class _HomePageState extends State<HomePage> {
                 ),
                 SizedBox(width: 40),
                 SizedBox(
-                  height: 30,
-                  width: 30,
+                  height: 38,
+                  width: 38,
                   child: CircleAvatar(
                     backgroundColor: Colors.black,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.person,
-                        color: Colors.indigo.shade900,
+                    child: SizedBox(
+                      width: 36,
+                      height: 36,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.person_outline_outlined,
+                          size: 35,
+                          color: Colors.indigo.shade900,
+                        ),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8.0),
-                SizedBox(
-                  width: 50,
-                  child: Text(
-                    'Guest User',
-                    maxLines: 2,
-                    style: TextStyle(color: Colors.black),
+                Padding(
+                  padding: EdgeInsets.only(top: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Guest',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.indigo.shade900,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'User',
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.indigo.shade900,
+                            height: 0),
+                      ),
+                    ],
                   ),
                 ),
               ],

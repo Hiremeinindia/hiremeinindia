@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../Models/candidated.dart';
+import '../User/user.dart';
 
 import 'package:flutter/material.dart';
 

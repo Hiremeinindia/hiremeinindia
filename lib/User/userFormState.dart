@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../Models/candidated.dart';
+import 'user.dart';
 
 class CandidateFormController {
   CandidateFormController({String? initialSelectedOption}) {

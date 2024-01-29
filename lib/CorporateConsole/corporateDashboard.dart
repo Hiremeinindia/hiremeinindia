@@ -40,32 +40,30 @@ class _CorporateDashboard extends State<CorporateDashboard> {
 
   bool isPressed = false;
 
-  String? _userName;
-  late Stream<DocumentSnapshot<Map<String, dynamic>>> userStream;
+  @override
+  late Stream<Map<String, dynamic>?> userStream;
+  String _userName = '';
+  String _designation = '';
 
   @override
   void initState() {
     super.initState();
-    userStream = FirebaseFirestore.instance
-        .collection('greycollaruser')
-        .doc(widget.user.uid)
-        .snapshots();
+    userStream = fetchData().map((data) => data);
   }
 
   Stream<Map<String, dynamic>?> fetchData() {
     try {
-      // Replace 'your_collection' and 'your_document' with your actual collection and document names
       return FirebaseFirestore.instance
-          .collection('greycollaruser')
+          .collection('corporateuser')
           .doc(widget.user.uid)
           .snapshots()
           .map((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
         if (documentSnapshot.exists) {
-          // Access the data using documentSnapshot.data()
           Map<String, dynamic> data = documentSnapshot.data()!;
           String name = data['name'];
-          print('Name: $name');
+          String designation = data['designation'];
           _userName = name;
+          _designation = designation;
           return data;
         } else {
           print('Document does not exist');
@@ -82,6 +80,7 @@ class _CorporateDashboard extends State<CorporateDashboard> {
     return Scaffold(
         appBar: AppBar(
           title: HireMeInIndia(),
+          automaticallyImplyLeading: false,
           centerTitle: false,
           toolbarHeight: 80,
           backgroundColor: Colors.transparent,
@@ -274,23 +273,60 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                   ),
                   SizedBox(width: 40),
                   SizedBox(
-                    height: 30,
-                    width: 30,
+                    height: 38,
+                    width: 38,
                     child: CircleAvatar(
                       backgroundColor: Colors.black,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.person,
-                          color: Colors.indigo.shade900,
+                      child: SizedBox(
+                        width: 36,
+                        height: 36,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: Icon(
+                            Icons.person_outline_outlined,
+                            size: 35,
+                            color: Colors.indigo.shade900,
+                          ),
                         ),
                       ),
                     ),
                   ),
                   SizedBox(width: 8.0),
-                  Text(
-                    AppSession().candidate?.name ?? "No Username",
-                    style: TextStyle(fontSize: 18),
+                  StreamBuilder<Map<String, dynamic>?>(
+                    stream: userStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData && snapshot.data != null) {
+                        // Display the user's name
+                        return Padding(
+                          padding: EdgeInsets.only(top: 15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '$_userName',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.indigo.shade900,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                '$_designation',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.indigo.shade900,
+                                    height: 0),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        // Loading or error state
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    },
                   ),
                 ],
               ),
@@ -324,96 +360,63 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            DropdownButtonHideUnderline(
-                              child: DropdownButton2<String>(
-                                isExpanded: true,
-                                hint: const Row(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerLeft,
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: StreamBuilder<Map<String, dynamic>?>(
+                                stream: userStream,
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData &&
+                                      snapshot.data != null) {
+                                    // Display the user's name
+                                    return Center(
                                       child: Text(
-                                        'Hello Krithick',
+                                        'Hello $_userName',
                                         style: CustomTextStyle.nameOfUser,
                                         overflow: TextOverflow.ellipsis,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                items: items
-                                    .map((String item) =>
-                                        DropdownMenuItem<String>(
-                                          value: item,
-                                          child: Text(
-                                            item,
-                                            style: CustomTextStyle.nameOflist,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ))
-                                    .toList(),
-                                value: selectedValue,
-                                onChanged: (String? value) {
-                                  setState(() {
-                                    selectedValue = value;
-                                  });
+                                    );
+                                  } else {
+                                    // Loading or error state
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
                                 },
-                                buttonStyleData: ButtonStyleData(
-                                  height: 50,
-                                  width: 270,
-                                  elevation: 1,
-                                ),
-                                iconStyleData: const IconStyleData(
-                                  icon: Icon(
-                                    Icons.arrow_drop_down_sharp,
-                                  ),
-                                  iconSize: 45,
-                                  iconEnabledColor: Colors.indigo,
-                                  iconDisabledColor: null,
-                                ),
-                                dropdownStyleData: DropdownStyleData(
-                                  maxHeight: 210,
-                                  width: 270,
-                                  elevation: 0,
-                                  padding: EdgeInsets.only(
-                                      left: 10, right: 10, top: 5, bottom: 15),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(color: Colors.black),
-                                    color: Colors.white,
-                                  ),
-                                  scrollPadding: EdgeInsets.all(5),
-                                  scrollbarTheme: ScrollbarThemeData(
-                                    thickness:
-                                        MaterialStateProperty.all<double>(6),
-                                    thumbVisibility:
-                                        MaterialStateProperty.all<bool>(true),
-                                  ),
-                                ),
-                                menuItemStyleData: const MenuItemStyleData(
-                                  height: 50,
-                                  padding: EdgeInsets.only(left: 14, right: 14),
-                                ),
                               ),
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  'HR Manager',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.indigo.shade900,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Poppins'),
-                                ),
-                                Text('|'),
-                                Text(
-                                  'Tata Salt',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.indigo.shade900,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Poppins'),
-                                ),
-                              ],
+                            StreamBuilder<Map<String, dynamic>?>(
+                              stream: userStream,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData && snapshot.data != null) {
+                                  // Display the user's name
+                                  return Row(
+                                    children: [
+                                      Text(
+                                        '$_designation',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.indigo.shade900,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Poppins'),
+                                      ),
+                                      Text('|'),
+                                      Text(
+                                        'Tata Salt',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.indigo.shade900,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Poppins'),
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  // Loading or error state
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                              },
                             ),
                           ],
                         ),

@@ -8,18 +8,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:hiremeinindiaapp/Models/candidated.dart';
-import 'package:hiremeinindiaapp/User/GreyUser/greyRegistration.dart';
+import 'package:hiremeinindiaapp/User/user.dart';
+import 'package:hiremeinindiaapp/User/userRegistration.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
-import 'package:hiremeinindiaapp/userpayment.dart';
+import 'package:hiremeinindiaapp/User/userPayment.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import '../candidate_form_state.dart';
-import '../../classes/language.dart';
-import '../../classes/language_constants.dart';
-import '../../Widgets/customtextstyle.dart';
-import '../../main.dart';
-import '../../widgets/custombutton.dart';
+import 'userFormState.dart';
+import '../classes/language.dart';
+import '../classes/language_constants.dart';
+import '../Widgets/customtextstyle.dart';
+import '../main.dart';
+import '../widgets/custombutton.dart';
 import 'package:file_picker/file_picker.dart';
 
 import 'package:firebase_storage/firebase_storage.dart';
