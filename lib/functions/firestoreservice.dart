@@ -28,7 +28,7 @@ class FirebaseService with ChangeNotifier {
         name: doc['name'].toString(),
         mobile: doc['mobile'].toString(),
         qualification: doc['qualification'].toString(),
-        selectedSkills: (doc['selectedSkills'] as List<dynamic>).cast<String>(),
+        skills: (doc['skills'] as List<dynamic>).cast<String>(),
         selectedOption: doc['selectedOption'].toString(),
         // Add other fields as needed
       );

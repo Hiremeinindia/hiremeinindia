@@ -9,6 +9,7 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:hiremeinindiaapp/User/user.dart';
 import 'package:hiremeinindiaapp/Providers/session.dart';
 import 'package:hiremeinindiaapp/User/userFormState.dart';
+import 'package:hiremeinindiaapp/User/userUpload.dart';
 import 'package:hiremeinindiaapp/classes/language.dart';
 import 'package:hiremeinindiaapp/classes/language_constants.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
@@ -1353,7 +1354,7 @@ class _RegistrationState extends State<Registration> {
                                     Wrap(
                                       spacing: 8.0,
                                       runSpacing: 8.0,
-                                      children: controller.selectedSkills
+                                      children: controller.skills
                                           .map(
                                             (value) => Chip(
                                               backgroundColor:
@@ -1365,7 +1366,7 @@ class _RegistrationState extends State<Registration> {
                                               ),
                                               onDeleted: () {
                                                 setState(() {
-                                                  controller.selectedSkills
+                                                  controller.skills
                                                       .remove(value);
                                                 });
                                               },
@@ -1456,13 +1457,11 @@ class _RegistrationState extends State<Registration> {
                                                 setState(() {
                                                   int selectionLimit = 2;
                                                   if (newValue != null &&
-                                                      controller.selectedSkills
-                                                              .length <
+                                                      controller.skills.length <
                                                           selectionLimit) {
-                                                    if (!controller
-                                                        .selectedSkills
+                                                    if (!controller.skills
                                                         .contains(newValue)) {
-                                                      controller.selectedSkills
+                                                      controller.skills
                                                           .add(newValue);
                                                     }
                                                   }
@@ -1498,7 +1497,7 @@ class _RegistrationState extends State<Registration> {
                                     Wrap(
                                       spacing: 8.0,
                                       runSpacing: 8.0,
-                                      children: controller.selectedWorkins
+                                      children: controller.workins
                                           .map(
                                             (value) => Chip(
                                               backgroundColor:
@@ -1510,7 +1509,7 @@ class _RegistrationState extends State<Registration> {
                                               ),
                                               onDeleted: () {
                                                 setState(() {
-                                                  controller.selectedWorkins
+                                                  controller.workins
                                                       .remove(value);
                                                 });
                                               },
@@ -1596,9 +1595,9 @@ class _RegistrationState extends State<Registration> {
                                             onChanged: (String? newValue) {
                                               setState(() {
                                                 if (newValue != null &&
-                                                    !controller.selectedWorkins
+                                                    !controller.workins
                                                         .contains(newValue)) {
-                                                  controller.selectedWorkins
+                                                  controller.workins
                                                       .add(newValue);
                                                 }
                                               });
@@ -1636,7 +1635,7 @@ class _RegistrationState extends State<Registration> {
                                     Wrap(
                                       spacing: 8.0,
                                       runSpacing: 8.0,
-                                      children: controller.selectedSkills
+                                      children: controller.skills
                                           .map(
                                             (value) => Chip(
                                               backgroundColor:
@@ -1648,7 +1647,7 @@ class _RegistrationState extends State<Registration> {
                                               ),
                                               onDeleted: () {
                                                 setState(() {
-                                                  controller.selectedSkills
+                                                  controller.skills
                                                       .remove(value);
                                                 });
                                               },
@@ -1739,13 +1738,11 @@ class _RegistrationState extends State<Registration> {
                                                 setState(() {
                                                   int selectionLimit = 2;
                                                   if (newValue != null &&
-                                                      controller.selectedSkills
-                                                              .length <
+                                                      controller.skills.length <
                                                           selectionLimit) {
-                                                    if (!controller
-                                                        .selectedSkills
+                                                    if (!controller.skills
                                                         .contains(newValue)) {
-                                                      controller.selectedSkills
+                                                      controller.skills
                                                           .add(newValue);
                                                     }
                                                   }
@@ -1781,7 +1778,7 @@ class _RegistrationState extends State<Registration> {
                                     Wrap(
                                       spacing: 8.0,
                                       runSpacing: 8.0,
-                                      children: controller.selectedWorkins
+                                      children: controller.workins
                                           .map(
                                             (value) => Chip(
                                               backgroundColor:
@@ -1793,7 +1790,7 @@ class _RegistrationState extends State<Registration> {
                                               ),
                                               onDeleted: () {
                                                 setState(() {
-                                                  controller.selectedWorkins
+                                                  controller.workins
                                                       .remove(value);
                                                 });
                                               },
@@ -1879,9 +1876,9 @@ class _RegistrationState extends State<Registration> {
                                             onChanged: (String? newValue) {
                                               setState(() {
                                                 if (newValue != null &&
-                                                    !controller.selectedWorkins
+                                                    !controller.workins
                                                         .contains(newValue)) {
-                                                  controller.selectedWorkins
+                                                  controller.workins
                                                       .add(newValue);
                                                 }
                                               });
@@ -1918,25 +1915,37 @@ class _RegistrationState extends State<Registration> {
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 // Sign up with email and password
-                                Navigator.pushNamed(
+                                // Navigator.pushNamed(
+                                //   context,
+                                //   '/document',
+                                //   arguments: {
+                                //     'name': controller.name.text,
+                                //     'email': controller.email.text,
+                                //     'mobile': controller.mobile.text,
+                                //     'worktitle': controller.worktitle.text,
+                                //     "aadharno": controller.aadharno.text,
+                                //     "gender": controller.gender.text,
+                                //     "workexp": controller.workexp.text,
+                                //     "qualification":
+                                //         controller.qualification.text,
+                                //     "address": controller.address.text,
+                                //     'workins':
+                                //         controller.workins,
+                                //     'skills': controller.skills,
+                                //     'label': controller.selectedOption.text,
+                                //   }, // Pass only keys to the next page
+                                // );
+                                UserCredential userCredential =
+                                    await _auth.createUserWithEmailAndPassword(
+                                  email: controller.email.text,
+                                  password: controller.password.text,
+                                );
+                                await assignUserRole(
+                                    userCredential.user!.uid, 'Blue');
+                                Navigator.push(
                                   context,
-                                  '/document',
-                                  arguments: {
-                                    'name': controller.name.text,
-                                    'email': controller.email.text,
-                                    'mobile': controller.mobile.text,
-                                    'worktitle': controller.worktitle.text,
-                                    "aadharno": controller.aadharno.text,
-                                    "gender": controller.gender.text,
-                                    "workexp": controller.workexp.text,
-                                    "qualification":
-                                        controller.qualification.text,
-                                    "address": controller.address.text,
-                                    'selectedWorkins':
-                                        controller.selectedWorkins,
-                                    'selectedSkills': controller.selectedSkills,
-                                    'label': controller.selectedOption.text,
-                                  }, // Pass only keys to the next page
+                                  MaterialPageRoute(
+                                      builder: (context) => GreyUserUpload()),
                                 );
                               }
                             },
@@ -1973,10 +1982,10 @@ class _RegistrationState extends State<Registration> {
         "qualification": controller.qualification.text,
         "state": controller.state.text,
         "address": controller.address.text,
-        'selectedWorkins': controller.selectedWorkins,
+        'workins': controller.workins,
         "city": controller.city.text,
         "country": controller.country.text,
-        'selectedSkills': controller.selectedSkills,
+        'skills': controller.skills,
         'label': controller.selectedOption.text,
         // Add additional user-related fields as needed
       });
