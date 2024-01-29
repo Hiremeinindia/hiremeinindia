@@ -20,7 +20,56 @@ import 'main.dart';
 import 'package:http/http.dart' as http;
 
 class NewUserPayment extends StatefulWidget {
-  const NewUserPayment();
+  const NewUserPayment({
+    Key? key,
+    this.selectedOption,
+    this.name,
+    this.email,
+    this.mobile,
+    this.worktitle,
+    this.aadharno,
+    this.gender,
+    this.workexp,
+    this.qualification,
+    this.address,
+    this.selectedWorkins,
+    this.selectedSkills,
+    this.label,
+    this.expectedwage,
+    this.currentwage,
+    this.imageUrl1,
+    this.imageUrl2,
+    this.imageUrl3,
+    this.imageUrl4,
+    this.imageUrl5,
+    this.city,
+    this.state,
+    this.country,
+  }) : super(key: key);
+  final String? selectedOption;
+  final String? email;
+  final String? mobile;
+  final String? worktitle;
+  final String? aadharno;
+  final String? gender;
+  final String? workexp;
+  final String? qualification;
+  final String? address;
+  final String? selectedWorkins;
+  final String? selectedSkills;
+  final String? label;
+  final String? name;
+  final String? expectedwage;
+  final String? currentwage;
+  final String? city;
+  final String? country;
+  final String? state;
+  final String? imageUrl1;
+  final String? imageUrl2;
+  final String? imageUrl3;
+  final String? imageUrl4;
+  final String? imageUrl5;
+
   @override
   State<NewUserPayment> createState() => _NewUserPayment();
 }
