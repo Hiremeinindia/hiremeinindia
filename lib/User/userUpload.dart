@@ -65,7 +65,10 @@ class _GreyUserUpload extends State<GreyUserUpload> {
   List<File> images = [];
 
   List<String> cvImageUrls = [];
-
+  List<String> expImageUrls = [];
+  List<String> voteImageUrls = [];
+  List<String> pictureImageUrls = [];
+  List<String> aadharImageUrls = [];
   String _title = '';
   CandidateFormController controller = CandidateFormController();
 
@@ -642,40 +645,46 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                           );
 
                           if (result != null) {
-                            List<String> imageUrls = [];
-                            // Process the selected files
-                            for (PlatformFile file in result.files) {
-                              String imageUrl1;
-                              if (kIsWeb) {
-                                // For web, use the bytes property instead of path
-                                final String fileName = file.name;
-                                final Uint8List fileBytes = file.bytes!;
+                            try {
+                              for (PlatformFile file in result.files) {
+                                String imageUrl;
+                                if (kIsWeb) {
+                                  // For web, use the bytes property instead of path
+                                  final String fileName = file.name;
+                                  final Uint8List fileBytes = file.bytes!;
 
-                                // Upload file to Firebase Storage
-                                imageUrl1 = await uploadFileFromBytes(
-                                  fileBytes: fileBytes,
-                                  originalFileName: fileName,
-                                );
-                              } else {
-                                // For other platforms, handle file uploads using path
-                                final String filePath = file.path!;
+                                  // Upload file to Firebase Storage
+                                  imageUrl = await uploadFileFromBytes(
+                                    fileBytes: fileBytes,
+                                    originalFileName: fileName,
+                                  );
+                                } else {
+                                  // For other platforms, handle file uploads using path
+                                  final String filePath = file.path!;
 
-                                // Upload file to Firebase Storage
-                                imageUrl1 = await uploadFileToStorage(filePath);
+                                  // Upload file to Firebase Storage
+                                  imageUrl =
+                                      await uploadFileToStorage(filePath);
+                                }
+
+                                // Store the image URL in Firestore
+                                await uploadImageUrl1ToFirestore(imageUrl);
+                                pictureImageUrls.add(imageUrl);
+
+                                // Display the uploaded file (Aadhar) with its URL
+                                final urlDownload = await FirebaseStorage
+                                    .instance
+                                    .ref()
+                                    .child('uploads/${file.name}')
+                                    .getDownloadURL();
+                                displayUploadedFilePicture(
+                                    urlDownload, file.name);
                               }
-
-                              // Store the image URL in Firestore
-                              await uploadImageUrl1ToFirestore(imageUrl1);
-                              imageUrls.add(imageUrl1);
-
-                              // Display the uploaded file (Aadhar) with its URL
-                              final urlDownload = await FirebaseStorage.instance
-                                  .ref()
-                                  .child('uploads/${file.name}')
-                                  .getDownloadURL();
-                              displayUploadedFilePicture(
-                                  urlDownload, file.name);
+                            } catch (e) {
+                              print('Error uploading CV: $e');
+                              // Handle error
                             }
+                            // Process the selected files
                           } else {
                             // User canceled the file picker
                           }
@@ -730,39 +739,46 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                           );
 
                           if (result != null) {
-                            List<String> imageUrls = [];
-                            // Process the selected files
-                            for (PlatformFile file in result.files) {
-                              String imageUrl2;
-                              if (kIsWeb) {
-                                // For web, use the bytes property instead of path
-                                final String fileName = file.name;
-                                final Uint8List fileBytes = file.bytes!;
+                            try {
+                              for (PlatformFile file in result.files) {
+                                String imageUrl2;
+                                if (kIsWeb) {
+                                  // For web, use the bytes property instead of path
+                                  final String fileName = file.name;
+                                  final Uint8List fileBytes = file.bytes!;
 
-                                // Upload file to Firebase Storage
-                                imageUrl2 = await uploadFileFromBytes(
-                                  fileBytes: fileBytes,
-                                  originalFileName: fileName,
-                                );
-                              } else {
-                                // For other platforms, handle file uploads using path
-                                final String filePath = file.path!;
+                                  // Upload file to Firebase Storage
+                                  imageUrl2 = await uploadFileFromBytes(
+                                    fileBytes: fileBytes,
+                                    originalFileName: fileName,
+                                  );
+                                } else {
+                                  // For other platforms, handle file uploads using path
+                                  final String filePath = file.path!;
 
-                                // Upload file to Firebase Storage
-                                imageUrl2 = await uploadFileToStorage(filePath);
+                                  // Upload file to Firebase Storage
+                                  imageUrl2 =
+                                      await uploadFileToStorage(filePath);
+                                }
+
+                                // Store the image URL in Firestore
+                                await uploadImageUrl2ToFirestore(imageUrl2);
+                                aadharImageUrls.add(imageUrl2);
+
+                                // Display the uploaded file (Aadhar) with its URL
+                                final urlDownload = await FirebaseStorage
+                                    .instance
+                                    .ref()
+                                    .child('uploads/${file.name}')
+                                    .getDownloadURL();
+                                displayUploadedFileAadhar(
+                                    urlDownload, file.name);
                               }
-
-                              // Store the image URL in Firestore
-                              await uploadImageUrl2ToFirestore(imageUrl2);
-                              imageUrls.add(imageUrl2);
-
-                              // Display the uploaded file (Aadhar) with its URL
-                              final urlDownload = await FirebaseStorage.instance
-                                  .ref()
-                                  .child('uploads/${file.name}')
-                                  .getDownloadURL();
-                              displayUploadedFileAadhar(urlDownload, file.name);
+                            } catch (e) {
+                              print('Error uploading CV: $e');
+                              // Handle error
                             }
+                            // Process the selected files
                           } else {
                             // User canceled the file picker
                           }
@@ -820,14 +836,14 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                             // Process the selected files
                             List<String> imageUrls = [];
                             for (PlatformFile file in result.files) {
-                              String imageUrl3;
+                              String imageUrl;
                               if (kIsWeb) {
                                 // For web, use the bytes property instead of path
                                 final String fileName = file.name;
                                 final Uint8List fileBytes = file.bytes!;
 
                                 // Upload file to Firebase Storage
-                                imageUrl3 = await uploadFileFromBytes(
+                                imageUrl = await uploadFileFromBytes(
                                   fileBytes: fileBytes,
                                   originalFileName: fileName,
                                 );
@@ -836,12 +852,12 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                                 final String filePath = file.path!;
 
                                 // Upload file to Firebase Storage
-                                imageUrl3 = await uploadFileToStorage(filePath);
+                                imageUrl = await uploadFileToStorage(filePath);
                               }
 
                               // Store the image URL in Firestore
-                              await uploadImageUrl3ToFirestore(imageUrl3);
-                              imageUrls.add(imageUrl3);
+                              await uploadImageUrl3ToFirestore(imageUrl);
+                              voteImageUrls.add(imageUrl);
 
                               // Display the uploaded file (Voter ID) with its URL
                               final urlDownload = await FirebaseStorage.instance
@@ -905,17 +921,16 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                           );
 
                           if (result != null) {
-                            List<String> imageUrls = [];
                             // Process the selected files
                             for (PlatformFile file in result.files) {
-                              String imageUrl4;
+                              String imageUrl;
                               if (kIsWeb) {
                                 // For web, use the bytes property instead of path
                                 final String fileName = file.name;
                                 final Uint8List fileBytes = file.bytes!;
 
                                 // Upload file to Firebase Storage
-                                imageUrl4 = await uploadFileFromBytes(
+                                imageUrl = await uploadFileFromBytes(
                                   fileBytes: fileBytes,
                                   originalFileName: fileName,
                                 );
@@ -924,12 +939,12 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                                 final String filePath = file.path!;
 
                                 // Upload file to Firebase Storage
-                                imageUrl4 = await uploadFileToStorage(filePath);
+                                imageUrl = await uploadFileToStorage(filePath);
                               }
 
                               // Store the image URL in Firestore
-                              await uploadImageUrl4ToFirestore(imageUrl4);
-                              imageUrls.add(imageUrl4);
+                              await uploadImageUrl4ToFirestore(imageUrl);
+                              expImageUrls.add(imageUrl);
 
                               // Display the uploaded file (Experience Proof) with its URL
                               final urlDownload = await FirebaseStorage.instance
