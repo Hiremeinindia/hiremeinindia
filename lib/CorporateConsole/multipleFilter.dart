@@ -18,11 +18,13 @@ class _MultipleFilterState extends State<MultipleFilter> {
   Candidate? qualification;
   late String job;
   late Query<Map<String, dynamic>> query;
+  late Query<Map<String, dynamic>> originalQuery;
 
   final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
-    query = FirebaseFirestore.instance.collection("greycollaruser");
+    originalQuery = FirebaseFirestore.instance.collection("greycollaruser");
+    query = originalQuery;
     super.initState();
   }
 
@@ -51,13 +53,12 @@ class _MultipleFilterState extends State<MultipleFilter> {
                       isExpanded: true,
                       items: AppSession()
                           .candidates
-                          .map((skill1Iterable) => DropdownMenuItem<Candidate?>(
-                                value: skill1Iterable,
-                                child: Text(skill1Iterable
-                                    .skills![0]), // Update this line
+                          .map((agentIterable) => DropdownMenuItem<Candidate>(
+                                value: agentIterable,
+                                child: Text(agentIterable.skills![0]),
                               ))
                           .followedBy([
-                        const DropdownMenuItem<Candidate?>(
+                        const DropdownMenuItem<Candidate>(
                           value: null,
                           child: Text('Job Classification'),
                         )
@@ -131,13 +132,12 @@ class _MultipleFilterState extends State<MultipleFilter> {
                         isExpanded: true,
                         items: AppSession()
                             .candidates
-                            .map((skill2Iterable) =>
-                                DropdownMenuItem<Candidate?>(
-                                  value: skill2Iterable,
-                                  child: Text(skill2Iterable.qualification!),
+                            .map((agentIterable) => DropdownMenuItem<Candidate>(
+                                  value: agentIterable,
+                                  child: Text(agentIterable.qualification!),
                                 ))
                             .followedBy([
-                          const DropdownMenuItem<Candidate?>(
+                          const DropdownMenuItem<Candidate>(
                             value: null,
                             child: Text('Qualification Set'),
                           )
@@ -208,6 +208,9 @@ class _MultipleFilterState extends State<MultipleFilter> {
               CustomButton(
                 text: 'Run',
                 onPressed: () {
+                  // Reset the query to its original state
+                  query = originalQuery;
+
                   // Check if skills are selected
                   if (skills != null) {
                     query = query.where(
@@ -215,10 +218,15 @@ class _MultipleFilterState extends State<MultipleFilter> {
                       arrayContainsAny: skills!.skills,
                     );
                   }
+
+                  // Check if qualification is selected
                   if (qualification != null) {
-                    query = query.where("qualification",
-                        isEqualTo: qualification!.qualification);
+                    query = query.where(
+                      "qualification",
+                      isEqualTo: qualification!.qualification,
+                    );
                   }
+
                   // You can add more conditions here for other filters
 
                   // Update the StreamBuilder to reflect the new query

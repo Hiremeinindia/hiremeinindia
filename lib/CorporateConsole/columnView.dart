@@ -280,7 +280,7 @@ class _ColumnViewState extends State<ColumnView> {
                 return const Center(
                   child: Padding(
                     padding: EdgeInsets.all(32.0),
-                    child: Text("No staffs are added yet"),
+                    child: Text("No users are added yet"),
                   ),
                 );
               } else {
