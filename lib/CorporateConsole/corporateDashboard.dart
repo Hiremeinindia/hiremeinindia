@@ -333,7 +333,7 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                       ],
                     ),
                     SizedBox(
-                      height: 50,
+                      height: 5,
                     ),
                     isPressed ? MultipleFilter() : ColumnView(),
                   ]),
