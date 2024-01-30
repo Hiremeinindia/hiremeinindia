@@ -142,8 +142,23 @@ class _NewUserPayment extends State<NewUserPayment> {
     }
   }
 
+  Future<void> uploadImageUrlToFirestore(String imageUrl) async {
+    try {
+      final DocumentReference documentReference =
+          FirebaseFirestore.instance.collection('greyusercollar').doc();
+      await documentReference.set({
+        'imageUrl': imageUrl,
+        // Add additional fields if needed
+      });
+      print('Image URL uploaded to Firestore successfully.');
+    } catch (error) {
+      print('Error uploading image URL to Firestore: $error');
+      throw error;
+    }
+  }
+
   Future<void> getCashReceipt() async {
-    final String serverUrl = 'http://localhost:3014';
+    final String serverUrl = 'http://localhost:3016';
     final String endpoint = '/getCashReceipt';
 
     try {
@@ -163,6 +178,24 @@ class _NewUserPayment extends State<NewUserPayment> {
     }
   }
 
+  Future<String> uploadImageToFirestore(List<int> fileBytes) async {
+    try {
+      Reference reference =
+          FirebaseStorage.instance.ref().child('cash_receipt.jpg');
+      await reference.putData(Uint8List.fromList(fileBytes));
+      String imageUrl = await reference.getDownloadURL();
+
+      // Upload the image URL to Firestore
+      await uploadImageUrlToFirestore(imageUrl);
+
+      // Return the image URL
+      return imageUrl;
+    } catch (error) {
+      print('Error uploading image: $error');
+      throw error;
+    }
+  }
+
   Future<void> uploadCashReceipt() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -178,8 +211,10 @@ class _NewUserPayment extends State<NewUserPayment> {
             ? _cashReceipt!.bytes!
             : await _readFileAsBytes(_cashReceipt!.path!);
 
-        // Upload the cash receipt image to Firebase Storage
-        await uploadImageToFirebase(fileBytes, 'cash_receipt.jpg');
+        // Upload the cash receipt image URL to Firestore
+        String imageUrl = await uploadImageToFirestore(fileBytes);
+        ;
+        print('Image URL: $imageUrl');
 
         // Show success dialog or handle success scenario as needed
       } else {
@@ -306,7 +341,7 @@ class _NewUserPayment extends State<NewUserPayment> {
     setState(() {
       isProcessing = true; // Set the flag to indicate processing
     });
-    final String serverUrl = 'http://localhost:3014';
+    final String serverUrl = 'http://localhost:3016';
     final String endpoint = '/cashNotification';
 
     try {

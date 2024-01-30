@@ -1195,8 +1195,11 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                         "label": controller.selectedOption.text,
                         "expectedwage": controller.expectedwage.text,
                         "currentwage": controller.currentwage.text,
-                        "imageUrls":
-                            cvImageUrls, // Use the image URLs obtained from CV button
+                        "imageUrls1": pictureImageUrls,
+                        "imageUrls2": aadharImageUrls,
+                        "imageUrls3": voteImageUrls,
+                        "imageUrls4": expImageUrls,
+                        "imageUrls5": cvImageUrls,
                       };
 
                       // Navigate to the payment page with user data and image URLs
