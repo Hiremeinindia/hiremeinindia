@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -158,7 +159,7 @@ class _NewUserPayment extends State<NewUserPayment> {
   }
 
   Future<void> getCashReceipt() async {
-    final String serverUrl = 'http://localhost:3016';
+    final String serverUrl = 'http://localhost:3018';
     final String endpoint = '/getCashReceipt';
 
     try {
@@ -336,12 +337,12 @@ class _NewUserPayment extends State<NewUserPayment> {
     );
   }
 
-  Future<void> sendCashNotification() async {
+  Future<void> sendCashNotification(String imageUrl) async {
     print("cash2");
     setState(() {
       isProcessing = true; // Set the flag to indicate processing
     });
-    final String serverUrl = 'http://localhost:3016';
+    final String serverUrl = 'http://localhost:3018';
     final String endpoint = '/cashNotification';
 
     try {
@@ -351,6 +352,9 @@ class _NewUserPayment extends State<NewUserPayment> {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
+        body: jsonEncode(<String, dynamic>{
+          'imageUrl': imageUrl, // Pass imageUrl as a parameter
+        }),
       );
 
       print('Response status code: ${response.statusCode}');
@@ -731,8 +735,9 @@ class _NewUserPayment extends State<NewUserPayment> {
                           );
 
                           try {
+                            String? imageUrl = '';
                             // Call the method to send cash notification
-                            await sendCashNotification();
+                            await sendCashNotification(imageUrl);
 
                             // Call the method to retrieve cash receipt after the notification is sent
                             await getCashReceipt();
