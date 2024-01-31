@@ -20,18 +20,22 @@ class Hired extends StatefulWidget {
 class _HiredState extends State<Hired> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Future<int> greycountDocuments() async {
-    QuerySnapshot<Map<String, dynamic>> myDoc =
-        await firestore.collection('greycollaruser').get();
-    List<DocumentSnapshot<Map<String, dynamic>>> myDocCount = myDoc.docs;
-    return myDocCount.length; // Return the count of documents in the collection
+  Future<int> BlueResult() async {
+    var query = await FirebaseFirestore.instance
+        .collection("greycollaruser")
+        .where('label', isEqualTo: 'Blue');
+    var snapshot = await query.get();
+    var count = snapshot.size;
+    return count; // Add this line to return the count
   }
 
-  Future<int> bluecountDocuments() async {
-    QuerySnapshot<Map<String, dynamic>> myDoc =
-        await firestore.collection('greycollaruser').get();
-    List<DocumentSnapshot<Map<String, dynamic>>> myDocCount = myDoc.docs;
-    return myDocCount.length; // Return the count of documents in the collection
+  Future<int> GreyResult() async {
+    var query = await FirebaseFirestore.instance
+        .collection("greycollaruser")
+        .where('label', isEqualTo: 'Grey');
+    var snapshot = await query.get();
+    var count = snapshot.size;
+    return count; // Add this line to return the count
   }
 
   @override
@@ -316,7 +320,7 @@ class _HiredState extends State<Hired> {
                       height: 7,
                     ),
                     FutureBuilder<int>(
-                      future: bluecountDocuments(),
+                      future: BlueResult(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -361,7 +365,7 @@ class _HiredState extends State<Hired> {
                       height: 7,
                     ),
                     FutureBuilder<int>(
-                      future: greycountDocuments(),
+                      future: GreyResult(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {

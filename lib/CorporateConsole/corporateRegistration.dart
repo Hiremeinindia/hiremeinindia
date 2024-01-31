@@ -498,6 +498,7 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
         'name': controller.name.text,
         'email': controller.email.text,
         'designation': controller.designation.text,
+        'companyname': controller.companyName.text
         // Add additional admin-related fields as needed
       });
     } catch (e) {

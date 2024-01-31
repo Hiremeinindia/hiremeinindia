@@ -44,6 +44,7 @@ class _CorporateDashboard extends State<CorporateDashboard> {
   late Stream<Map<String, dynamic>?> userStream;
   String _userName = '';
   String _designation = '';
+  String _companyName = '';
 
   @override
   void initState() {
@@ -62,6 +63,8 @@ class _CorporateDashboard extends State<CorporateDashboard> {
           Map<String, dynamic> data = documentSnapshot.data()!;
           String name = data['name'];
           String designation = data['designation'];
+          String companyName = data['companyname'];
+          _companyName = companyName;
           _userName = name;
           _designation = designation;
           return data;
@@ -90,186 +93,12 @@ class _CorporateDashboard extends State<CorporateDashboard> {
               padding: EdgeInsets.only(right: 50.0, top: 10),
               child: Row(
                 children: [
-                  SizedBox(
-                    height: 30,
-                    width: 170,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.indigo.shade900,
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton2<Language>(
-                            isExpanded: true,
-                            hint: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    translation(context).english,
-                                    style: CustomTextStyle.dropdowntext,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            onChanged: (Language? language) async {
-                              if (language != null) {
-                                Locale _locale =
-                                    await setLocale(language.languageCode);
-                                HireApp.setLocale(context, _locale);
-                              } else {
-                                language;
-                              }
-                            },
-                            items: Language.languageList()
-                                .map<DropdownMenuItem<Language>>(
-                                  (e) => DropdownMenuItem<Language>(
-                                    value: e,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: <Widget>[
-                                        Text(
-                                          e.flag,
-                                          style: CustomTextStyle.dropdowntext,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        Text(
-                                          e.langname,
-                                          style: CustomTextStyle.dropdowntext,
-                                          overflow: TextOverflow.ellipsis,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                            buttonStyleData: ButtonStyleData(
-                              height: 30,
-                              width: 200,
-                              elevation: 1,
-                              padding:
-                                  const EdgeInsets.only(left: 14, right: 14),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                  color: Colors.black26,
-                                ),
-                                color: Colors.indigo.shade900,
-                              ),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              icon: Icon(
-                                Icons.arrow_drop_down_sharp,
-                              ),
-                              iconSize: 25,
-                              iconEnabledColor: Colors.white,
-                              iconDisabledColor: null,
-                            ),
-                            dropdownStyleData: DropdownStyleData(
-                              maxHeight: 210,
-                              width: 156,
-                              elevation: 0,
-                              padding: EdgeInsets.only(
-                                  left: 10, right: 10, top: 5, bottom: 15),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(color: Colors.black),
-                                color: Colors.indigo.shade900,
-                              ),
-                              scrollPadding: EdgeInsets.all(5),
-                              scrollbarTheme: ScrollbarThemeData(
-                                thickness: MaterialStateProperty.all<double>(6),
-                                thumbVisibility:
-                                    MaterialStateProperty.all<bool>(true),
-                              ),
-                            ),
-                            menuItemStyleData: const MenuItemStyleData(
-                              height: 25,
-                              padding: EdgeInsets.only(left: 14, right: 14),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  SizedBox(
-                    height: 30,
-                    width: 170,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 13),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.indigo.shade900,
-                        ),
-                        child: DropdownButton2<String>(
-                          isExpanded: true,
-                          items: [
-                            DropdownMenuItem<String>(
-                              value: 'Option 1',
-                              child: Text('Option 1'),
-                            ),
-                            DropdownMenuItem<String>(
-                              value: 'Option 2',
-                              child: Text('Option 1'),
-                            ),
-                            // Add more options as needed
-                          ],
-                          onChanged: (value) {
-                            // Handle option selection
-                          },
-                          hint: Text(
-                            AppLocalizations.of(context)!.findaJob,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          buttonStyleData: ButtonStyleData(
-                            height: 30,
-                            width: 200,
-                            elevation: 1,
-                            padding: const EdgeInsets.only(left: 14, right: 14),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(
-                                color: Colors.black26,
-                              ),
-                              color: Colors.indigo.shade900,
-                            ),
-                          ),
-                          iconStyleData: const IconStyleData(
-                            icon: Icon(
-                              Icons.arrow_drop_down_sharp,
-                            ),
-                            iconSize: 25,
-                            iconEnabledColor: Colors.white,
-                            iconDisabledColor: null,
-                          ),
-                          dropdownStyleData: DropdownStyleData(
-                            maxHeight: 210,
-                            width: 156,
-                            elevation: 0,
-                            padding: EdgeInsets.only(
-                                left: 10, right: 10, top: 5, bottom: 15),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(color: Colors.black),
-                              color: Colors.indigo.shade900,
-                            ),
-                            scrollPadding: EdgeInsets.all(5),
-                            scrollbarTheme: ScrollbarThemeData(
-                              thickness: MaterialStateProperty.all<double>(6),
-                              thumbVisibility:
-                                  MaterialStateProperty.all<bool>(true),
-                            ),
-                          ),
-                          menuItemStyleData: const MenuItemStyleData(
-                            height: 25,
-                            padding: EdgeInsets.only(left: 14, right: 14),
-                          ),
-                        ),
-                      ),
-                    ),
+                  Text(
+                    'Corporate Console',
+                    style: TextStyle(
+                        fontSize: 25,
+                        color: Colors.indigo.shade900,
+                        fontFamily: 'Poppins'),
                   ),
                   SizedBox(width: 40),
                   SizedBox(
@@ -377,8 +206,9 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                           IconButton(
+                                            hoverColor: Colors.transparent,
                                             icon: Icon(
-                                                Icons.arrow_downward_sharp),
+                                                Icons.arrow_drop_down_sharp),
                                             iconSize: 30,
                                             color: Colors.indigo.shade900,
                                             onPressed: () {
@@ -418,7 +248,7 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                                         ),
                                         Text('|'),
                                         Text(
-                                          'Tata Salt',
+                                          '$_companyName',
                                           style: TextStyle(
                                               fontSize: 15,
                                               color: Colors.indigo.shade900,
@@ -503,7 +333,7 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                       ],
                     ),
                     SizedBox(
-                      height: 50,
+                      height: 5,
                     ),
                     isPressed ? MultipleFilter() : ColumnView(),
                   ]),
