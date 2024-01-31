@@ -19,11 +19,98 @@ class _MultipleFilterState extends State<MultipleFilter> {
   List<Query<Map<String, dynamic>>> savedQueries = [];
   late Query<Map<String, dynamic>> query;
   late Query<Map<String, dynamic>> originalQuery;
+  Query<Map<String, dynamic>>? savedQuery;
   final ScrollController _scrollController = ScrollController();
   List<String> itemList = [];
-
   List<Candidate?> skillsList = [];
   List<Candidate?> qualificationList = [];
+  void runQueries() {
+    if (savedQueries.isNotEmpty) {
+      //   Query<Map<String, dynamic>> currentQuery = savedQuery;
+      //   for (final savedQuery in savedQueries) {
+      //     // Create a list to store non-null skills from skillsList
+      //     List<String> skillsToQuery = skillsList
+      //         .where((candidate) =>
+      //             candidate != null && candidate.skills!.isNotEmpty)
+      //         .expand((candidate) => candidate!.skills!)
+      //         .toList();
+      //     if (skillsToQuery.isNotEmpty) {
+      //       currentQuery = currentQuery.where(
+      //         "skills",
+      //         arrayContainsAny: skillsToQuery,
+      //       );
+      //       print('Applying skills filter: $skillsToQuery');
+      //     }
+      //     for (int index = 0; index < qualificationList.length; index++) {
+      //       if (qualificationList[index] != null) {
+      //         currentQuery = currentQuery.where(
+      //           "qualification",
+      //           isEqualTo: qualificationList[index]!.qualification,
+      //         );
+      //         print(
+      //             'Applying qualification filter: ${qualificationList[index]!.qualification}');
+      //       }
+      //     }
+
+      //     // Print information about each saved query
+      //     print('Saved Query: $savedQuery');
+      //     // Print the final query for debugging
+      //     print('Final query: $currentQuery');
+      //   }
+
+      //   // Update the UI after applying all saved queries
+      //   setState(() {
+      //     query = currentQuery;
+      //   });
+
+      //   // Print the final query for debugging
+      //   print('Applying saved queries: $query');
+      query = savedQuery!;
+      print('Applying saved query: $query');
+
+      for (int index = 0; index < skillsList.length; index++) {
+        // Create a list to store non-null skills from skillsList
+
+        if (skillsList[index] != null) {
+          query = query.where(
+            "qualification",
+            arrayContainsAny: skillsList[index]!.skills,
+          );
+          print('Applying skills filter: ${skillsList[index]!.skills}');
+        }
+      }
+      for (int index = 0; index < qualificationList.length; index++) {
+        if (qualificationList[index] != null) {
+          query = query.where(
+            "qualification",
+            isEqualTo: qualificationList[index]!.qualification,
+          );
+          print(
+              'Applying qualification filter: ${qualificationList[index]!.qualification}');
+        }
+      }
+    } else {
+      // If no saved queries, apply the current query logic
+      query = originalQuery;
+      print('Applying original query: $query');
+
+      if (skills != null && skills!.skills!.isNotEmpty) {
+        // Use 'array-contains' for skills filter
+        query = query.where("skills", arrayContains: skills!.skills![0]);
+        print('Applying skill : ${skills!.skills![0]}');
+      }
+      if (qualification != null) {
+        query = query.where(
+          "qualification",
+          isEqualTo: qualification!.qualification,
+        );
+        print('Applying qualification : ${qualification!.qualification}');
+      }
+
+      // Update the UI
+      setState(() {});
+    }
+  }
 
   @override
   void initState() {
@@ -235,7 +322,6 @@ class _MultipleFilterState extends State<MultipleFilter> {
                     CustomButton(
                       text: 'Save',
                       onPressed: () {
-                        // Save the current query when the "Save" button is pressed
                         setState(() {
                           savedQueries.add(query);
                           print('Saved query: $query');
@@ -248,79 +334,7 @@ class _MultipleFilterState extends State<MultipleFilter> {
                     CustomButton(
                       text: 'Run',
                       onPressed: () {
-                        if (savedQueries.isNotEmpty) {
-                          // Create a copy of the original query to start fresh
-                          Query<Map<String, dynamic>> currentQuery =
-                              originalQuery;
-
-                          for (final savedQuery in savedQueries) {
-                            List<String> allSkills = [];
-                            for (int index = 0;
-                                index < skillsList.length;
-                                index++) {
-                              if (skillsList[index] != null &&
-                                  skillsList[index]!.skills!.isNotEmpty) {
-                                allSkills.addAll(skillsList[index]!.skills!);
-                              }
-                            }
-
-                            if (allSkills.isNotEmpty) {
-                              currentQuery = currentQuery.where(
-                                "skills",
-                                arrayContainsAny: allSkills,
-                              );
-                              print('Applying skills filter: $allSkills');
-                            }
-
-                            for (int index = 0;
-                                index < qualificationList.length;
-                                index++) {
-                              if (qualificationList[index] != null) {
-                                currentQuery = currentQuery.where(
-                                  "qualification",
-                                  isEqualTo:
-                                      qualificationList[index]!.qualification,
-                                );
-                                print(
-                                    'Applying qualification filter: ${qualificationList[index]!.qualification}');
-                              }
-                            }
-
-                            // Print the final query for debugging
-                            print('Final query: $currentQuery');
-                          }
-
-                          // Update the UI after applying all saved queries
-                          setState(() {
-                            query = currentQuery;
-                          });
-
-                          // Print the final query for debugging
-                          print('Applying saved queries: $query');
-                        } else {
-                          // If no saved queries, apply the current query logic
-                          query = originalQuery;
-                          print('Applying original query: $query');
-
-                          if (skills != null && skills!.skills!.isNotEmpty) {
-                            // Use 'array-contains' for skills filter
-                            query = query.where("skills",
-                                arrayContains: skills!.skills![0]);
-                            print(
-                                'Applying skills filter: ${skills!.skills![0]}');
-                          }
-                          if (qualification != null) {
-                            query = query.where(
-                              "qualification",
-                              isEqualTo: qualification!.qualification,
-                            );
-                            print(
-                                'Applying qualification filter: ${qualification!.qualification}');
-                          }
-
-                          // Update the UI
-                          setState(() {});
-                        }
+                        runQueries();
                       },
                     ),
                     SizedBox(

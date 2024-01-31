@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:hiremeinindiaapp/CorporateConsole/corporateRegistration.dart';
 import 'package:hiremeinindiaapp/gethired.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:hiremeinindiaapp/main.dart';
@@ -10,20 +11,6 @@ import 'classes/language_constants.dart';
 import 'gen_l10n/app_localizations.dart';
 import 'widgets/custombutton.dart';
 import 'widgets/hiremeinindia.dart';
-
-class LocalString extends Translations {
-  @override
-  Map<String, Map<String, String>> get keys => {
-        'en_US': {
-          'hello': "hello world",
-          'message': 'welcome',
-        },
-        'hi_IN': {
-          'hello': 'हिन्दी',
-          'message': 'हिन्दी',
-        }
-      };
-}
 
 class HomePage extends StatefulWidget {
   const HomePage();
@@ -307,7 +294,9 @@ class _HomePageState extends State<HomePage> {
                       height: 40,
                       child: CustomButton(
                         text: translation(context).hireNow,
-                        onPressed: () {},
+                        onPressed: () {
+                          _showDialog();
+                        },
                       ),
                     )
                   ],
@@ -367,7 +356,8 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const HomePage()),
+                            builder: (context) =>
+                                const CorporateRegistration()),
                       );
                     },
                     text: 'Sign Up'),
