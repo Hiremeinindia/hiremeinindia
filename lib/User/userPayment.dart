@@ -147,10 +147,13 @@ class _NewUserPayment extends State<NewUserPayment> {
     try {
       final DocumentReference documentReference =
           FirebaseFirestore.instance.collection('greyusercollar').doc();
+
+      // Save only the imageUrl to Firestore
       await documentReference.set({
         'imageUrl': imageUrl,
-        // Add additional fields if needed
+        // You can add more fields if needed
       });
+
       print('Image URL uploaded to Firestore successfully.');
     } catch (error) {
       print('Error uploading image URL to Firestore: $error');
@@ -187,7 +190,8 @@ class _NewUserPayment extends State<NewUserPayment> {
       String imageUrl = await reference.getDownloadURL();
 
       // Upload the image URL to Firestore
-      await uploadImageUrlToFirestore(imageUrl);
+      await uploadImageUrlToFirestore(
+          imageUrl); // Pass the imageUrl to this method
 
       // Return the image URL
       return imageUrl;
@@ -206,15 +210,12 @@ class _NewUserPayment extends State<NewUserPayment> {
           _cashReceipt = result.files.first;
         });
 
-        // For non-web platforms, use the path property
-        // For web, use the bytes property
         List<int> fileBytes = kIsWeb
             ? _cashReceipt!.bytes!
             : await _readFileAsBytes(_cashReceipt!.path!);
 
         // Upload the cash receipt image URL to Firestore
         String imageUrl = await uploadImageToFirestore(fileBytes);
-        ;
         print('Image URL: $imageUrl');
 
         // Show success dialog or handle success scenario as needed
@@ -407,13 +408,6 @@ class _NewUserPayment extends State<NewUserPayment> {
   }
 
   Widget build(BuildContext context) {
-    final Object? data = ModalRoute.of(context)?.settings.arguments;
-    final Map<String, dynamic> dataMap = {
-      'data': data,
-    };
-
-// Now you can store this map in Firestore
-    FirebaseFirestore.instance.collection('greyusercollar').add(dataMap);
     return Scaffold(
         appBar: AppBar(
           title: HireMeInIndia(),
