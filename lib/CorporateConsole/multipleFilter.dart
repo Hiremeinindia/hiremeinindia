@@ -3,6 +3,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:hiremeinindiaapp/widgets/customdropdown.dart';
 
 import '../User/user.dart';
 import '../Providers/session.dart';
@@ -16,95 +17,71 @@ class MultipleFilter extends StatefulWidget {
 class _MultipleFilterState extends State<MultipleFilter> {
   Candidate? skills;
   Candidate? qualification;
-  List<Query<Map<String, dynamic>>> savedQueries = [];
+  Candidate? operator;
+  Candidate? verified;
+  List<List<Map<String, dynamic>>> savedQueries = [];
   late Query<Map<String, dynamic>> query;
   late Query<Map<String, dynamic>> originalQuery;
-  Query<Map<String, dynamic>>? savedQuery;
+  late Query<Map<String, dynamic>> savedQuery;
   final ScrollController _scrollController = ScrollController();
   List<String> itemList = [];
   List<Candidate?> skillsList = [];
   List<Candidate?> qualificationList = [];
   void runQueries() {
     if (savedQueries.isNotEmpty) {
-      //   Query<Map<String, dynamic>> currentQuery = savedQuery;
-      //   for (final savedQuery in savedQueries) {
-      //     // Create a list to store non-null skills from skillsList
-      //     List<String> skillsToQuery = skillsList
-      //         .where((candidate) =>
-      //             candidate != null && candidate.skills!.isNotEmpty)
-      //         .expand((candidate) => candidate!.skills!)
-      //         .toList();
-      //     if (skillsToQuery.isNotEmpty) {
-      //       currentQuery = currentQuery.where(
-      //         "skills",
-      //         arrayContainsAny: skillsToQuery,
-      //       );
-      //       print('Applying skills filter: $skillsToQuery');
-      //     }
-      //     for (int index = 0; index < qualificationList.length; index++) {
-      //       if (qualificationList[index] != null) {
-      //         currentQuery = currentQuery.where(
-      //           "qualification",
-      //           isEqualTo: qualificationList[index]!.qualification,
-      //         );
-      //         print(
-      //             'Applying qualification filter: ${qualificationList[index]!.qualification}');
-      //       }
-      //     }
-
-      //     // Print information about each saved query
-      //     print('Saved Query: $savedQuery');
-      //     // Print the final query for debugging
-      //     print('Final query: $currentQuery');
-      //   }
-
-      //   // Update the UI after applying all saved queries
-      //   setState(() {
-      //     query = currentQuery;
-      //   });
-
-      //   // Print the final query for debugging
-      //   print('Applying saved queries: $query');
-      query = savedQuery!;
-      print('Applying saved query: $query');
-
-      for (int index = 0; index < skillsList.length; index++) {
+      Query<Map<String, dynamic>> currentQuery = originalQuery;
+      print('Applying saved queries: ${currentQuery.toString()}');
+      for (var savedQuery in savedQueries) {
         // Create a list to store non-null skills from skillsList
+        List<String> skillsToQuery = skillsList
+            .where((candidate) =>
+                candidate != null && candidate.skills!.isNotEmpty)
+            .expand((candidate) => candidate!.skills!)
+            .toList();
+        if (skillsToQuery.isNotEmpty) {
+          currentQuery = currentQuery.where(
+            "skills",
+            arrayContainsAny: skillsToQuery,
+          );
+          print('Applying skills filter: $skillsToQuery');
+        }
+        for (int index = 0; index < qualificationList.length; index++) {
+          if (qualificationList[index] != null) {
+            currentQuery = currentQuery.where(
+              "qualification",
+              isEqualTo: qualificationList[index]!.qualification,
+            );
+            print(
+                'Applying qualification filter: ${qualificationList[index]!.qualification}');
+          }
+        }
 
-        if (skillsList[index] != null) {
-          query = query.where(
-            "qualification",
-            arrayContainsAny: skillsList[index]!.skills,
-          );
-          print('Applying skills filter: ${skillsList[index]!.skills}');
-        }
+        // Print information about each saved query
+        print('Saved Query: $savedQuery'.toString());
+        // Print the final query for debugging
+        print('Final query: $currentQuery'.toString());
       }
-      for (int index = 0; index < qualificationList.length; index++) {
-        if (qualificationList[index] != null) {
-          query = query.where(
-            "qualification",
-            isEqualTo: qualificationList[index]!.qualification,
-          );
-          print(
-              'Applying qualification filter: ${qualificationList[index]!.qualification}');
-        }
-      }
+
+      // Update the UI after applying all saved queries
+      setState(() {
+        query = currentQuery;
+      });
+      // Print the final query for debugging
     } else {
       // If no saved queries, apply the current query logic
       query = originalQuery;
-      print('Applying original query: $query');
-
+      print('Applying original query: ${query.toString()}');
       if (skills != null && skills!.skills!.isNotEmpty) {
         // Use 'array-contains' for skills filter
         query = query.where("skills", arrayContains: skills!.skills![0]);
-        print('Applying skill : ${skills!.skills![0]}');
+        print('Applying skill filter: ${skills!.skills![0]}');
       }
       if (qualification != null) {
         query = query.where(
           "qualification",
           isEqualTo: qualification!.qualification,
         );
-        print('Applying qualification : ${qualification!.qualification}');
+        print('Applying qualification filter: ${qualification!.qualification}');
       }
 
       // Update the UI
@@ -153,80 +130,55 @@ class _MultipleFilterState extends State<MultipleFilter> {
                     ),
                     SizedBox(
                       height: 30,
-                      width: 250,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton2<Candidate?>(
-                            value: skills,
-                            isExpanded: true,
-                            items: AppSession()
-                                .candidates
-                                .map((skill1Iterable) =>
-                                    DropdownMenuItem<Candidate?>(
-                                      value: skill1Iterable,
-                                      child: Text(skill1Iterable
-                                          .skills![0]), // Update this line
-                                    ))
-                                .followedBy([
-                              const DropdownMenuItem<Candidate?>(
-                                value: null,
-                                child: Text('Job Classification'),
-                              )
-                            ]).toList(),
-                            onChanged: (item) {
-                              setState(() {
-                                skills = item;
-                              });
-                            },
-                            buttonStyleData: ButtonStyleData(
-                              height: 30,
-                              width: 200,
-                              elevation: 2,
-                              padding:
-                                  const EdgeInsets.only(left: 14, right: 14),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                  color: Colors.black26,
-                                ),
-                                color: Colors.white,
-                              ),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              icon: Icon(
-                                Icons.arrow_drop_down_sharp,
-                              ),
-                              iconSize: 25,
-                              iconEnabledColor: Colors.black,
-                              iconDisabledColor: null,
-                            ),
-                            dropdownStyleData: DropdownStyleData(
-                              maxHeight: 210,
-                              width: 250,
-                              elevation: 1,
-                              padding: EdgeInsets.only(
-                                  left: 5, right: 5, top: 5, bottom: 5),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(color: Colors.black),
-                                color: Colors.white,
-                              ),
-                              scrollPadding: EdgeInsets.all(5),
-                              scrollbarTheme: ScrollbarThemeData(
-                                thickness: MaterialStateProperty.all<double>(6),
-                                thumbVisibility:
-                                    MaterialStateProperty.all<bool>(true),
-                              ),
-                            ),
-                            menuItemStyleData: const MenuItemStyleData(
-                              height: 25,
-                              padding: EdgeInsets.only(left: 14, right: 14),
-                            ),
+                      width: 125,
+                      child: CustomDropDown(
+                        value: operator,
+                        onChanged: (item) {
+                          setState(() {
+                            operator = item;
+                          });
+                        },
+                        items: AppSession()
+                            .candidates
+                            .map((skill1Iterable) =>
+                                DropdownMenuItem<Candidate?>(
+                                  value: skill1Iterable,
+                                  child: Text(skill1Iterable
+                                      .skills![0]), // Update this line
+                                ))
+                            .followedBy([
+                          const DropdownMenuItem<Candidate?>(
+                            value: null,
+                            child: Text('And'),
+                          )
+                        ]).toList(),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    SizedBox(
+                      height: 30,
+                      width: 125,
+                      child: CustomDropDown<Candidate?>(
+                        value: verified,
+                        onChanged: (Candidate? item) {
+                          setState(() {
+                            verified = item;
+                          });
+                        },
+                        items: [
+                          DropdownMenuItem<Candidate?>(
+                            value: Candidate(
+                                /* your verified candidate instance */),
+                            child: Text('Verified'),
                           ),
-                        ),
+                          DropdownMenuItem<Candidate?>(
+                            value:
+                                null, // You can set this to represent "Not Verified"
+                            child: Text('Not Verified'),
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(
@@ -235,96 +187,123 @@ class _MultipleFilterState extends State<MultipleFilter> {
                     SizedBox(
                       height: 30,
                       width: 250,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                        ),
-                        child: LayoutBuilder(builder: (context, constraints) {
-                          return DropdownButtonHideUnderline(
-                            child: DropdownButton2<Candidate?>(
-                              value: qualification,
-                              isExpanded: true,
-                              items: AppSession()
-                                  .candidates
-                                  .map((skill2Iterable) =>
-                                      DropdownMenuItem<Candidate?>(
-                                        value: skill2Iterable,
-                                        child:
-                                            Text(skill2Iterable.qualification!),
-                                      ))
-                                  .followedBy([
-                                const DropdownMenuItem<Candidate?>(
-                                  value: null,
-                                  child: Text('Qualification Set'),
-                                )
-                              ]).toList(),
-                              onChanged: (item) {
-                                setState(() {
-                                  qualification = item;
-                                });
-                              },
-                              buttonStyleData: ButtonStyleData(
-                                height: 30,
-                                width: 200,
-                                elevation: 2,
-                                padding:
-                                    const EdgeInsets.only(left: 14, right: 14),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  border: Border.all(
-                                    color: Colors.black26,
-                                  ),
-                                  color: Colors.white,
-                                ),
-                              ),
-                              iconStyleData: const IconStyleData(
-                                icon: Icon(
-                                  Icons.arrow_drop_down_sharp,
-                                ),
-                                iconSize: 25,
-                                iconEnabledColor: Colors.black,
-                                iconDisabledColor: null,
-                              ),
-                              dropdownStyleData: DropdownStyleData(
-                                maxHeight: 210,
-                                width: 250,
-                                elevation: 1,
-                                padding: EdgeInsets.only(
-                                    left: 5, right: 5, top: 5, bottom: 5),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(color: Colors.black),
-                                  color: Colors.white,
-                                ),
-                                scrollPadding: EdgeInsets.all(5),
-                                scrollbarTheme: ScrollbarThemeData(
-                                  thickness:
-                                      MaterialStateProperty.all<double>(6),
-                                  thumbVisibility:
-                                      MaterialStateProperty.all<bool>(true),
-                                ),
-                              ),
-                              menuItemStyleData: const MenuItemStyleData(
-                                height: 25,
-                                padding: EdgeInsets.only(left: 14, right: 14),
-                              ),
-                            ),
-                          );
-                        }),
+                      child: CustomDropDown(
+                        value: skills,
+                        onChanged: (item) {
+                          setState(() {
+                            skills = item;
+                          });
+                        },
+                        items: AppSession()
+                            .candidates
+                            .map((skill1Iterable) =>
+                                DropdownMenuItem<Candidate?>(
+                                  value: skill1Iterable,
+                                  child: Text(skill1Iterable
+                                      .skills![0]), // Update this line
+                                ))
+                            .followedBy([
+                          const DropdownMenuItem<Candidate?>(
+                            value: null,
+                            child: Text('Job Classification'),
+                          )
+                        ]).toList(),
                       ),
                     ),
                     SizedBox(
                       width: 15,
                     ),
                     SizedBox(
+                      height: 30,
+                      width: 250,
+                      child: CustomDropDown(
+                        value: qualification,
+                        items: AppSession()
+                            .candidates
+                            .map((skill2Iterable) =>
+                                DropdownMenuItem<Candidate?>(
+                                  value: skill2Iterable,
+                                  child: Text(skill2Iterable.qualification!),
+                                ))
+                            .followedBy([
+                          const DropdownMenuItem<Candidate?>(
+                            value: null,
+                            child: Text('Qualification Set'),
+                          )
+                        ]).toList(),
+                        onChanged: (item) {
+                          setState(() {
+                            qualification = item;
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                      width: 125,
+                      child: CustomDropDown(
+                        value: operator,
+                        onChanged: (item) {
+                          setState(() {
+                            operator = item;
+                          });
+                        },
+                        items: AppSession()
+                            .candidates
+                            .map((skill1Iterable) =>
+                                DropdownMenuItem<Candidate?>(
+                                  value: skill1Iterable,
+                                  child: Text(skill1Iterable
+                                      .skills![0]), // Update this line
+                                ))
+                            .followedBy([
+                          const DropdownMenuItem<Candidate?>(
+                            value: null,
+                            child: Text('Query'),
+                          )
+                        ]).toList(),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 40,
+                      width: 40,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.indigo.shade900,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                2), // Adjust border radius as needed
+                          ),
+                        ),
+                        onPressed: () {},
+                        child: ImageIcon(
+                          AssetImage("account.png"),
+                          size: 25,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
                       width: 15,
+                    ),
+                    SizedBox(
+                      width: 40,
                     ),
                     CustomButton(
                       text: 'Save',
-                      onPressed: () {
+                      onPressed: () async {
+                        // Execute the query and get the result
+                        QuerySnapshot queryResult = await query.get();
+
+                        // Convert the query result to a list of data
+                        List<Map<String, dynamic>> dataList = queryResult.docs
+                            .map((doc) => doc.data() as Map<String, dynamic>)
+                            .toList();
+
+                        // Save the current query data when the "Save" button is pressed
                         setState(() {
-                          savedQueries.add(query);
-                          print('Saved query: $query');
+                          savedQueries.add(dataList);
+                          print('Saved query: ${savedQueries}');
                         });
                       },
                     ),

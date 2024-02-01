@@ -30,6 +30,8 @@ class Candidate {
   final String? imageUrl3;
   final String? imageUrl4;
   final String? imageUrl5;
+  final String? operator;
+  final String? verified;
   final DocumentReference? reference;
 
   Candidate({
@@ -61,6 +63,8 @@ class Candidate {
     this.imageUrl3,
     this.imageUrl4,
     this.imageUrl5,
+    this.operator,
+    this.verified,
   });
 
   toJson() => {
