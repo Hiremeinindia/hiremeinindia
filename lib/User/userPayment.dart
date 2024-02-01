@@ -534,68 +534,71 @@ class _NewUserPayment extends State<NewUserPayment> {
                         decoration: BoxDecoration(
                           color: Colors.indigo.shade900,
                         ),
-                        child: DropdownButton2<String>(
-                          isExpanded: true,
-                          items: [
-                            DropdownMenuItem<String>(
-                              value: 'Option 1',
-                              child: Text('Option 1'),
-                            ),
-                            DropdownMenuItem<String>(
-                              value: 'Option 2',
-                              child: Text('Option 1'),
-                            ),
-                            // Add more options as needed
-                          ],
-                          onChanged: (value) {
-                            // Handle option selection
-                          },
-                          hint: Text(
-                            AppLocalizations.of(context)!.findaJob,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          buttonStyleData: ButtonStyleData(
-                            height: 30,
-                            width: 200,
-                            elevation: 1,
-                            padding: const EdgeInsets.only(left: 14, right: 14),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(
-                                color: Colors.black26,
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            isExpanded: true,
+                            items: [
+                              DropdownMenuItem<String>(
+                                value: 'Option 1',
+                                child: Text('Option 1'),
                               ),
-                              color: Colors.indigo.shade900,
+                              DropdownMenuItem<String>(
+                                value: 'Option 2',
+                                child: Text('Option 1'),
+                              ),
+                              // Add more options as needed
+                            ],
+                            onChanged: (value) {
+                              // Handle option selection
+                            },
+                            hint: Text(
+                              AppLocalizations.of(context)!.findaJob,
+                              style: TextStyle(color: Colors.white),
                             ),
-                          ),
-                          iconStyleData: const IconStyleData(
-                            icon: Icon(
-                              Icons.arrow_drop_down_sharp,
+                            buttonStyleData: ButtonStyleData(
+                              height: 30,
+                              width: 200,
+                              elevation: 1,
+                              padding:
+                                  const EdgeInsets.only(left: 14, right: 14),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                  color: Colors.black26,
+                                ),
+                                color: Colors.indigo.shade900,
+                              ),
                             ),
-                            iconSize: 25,
-                            iconEnabledColor: Colors.white,
-                            iconDisabledColor: null,
-                          ),
-                          dropdownStyleData: DropdownStyleData(
-                            maxHeight: 210,
-                            width: 156,
-                            elevation: 0,
-                            padding: EdgeInsets.only(
-                                left: 10, right: 10, top: 5, bottom: 15),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(color: Colors.black),
-                              color: Colors.indigo.shade900,
+                            iconStyleData: const IconStyleData(
+                              icon: Icon(
+                                Icons.arrow_drop_down_sharp,
+                              ),
+                              iconSize: 25,
+                              iconEnabledColor: Colors.white,
+                              iconDisabledColor: null,
                             ),
-                            scrollPadding: EdgeInsets.all(5),
-                            scrollbarTheme: ScrollbarThemeData(
-                              thickness: MaterialStateProperty.all<double>(6),
-                              thumbVisibility:
-                                  MaterialStateProperty.all<bool>(true),
+                            dropdownStyleData: DropdownStyleData(
+                              maxHeight: 210,
+                              width: 156,
+                              elevation: 0,
+                              padding: EdgeInsets.only(
+                                  left: 10, right: 10, top: 5, bottom: 15),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(color: Colors.black),
+                                color: Colors.indigo.shade900,
+                              ),
+                              scrollPadding: EdgeInsets.all(5),
+                              scrollbarTheme: ScrollbarThemeData(
+                                thickness: MaterialStateProperty.all<double>(6),
+                                thumbVisibility:
+                                    MaterialStateProperty.all<bool>(true),
+                              ),
                             ),
-                          ),
-                          menuItemStyleData: const MenuItemStyleData(
-                            height: 25,
-                            padding: EdgeInsets.only(left: 14, right: 14),
+                            menuItemStyleData: const MenuItemStyleData(
+                              height: 25,
+                              padding: EdgeInsets.only(left: 14, right: 14),
+                            ),
                           ),
                         ),
                       ),
