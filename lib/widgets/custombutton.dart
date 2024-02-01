@@ -116,3 +116,66 @@ final class ViewButton extends StatelessWidget {
     );
   }
 }
+
+@immutable
+final class CustomRectButton extends StatelessWidget {
+  Widget? child;
+  late final Function()? onPressed;
+  final Radius? topleft;
+  final Radius? bottomright;
+  final Radius? bottomleft;
+  final Radius? topright;
+  final Color? colors;
+
+  CustomRectButton({
+    Key? key,
+    this.onPressed,
+    this.colors,
+    this.child,
+    this.topleft,
+    this.bottomright,
+    this.bottomleft,
+    this.topright,
+  }) : super(key: key);
+
+  Color _getColor(Set<MaterialState> states) {
+    if (states.contains(MaterialState.hovered)) {
+      return colors ?? Colors.transparent; // Change to your hover color
+    }
+    return Colors.white; // Default color
+  }
+
+  Radius _getRadius(Radius? radius) {
+    return radius ?? Radius.zero;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 40,
+      width: 60,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ButtonStyle(
+          shape: MaterialStateProperty.resolveWith<OutlinedBorder?>(
+            (Set<MaterialState> states) {
+              return RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: _getRadius(bottomleft),
+                  topLeft: _getRadius(topleft),
+                  bottomRight: _getRadius(bottomright),
+                  topRight: _getRadius(topright),
+                ),
+                side: BorderSide(width: 1, color: Colors.black),
+              );
+            },
+          ),
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) => _getColor(states),
+          ),
+        ),
+        child: child,
+      ),
+    );
+  }
+}

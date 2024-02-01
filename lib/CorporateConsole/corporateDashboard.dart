@@ -274,7 +274,7 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                               children: [
                                 SizedBox(
                                   height: 40,
-                                  width: 73,
+                                  width: 70,
                                   child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: isPressed
@@ -301,7 +301,7 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                                 ),
                                 SizedBox(
                                   height: 40,
-                                  width: 73,
+                                  width: 70,
                                   child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: isPressed
@@ -318,7 +318,7 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                                       });
                                     },
                                     child: ImageIcon(
-                                      AssetImage("column.png"),
+                                      AssetImage("table.png"),
                                       size: 25,
                                       color: isPressed
                                           ? Colors.indigo.shade900
