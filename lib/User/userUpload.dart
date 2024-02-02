@@ -1205,12 +1205,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                     SizedBox(
                       width: 400,
                       height: 40,
-                      child: TextFormField(
-                        onChanged: (value) {
-                          // Define your onChanged logic here
-                          // For example, if you want to update the value of `controller.expectedwage`, you can do:
-                          controller.expectedwage.text = value;
-                        },
+                      child: TextField(
                         controller: controller.expectedwage, // Set controller
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
@@ -1221,13 +1216,9 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                     SizedBox(
                       width: 400,
                       height: 40,
-                      child: TextFormField(
+                      child: TextField(
                         controller: controller.currentwage,
-                        onChanged: (value) {
-                          // Define your onChanged logic here
-                          // For example, if you want to update the value of `controller.expectedwage`, you can do:
-                          controller.currentwage.text = value;
-                        }, // Set controller
+                        // Set controller
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                         ),
