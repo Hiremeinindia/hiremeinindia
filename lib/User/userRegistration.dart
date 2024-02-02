@@ -886,7 +886,7 @@ class _RegistrationState extends State<Registration> {
                                 groupValue: widget.selectedOption,
                                 onChanged: null),
                             Text(
-                              'Grey Collar',
+                              'Blue Collar',
                               style: TextStyle(
                                   color: Colors.grey.shade500,
                                   fontFamily: 'Poppins',
@@ -948,7 +948,7 @@ class _RegistrationState extends State<Registration> {
                               groupValue: widget.selectedOption,
                               onChanged: null),
                           Text(
-                            'Grey Collar',
+                            'Blue Collar',
                             style: TextStyle(
                                 color: Colors.grey.shade500,
                                 fontFamily: 'Poppins',
@@ -1012,11 +1012,6 @@ class _RegistrationState extends State<Registration> {
                               children: [
                                 CustomTextfield(
                                   validator: nameValidator,
-                                  onchanged: (value) {
-                                    // Define your onChanged logic here
-                                    // For example, if you want to update the value of `controller.expectedwage`, you can do:
-                                    controller.name.text = value;
-                                  },
                                   controller: controller.name,
                                 ),
                                 SizedBox(
@@ -1024,11 +1019,6 @@ class _RegistrationState extends State<Registration> {
                                 ),
                                 CustomTextfield(
                                   validator: nameValidator,
-                                  onchanged: (value) {
-                                    // Define your onChanged logic here
-                                    // For example, if you want to update the value of `controller.expectedwage`, you can do:
-                                    controller.worktitle.text = value;
-                                  },
                                   controller: controller.worktitle,
                                 ),
                                 SizedBox(
@@ -1044,11 +1034,6 @@ class _RegistrationState extends State<Registration> {
                                     return null;
                                   },
                                   controller: controller.aadharno,
-                                  onchanged: (value) {
-                                    // Define your onChanged logic here
-                                    // For example, if you want to update the value of `controller.expectedwage`, you can do:
-                                    controller.aadharno.text = value;
-                                  },
                                 ),
                               ],
                             ),
@@ -1089,11 +1074,6 @@ class _RegistrationState extends State<Registration> {
                               children: [
                                 CustomTextfield(
                                   validator: nameValidator,
-                                  onchanged: (value) {
-                                    // Define your onChanged logic here
-                                    // For example, if you want to update the value of `controller.expectedwage`, you can do:
-                                    controller.gender.text = value;
-                                  },
                                   controller: controller.gender,
                                 ),
                                 SizedBox(
@@ -1101,11 +1081,6 @@ class _RegistrationState extends State<Registration> {
                                 ),
                                 CustomTextfield(
                                   validator: workexpValidator,
-                                  onchanged: (value) {
-                                    // Define your onChanged logic here
-                                    // For example, if you want to update the value of `controller.expectedwage`, you can do:
-                                    controller.workexp.text = value;
-                                  },
                                   controller: controller.workexp,
                                 ),
                                 SizedBox(
@@ -1218,11 +1193,6 @@ class _RegistrationState extends State<Registration> {
                         Expanded(
                             child: CustomTextfield(
                           validator: workexpValidator,
-                          onchanged: (value) {
-                            // Define your onChanged logic here
-                            // For example, if you want to update the value of `controller.expectedwage`, you can do:
-                            controller.address.text = value;
-                          },
                           controller: controller.address,
                         )),
                         SizedBox(
@@ -1242,11 +1212,6 @@ class _RegistrationState extends State<Registration> {
                         Expanded(
                             child: CustomTextfield(
                           validator: validatePassword,
-                          onchanged: (value) {
-                            // Define your onChanged logic here
-                            // For example, if you want to update the value of `controller.expectedwage`, you can do:
-                            controller.password.text = value;
-                          },
                           onsaved: (value) {
                             setState(() {
                               password = value;
@@ -1269,11 +1234,6 @@ class _RegistrationState extends State<Registration> {
                         Expanded(
                             child: CustomTextfield(
                           controller: controller.mobile,
-                          onchanged: (value) {
-                            // Define your onChanged logic here
-                            // For example, if you want to update the value of `controller.expectedwage`, you can do:
-                            controller.mobile.text = value;
-                          },
                           validator: (value) {
                             if (value!.length != 10)
                               return 'Mobile Number must be of 10 digit';
@@ -1351,11 +1311,7 @@ class _RegistrationState extends State<Registration> {
                         Expanded(
                             child: CustomTextfield(
                           controller: controller.email,
-                          onchanged: (value) {
-                            // Define your onChanged logic here
-                            // For example, if you want to update the value of `controller.expectedwage`, you can do:
-                            controller.email.text = value;
-                          },
+
                           validator: emailValidator,
                           //(val) {
                           //   if (AppSession()
