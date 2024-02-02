@@ -9,6 +9,8 @@ final class CustomTextfield extends StatelessWidget {
   final List<Color>? colors;
   final double? dynamicHeight;
   String? Function(String?)? validator;
+  final Function(String)? handleForm;
+  final Function(String)? onchanged;
 
   CustomTextfield({
     this.controller,
@@ -19,6 +21,8 @@ final class CustomTextfield extends StatelessWidget {
     this.dynamicHeight,
     this.onsaved,
     this.validator,
+    this.handleForm,
+    this.onchanged,
   });
 
   @override
@@ -31,6 +35,7 @@ final class CustomTextfield extends StatelessWidget {
           style: TextStyle(height: 1),
           validator: validator,
           controller: controller,
+          onChanged: handleForm,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.all(5.0),
             hintText: text,

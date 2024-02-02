@@ -28,7 +28,15 @@ import 'package:path/path.dart' as path;
 import 'package:flutter/services.dart' show rootBundle;
 
 class GreyUserUpload extends StatefulWidget {
-  const GreyUserUpload();
+  const GreyUserUpload({
+    Key? key,
+    this.handleForm,
+    this.candidate,
+    this.selectedOption,
+  }) : super(key: key);
+  final Function(String)? handleForm;
+  final Candidate? candidate;
+  final String? selectedOption;
   @override
   State<GreyUserUpload> createState() => _GreyUserUpload();
 }
@@ -47,6 +55,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
   String? downloadURL4;
   String? downloadURL5;
   PlatformFile? pickedFile;
+
   UploadTask? uploadTask;
   final _formKey = GlobalKey<FormState>();
   final List<String> items = ['Tamil', 'English', 'French', 'Malayalam'];
@@ -114,7 +123,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
   Future<void> updateFirestoreDocument(List<String> imageUrls) async {
     try {
       DocumentReference docRef =
-          FirebaseFirestore.instance.collection('greycollaruser').doc();
+          FirebaseFirestore.instance.collection('users').doc();
       await docRef.set({
         'imageUrls': imageUrls,
       });
@@ -127,7 +136,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
 
   Future<void> assignUserRole(String uid, String role) async {
     try {
-      String userCollection = 'greycollaruser';
+      String userCollection = 'users';
 
       // Assign the user role to the user
       await FirebaseFirestore.instance.collection(userCollection).doc(uid).set({
@@ -1133,7 +1142,12 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                     SizedBox(
                       width: 400,
                       height: 40,
-                      child: TextField(
+                      child: TextFormField(
+                        onChanged: (value) {
+                          // Define your onChanged logic here
+                          // For example, if you want to update the value of `controller.expectedwage`, you can do:
+                          controller.expectedwage.text = value;
+                        },
                         controller: controller.expectedwage, // Set controller
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
@@ -1144,8 +1158,13 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                     SizedBox(
                       width: 400,
                       height: 40,
-                      child: TextField(
-                        controller: controller.currentwage, // Set controller
+                      child: TextFormField(
+                        controller: controller.currentwage,
+                        onChanged: (value) {
+                          // Define your onChanged logic here
+                          // For example, if you want to update the value of `controller.expectedwage`, you can do:
+                          controller.currentwage.text = value;
+                        }, // Set controller
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                         ),

@@ -352,6 +352,7 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
                                 CustomTextfield(
                                   validator: nameValidator,
                                   controller: controller.name,
+                                  onchanged: (value) {},
                                 ),
                                 SizedBox(
                                   height: 40,
@@ -359,6 +360,7 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
                                 CustomTextfield(
                                   validator: nameValidator,
                                   controller: controller.companyName,
+                                  onchanged: (value) {},
                                 ),
                                 SizedBox(
                                   height: 40,
@@ -370,6 +372,7 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
                                         errorText: "Enter valid email id"),
                                   ]),
                                   controller: controller.email,
+                                  onchanged: (value) {},
                                 ),
                               ],
                             ),
@@ -412,6 +415,7 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
                                 CustomTextfield(
                                   validator: nameValidator,
                                   controller: controller.designation,
+                                  onchanged: (value) {},
                                 ),
                                 SizedBox(
                                   height: 40,
@@ -419,6 +423,7 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
                                 CustomTextfield(
                                   validator: validatePassword,
                                   controller: controller.password,
+                                  onchanged: (value) {},
                                 ),
                                 SizedBox(
                                   height: 40,
@@ -433,6 +438,7 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
                                     }
                                   },
                                   controller: controller.confirmPassword,
+                                  onchanged: (value) {},
                                 ),
                               ],
                             ),

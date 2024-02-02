@@ -30,6 +30,7 @@ class Candidate {
   final String? imageUrl3;
   final String? imageUrl4;
   final String? imageUrl5;
+  final String? imageUrl;
   final DocumentReference? reference;
 
   Candidate({
@@ -61,6 +62,7 @@ class Candidate {
     this.imageUrl3,
     this.imageUrl4,
     this.imageUrl5,
+    this.imageUrl,
   });
 
   toJson() => {
@@ -92,6 +94,7 @@ class Candidate {
         "imageUrl3": imageUrl3,
         "imageUrl4": imageUrl4,
         "imageUrl5": imageUrl5,
+        "imageUrl": imageUrl,
       };
 
   factory Candidate.fromSnapshot(DocumentSnapshot snapshot) {
@@ -125,6 +128,7 @@ class Candidate {
       imageUrl3: data["imageUrl3"],
       imageUrl4: data["imageUrl4"],
       imageUrl5: data["imageUrl5"],
+      imageUrl: data["imageUrl"],
     );
   }
 
@@ -150,12 +154,21 @@ class Candidate {
         otpm: json["otpm"],
         code: json["code"],
         country: json["country"],
+        city: json["city"],
+        expectedwage: json["expectedwage"],
+        currentwage: json["currentwage"],
+        imageUrl1: json["imageUrl1"],
+        imageUrl2: json["imageUrl2"],
+        imageUrl3: json["imageUrl3"],
+        imageUrl4: json["imageUrl4"],
+        imageUrl5: json["imageUrl5"],
+        imageUrl: json["imageUrl"],
         confirmPassword: json["confirmPassword"]);
   }
 
   static Future<List<Candidate>> getCandidates(
       {Candidate? selectedSkills, Candidate? selectedQualification}) {
-    return FirebaseFirestore.instance.collection('greycollaruser').get().then(
+    return FirebaseFirestore.instance.collection('users').get().then(
         (value) => value.docs.map((e) => Candidate.fromSnapshot(e)).toList());
   }
 
@@ -165,8 +178,9 @@ class Candidate {
   }) {
     // You can keep this method for additional filters if needed
     // Make sure not to apply the skills filter here since it's done in the query
+
     return FirebaseFirestore.instance
-        .collection("greycollaruser")
+        .collection("users")
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((doc) => Candidate.fromSnapshot(doc)).toList();

@@ -36,11 +36,16 @@ class CandidateFormController {
   List<String> workins = [];
   late TextEditingController selectedOption;
   File? image;
+  File? imageUrl;
+  File? imageUrl1;
+  File? imageUrl2;
+  File? imageUrl3;
+  File? imageUrl4;
+  File? imageUrl5;
   DocumentReference? _reference;
 
   DocumentReference get reference {
-    _reference ??=
-        FirebaseFirestore.instance.collection('greycollaruser').doc();
+    _reference ??= FirebaseFirestore.instance.collection('users').doc();
     return _reference!;
   }
 
@@ -67,6 +72,7 @@ class CandidateFormController {
         city: city.text,
         expectedwage: expectedwage.text,
         currentwage: currentwage.text,
+        imageUrl: '',
         imageUrl1: '',
         imageUrl2: '',
         imageUrl3: '',

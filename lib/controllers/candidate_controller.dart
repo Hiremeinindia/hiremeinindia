@@ -11,10 +11,14 @@ class CandidateController {
   });
   final CandidateFormController? formController;
 
-  static final candidateRef =
-      FirebaseFirestore.instance.collection('greycollaruser');
+  static final candidateRef = FirebaseFirestore.instance.collection('users');
 
   Candidate get candidate => formController!.candidate;
+  File? imageUrl1;
+  File? imageUrl2;
+  File? imageUrl3;
+  File? imageUrl4;
+  File? imageUrl5;
 
   Future<void> addCandidate(CandidateFormController controller) async {
     try {
@@ -37,7 +41,12 @@ class CandidateController {
         "label": controller.selectedOption.text,
         "expectedwage": controller.expectedwage,
         "currentwage": controller.currentwage,
-        "imageUrls": imageUrls,
+        "imageUrl": imageUrls,
+        "imageUrl1": imageUrl1,
+        "imageUrl2": imageUrl2,
+        "imageUrl3": imageUrl3,
+        "imageUrl4": imageUrl4,
+        "imageUrl5": imageUrl5,
       }, SetOptions(merge: true));
 
       print('Candidate added successfully');

@@ -320,6 +320,7 @@ class _LoginPageState extends State<LoginPage> {
                           email = value;
                         });
                       },
+                      onchanged: (value) {},
                     ),
                     SizedBox(
                       height: 30,
@@ -341,6 +342,7 @@ class _LoginPageState extends State<LoginPage> {
                           password = value;
                         });
                       },
+                      onchanged: (value) {},
                     ),
                     SizedBox(
                       height: 40,
