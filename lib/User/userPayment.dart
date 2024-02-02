@@ -30,6 +30,7 @@ class NewUserPayment extends StatefulWidget {
     this.email,
     this.mobile,
     this.worktitle,
+    this.password,
     this.aadharno,
     this.gender,
     this.workexp,
@@ -53,23 +54,24 @@ class NewUserPayment extends StatefulWidget {
     this.handleForm,
   }) : super(key: key);
   final String? selectedOption;
+  final String? name;
   final String? email;
+  final String? password;
   final String? mobile;
   final String? worktitle;
   final String? aadharno;
   final String? gender;
-  final String? workexp;
   final String? qualification;
+  final String? state;
   final String? address;
-  final String? workins;
-  final String? skills;
-  final String? label;
-  final String? name;
-  final String? expectedwage;
-  final String? currentwage;
+  final List<String>? workins;
   final String? city;
   final String? country;
-  final String? state;
+  final List<String>? skills;
+  final String? workexp;
+  final String? label;
+  final String? expectedwage;
+  final String? currentwage;
   final String? imageUrl;
   final String? imageUrl1;
   final String? imageUrl2;
@@ -96,44 +98,7 @@ class _NewUserPayment extends State<NewUserPayment> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   CandidateFormController controller = CandidateFormController();
-  String? _uploadedImageURL; // New variable to store uploaded image URL
-  Future<void> assignUserRole(String uid, String role) async {
-    try {
-      String userCollection = 'greyusercollar';
-
-      // Assign the user role to the user
-      await FirebaseFirestore.instance.collection(userCollection).doc(uid).set({
-        'name': controller.name.text,
-        'email': controller.email.text,
-        'mobile': controller.mobile.text,
-        'worktitle': controller.worktitle.text,
-        "aadharno": controller.aadharno.text,
-        "gender": controller.gender.text,
-        "workexp": controller.workexp.text,
-        "qualification": controller.qualification.text,
-        "state": controller.state.text,
-        "address": controller.address.text,
-        'workins': controller.workins ?? [],
-        "city": controller.city.text,
-        "country": controller.country.text,
-        'skills': controller.skills ?? [],
-        'label': controller.selectedOption.text,
-        'password': controller.password.text,
-        'expectedwages': controller.expectedwage.text,
-        'currentwaages': controller.currentwage.text,
-        'imageUrl': imageUrl,
-        'imageUrl1': imageUrl1,
-        'imageUrl2': imageUrl2,
-        'imageUrl3': imageUrl3,
-        'imageUrl4': imageUrl4,
-        'imageUrl5': imageUrl5,
-
-        // Add additional user-related fields as needed
-      });
-    } catch (e) {
-      print('Error assigning user role: $e');
-    }
-  }
+  String? _uploadedImageURL;
 
   Future<void> showFileUploadSuccessDialog() async {
     showDialog(
@@ -713,170 +678,206 @@ class _NewUserPayment extends State<NewUserPayment> {
             ),
           ],
         ),
-        body: Container(
-            padding:
-                EdgeInsets.only(left: 125, right: 125, top: 20, bottom: 20),
-            child: Column(children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Checkbox(
-                    value: isChecked,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        isChecked = value ?? false;
-                      });
-                    },
-                    fillColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.selected)) {
-                          return Colors.indigo.shade900;
-                        }
-                        return Colors.transparent;
+        body: Form(
+          key: _formKey,
+          child: Container(
+              padding:
+                  EdgeInsets.only(left: 125, right: 125, top: 20, bottom: 20),
+              child: Column(children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Checkbox(
+                      value: isChecked,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isChecked = value ?? false;
+                        });
                       },
-                    ),
-                    checkColor: Colors.black,
-                    side: BorderSide(
-                      color: Colors.black,
-                      width: 2.0,
-                    ),
-                  ),
-                  Text(translation(context).greyColler),
-                  Checkbox(
-                    value: isChecked,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        isChecked = value ?? false;
-                      });
-                    },
-                    fillColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.selected)) {
-                          return Colors.grey;
-                        }
-                        return Colors.transparent;
-                      },
-                    ),
-                    checkColor: Colors.black,
-                    side: BorderSide(
-                      color: Colors.black,
-                      width: 2.0,
-                    ),
-                  ),
-                  Text(
-                    translation(context).greyColler,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 70,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 40,
-                  ),
-                  Expanded(
-                      child: CustomButton(
-                    text: translation(context).gpay,
-                    onPressed: () {},
-                  )),
-                  SizedBox(
-                    width: 40,
-                  ),
-                  Expanded(
-                      child: CustomButton(
-                    text: translation(context).neft,
-                    onPressed: () {},
-                  )),
-                  SizedBox(
-                    width: 40,
-                  ),
-                  Expanded(
-                    child: CustomButton(
-                      text: translation(context).cash,
-                      onPressed: () async {
-                        print("cash1");
-
-                        // Call the method to upload cash receipt
-                        await uploadCashReceipt();
-
-                        // Display the pop-up dialog only if the receipt is uploaded successfully
-                        if (_cashReceipt != null) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return _buildSendingCashDialog(context);
-                            },
-                          );
-
-                          try {
-                            String? imageUrl = '';
-                            // Call the method to send cash notification
-                            await sendCashNotification(imageUrl);
-
-                            // Call the method to retrieve cash receipt after the notification is sent
-                            await getCashReceipt();
-
-                            // The pop-up dialog will be dismissed automatically when the process is complete
-                            // Instead of navigating back immediately, you can handle the response here
-                            // For example, you can show a message or navigate to another page based on the response
-                          } catch (error) {
-                            print('Error handling cash notification: $error');
-                            // Handle the error scenario, e.g., show an error message to the user
+                      fillColor: MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.selected)) {
+                            return Colors.indigo.shade900;
                           }
-                        }
-                      },
+                          return Colors.transparent;
+                        },
+                      ),
+                      checkColor: Colors.black,
+                      side: BorderSide(
+                        color: Colors.black,
+                        width: 2.0,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 40,
-                  ),
-                  Expanded(
+                    Text(translation(context).greyColler),
+                    Checkbox(
+                      value: isChecked,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isChecked = value ?? false;
+                        });
+                      },
+                      fillColor: MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.selected)) {
+                            return Colors.grey;
+                          }
+                          return Colors.transparent;
+                        },
+                      ),
+                      checkColor: Colors.black,
+                      side: BorderSide(
+                        color: Colors.black,
+                        width: 2.0,
+                      ),
+                    ),
+                    Text(
+                      translation(context).greyColler,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 70,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 40,
+                    ),
+                    Expanded(
+                        child: CustomButton(
+                      text: translation(context).gpay,
+                      onPressed: () {},
+                    )),
+                    SizedBox(
+                      width: 40,
+                    ),
+                    Expanded(
+                        child: CustomButton(
+                      text: translation(context).neft,
+                      onPressed: () {},
+                    )),
+                    SizedBox(
+                      width: 40,
+                    ),
+                    Expanded(
                       child: CustomButton(
-                    text: translation(context).paymentGateway,
-                    onPressed: () {},
-                  )),
-                  SizedBox(
-                    width: 40,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 400,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CustomButton(
-                    text: translation(context).register,
-                    onPressed: () async {
-                      // );
-                      try {
-                        await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                          email: controller.email.text,
-                          password: controller.password.text,
-                        );
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == 'invalid-email') {
-                          // Handle invalid email error
-                          print('The email address is badly formatted.');
-                        } else {
-                          // Handle other FirebaseAuthException errors
-                          print('Error creating user: ${e.message}');
-                        }
-                      } catch (e) {
-                        // Handle other errors
-                        print('Error creating user: $e');
-                      }
-                    },
-                  ),
-                  SizedBox(height: 20),
-                ],
-              )
-            ])));
+                        text: translation(context).cash,
+                        onPressed: () async {
+                          print("cash1");
+
+                          // Call the method to upload cash receipt
+                          await uploadCashReceipt();
+
+                          // Display the pop-up dialog only if the receipt is uploaded successfully
+                          if (_cashReceipt != null) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return _buildSendingCashDialog(context);
+                              },
+                            );
+
+                            try {
+                              String? imageUrl = '';
+                              // Call the method to send cash notification
+                              await sendCashNotification(imageUrl);
+
+                              // Call the method to retrieve cash receipt after the notification is sent
+                              await getCashReceipt();
+
+                              // The pop-up dialog will be dismissed automatically when the process is complete
+                              // Instead of navigating back immediately, you can handle the response here
+                              // For example, you can show a message or navigate to another page based on the response
+                            } catch (error) {
+                              print('Error handling cash notification: $error');
+                              // Handle the error scenario, e.g., show an error message to the user
+                            }
+                          }
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: 40,
+                    ),
+                    Expanded(
+                        child: CustomButton(
+                      text: translation(context).paymentGateway,
+                      onPressed: () {},
+                    )),
+                    SizedBox(
+                      width: 40,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 400,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CustomButton(
+                        text: translation(context).register,
+                        onPressed: _register),
+                    SizedBox(height: 20),
+                  ],
+                )
+              ])),
+        ));
+  }
+
+  void _register() async {
+    try {
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: widget.email!,
+        password: widget.password!,
+      );
+      // User creation successful
+      print("User created: ${userCredential.user!.email}");
+      await assignUserRole(userCredential.user!.uid, 'Blue');
+    } catch (e) {
+      print("Error creating user: $e");
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NewUserPayment(
+          name: widget.name!,
+          email: widget.email!.trim(),
+          password: widget.password!,
+        ),
+      ),
+    );
+  }
+
+  Future<void> assignUserRole(String uid, String role) async {
+    try {
+      String userCollection = 'greycollaruser';
+
+      // Assign the user role to the user
+      await FirebaseFirestore.instance.collection(userCollection).doc(uid).set({
+        'name': controller.name.text,
+        'email': controller.email.text,
+        'mobile': controller.mobile.text,
+        'worktitle': controller.worktitle.text,
+        "aadharno": controller.aadharno.text,
+        "gender": controller.gender.text,
+        "workexp": controller.workexp.text,
+        "qualification": controller.qualification.text,
+        "state": controller.state.text,
+        "address": controller.address.text,
+        'workins': controller.workins,
+        "city": controller.city.text,
+        "country": controller.country.text,
+        'skills': controller.skills,
+        'label': controller.selectedOption.text,
+        // Add additional user-related fields as needed
+      });
+    } catch (e) {
+      print('Error assigning user role: $e');
+    }
   }
 }
 
