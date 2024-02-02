@@ -23,7 +23,6 @@ class CandidateFormController {
   final otpm = TextEditingController();
   final code = TextEditingController();
   final otp = TextEditingController();
-  final contry = TextEditingController();
   final qualification = TextEditingController();
   final city = TextEditingController();
   final expectedwage = TextEditingController();
@@ -31,6 +30,11 @@ class CandidateFormController {
   final bluecoller = TextEditingController();
   final country = TextEditingController();
   final confirmPassword = TextEditingController();
+  final imgpic = TextEditingController();
+  final imgcv = TextEditingController();
+  final imgexp = TextEditingController();
+  final imgaadhar = TextEditingController();
+  final imgvoter = TextEditingController();
   List<File> images = [];
   List<String> skills = [];
   List<String> workins = [];

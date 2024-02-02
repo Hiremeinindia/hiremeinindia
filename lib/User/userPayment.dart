@@ -24,7 +24,6 @@ import 'package:http/http.dart' as http;
 class NewUserPayment extends StatefulWidget {
   final Function(String)? handleForm;
   const NewUserPayment({
-    Key? key,
     this.selectedOption,
     this.name,
     this.email,
@@ -46,13 +45,13 @@ class NewUserPayment extends StatefulWidget {
     this.imageUrl3,
     this.imageUrl4,
     this.imageUrl5,
-    this.imageUrl,
+    this.imageUrls,
     this.city,
     this.state,
     this.country,
     this.candidate,
     this.handleForm,
-  }) : super(key: key);
+  });
   final String? selectedOption;
   final String? name;
   final String? email;
@@ -72,7 +71,7 @@ class NewUserPayment extends StatefulWidget {
   final String? label;
   final String? expectedwage;
   final String? currentwage;
-  final String? imageUrl;
+  final List<String>? imageUrls;
   final String? imageUrl1;
   final String? imageUrl2;
   final String? imageUrl3;
@@ -98,7 +97,6 @@ class _NewUserPayment extends State<NewUserPayment> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   CandidateFormController controller = CandidateFormController();
-  String? _uploadedImageURL;
 
   Future<void> showFileUploadSuccessDialog() async {
     showDialog(
@@ -844,9 +842,23 @@ class _NewUserPayment extends State<NewUserPayment> {
       context,
       MaterialPageRoute(
         builder: (context) => NewUserPayment(
-          name: widget.name!,
+          name: widget.name,
           email: widget.email!.trim(),
-          password: widget.password!,
+          mobile: widget.mobile,
+          workexp: widget.workexp,
+          worktitle: widget.worktitle,
+          aadharno: widget.aadharno,
+          address: widget.address,
+          gender: widget.gender,
+          workins: widget.workins,
+          qualification: widget.qualification,
+          label: widget.label,
+          skills: widget.skills,
+          state: widget.state,
+          city: widget.city,
+          country: widget.country,
+          expectedwage: widget.expectedwage,
+          currentwage: widget.currentwage,
         ),
       ),
     );
@@ -854,25 +866,29 @@ class _NewUserPayment extends State<NewUserPayment> {
 
   Future<void> assignUserRole(String uid, String role) async {
     try {
-      String userCollection = 'greycollaruser';
+      String userCollection = 'registeruser';
 
+      List<String> imageUrls = await uploadImages(controller);
       // Assign the user role to the user
       await FirebaseFirestore.instance.collection(userCollection).doc(uid).set({
-        'name': controller.name.text,
-        'email': controller.email.text,
-        'mobile': controller.mobile.text,
-        'worktitle': controller.worktitle.text,
-        "aadharno": controller.aadharno.text,
-        "gender": controller.gender.text,
-        "workexp": controller.workexp.text,
-        "qualification": controller.qualification.text,
-        "state": controller.state.text,
-        "address": controller.address.text,
-        'workins': controller.workins,
-        "city": controller.city.text,
-        "country": controller.country.text,
-        'skills': controller.skills,
-        'label': controller.selectedOption.text,
+        'name': widget.name,
+        'email': widget.email,
+        'mobile': widget.mobile,
+        'worktitle': widget.worktitle,
+        "aadharno": widget.aadharno,
+        "gender": widget.gender,
+        "workexp": widget.workexp,
+        "qualification": widget.qualification,
+        "state": widget.state,
+        "address": widget.address,
+        'workins': widget.workins ?? [],
+        "city": widget.city,
+        "country": widget.country,
+        'skills': widget.skills ?? [],
+        "expectedwage": widget.expectedwage,
+        "currentwage": widget.currentwage,
+        'label': widget.selectedOption,
+        "imageUrl": widget.imageUrls,
         // Add additional user-related fields as needed
       });
     } catch (e) {
