@@ -14,6 +14,7 @@ import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
 import 'package:hiremeinindiaapp/User/userPayment.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../widgets/hiremeinindia.dart';
 import 'userFormState.dart';
 import '../classes/language.dart';
 import '../classes/language_constants.dart';
@@ -361,10 +362,11 @@ class _GreyUserUpload extends State<GreyUserUpload> {
     final Object? keys = ModalRoute.of(context)!.settings.arguments;
     return Scaffold(
       appBar: AppBar(
+        title: HireMeInIndia(),
+        automaticallyImplyLeading: false,
         centerTitle: false,
         toolbarHeight: 80,
         backgroundColor: Colors.transparent,
-        automaticallyImplyLeading: false,
         elevation: 0.0,
         actions: [
           Padding(
@@ -484,56 +486,117 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                       decoration: BoxDecoration(
                         color: Colors.indigo.shade900,
                       ),
-                      child: DropdownButton<String>(
-                        items: [
-                          DropdownMenuItem<String>(
-                            value: 'Option 1',
-                            child: Text('Option 1'),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton2<String>(
+                          isExpanded: true,
+                          items: [
+                            DropdownMenuItem<String>(
+                              value: 'Option 1',
+                              child: Text('Option 1'),
+                            ),
+                            DropdownMenuItem<String>(
+                              value: 'Option 2',
+                              child: Text('Option 1'),
+                            ),
+                            // Add more options as needed
+                          ],
+                          onChanged: (value) {
+                            // Handle option selection
+                          },
+                          hint: Text(
+                            AppLocalizations.of(context)!.findaJob,
+                            style: TextStyle(color: Colors.white),
                           ),
-                          DropdownMenuItem<String>(
-                            value: 'Option 2',
-                            child: Text('Option 1'),
+                          buttonStyleData: ButtonStyleData(
+                            height: 30,
+                            width: 200,
+                            elevation: 1,
+                            padding: const EdgeInsets.only(left: 14, right: 14),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: Colors.black26,
+                              ),
+                              color: Colors.indigo.shade900,
+                            ),
                           ),
-                          // Add more options as needed
-                        ],
-                        onChanged: (value) {
-                          // Handle option selection
-                        },
-                        hint: Text(
-                          AppLocalizations.of(context)!.findaJob,
-                          style: TextStyle(color: Colors.white),
+                          iconStyleData: const IconStyleData(
+                            icon: Icon(
+                              Icons.arrow_drop_down_sharp,
+                            ),
+                            iconSize: 25,
+                            iconEnabledColor: Colors.white,
+                            iconDisabledColor: null,
+                          ),
+                          dropdownStyleData: DropdownStyleData(
+                            maxHeight: 210,
+                            width: 156,
+                            elevation: 0,
+                            padding: EdgeInsets.only(
+                                left: 10, right: 10, top: 5, bottom: 15),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(color: Colors.black),
+                              color: Colors.indigo.shade900,
+                            ),
+                            scrollPadding: EdgeInsets.all(5),
+                            scrollbarTheme: ScrollbarThemeData(
+                              thickness: MaterialStateProperty.all<double>(6),
+                              thumbVisibility:
+                                  MaterialStateProperty.all<bool>(true),
+                            ),
+                          ),
+                          menuItemStyleData: const MenuItemStyleData(
+                            height: 25,
+                            padding: EdgeInsets.only(left: 14, right: 14),
+                          ),
                         ),
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.white,
-                        ),
-                        underline: Container(),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(width: 40),
                 SizedBox(
-                  height: 30,
-                  width: 30,
+                  height: 38,
+                  width: 38,
                   child: CircleAvatar(
                     backgroundColor: Colors.black,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.person,
-                        color: Colors.indigo.shade900,
+                    child: SizedBox(
+                      width: 36,
+                      height: 36,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.person_outline_outlined,
+                          size: 35,
+                          color: Colors.indigo.shade900,
+                        ),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8.0),
-                SizedBox(
-                  width: 50,
-                  child: Text(
-                    'Guest User',
-                    maxLines: 2,
-                    style: TextStyle(color: Colors.black),
+                Padding(
+                  padding: EdgeInsets.only(top: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'New',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.indigo.shade900,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'User',
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.indigo.shade900,
+                            height: 0),
+                      ),
+                    ],
                   ),
                 ),
               ],
