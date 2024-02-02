@@ -24,16 +24,6 @@ class CompanyViewUser extends StatefulWidget {
 }
 
 class _CompanyViewUser extends State<CompanyViewUser> {
-  final List<String> items = [
-    'Item1',
-    'Item2',
-    'Item3',
-    'Item4',
-    'Item5',
-    'Item6',
-    'Item7',
-    'Item8',
-  ];
   String? selectedValue;
 
   bool dropdownValue = false;
@@ -223,46 +213,54 @@ class _CompanyViewUser extends State<CompanyViewUser> {
                       child: Row(
                         textDirection: TextDirection.ltr,
                         children: [
-                          SizedBox(
-                            width: 400,
-                            child: Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(children: [
-                                  CircleAvatar(
-                                    backgroundColor: Colors.indigo.shade900,
-                                    maxRadius: 68,
-                                    minRadius: 67.5,
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      maxRadius: 66,
-                                      minRadius: 60,
-                                      child: CircleAvatar(
-                                        backgroundImage:
-                                            AssetImage('imguser.jpg'),
-                                        maxRadius: 59,
-                                        minRadius: 56,
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    'Name',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.indigo.shade900,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Designation',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.indigo.shade900,
-                                        height: 0),
-                                  ),
-                                ]),
-                              ),
+                          Container(
+                            constraints:
+                                BoxConstraints(minWidth: 100, maxWidth: 200),
+                            height: 100.0,
+                            margin: const EdgeInsets.only(bottom: 6.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.0),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey,
+                                  offset: Offset(0.0, 1.0), //(x,y)
+                                  blurRadius: 6.0,
+                                ),
+                              ],
                             ),
+                            child: Column(children: [
+                              CircleAvatar(
+                                backgroundColor: Colors.indigo.shade900,
+                                maxRadius: 68,
+                                minRadius: 67.5,
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  maxRadius: 66,
+                                  minRadius: 60,
+                                  child: CircleAvatar(
+                                    backgroundImage: AssetImage('imguser.jpg'),
+                                    maxRadius: 59,
+                                    minRadius: 56,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                'Name',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.indigo.shade900,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                'Designation',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.indigo.shade900,
+                                    height: 0),
+                              ),
+                            ]),
                           ),
                           Expanded(
                             child: Container(
