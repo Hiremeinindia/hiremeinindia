@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:email_otp/email_otp.dart';
+import 'package:email_auth/email_auth.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:hiremeinindiaapp/User/user.dart';
 import 'package:hiremeinindiaapp/Providers/session.dart';
@@ -13,6 +15,7 @@ import 'package:hiremeinindiaapp/User/userUpload.dart';
 import 'package:hiremeinindiaapp/classes/language.dart';
 import 'package:hiremeinindiaapp/classes/language_constants.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
+import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:hiremeinindiaapp/main.dart';
 import 'package:hiremeinindiaapp/widgets/customtextfield.dart';
 import 'package:hiremeinindiaapp/widgets/customtextstyle.dart';
@@ -32,13 +35,53 @@ class Registration extends StatefulWidget {
 class _RegistrationState extends State<Registration> {
   bool isGreyEnabled = false;
   bool isBlueEnabled = false;
+  late EmailAuth emailAuth;
+  late String sessionName = "";
+  late String recipientMail = "";
+  // Define Firebase Config manually
+
   void initState() {
     super.initState();
+    emailAuth = new EmailAuth(
+      sessionName: "Sample session",
+    );
+    var remoteServerConfig = {
+      "server":
+          "https://app-authenticator.herokuapp.com/dart/auth/${recipientMail}?CompanyName=${this.sessionName}",
+      "serverKey": "AIzaSyBKUuhUeiA2DpvZD4od15RdHEBZyjsuVlA"
+    };
+
+    /// Configuring the remote server
+    emailAuth.config(remoteServerConfig);
+
     controller =
         CandidateFormController(initialSelectedOption: widget.selectedOption);
     isBlueEnabled = widget.selectedOption == 'Blue';
     isGreyEnabled = widget.selectedOption == 'Grey';
   }
+
+  void verify() {
+    if (kDebugMode) {
+      print(
+          "OTP validation results >> ${emailAuth.validateOtp(recipientMail: controller.email.text, userOtp: controller.otpm.text)}");
+    }
+  }
+
+  /// a void funtion to send the OTP to the user
+  /// Can also be converted into a Boolean function and render accordingly for providers
+  void sendOtp() async {
+    bool result = await emailAuth.sendOtp(
+        recipientMail: controller.email.text, otpLength: 5);
+    if (result) {
+      setState(() {
+        submitValid = true;
+      });
+    } else if (kDebugMode) {
+      print("Error processing OTP requests, check server for logs");
+    }
+  }
+
+  bool submitValid = false;
 
   String enteredOTP = '';
   String smscode = "";
@@ -57,6 +100,7 @@ class _RegistrationState extends State<Registration> {
   final _formKey = GlobalKey<FormState>();
   EmailOTP myauth = EmailOTP();
   CandidateFormController controller = CandidateFormController();
+  final TextEditingController _otpController = TextEditingController();
   List<String> selectedSkill = [];
   List<String> selectedWorkin = [];
   var label = 'Grey';
@@ -208,7 +252,7 @@ class _RegistrationState extends State<Registration> {
         return AlertDialog(
           title: Text("Enter OTP"),
           content: TextField(
-            controller: controller.otp,
+            controller: controller.otpm,
             keyboardType: TextInputType.number,
             maxLength: 4,
           ),
@@ -219,32 +263,33 @@ class _RegistrationState extends State<Registration> {
                 Navigator.of(context).pop();
 
                 // Verify entered OTP
-                print("Entered OTP: ${controller.otp.text}");
+                print("Entered OTP: ${controller.otpm.text}");
+                verify();
 
-                if (await myauth.verifyOTP(otp: controller.otp.text.trim())) {
-                  print("OTP verification success");
-                  // Navigate to registration page
-                } else {
-                  print("OTP verification failed");
-                  // Display error pop-up for invalid OTP
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text("Invalid OTP"),
-                        content: Text("Please enter a valid OTP."),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text("OK"),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
+                // if (await myauth.verifyOTP(otp: controller.otp.text.trim())) {
+                //   print("OTP verification success");
+                //   // Navigate to registration page
+                // } else {
+                //   print("OTP verification failed");
+                //   // Display error pop-up for invalid OTP
+                //   showDialog(
+                //     context: context,
+                //     builder: (BuildContext context) {
+                //       return AlertDialog(
+                //         title: Text("Invalid OTP"),
+                //         content: Text("Please enter a valid OTP."),
+                //         actions: <Widget>[
+                //           TextButton(
+                //             onPressed: () {
+                //               Navigator.of(context).pop();
+                //             },
+                //             child: Text("OK"),
+                //           ),
+                //         ],
+                //       );
+                //     },
+                //   );
+                // }
               },
             ),
           ],
@@ -967,6 +1012,11 @@ class _RegistrationState extends State<Registration> {
                               children: [
                                 CustomTextfield(
                                   validator: nameValidator,
+                                  onchanged: (value) {
+                                    // Define your onChanged logic here
+                                    // For example, if you want to update the value of `controller.expectedwage`, you can do:
+                                    controller.name.text = value;
+                                  },
                                   controller: controller.name,
                                 ),
                                 SizedBox(
@@ -974,6 +1024,11 @@ class _RegistrationState extends State<Registration> {
                                 ),
                                 CustomTextfield(
                                   validator: nameValidator,
+                                  onchanged: (value) {
+                                    // Define your onChanged logic here
+                                    // For example, if you want to update the value of `controller.expectedwage`, you can do:
+                                    controller.worktitle.text = value;
+                                  },
                                   controller: controller.worktitle,
                                 ),
                                 SizedBox(
@@ -989,6 +1044,11 @@ class _RegistrationState extends State<Registration> {
                                     return null;
                                   },
                                   controller: controller.aadharno,
+                                  onchanged: (value) {
+                                    // Define your onChanged logic here
+                                    // For example, if you want to update the value of `controller.expectedwage`, you can do:
+                                    controller.aadharno.text = value;
+                                  },
                                 ),
                               ],
                             ),
@@ -1029,6 +1089,11 @@ class _RegistrationState extends State<Registration> {
                               children: [
                                 CustomTextfield(
                                   validator: nameValidator,
+                                  onchanged: (value) {
+                                    // Define your onChanged logic here
+                                    // For example, if you want to update the value of `controller.expectedwage`, you can do:
+                                    controller.gender.text = value;
+                                  },
                                   controller: controller.gender,
                                 ),
                                 SizedBox(
@@ -1036,6 +1101,11 @@ class _RegistrationState extends State<Registration> {
                                 ),
                                 CustomTextfield(
                                   validator: workexpValidator,
+                                  onchanged: (value) {
+                                    // Define your onChanged logic here
+                                    // For example, if you want to update the value of `controller.expectedwage`, you can do:
+                                    controller.workexp.text = value;
+                                  },
                                   controller: controller.workexp,
                                 ),
                                 SizedBox(
@@ -1148,6 +1218,11 @@ class _RegistrationState extends State<Registration> {
                         Expanded(
                             child: CustomTextfield(
                           validator: workexpValidator,
+                          onchanged: (value) {
+                            // Define your onChanged logic here
+                            // For example, if you want to update the value of `controller.expectedwage`, you can do:
+                            controller.address.text = value;
+                          },
                           controller: controller.address,
                         )),
                         SizedBox(
@@ -1167,6 +1242,11 @@ class _RegistrationState extends State<Registration> {
                         Expanded(
                             child: CustomTextfield(
                           validator: validatePassword,
+                          onchanged: (value) {
+                            // Define your onChanged logic here
+                            // For example, if you want to update the value of `controller.expectedwage`, you can do:
+                            controller.password.text = value;
+                          },
                           onsaved: (value) {
                             setState(() {
                               password = value;
@@ -1189,6 +1269,11 @@ class _RegistrationState extends State<Registration> {
                         Expanded(
                             child: CustomTextfield(
                           controller: controller.mobile,
+                          onchanged: (value) {
+                            // Define your onChanged logic here
+                            // For example, if you want to update the value of `controller.expectedwage`, you can do:
+                            controller.mobile.text = value;
+                          },
                           validator: (value) {
                             if (value!.length != 10)
                               return 'Mobile Number must be of 10 digit';
@@ -1266,6 +1351,11 @@ class _RegistrationState extends State<Registration> {
                         Expanded(
                             child: CustomTextfield(
                           controller: controller.email,
+                          onchanged: (value) {
+                            // Define your onChanged logic here
+                            // For example, if you want to update the value of `controller.expectedwage`, you can do:
+                            controller.email.text = value;
+                          },
                           validator: emailValidator,
                           //(val) {
                           //   if (AppSession()
@@ -1295,23 +1385,45 @@ class _RegistrationState extends State<Registration> {
                               ),
                             ),
                             onPressed: () async {
-                              myauth.setConfig(
-                                  appEmail: "me@rohitchouhan.com",
-                                  appName: "Email OTP",
-                                  userEmail: controller.email.text,
-                                  otpLength: 6,
-                                  otpType: OTPType.digitsOnly);
-                              if (await myauth.sendOTP() == true) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: Text("OTP has been sent"),
-                                ));
-                              } else {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: Text("Oops, OTP send failed"),
-                                ));
-                              }
+                              print("otp1");
+                              sendOtp();
+                              // Set OTP configuration
+                              // myauth.setConfig(
+                              //   appEmail: "contact@hdevcoder.com",
+                              //   appName: "OTP for Registration",
+                              //   userEmail: controller.email.text,
+                              //   otpLength: 4,
+                              //   otpType: OTPType.digitsOnly,
+                              // );
+                              _showOtpDialog();
+
+                              // // Send OTP to email
+                              // bool otpSent = await myauth.sendOTP();
+
+                              // // Show OTP entry dialog
+
+                              // // Check if OTP sending is successful
+                              // if (!otpSent) {
+                              //   // Display error pop-up for failed OTP sending
+                              //   showDialog(
+                              //     context: context,
+                              //     builder: (BuildContext context) {
+                              //       return AlertDialog(
+                              //         title: Text("Error"),
+                              //         content:
+                              //             Text("Oops, OTP sending failed."),
+                              //         actions: <Widget>[
+                              //           TextButton(
+                              //             onPressed: () {
+                              //               Navigator.of(context).pop();
+                              //             },
+                              //             child: Text("OK"),
+                              //           ),
+                              //         ],
+                              //       );
+                              //     },
+                              //   );
+                              // }
                             },
                             child: isVerifiedEmail
                                 ? Row(
@@ -1937,13 +2049,13 @@ class _RegistrationState extends State<Registration> {
                                 //     'label': controller.selectedOption.text,
                                 //   }, // Pass only keys to the next page
                                 // );
-                                UserCredential userCredential =
-                                    await _auth.createUserWithEmailAndPassword(
-                                  email: controller.email.text,
-                                  password: controller.password.text,
-                                );
-                                await assignUserRole(
-                                    userCredential.user!.uid, 'Blue');
+                                // UserCredential userCredential =
+                                //     await _auth.createUserWithEmailAndPassword(
+                                //   email: controller.email.text,
+                                //   password: controller.password.text,
+                                // );
+                                // await assignUserRole(
+                                //     userCredential.user!.uid, 'Blue');
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -1970,7 +2082,7 @@ class _RegistrationState extends State<Registration> {
 
   Future<void> assignUserRole(String uid, String role) async {
     try {
-      String userCollection = 'greycollaruser';
+      String userCollection = 'users';
 
       // Assign the user role to the user
       await FirebaseFirestore.instance.collection(userCollection).doc(uid).set({

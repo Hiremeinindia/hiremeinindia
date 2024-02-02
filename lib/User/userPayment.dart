@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hiremeinindiaapp/User/user.dart';
 import 'package:hiremeinindiaapp/User/userFormState.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import '../Widgets/customtextstyle.dart';
@@ -21,6 +22,7 @@ import '../main.dart';
 import 'package:http/http.dart' as http;
 
 class NewUserPayment extends StatefulWidget {
+  final Function(String)? handleForm;
   const NewUserPayment({
     Key? key,
     this.selectedOption,
@@ -43,9 +45,12 @@ class NewUserPayment extends StatefulWidget {
     this.imageUrl3,
     this.imageUrl4,
     this.imageUrl5,
+    this.imageUrl,
     this.city,
     this.state,
     this.country,
+    this.candidate,
+    this.handleForm,
   }) : super(key: key);
   final String? selectedOption;
   final String? email;
@@ -65,11 +70,13 @@ class NewUserPayment extends StatefulWidget {
   final String? city;
   final String? country;
   final String? state;
+  final String? imageUrl;
   final String? imageUrl1;
   final String? imageUrl2;
   final String? imageUrl3;
   final String? imageUrl4;
   final String? imageUrl5;
+  final Candidate? candidate;
 
   @override
   State<NewUserPayment> createState() => _NewUserPayment();
@@ -80,13 +87,19 @@ class _NewUserPayment extends State<NewUserPayment> {
   bool isChecked = false;
   bool isProcessing = false;
   PlatformFile? _cashReceipt;
+  late final String? imageUrl = "";
+  late final String? imageUrl1 = "";
+  late final String? imageUrl2 = "";
+  late final String? imageUrl3 = "";
+  late final String? imageUrl4 = "";
+  late final String? imageUrl5 = "";
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   CandidateFormController controller = CandidateFormController();
   String? _uploadedImageURL; // New variable to store uploaded image URL
   Future<void> assignUserRole(String uid, String role) async {
     try {
-      String userCollection = 'greycollaruser';
+      String userCollection = 'greyusercollar';
 
       // Assign the user role to the user
       await FirebaseFirestore.instance.collection(userCollection).doc(uid).set({
@@ -105,6 +118,16 @@ class _NewUserPayment extends State<NewUserPayment> {
         "country": controller.country.text,
         'skills': controller.skills ?? [],
         'label': controller.selectedOption.text,
+        'password': controller.password.text,
+        'expectedwages': controller.expectedwage.text,
+        'currentwaages': controller.currentwage.text,
+        'imageUrl': imageUrl,
+        'imageUrl1': imageUrl1,
+        'imageUrl2': imageUrl2,
+        'imageUrl3': imageUrl3,
+        'imageUrl4': imageUrl4,
+        'imageUrl5': imageUrl5,
+
         // Add additional user-related fields as needed
       });
     } catch (e) {
@@ -244,6 +267,42 @@ class _NewUserPayment extends State<NewUserPayment> {
       throw error;
     }
     return imageUrls;
+  }
+
+  Future<void> addCandidate(CandidateFormController controller) async {
+    try {
+      List<String> imageUrls = await uploadImages(controller);
+      await controller.reference.set({
+        'name': controller.name.text,
+        'email': controller.email.text,
+        'mobile': controller.mobile.text,
+        'worktitle': controller.worktitle.text,
+        "aadharno": controller.aadharno.text,
+        "gender": controller.gender.text,
+        "workexp": controller.workexp.text,
+        "qualification": controller.qualification.text,
+        "state": controller.state.text,
+        "address": controller.address.text,
+        'workins': controller.workins,
+        "city": controller.city.text,
+        "country": controller.country.text,
+        'skills': controller.skills,
+        "label": controller.selectedOption.text,
+        "expectedwage": controller.expectedwage,
+        "currentwage": controller.currentwage,
+        "imageUrl": imageUrls,
+        "imageUrl1": imageUrl1,
+        "imageUrl2": imageUrl2,
+        "imageUrl3": imageUrl3,
+        "imageUrl4": imageUrl4,
+        "imageUrl5": imageUrl5,
+      }, SetOptions(merge: true));
+
+      print('Candidate added successfully');
+    } catch (error) {
+      print('Error adding candidate: $error');
+      throw error;
+    }
   }
 
   Future<void> uploadUserData() async {
@@ -791,50 +850,30 @@ class _NewUserPayment extends State<NewUserPayment> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   CustomButton(
-                    text: translation(context).next,
+                    text: translation(context).register,
                     onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        // Sign up with email and password
-                        List<String> imageUrls = await uploadImages(controller);
-                        Navigator.pushNamed(
-                          context,
-                          '/document',
-                          arguments: {
-                            'name': controller.name.text,
-                            'email': controller.email.text,
-                            'mobile': controller.mobile.text,
-                            'worktitle': controller.worktitle.text,
-                            "aadharno": controller.aadharno.text,
-                            "gender": controller.gender.text,
-                            "workexp": controller.workexp.text,
-                            "qualification": controller.qualification.text,
-                            "state": controller.state.text,
-                            "address": controller.address.text,
-                            'workins': controller.workins,
-                            "city": controller.city.text,
-                            "country": controller.country.text,
-                            'skills': controller.skills,
-                            "label": controller.selectedOption.text,
-                            "expectedwage": controller.expectedwage,
-                            "currentwage": controller.currentwage,
-                            "imageUrls": imageUrls,
-                          }, // Pass only keys to the next page
+                      // );
+                      try {
+                        await FirebaseAuth.instance
+                            .createUserWithEmailAndPassword(
+                          email: controller.email.text,
+                          password: controller.password.text,
                         );
-                        await uploadUserData();
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'invalid-email') {
+                          // Handle invalid email error
+                          print('The email address is badly formatted.');
+                        } else {
+                          // Handle other FirebaseAuthException errors
+                          print('Error creating user: ${e.message}');
+                        }
+                      } catch (e) {
+                        // Handle other errors
+                        print('Error creating user: $e');
                       }
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
-                      );
                     },
                   ),
                   SizedBox(height: 20),
-                  CustomButton(
-                    text: 'Complete Payment',
-                    onPressed: () async {
-                      // Call the method to upload all user data to Firestore
-                    },
-                  ),
                 ],
               )
             ])));
