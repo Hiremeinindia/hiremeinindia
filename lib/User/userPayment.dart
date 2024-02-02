@@ -150,7 +150,7 @@ class _NewUserPayment extends State<NewUserPayment> {
   }
 
   Future<void> getCashReceipt() async {
-    final String serverUrl = 'http://localhost:3018';
+    final String serverUrl = 'http://localhost:3019';
     final String endpoint = '/getCashReceipt';
 
     try {
@@ -367,7 +367,7 @@ class _NewUserPayment extends State<NewUserPayment> {
     setState(() {
       isProcessing = true; // Set the flag to indicate processing
     });
-    final String serverUrl = 'http://localhost:3018';
+    final String serverUrl = 'http://localhost:3019';
     final String endpoint = '/cashNotification';
 
     try {

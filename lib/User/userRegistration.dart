@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:email_auth/email_auth.dart';
@@ -20,7 +23,10 @@ import 'package:hiremeinindiaapp/main.dart';
 import 'package:hiremeinindiaapp/widgets/customtextfield.dart';
 import 'package:hiremeinindiaapp/widgets/customtextstyle.dart';
 import 'package:hiremeinindiaapp/widgets/hiremeinindia.dart';
+import 'package:mailer/mailer.dart' as mailer;
+import 'package:mailer/smtp_server/gmail.dart';
 import '../widgets/custombutton.dart';
+import 'package:mailer/smtp_server.dart' as smtp;
 
 class Registration extends StatefulWidget {
   const Registration({Key? key, this.candidate, this.selectedOption})
@@ -38,21 +44,11 @@ class _RegistrationState extends State<Registration> {
   late EmailAuth emailAuth;
   late String sessionName = "";
   late String recipientMail = "";
+  bool _isVerifiedEmail = false;
   // Define Firebase Config manually
 
   void initState() {
     super.initState();
-    emailAuth = new EmailAuth(
-      sessionName: "Sample session",
-    );
-    var remoteServerConfig = {
-      "server":
-          "https://app-authenticator.herokuapp.com/dart/auth/${recipientMail}?CompanyName=${this.sessionName}",
-      "serverKey": "AIzaSyBKUuhUeiA2DpvZD4od15RdHEBZyjsuVlA"
-    };
-
-    /// Configuring the remote server
-    emailAuth.config(remoteServerConfig);
 
     controller =
         CandidateFormController(initialSelectedOption: widget.selectedOption);
@@ -60,24 +56,114 @@ class _RegistrationState extends State<Registration> {
     isGreyEnabled = widget.selectedOption == 'Grey';
   }
 
-  void verify() {
-    if (kDebugMode) {
-      print(
-          "OTP validation results >> ${emailAuth.validateOtp(recipientMail: controller.email.text, userOtp: controller.otpm.text)}");
+  void _sendOtp() async {
+    final smtpServer =
+        smtp.gmail('hiremeinindia@gmail.com', 'jgbh aqnk yxgp qrol');
+
+    String otp = _generateOTP();
+
+    final mailer.Message message = mailer.Message()
+      ..from = mailer.Address('hiremeinindia@gmail.com', 'jgbh aqnk yxgp qrol')
+      ..recipients.add(controller.email.text)
+      ..subject = 'Your OTP for Verification'
+      ..text = 'Your OTP is: $otp';
+
+    try {
+      final sendReport = await mailer.send(message, smtpServer);
+      print('Message sent: ${sendReport.toString()}');
+
+      _showOtpDialog(otp);
+    } catch (e) {
+      print('Error sending OTP: $e');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text(
+                "Oops, OTP sending failed. Please check your network connection and SMTP server configuration."),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
-  /// a void funtion to send the OTP to the user
-  /// Can also be converted into a Boolean function and render accordingly for providers
-  void sendOtp() async {
-    bool result = await emailAuth.sendOtp(
-        recipientMail: controller.email.text, otpLength: 5);
-    if (result) {
+  String _generateOTP() {
+    Random random = Random();
+    String otp = '';
+    for (int i = 0; i < 4; i++) {
+      otp += random.nextInt(9).toString();
+    }
+    return otp;
+  }
+
+  void _showOtpDialog(String otp) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Enter OTP"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("An OTP has been sent to your email."),
+              SizedBox(height: 20),
+              TextField(
+                decoration: InputDecoration(labelText: 'OTP'),
+                onChanged: (value) {
+                  if (value.length == 4) {
+                    _verifyOtp(value, otp);
+                  }
+                },
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _verifyOtp(String enteredOtp, String actualOtp) {
+    if (enteredOtp == actualOtp) {
       setState(() {
-        submitValid = true;
+        _isVerifiedEmail = true;
       });
-    } else if (kDebugMode) {
-      print("Error processing OTP requests, check server for logs");
+      Navigator.of(context).pop(); // Close OTP dialog
+      // Proceed with further actions upon successful verification
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Invalid OTP"),
+            content: Text("Please enter the correct OTP."),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -242,82 +328,6 @@ class _RegistrationState extends State<Registration> {
       return 'Invalid format';
     }
     return null;
-  }
-
-  void _showOtpDialog() {
-    print("otp2");
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Enter OTP"),
-          content: TextField(
-            controller: controller.otpm,
-            keyboardType: TextInputType.number,
-            maxLength: 4,
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text("Verify"),
-              onPressed: () async {
-                Navigator.of(context).pop();
-
-                // Verify entered OTP
-                print("Entered OTP: ${controller.otpm.text}");
-                verify();
-
-                // if (await myauth.verifyOTP(otp: controller.otp.text.trim())) {
-                //   print("OTP verification success");
-                //   // Navigate to registration page
-                // } else {
-                //   print("OTP verification failed");
-                //   // Display error pop-up for invalid OTP
-                //   showDialog(
-                //     context: context,
-                //     builder: (BuildContext context) {
-                //       return AlertDialog(
-                //         title: Text("Invalid OTP"),
-                //         content: Text("Please enter a valid OTP."),
-                //         actions: <Widget>[
-                //           TextButton(
-                //             onPressed: () {
-                //               Navigator.of(context).pop();
-                //             },
-                //             child: Text("OK"),
-                //           ),
-                //         ],
-                //       );
-                //     },
-                //   );
-                // }
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _verifyOtp() async {
-    // Perform OTP verification here using myauth.verifyOTP(otpController.text)
-    bool isOtpValid = await myauth.verifyOTP(otp: controller.otp.text);
-
-    if (isOtpValid) {
-      // Navigate to registration page
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Registration(),
-        ),
-      );
-    } else {
-      // Display error pop-up for invalid OTP
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Invalid OTP. Please try again."),
-        ),
-      );
-    }
   }
 
   void showErrorDialog(String errorMessage) {
@@ -1341,8 +1351,9 @@ class _RegistrationState extends State<Registration> {
                               ),
                             ),
                             onPressed: () async {
+                              String otp = "";
                               print("otp1");
-                              sendOtp();
+
                               // Set OTP configuration
                               // myauth.setConfig(
                               //   appEmail: "contact@hdevcoder.com",
@@ -1351,7 +1362,8 @@ class _RegistrationState extends State<Registration> {
                               //   otpLength: 4,
                               //   otpType: OTPType.digitsOnly,
                               // );
-                              _showOtpDialog();
+                              _sendOtp();
+                              _showOtpDialog(otp);
 
                               // // Send OTP to email
                               // bool otpSent = await myauth.sendOTP();
