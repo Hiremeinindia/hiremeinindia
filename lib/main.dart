@@ -91,14 +91,14 @@ class _HireAppState extends State<HireApp> {
       child: MaterialApp(
         initialRoute: '/',
         routes: {
-          '/document': (context) => GreyUserUpload(),
+          '/document': (context) => NewUserUpload(),
           '/payment': (context) => NewUserPayment(),
         },
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: _locale,
         debugShowCheckedModeBanner: false,
-        home: CompanyViewUser(),
+        home: HomePage(),
       ),
     );
   }

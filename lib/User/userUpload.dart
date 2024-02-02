@@ -28,21 +28,27 @@ import 'package:path/path.dart' as path;
 
 import 'package:flutter/services.dart' show rootBundle;
 
-class GreyUserUpload extends StatefulWidget {
-  const GreyUserUpload({
-    Key? key,
-    this.handleForm,
-    this.candidate,
-    this.selectedOption,
-  }) : super(key: key);
+class NewUserUpload extends StatefulWidget {
   final Function(String)? handleForm;
   final Candidate? candidate;
   final String? selectedOption;
+  final String? name;
+  final String? email;
+  final String? password;
+  const NewUserUpload({
+    this.handleForm,
+    this.candidate,
+    this.selectedOption,
+    this.password,
+    this.name,
+    this.email,
+  }) : assert(name != null && email != null && password != null);
+
   @override
-  State<GreyUserUpload> createState() => _GreyUserUpload();
+  State<NewUserUpload> createState() => _NewUserUpload();
 }
 
-class _GreyUserUpload extends State<GreyUserUpload> {
+class _NewUserUpload extends State<NewUserUpload> {
   bool isChecked = false;
   String? uploadedMessage;
   String? uploadedImageUrlAadhar;
@@ -61,12 +67,11 @@ class _GreyUserUpload extends State<GreyUserUpload> {
   final _formKey = GlobalKey<FormState>();
   final List<String> items = ['Tamil', 'English', 'French', 'Malayalam'];
   String? selectedValue;
-  String email = '';
+
   String name = '';
   String mobile = '';
   String worktitle = '';
 
-  String password = '';
   bool login = false;
   String? countryValue;
   String? stateValue;
@@ -137,7 +142,7 @@ class _GreyUserUpload extends State<GreyUserUpload> {
 
   Future<void> assignUserRole(String uid, String role) async {
     try {
-      String userCollection = 'users';
+      String userCollection = 'greycollaruser';
 
       // Assign the user role to the user
       await FirebaseFirestore.instance.collection(userCollection).doc(uid).set({
@@ -604,120 +609,311 @@ class _GreyUserUpload extends State<GreyUserUpload> {
           ),
         ],
       ),
-      body: Container(
-        padding: EdgeInsets.only(left: 125, right: 125, top: 20, bottom: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Checkbox(
-                  value: isChecked,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      isChecked = value ?? false;
-                    });
-                  },
-                  fillColor: MaterialStateProperty.resolveWith<Color>(
-                    (Set<MaterialState> states) {
-                      if (states.contains(MaterialState.selected)) {
-                        return Colors.indigo.shade900;
-                      }
-                      return Colors.transparent;
+      body: Form(
+        key: _formKey,
+        child: Container(
+          padding: EdgeInsets.only(left: 125, right: 125, top: 20, bottom: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Checkbox(
+                    value: isChecked,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isChecked = value ?? false;
+                      });
                     },
+                    fillColor: MaterialStateProperty.resolveWith<Color>(
+                      (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.selected)) {
+                          return Colors.indigo.shade900;
+                        }
+                        return Colors.transparent;
+                      },
+                    ),
+                    checkColor: Colors.black,
+                    side: BorderSide(
+                      color: Colors.black,
+                      width: 2.0,
+                    ),
                   ),
-                  checkColor: Colors.black,
-                  side: BorderSide(
-                    color: Colors.black,
-                    width: 2.0,
+                  Text(translation(context).blueColler),
+                  Checkbox(
+                    value: false,
+                    onChanged: null,
+                    fillColor: MaterialStateProperty.resolveWith<Color>(
+                      (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.selected)) {
+                          return Colors.grey;
+                        }
+                        return Colors.transparent;
+                      },
+                    ),
+                    checkColor: Colors.black,
+                    side: BorderSide(
+                      color: Colors.black,
+                      width: 2.0,
+                    ),
                   ),
-                ),
-                Text(translation(context).blueColler),
-                Checkbox(
-                  value: false,
-                  onChanged: null,
-                  fillColor: MaterialStateProperty.resolveWith<Color>(
-                    (Set<MaterialState> states) {
-                      if (states.contains(MaterialState.selected)) {
-                        return Colors.grey;
-                      }
-                      return Colors.transparent;
-                    },
-                  ),
-                  checkColor: Colors.black,
-                  side: BorderSide(
-                    color: Colors.black,
-                    width: 2.0,
-                  ),
-                ),
-                Text(translation(context).greyColler),
-              ],
-            ),
-            SizedBox(
-              height: 40,
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                translation(context).uploadEssentialDocument,
-                style: TextStyle(
-                    color: Colors.indigo.shade900,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
+                  Text(translation(context).greyColler),
+                ],
               ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      if (uploadedImageUrlForPicture != null)
-                        Container(
-                          width: 100,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black, width: 2),
-                            borderRadius: BorderRadius.circular(10),
+              SizedBox(
+                height: 40,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  translation(context).uploadEssentialDocument,
+                  style: TextStyle(
+                      color: Colors.indigo.shade900,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        if (uploadedImageUrlForPicture != null)
+                          Container(
+                            width: 100,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black, width: 2),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: CachedNetworkImage(
+                              imageUrl: uploadedImageUrlForPicture!,
+                              fit: BoxFit.cover,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                      value: downloadProgress.progress),
+                                );
+                              },
+                              errorWidget: (context, url, error) {
+                                print('Error loading image: $error');
+                                return Placeholder(); // You can replace this with any placeholder widget
+                              },
+                            ),
                           ),
-                          child: CachedNetworkImage(
-                            imageUrl: uploadedImageUrlForPicture!,
-                            fit: BoxFit.cover,
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) {
-                              return Center(
-                                child: CircularProgressIndicator(
-                                    value: downloadProgress.progress),
-                              );
-                            },
-                            errorWidget: (context, url, error) {
-                              print('Error loading image: $error');
-                              return Placeholder(); // You can replace this with any placeholder widget
-                            },
-                          ),
-                        ),
-                      CustomButton(
-                        text: translation(context).picture,
-                        onPressed: () async {
-                          FilePickerResult? result =
-                              await FilePicker.platform.pickFiles(
-                            allowMultiple: true,
-                            type: FileType.custom,
-                            allowedExtensions: [
-                              'jpg',
-                              'jpeg',
-                              'png',
-                              'pdf',
-                              'doc',
-                              'docx'
-                            ],
-                          );
+                        CustomButton(
+                          text: translation(context).picture,
+                          onPressed: () async {
+                            FilePickerResult? result =
+                                await FilePicker.platform.pickFiles(
+                              allowMultiple: true,
+                              type: FileType.custom,
+                              allowedExtensions: [
+                                'jpg',
+                                'jpeg',
+                                'png',
+                                'pdf',
+                                'doc',
+                                'docx'
+                              ],
+                            );
 
-                          if (result != null) {
-                            try {
+                            if (result != null) {
+                              try {
+                                for (PlatformFile file in result.files) {
+                                  String imageUrl;
+                                  if (kIsWeb) {
+                                    // For web, use the bytes property instead of path
+                                    final String fileName = file.name;
+                                    final Uint8List fileBytes = file.bytes!;
+
+                                    // Upload file to Firebase Storage
+                                    imageUrl = await uploadFileFromBytes(
+                                      fileBytes: fileBytes,
+                                      originalFileName: fileName,
+                                    );
+                                  } else {
+                                    // For other platforms, handle file uploads using path
+                                    final String filePath = file.path!;
+
+                                    // Upload file to Firebase Storage
+                                    imageUrl =
+                                        await uploadFileToStorage(filePath);
+                                  }
+
+                                  // Store the image URL in Firestore
+                                  await uploadImageUrl1ToFirestore(imageUrl);
+                                  pictureImageUrls.add(imageUrl);
+
+                                  // Display the uploaded file (Aadhar) with its URL
+                                  final urlDownload = await FirebaseStorage
+                                      .instance
+                                      .ref()
+                                      .child('uploads/${file.name}')
+                                      .getDownloadURL();
+                                  displayUploadedFilePicture(
+                                      urlDownload, file.name);
+                                }
+                              } catch (e) {
+                                print('Error uploading CV: $e');
+                                // Handle error
+                              }
+                              // Process the selected files
+                            } else {
+                              // User canceled the file picker
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 40),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        if (uploadedImageUrlAadhar != null)
+                          Container(
+                            width: 100,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black, width: 2),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: CachedNetworkImage(
+                              imageUrl: uploadedImageUrlAadhar!,
+                              fit: BoxFit.cover,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                      value: downloadProgress.progress),
+                                );
+                              },
+                              errorWidget: (context, url, error) {
+                                print('Error loading image: $error');
+                                return Placeholder(); // You can replace this with any placeholder widget
+                              },
+                            ),
+                          ),
+                        CustomButton(
+                          text: translation(context).aadhar,
+                          onPressed: () async {
+                            FilePickerResult? result =
+                                await FilePicker.platform.pickFiles(
+                              allowMultiple: true,
+                              type: FileType.custom,
+                              allowedExtensions: [
+                                'jpg',
+                                'jpeg',
+                                'png',
+                                'pdf',
+                                'doc',
+                                'docx'
+                              ],
+                            );
+
+                            if (result != null) {
+                              try {
+                                for (PlatformFile file in result.files) {
+                                  String imageUrl2;
+                                  if (kIsWeb) {
+                                    // For web, use the bytes property instead of path
+                                    final String fileName = file.name;
+                                    final Uint8List fileBytes = file.bytes!;
+
+                                    // Upload file to Firebase Storage
+                                    imageUrl2 = await uploadFileFromBytes(
+                                      fileBytes: fileBytes,
+                                      originalFileName: fileName,
+                                    );
+                                  } else {
+                                    // For other platforms, handle file uploads using path
+                                    final String filePath = file.path!;
+
+                                    // Upload file to Firebase Storage
+                                    imageUrl2 =
+                                        await uploadFileToStorage(filePath);
+                                  }
+
+                                  // Store the image URL in Firestore
+                                  await uploadImageUrl2ToFirestore(imageUrl2);
+                                  aadharImageUrls.add(imageUrl2);
+
+                                  // Display the uploaded file (Aadhar) with its URL
+                                  final urlDownload = await FirebaseStorage
+                                      .instance
+                                      .ref()
+                                      .child('uploads/${file.name}')
+                                      .getDownloadURL();
+                                  displayUploadedFileAadhar(
+                                      urlDownload, file.name);
+                                }
+                              } catch (e) {
+                                print('Error uploading CV: $e');
+                                // Handle error
+                              }
+                              // Process the selected files
+                            } else {
+                              // User canceled the file picker
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 40),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        if (uploadedImageUrlForVoterId != null)
+                          Container(
+                            width: 100,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black, width: 2),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: CachedNetworkImage(
+                              imageUrl: uploadedImageUrlForVoterId!,
+                              fit: BoxFit.cover,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                      value: downloadProgress.progress),
+                                );
+                              },
+                              errorWidget: (context, url, error) {
+                                print('Error loading image: $error');
+                                return Placeholder(); // You can replace this with any placeholder widget
+                              },
+                            ),
+                          ),
+                        CustomButton(
+                          text: translation(context).voterId,
+                          onPressed: () async {
+                            FilePickerResult? result =
+                                await FilePicker.platform.pickFiles(
+                              allowMultiple: true,
+                              type: FileType.custom,
+                              allowedExtensions: [
+                                'jpg',
+                                'jpeg',
+                                'png',
+                                'pdf',
+                                'doc',
+                                'docx'
+                              ],
+                            );
+
+                            if (result != null) {
+                              // Process the selected files
+                              List<String> imageUrls = [];
                               for (PlatformFile file in result.files) {
                                 String imageUrl;
                                 if (kIsWeb) {
@@ -740,347 +936,72 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                                 }
 
                                 // Store the image URL in Firestore
-                                await uploadImageUrl1ToFirestore(imageUrl);
-                                pictureImageUrls.add(imageUrl);
+                                await uploadImageUrl3ToFirestore(imageUrl);
+                                voteImageUrls.add(imageUrl);
 
-                                // Display the uploaded file (Aadhar) with its URL
+                                // Display the uploaded file (Voter ID) with its URL
                                 final urlDownload = await FirebaseStorage
                                     .instance
                                     .ref()
                                     .child('uploads/${file.name}')
                                     .getDownloadURL();
-                                displayUploadedFilePicture(
+                                displayUploadedFileVoterId(
                                     urlDownload, file.name);
                               }
-                            } catch (e) {
-                              print('Error uploading CV: $e');
-                              // Handle error
+                            } else {
+                              // User canceled the file picker
                             }
-                            // Process the selected files
-                          } else {
-                            // User canceled the file picker
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: 40),
-                Expanded(
-                  child: Column(
-                    children: [
-                      if (uploadedImageUrlAadhar != null)
-                        Container(
-                          width: 100,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black, width: 2),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: CachedNetworkImage(
-                            imageUrl: uploadedImageUrlAadhar!,
-                            fit: BoxFit.cover,
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) {
-                              return Center(
-                                child: CircularProgressIndicator(
-                                    value: downloadProgress.progress),
-                              );
-                            },
-                            errorWidget: (context, url, error) {
-                              print('Error loading image: $error');
-                              return Placeholder(); // You can replace this with any placeholder widget
-                            },
-                          ),
+                          },
                         ),
-                      CustomButton(
-                        text: translation(context).aadhar,
-                        onPressed: () async {
-                          FilePickerResult? result =
-                              await FilePicker.platform.pickFiles(
-                            allowMultiple: true,
-                            type: FileType.custom,
-                            allowedExtensions: [
-                              'jpg',
-                              'jpeg',
-                              'png',
-                              'pdf',
-                              'doc',
-                              'docx'
-                            ],
-                          );
-
-                          if (result != null) {
-                            try {
-                              for (PlatformFile file in result.files) {
-                                String imageUrl2;
-                                if (kIsWeb) {
-                                  // For web, use the bytes property instead of path
-                                  final String fileName = file.name;
-                                  final Uint8List fileBytes = file.bytes!;
-
-                                  // Upload file to Firebase Storage
-                                  imageUrl2 = await uploadFileFromBytes(
-                                    fileBytes: fileBytes,
-                                    originalFileName: fileName,
-                                  );
-                                } else {
-                                  // For other platforms, handle file uploads using path
-                                  final String filePath = file.path!;
-
-                                  // Upload file to Firebase Storage
-                                  imageUrl2 =
-                                      await uploadFileToStorage(filePath);
-                                }
-
-                                // Store the image URL in Firestore
-                                await uploadImageUrl2ToFirestore(imageUrl2);
-                                aadharImageUrls.add(imageUrl2);
-
-                                // Display the uploaded file (Aadhar) with its URL
-                                final urlDownload = await FirebaseStorage
-                                    .instance
-                                    .ref()
-                                    .child('uploads/${file.name}')
-                                    .getDownloadURL();
-                                displayUploadedFileAadhar(
-                                    urlDownload, file.name);
-                              }
-                            } catch (e) {
-                              print('Error uploading CV: $e');
-                              // Handle error
-                            }
-                            // Process the selected files
-                          } else {
-                            // User canceled the file picker
-                          }
-                        },
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(width: 40),
-                Expanded(
-                  child: Column(
-                    children: [
-                      if (uploadedImageUrlForVoterId != null)
-                        Container(
-                          width: 100,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black, width: 2),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: CachedNetworkImage(
-                            imageUrl: uploadedImageUrlForVoterId!,
-                            fit: BoxFit.cover,
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) {
-                              return Center(
-                                child: CircularProgressIndicator(
-                                    value: downloadProgress.progress),
-                              );
-                            },
-                            errorWidget: (context, url, error) {
-                              print('Error loading image: $error');
-                              return Placeholder(); // You can replace this with any placeholder widget
-                            },
-                          ),
-                        ),
-                      CustomButton(
-                        text: translation(context).voterId,
-                        onPressed: () async {
-                          FilePickerResult? result =
-                              await FilePicker.platform.pickFiles(
-                            allowMultiple: true,
-                            type: FileType.custom,
-                            allowedExtensions: [
-                              'jpg',
-                              'jpeg',
-                              'png',
-                              'pdf',
-                              'doc',
-                              'docx'
-                            ],
-                          );
-
-                          if (result != null) {
-                            // Process the selected files
-                            List<String> imageUrls = [];
-                            for (PlatformFile file in result.files) {
-                              String imageUrl;
-                              if (kIsWeb) {
-                                // For web, use the bytes property instead of path
-                                final String fileName = file.name;
-                                final Uint8List fileBytes = file.bytes!;
-
-                                // Upload file to Firebase Storage
-                                imageUrl = await uploadFileFromBytes(
-                                  fileBytes: fileBytes,
-                                  originalFileName: fileName,
+                  SizedBox(width: 40),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        if (uploadedImageUrlForExperienceProof != null)
+                          Container(
+                            width: 100,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black, width: 2),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: CachedNetworkImage(
+                              imageUrl: uploadedImageUrlForExperienceProof!,
+                              fit: BoxFit.cover,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                      value: downloadProgress.progress),
                                 );
-                              } else {
-                                // For other platforms, handle file uploads using path
-                                final String filePath = file.path!;
-
-                                // Upload file to Firebase Storage
-                                imageUrl = await uploadFileToStorage(filePath);
-                              }
-
-                              // Store the image URL in Firestore
-                              await uploadImageUrl3ToFirestore(imageUrl);
-                              voteImageUrls.add(imageUrl);
-
-                              // Display the uploaded file (Voter ID) with its URL
-                              final urlDownload = await FirebaseStorage.instance
-                                  .ref()
-                                  .child('uploads/${file.name}')
-                                  .getDownloadURL();
-                              displayUploadedFileVoterId(
-                                  urlDownload, file.name);
-                            }
-                          } else {
-                            // User canceled the file picker
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: 40),
-                Expanded(
-                  child: Column(
-                    children: [
-                      if (uploadedImageUrlForExperienceProof != null)
-                        Container(
-                          width: 100,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black, width: 2),
-                            borderRadius: BorderRadius.circular(10),
+                              },
+                              errorWidget: (context, url, error) {
+                                print('Error loading image: $error');
+                                return Placeholder(); // You can replace this with any placeholder widget
+                              },
+                            ),
                           ),
-                          child: CachedNetworkImage(
-                            imageUrl: uploadedImageUrlForExperienceProof!,
-                            fit: BoxFit.cover,
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) {
-                              return Center(
-                                child: CircularProgressIndicator(
-                                    value: downloadProgress.progress),
-                              );
-                            },
-                            errorWidget: (context, url, error) {
-                              print('Error loading image: $error');
-                              return Placeholder(); // You can replace this with any placeholder widget
-                            },
-                          ),
-                        ),
-                      CustomButton(
-                        text: translation(context).experienceProof,
-                        onPressed: () async {
-                          FilePickerResult? result =
-                              await FilePicker.platform.pickFiles(
-                            allowMultiple: true,
-                            type: FileType.custom,
-                            allowedExtensions: [
-                              'jpg',
-                              'jpeg',
-                              'png',
-                              'pdf',
-                              'doc',
-                              'docx'
-                            ],
-                          );
+                        CustomButton(
+                          text: translation(context).experienceProof,
+                          onPressed: () async {
+                            FilePickerResult? result =
+                                await FilePicker.platform.pickFiles(
+                              allowMultiple: true,
+                              type: FileType.custom,
+                              allowedExtensions: [
+                                'jpg',
+                                'jpeg',
+                                'png',
+                                'pdf',
+                                'doc',
+                                'docx'
+                              ],
+                            );
 
-                          if (result != null) {
-                            // Process the selected files
-                            for (PlatformFile file in result.files) {
-                              String imageUrl;
-                              if (kIsWeb) {
-                                // For web, use the bytes property instead of path
-                                final String fileName = file.name;
-                                final Uint8List fileBytes = file.bytes!;
-
-                                // Upload file to Firebase Storage
-                                imageUrl = await uploadFileFromBytes(
-                                  fileBytes: fileBytes,
-                                  originalFileName: fileName,
-                                );
-                              } else {
-                                // For other platforms, handle file uploads using path
-                                final String filePath = file.path!;
-
-                                // Upload file to Firebase Storage
-                                imageUrl = await uploadFileToStorage(filePath);
-                              }
-
-                              // Store the image URL in Firestore
-                              await uploadImageUrl4ToFirestore(imageUrl);
-                              expImageUrls.add(imageUrl);
-
-                              // Display the uploaded file (Experience Proof) with its URL
-                              final urlDownload = await FirebaseStorage.instance
-                                  .ref()
-                                  .child('uploads/${file.name}')
-                                  .getDownloadURL();
-                              displayUploadedFileExpProof(
-                                  urlDownload, file.name);
-                            }
-                          } else {
-                            // User canceled the file picker
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: 40),
-                Expanded(
-                  child: Column(
-                    children: [
-                      if (uploadedImageUrlForCV != null)
-                        Container(
-                          width: 100,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black, width: 2),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: CachedNetworkImage(
-                            imageUrl: uploadedImageUrlForCV!,
-                            fit: BoxFit.cover,
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) {
-                              return Center(
-                                child: CircularProgressIndicator(
-                                    value: downloadProgress.progress),
-                              );
-                            },
-                            errorWidget: (context, url, error) {
-                              print('Error loading image: $error');
-                              return Placeholder(); // You can replace this with any placeholder widget
-                            },
-                          ),
-                        ),
-                      CustomButton(
-                        text: translation(context).cv,
-                        onPressed: () async {
-                          FilePickerResult? result =
-                              await FilePicker.platform.pickFiles(
-                            allowMultiple: true,
-                            type: FileType.custom,
-                            allowedExtensions: [
-                              'jpg',
-                              'jpeg',
-                              'png',
-                              'pdf',
-                              'doc',
-                              'docx'
-                            ],
-                          );
-
-                          if (result != null) {
-                            try {
+                            if (result != null) {
                               // Process the selected files
                               for (PlatformFile file in result.files) {
                                 String imageUrl;
@@ -1104,201 +1025,282 @@ class _GreyUserUpload extends State<GreyUserUpload> {
                                 }
 
                                 // Store the image URL in Firestore
-                                await uploadImageUrl5ToFirestore(imageUrl);
-                                cvImageUrls.add(
-                                    imageUrl); // Add the image URL to cvImageUrls
+                                await uploadImageUrl4ToFirestore(imageUrl);
+                                expImageUrls.add(imageUrl);
 
-                                // Display the uploaded file (CV) with its URL
+                                // Display the uploaded file (Experience Proof) with its URL
                                 final urlDownload = await FirebaseStorage
                                     .instance
                                     .ref()
                                     .child('uploads/${file.name}')
                                     .getDownloadURL();
-                                displayUploadedFileCv(urlDownload, file.name);
+                                displayUploadedFileExpProof(
+                                    urlDownload, file.name);
                               }
-                            } catch (e) {
-                              print('Error uploading CV: $e');
-                              // Handle error
+                            } else {
+                              // User canceled the file picker
                             }
-                          } else {
-                            // User canceled the file picker
-                          }
-                        },
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 40),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        if (uploadedImageUrlForCV != null)
+                          Container(
+                            width: 100,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black, width: 2),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: CachedNetworkImage(
+                              imageUrl: uploadedImageUrlForCV!,
+                              fit: BoxFit.cover,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                      value: downloadProgress.progress),
+                                );
+                              },
+                              errorWidget: (context, url, error) {
+                                print('Error loading image: $error');
+                                return Placeholder(); // You can replace this with any placeholder widget
+                              },
+                            ),
+                          ),
+                        CustomButton(
+                          text: translation(context).cv,
+                          onPressed: () async {
+                            FilePickerResult? result =
+                                await FilePicker.platform.pickFiles(
+                              allowMultiple: true,
+                              type: FileType.custom,
+                              allowedExtensions: [
+                                'jpg',
+                                'jpeg',
+                                'png',
+                                'pdf',
+                                'doc',
+                                'docx'
+                              ],
+                            );
+
+                            if (result != null) {
+                              try {
+                                // Process the selected files
+                                for (PlatformFile file in result.files) {
+                                  String imageUrl;
+                                  if (kIsWeb) {
+                                    // For web, use the bytes property instead of path
+                                    final String fileName = file.name;
+                                    final Uint8List fileBytes = file.bytes!;
+
+                                    // Upload file to Firebase Storage
+                                    imageUrl = await uploadFileFromBytes(
+                                      fileBytes: fileBytes,
+                                      originalFileName: fileName,
+                                    );
+                                  } else {
+                                    // For other platforms, handle file uploads using path
+                                    final String filePath = file.path!;
+
+                                    // Upload file to Firebase Storage
+                                    imageUrl =
+                                        await uploadFileToStorage(filePath);
+                                  }
+
+                                  // Store the image URL in Firestore
+                                  await uploadImageUrl5ToFirestore(imageUrl);
+                                  cvImageUrls.add(
+                                      imageUrl); // Add the image URL to cvImageUrls
+
+                                  // Display the uploaded file (CV) with its URL
+                                  final urlDownload = await FirebaseStorage
+                                      .instance
+                                      .ref()
+                                      .child('uploads/${file.name}')
+                                      .getDownloadURL();
+                                  displayUploadedFileCv(urlDownload, file.name);
+                                }
+                              } catch (e) {
+                                print('Error uploading CV: $e');
+                                // Handle error
+                              }
+                            } else {
+                              // User canceled the file picker
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        translation(context).currentCountry,
+                        style: TextStyle(
+                            fontFamily: 'Poppins', fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 60),
+                      Text(
+                        translation(context).currentState,
+                        style: TextStyle(
+                            fontFamily: 'Poppins', fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 60,
+                      ),
+                      Text(
+                        translation(context).currentCity,
+                        style: TextStyle(
+                            fontFamily: 'Poppins', fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 50,
-            ),
-            Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      translation(context).currentCountry,
-                      style: TextStyle(
-                          fontFamily: 'Poppins', fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 60),
-                    Text(
-                      translation(context).currentState,
-                      style: TextStyle(
-                          fontFamily: 'Poppins', fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 60,
-                    ),
-                    Text(
-                      translation(context).currentCity,
-                      style: TextStyle(
-                          fontFamily: 'Poppins', fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                SizedBox(
-                  width: 200,
-                  child: CountryStateCityPicker(
-                      country: controller.country,
-                      state: controller.state,
-                      city: controller.city,
-                      textFieldDecoration: InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          suffixIcon: const Icon(
-                            Icons.arrow_downward_rounded,
-                            size: 20,
+                  SizedBox(
+                    width: 20,
+                  ),
+                  SizedBox(
+                    width: 200,
+                    child: CountryStateCityPicker(
+                        country: controller.country,
+                        state: controller.state,
+                        city: controller.city,
+                        textFieldDecoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            suffixIcon: const Icon(
+                              Icons.arrow_downward_rounded,
+                              size: 20,
+                            ),
+                            border: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black)))),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        translation(context).expectedWage,
+                        style: TextStyle(
+                            fontFamily: 'Poppins', fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 60),
+                      Text(
+                        translation(context).currentWage,
+                        style: TextStyle(
+                            fontFamily: 'Poppins', fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    width: 40,
+                  ),
+                  Column(
+                    children: [
+                      SizedBox(
+                        width: 400,
+                        height: 40,
+                        child: TextFormField(
+                          onChanged: (value) {
+                            // Define your onChanged logic here
+                            // For example, if you want to update the value of `controller.expectedwage`, you can do:
+                            controller.expectedwage.text = value;
+                          },
+                          controller: controller.expectedwage, // Set controller
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
                           ),
-                          border: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black)))),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      translation(context).expectedWage,
-                      style: TextStyle(
-                          fontFamily: 'Poppins', fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 60),
-                    Text(
-                      translation(context).currentWage,
-                      style: TextStyle(
-                          fontFamily: 'Poppins', fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  width: 40,
-                ),
-                Column(
-                  children: [
-                    SizedBox(
-                      width: 400,
-                      height: 40,
-                      child: TextFormField(
-                        onChanged: (value) {
-                          // Define your onChanged logic here
-                          // For example, if you want to update the value of `controller.expectedwage`, you can do:
-                          controller.expectedwage.text = value;
-                        },
-                        controller: controller.expectedwage, // Set controller
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 40),
-                    SizedBox(
-                      width: 400,
-                      height: 40,
-                      child: TextFormField(
-                        controller: controller.currentwage,
-                        onChanged: (value) {
-                          // Define your onChanged logic here
-                          // For example, if you want to update the value of `controller.expectedwage`, you can do:
-                          controller.currentwage.text = value;
-                        }, // Set controller
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
+                      SizedBox(height: 40),
+                      SizedBox(
+                        width: 400,
+                        height: 40,
+                        child: TextFormField(
+                          controller: controller.currentwage,
+                          onChanged: (value) {
+                            // Define your onChanged logic here
+                            // For example, if you want to update the value of `controller.expectedwage`, you can do:
+                            controller.currentwage.text = value;
+                          }, // Set controller
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 250,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CustomButton(
-                  text: translation(context).back,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Registration()),
-                    );
-                  },
-                ),
-                SizedBox(width: 50),
-                CustomButton(
-                  text: translation(context).next,
-                  onPressed: () async {
-                    try {
-                      // Prepare data to pass to the payment page
-                      final Map<String, Object> data = {
-                        'name': controller.name.text,
-                        'email': controller.email.text,
-                        'mobile': controller.mobile.text,
-                        'worktitle': controller.worktitle.text,
-                        "aadharno": controller.aadharno.text,
-                        "gender": controller.gender.text,
-                        "workexp": controller.workexp.text,
-                        "qualification": controller.qualification.text,
-                        "state": controller.state.text,
-                        "address": controller.address.text,
-                        'workins': controller.workins,
-                        "city": controller.city.text,
-                        "country": controller.country.text,
-                        'skills': controller.skills,
-                        "label": controller.selectedOption.text,
-                        "expectedwage": controller.expectedwage.text,
-                        "currentwage": controller.currentwage.text,
-                        "imageUrls1": pictureImageUrls,
-                        "imageUrls2": aadharImageUrls,
-                        "imageUrls3": voteImageUrls,
-                        "imageUrls4": expImageUrls,
-                        "imageUrls5": cvImageUrls,
-                      };
-
-                      // Navigate to the payment page with user data and image URLs
-                      Navigator.pushNamed(
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 250,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  CustomButton(
+                    text: translation(context).back,
+                    onPressed: () {
+                      Navigator.push(
                         context,
-                        '/payment',
-                        arguments: data,
+                        MaterialPageRoute(
+                            builder: (context) => const Registration()),
                       );
-                    } catch (e) {
-                      print('Error navigating to payment page: $e');
-                      // Handle error
-                    }
-                  },
-                ),
-              ],
-            )
-          ],
+                    },
+                  ),
+                  SizedBox(width: 50),
+                  CustomButton(
+                    text: translation(context).next,
+                    onPressed: _register,
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _register() async {
+    try {
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: widget.email!,
+        password: widget.password!,
+      );
+      // User creation successful
+      print("User created: ${userCredential.user!.email}");
+
+      // You can navigate to another page or perform any post-registration tasks here.
+    } catch (e) {
+      // Handle any errors that occurred during user creation
+      print("Error creating user: $e");
+      // You can display an error message to the user or handle it in any way you prefer.
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NewUserPayment(
+          name: widget.name!,
+          email: widget.email!.trim(),
+          password: widget.password!,
         ),
       ),
     );

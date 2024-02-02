@@ -886,7 +886,7 @@ class _RegistrationState extends State<Registration> {
                                 groupValue: widget.selectedOption,
                                 onChanged: null),
                             Text(
-                              'Grey Collar',
+                              'Blue Collar',
                               style: TextStyle(
                                   color: Colors.grey.shade500,
                                   fontFamily: 'Poppins',
@@ -910,7 +910,7 @@ class _RegistrationState extends State<Registration> {
                             },
                           ),
                           Text(
-                            'Grey Collar',
+                            'Blue Collar',
                             style: TextStyle(
                                 color: Colors.grey.shade800,
                                 fontFamily: 'Poppins',
@@ -1023,7 +1023,7 @@ class _RegistrationState extends State<Registration> {
                                   height: 40,
                                 ),
                                 CustomTextfield(
-                                  validator: nameValidator,
+                                  // validator: nameValidator,
                                   onchanged: (value) {
                                     // Define your onChanged logic here
                                     // For example, if you want to update the value of `controller.expectedwage`, you can do:
@@ -1035,14 +1035,14 @@ class _RegistrationState extends State<Registration> {
                                   height: 40,
                                 ),
                                 CustomTextfield(
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return '*Required';
-                                    } else if (value.length != 12) {
-                                      return 'Aadhar Number must be of 12 digit';
-                                    }
-                                    return null;
-                                  },
+                                  // validator: (value) {
+                                  //   if (value!.isEmpty) {
+                                  //     return '*Required';
+                                  //   } else if (value.length != 12) {
+                                  //     return 'Aadhar Number must be of 12 digit';
+                                  //   }
+                                  //   return null;
+                                  // },
                                   controller: controller.aadharno,
                                   onchanged: (value) {
                                     // Define your onChanged logic here
@@ -1088,7 +1088,7 @@ class _RegistrationState extends State<Registration> {
                             child: Column(
                               children: [
                                 CustomTextfield(
-                                  validator: nameValidator,
+                                  // validator: nameValidator,
                                   onchanged: (value) {
                                     // Define your onChanged logic here
                                     // For example, if you want to update the value of `controller.expectedwage`, you can do:
@@ -1100,7 +1100,7 @@ class _RegistrationState extends State<Registration> {
                                   height: 40,
                                 ),
                                 CustomTextfield(
-                                  validator: workexpValidator,
+                                  // validator: workexpValidator,
                                   onchanged: (value) {
                                     // Define your onChanged logic here
                                     // For example, if you want to update the value of `controller.expectedwage`, you can do:
@@ -1217,7 +1217,7 @@ class _RegistrationState extends State<Registration> {
                         SizedBox(width: 60),
                         Expanded(
                             child: CustomTextfield(
-                          validator: workexpValidator,
+                          // validator: workexpValidator,
                           onchanged: (value) {
                             // Define your onChanged logic here
                             // For example, if you want to update the value of `controller.expectedwage`, you can do:
@@ -1241,7 +1241,7 @@ class _RegistrationState extends State<Registration> {
                         SizedBox(width: 60),
                         Expanded(
                             child: CustomTextfield(
-                          validator: validatePassword,
+                          // validator: validatePassword,
                           onchanged: (value) {
                             // Define your onChanged logic here
                             // For example, if you want to update the value of `controller.expectedwage`, you can do:
@@ -1274,12 +1274,12 @@ class _RegistrationState extends State<Registration> {
                             // For example, if you want to update the value of `controller.expectedwage`, you can do:
                             controller.mobile.text = value;
                           },
-                          validator: (value) {
-                            if (value!.length != 10)
-                              return 'Mobile Number must be of 10 digit';
-                            else
-                              return null;
-                          },
+                          //  validator : (value) {
+                          //     if (value!.length != 10)
+                          //       return 'Mobile Number must be of 10 digit';
+                          //     else
+                          //       return null;
+                          //   },
                         )),
                         SizedBox(
                           height: 30,
@@ -2056,11 +2056,47 @@ class _RegistrationState extends State<Registration> {
                                 // );
                                 // await assignUserRole(
                                 //     userCredential.user!.uid, 'Blue');
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => GreyUserUpload()),
-                                );
+                                print('Name: ${controller.name.text}');
+                                print('Email: ${controller.email.text.trim()}');
+                                print('Password: ${controller.password.text}');
+                                String name = controller.name.text;
+                                String email = controller.email.text.trim();
+                                String password = controller.password.text;
+
+                                if (name.isNotEmpty &&
+                                    email.isNotEmpty &&
+                                    password.isNotEmpty) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => NewUserUpload(
+                                        name: name,
+                                        email: email,
+                                        password: password,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  // Display an error message or handle the case where one or more arguments are empty or null
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Error'),
+                                        content:
+                                            Text('Please fill in all fields.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('OK'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
                               }
                             },
                           ),
