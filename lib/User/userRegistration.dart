@@ -910,7 +910,7 @@ class _RegistrationState extends State<Registration> {
                             },
                           ),
                           Text(
-                            'Grey Collar',
+                            'Blue Collar',
                             style: TextStyle(
                                 color: Colors.grey.shade800,
                                 fontFamily: 'Poppins',
@@ -1025,14 +1025,14 @@ class _RegistrationState extends State<Registration> {
                                   height: 40,
                                 ),
                                 CustomTextfield(
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return '*Required';
-                                    } else if (value.length != 12) {
-                                      return 'Aadhar Number must be of 12 digit';
-                                    }
-                                    return null;
-                                  },
+                                  // validator: (value) {
+                                  //   if (value!.isEmpty) {
+                                  //     return '*Required';
+                                  //   } else if (value.length != 12) {
+                                  //     return 'Aadhar Number must be of 12 digit';
+                                  //   }
+                                  //   return null;
+                                  // },
                                   controller: controller.aadharno,
                                 ),
                               ],
@@ -2012,11 +2012,47 @@ class _RegistrationState extends State<Registration> {
                                 // );
                                 // await assignUserRole(
                                 //     userCredential.user!.uid, 'Blue');
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => GreyUserUpload()),
-                                );
+                                print('Name: ${controller.name.text}');
+                                print('Email: ${controller.email.text.trim()}');
+                                print('Password: ${controller.password.text}');
+                                String name = controller.name.text;
+                                String email = controller.email.text.trim();
+                                String password = controller.password.text;
+
+                                if (name.isNotEmpty &&
+                                    email.isNotEmpty &&
+                                    password.isNotEmpty) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => NewUserUpload(
+                                        name: name,
+                                        email: email,
+                                        password: password,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  // Display an error message or handle the case where one or more arguments are empty or null
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Error'),
+                                        content:
+                                            Text('Please fill in all fields.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('OK'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
                               }
                             },
                           ),

@@ -71,6 +71,7 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
     return Scaffold(
       appBar: AppBar(
         title: HireMeInIndia(),
+        automaticallyImplyLeading: false,
         centerTitle: false,
         toolbarHeight: 80,
         backgroundColor: Colors.transparent,
@@ -264,32 +265,44 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
                 ),
                 SizedBox(width: 40),
                 SizedBox(
-                  height: 30,
-                  width: 30,
+                  height: 38,
+                  width: 38,
                   child: CircleAvatar(
                     backgroundColor: Colors.black,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.person,
-                        color: Colors.indigo.shade900,
+                    child: SizedBox(
+                      width: 36,
+                      height: 36,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.person_outline_outlined,
+                          size: 35,
+                          color: Colors.indigo.shade900,
+                        ),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(width: 8.0),
                 Padding(
-                  padding: const EdgeInsets.only(top: 20),
+                  padding: EdgeInsets.only(top: 15),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Guest',
-                        style: TextStyle(color: Colors.black),
+                        'New',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.indigo.shade900,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Text(
                         'User',
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.indigo.shade900,
+                            height: 0),
                       ),
                     ],
                   ),
@@ -304,20 +317,24 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 45),
+              SizedBox(height: 37),
+              Padding(
+                padding: const EdgeInsets.only(left: 160),
+                child: Row(
+                  children: [
+                    Text(
+                      translation(context).registerAsANewUser,
+                      style: TextStyle(fontSize: 30, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.only(left: 170, right: 170),
                 child: Container(
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 1400),
-                        child: Text(
-                          translation(context).registerAsANewUser,
-                          style: TextStyle(fontSize: 30, color: Colors.grey),
-                        ),
-                      ),
-                      SizedBox(height: 45),
                       Row(
                         children: [
                           Column(
@@ -378,6 +395,7 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
                           ),
                           SizedBox(
                             width: 43,
+                            height: 30,
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
