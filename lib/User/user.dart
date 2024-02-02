@@ -30,6 +30,8 @@ class Candidate {
   final String? imageUrl3;
   final String? imageUrl4;
   final String? imageUrl5;
+  final String? operator;
+  final String? verified;
   final String? imageUrl;
   final DocumentReference? reference;
 

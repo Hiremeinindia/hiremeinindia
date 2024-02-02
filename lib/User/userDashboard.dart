@@ -14,9 +14,9 @@ import '../widgets/custombutton.dart';
 import '../widgets/hiremeinindia.dart';
 
 class UserDashboard extends StatefulWidget {
-  final User? user;
+  final User user;
 
-  UserDashboard({Key? key, this.user}) : super(key: key);
+  UserDashboard({Key? key, required this.user});
 
   @override
   State<UserDashboard> createState() => _UserDashboard();
@@ -25,44 +25,39 @@ class UserDashboard extends StatefulWidget {
 class _UserDashboard extends State<UserDashboard> {
   bool isChecked = false;
   bool dropdownValue = false;
-  String? _userName;
+  bool isArrowClick = false;
+  late Stream<Map<String, dynamic>?> userStream;
+  String _userName = '';
+  List<String> _skills = [];
 
   @override
   void initState() {
     super.initState();
-    // Fetch the user name when the widget is initialized
-    getData();
+    userStream = fetchData().map((data) => data);
   }
 
-  void getData() async {
+  Stream<Map<String, dynamic>?> fetchData() {
     try {
-      // Fetch the user document from Firestore
-      DocumentSnapshot<Map<String, dynamic>> userDoc = await FirebaseFirestore
-          .instance
+      return FirebaseFirestore.instance
           .collection('greycollaruser')
           .doc(widget.user!.uid)
-          .get();
-
-      // Check if the document exists
-      if (userDoc.exists) {
-        // Retrieve the username from the document
-        String? username = userDoc.data()?['name'];
-
-        // Update the state with the retrieved username
-        setState(() {
-          if (username != null && username.isNotEmpty) {
-            _userName = username;
-          } else {
-            _userName = 'Name not available';
-          }
-        });
-      } else {
-        // Document doesn't exist
-        print('User not found in Firestore.');
-      }
+          .snapshots()
+          .map((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+        if (documentSnapshot.exists) {
+          Map<String, dynamic> data = documentSnapshot.data()!;
+          String name = data['name'];
+          List<String> skills = List<String>.from(data['skills']);
+          _userName = name;
+          _skills = skills;
+          return data;
+        } else {
+          print('Document does not exist');
+          return null;
+        }
+      });
     } catch (e) {
-      // Handle errors
-      print('Error retrieving username: $e');
+      print('Error fetching data: $e');
+      return Stream.value(null);
     }
   }
 
@@ -193,68 +188,71 @@ class _UserDashboard extends State<UserDashboard> {
                         decoration: BoxDecoration(
                           color: Colors.indigo.shade900,
                         ),
-                        child: DropdownButton2<String>(
-                          isExpanded: true,
-                          items: [
-                            DropdownMenuItem<String>(
-                              value: 'Option 1',
-                              child: Text('Option 1'),
-                            ),
-                            DropdownMenuItem<String>(
-                              value: 'Option 2',
-                              child: Text('Option 1'),
-                            ),
-                            // Add more options as needed
-                          ],
-                          onChanged: (value) {
-                            // Handle option selection
-                          },
-                          hint: Text(
-                            AppLocalizations.of(context)!.findaJob,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          buttonStyleData: ButtonStyleData(
-                            height: 30,
-                            width: 200,
-                            elevation: 1,
-                            padding: const EdgeInsets.only(left: 14, right: 14),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(
-                                color: Colors.black26,
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            isExpanded: true,
+                            items: [
+                              DropdownMenuItem<String>(
+                                value: 'Option 1',
+                                child: Text('Option 1'),
                               ),
-                              color: Colors.indigo.shade900,
+                              DropdownMenuItem<String>(
+                                value: 'Option 2',
+                                child: Text('Option 1'),
+                              ),
+                              // Add more options as needed
+                            ],
+                            onChanged: (value) {
+                              // Handle option selection
+                            },
+                            hint: Text(
+                              AppLocalizations.of(context)!.findaJob,
+                              style: TextStyle(color: Colors.white),
                             ),
-                          ),
-                          iconStyleData: const IconStyleData(
-                            icon: Icon(
-                              Icons.arrow_drop_down_sharp,
+                            buttonStyleData: ButtonStyleData(
+                              height: 30,
+                              width: 200,
+                              elevation: 1,
+                              padding:
+                                  const EdgeInsets.only(left: 14, right: 14),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                  color: Colors.black26,
+                                ),
+                                color: Colors.indigo.shade900,
+                              ),
                             ),
-                            iconSize: 25,
-                            iconEnabledColor: Colors.white,
-                            iconDisabledColor: null,
-                          ),
-                          dropdownStyleData: DropdownStyleData(
-                            maxHeight: 210,
-                            width: 156,
-                            elevation: 0,
-                            padding: EdgeInsets.only(
-                                left: 10, right: 10, top: 5, bottom: 15),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(color: Colors.black),
-                              color: Colors.indigo.shade900,
+                            iconStyleData: const IconStyleData(
+                              icon: Icon(
+                                Icons.arrow_drop_down_sharp,
+                              ),
+                              iconSize: 25,
+                              iconEnabledColor: Colors.white,
+                              iconDisabledColor: null,
                             ),
-                            scrollPadding: EdgeInsets.all(5),
-                            scrollbarTheme: ScrollbarThemeData(
-                              thickness: MaterialStateProperty.all<double>(6),
-                              thumbVisibility:
-                                  MaterialStateProperty.all<bool>(true),
+                            dropdownStyleData: DropdownStyleData(
+                              maxHeight: 210,
+                              width: 156,
+                              elevation: 0,
+                              padding: EdgeInsets.only(
+                                  left: 10, right: 10, top: 5, bottom: 15),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(color: Colors.black),
+                                color: Colors.indigo.shade900,
+                              ),
+                              scrollPadding: EdgeInsets.all(5),
+                              scrollbarTheme: ScrollbarThemeData(
+                                thickness: MaterialStateProperty.all<double>(6),
+                                thumbVisibility:
+                                    MaterialStateProperty.all<bool>(true),
+                              ),
                             ),
-                          ),
-                          menuItemStyleData: const MenuItemStyleData(
-                            height: 25,
-                            padding: EdgeInsets.only(left: 14, right: 14),
+                            menuItemStyleData: const MenuItemStyleData(
+                              height: 25,
+                              padding: EdgeInsets.only(left: 14, right: 14),
+                            ),
                           ),
                         ),
                       ),
@@ -262,28 +260,60 @@ class _UserDashboard extends State<UserDashboard> {
                   ),
                   SizedBox(width: 40),
                   SizedBox(
-                    height: 30,
-                    width: 30,
+                    height: 38,
+                    width: 38,
                     child: CircleAvatar(
                       backgroundColor: Colors.black,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.person,
-                          color: Colors.indigo.shade900,
+                      child: SizedBox(
+                        width: 36,
+                        height: 36,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: Icon(
+                            Icons.person_outline_outlined,
+                            size: 35,
+                            color: Colors.indigo.shade900,
+                          ),
                         ),
                       ),
                     ),
                   ),
                   SizedBox(width: 8.0),
-                  Text(
-                    'Hello $_userName', // Display the fetched username
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 20,
-                      color: Colors.indigo,
-                      fontWeight: FontWeight.w900,
-                    ),
+                  StreamBuilder<Map<String, dynamic>?>(
+                    stream: userStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData && snapshot.data != null) {
+                        // Display the user's name
+                        return Padding(
+                          padding: EdgeInsets.only(top: 15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '$_userName',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.indigo.shade900,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                '$_skills',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.indigo.shade900,
+                                    height: 0),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        // Loading or error state
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    },
                   ),
                 ],
               ),
@@ -313,35 +343,79 @@ class _UserDashboard extends State<UserDashboard> {
               SizedBox(
                 height: 10,
               ),
-              DropdownButtonFormField<String>(
-                icon: const Icon(Icons.arrow_drop_down_sharp),
-                iconSize: 40,
-                iconEnabledColor: Colors.indigo,
-                decoration: InputDecoration(border: InputBorder.none),
-                hint: const Text(
-                  'Hello Saravanan',
-                  style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 20,
-                      color: Colors.indigo,
-                      fontWeight: FontWeight.w900),
-                ),
-                dropdownColor: Colors.indigo,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    dropdownValue = newValue! as bool;
-                  });
-                },
-                items: <String>['Apple', 'Mango', 'Banana', 'Peach']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: TextStyle(color: Colors.white),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: StreamBuilder<Map<String, dynamic>?>(
+                            stream: userStream,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData && snapshot.data != null) {
+                                // Display the user's name
+                                return Center(
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'Hello $_userName',
+                                        style: CustomTextStyle.nameOfUser,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      IconButton(
+                                        hoverColor: Colors.transparent,
+                                        icon: Icon(Icons.arrow_drop_down_sharp),
+                                        iconSize: 30,
+                                        color: Colors.indigo.shade900,
+                                        onPressed: () {
+                                          setState(() {
+                                            isArrowClick = !isArrowClick;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                // Loading or error state
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                        StreamBuilder<Map<String, dynamic>?>(
+                          stream: userStream,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData && snapshot.data != null) {
+                              // Display the user's name
+                              return Visibility(
+                                visible: isArrowClick,
+                                child: Text(
+                                  '$_skills',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.indigo.shade900,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Poppins'),
+                                ),
+                              );
+                            } else {
+                              // Loading or error state
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
+                        ),
+                      ],
                     ),
-                  );
-                }).toList(),
+                  ],
+                ),
               ),
               SizedBox(
                 height: 50,
