@@ -208,92 +208,86 @@ class _CompanyViewUser extends State<CompanyViewUser> {
                   ],
                 ),
                 Row(
+                  textDirection: TextDirection.ltr,
                   children: [
-                    Expanded(
-                      child: Row(
-                        textDirection: TextDirection.ltr,
-                        children: [
-                          Container(
-                            constraints:
-                                BoxConstraints(minWidth: 100, maxWidth: 200),
-                            height: 100.0,
-                            margin: const EdgeInsets.only(bottom: 6.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5.0),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  offset: Offset(0.0, 1.0), //(x,y)
-                                  blurRadius: 6.0,
-                                ),
-                              ],
+                    Flexible(
+                      flex: 1,
+                      fit: FlexFit.tight,
+                      child: Container(
+                        width: 300,
+                        margin: const EdgeInsets.only(bottom: 6.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(0.0, 1.0), //(x,y)
+                              blurRadius: 6.0,
                             ),
-                            child: Column(children: [
-                              CircleAvatar(
-                                backgroundColor: Colors.indigo.shade900,
-                                maxRadius: 68,
-                                minRadius: 67.5,
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  maxRadius: 66,
-                                  minRadius: 60,
-                                  child: CircleAvatar(
-                                    backgroundImage: AssetImage('imguser.jpg'),
-                                    maxRadius: 59,
-                                    minRadius: 56,
+                          ],
+                        ),
+                        child: Column(children: [
+                          CircleAvatar(
+                            backgroundColor: Colors.indigo.shade900,
+                            maxRadius: 68,
+                            minRadius: 67.5,
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              maxRadius: 66,
+                              minRadius: 60,
+                              child: CircleAvatar(
+                                backgroundImage: AssetImage('imguser.jpg'),
+                                maxRadius: 59,
+                                minRadius: 56,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'Name',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.indigo.shade900,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'Designation',
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.indigo.shade900,
+                                height: 0),
+                          ),
+                        ]),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Container(
+                              constraints: BoxConstraints(
+                                maxHeight: MediaQuery.of(context).size.height,
+                              ),
+                              width:
+                                  MediaQuery.of(context).size.width * 8.5 / 10,
+                              child: Card(
+                                child: Container(
+                                  child: Text(
+                                    'Basic Details',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.indigo.shade900,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),
-                              Text(
-                                'Name',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.indigo.shade900,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                'Designation',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.indigo.shade900,
-                                    height: 0),
-                              ),
-                            ]),
-                          ),
-                          Expanded(
-                            child: Container(
-                              child: Column(
-                                children: [
-                                  Container(
-                                    constraints: BoxConstraints(
-                                      maxHeight:
-                                          MediaQuery.of(context).size.height,
-                                    ),
-                                    width: MediaQuery.of(context).size.width *
-                                        8.5 /
-                                        10,
-                                    child: Card(
-                                      child: Container(
-                                        child: Text(
-                                          'Basic Details',
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.indigo.shade900,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
-                    ),
+                    )
                   ],
                 ),
               ],
