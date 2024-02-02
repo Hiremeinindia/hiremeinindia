@@ -1119,188 +1119,188 @@ class _NewUserUpload extends State<NewUserUpload> {
                                   cvImageUrls.add(
                                       imageUrl); // Add the image URL to cvImageUrls
 
-                                  // Display the uploaded file (CV) with its URL
-                                  final urlDownload = await FirebaseStorage
-                                      .instance
-                                      .ref()
-                                      .child('uploads/${file.name}')
-                                      .getDownloadURL();
-                                  displayUploadedFileCv(urlDownload, file.name);
-                                }
-                              } catch (e) {
-                                print('Error uploading CV: $e');
-                                // Handle error
+                                // Display the uploaded file (CV) with its URL
+                                final urlDownload = await FirebaseStorage
+                                    .instance
+                                    .ref()
+                                    .child('uploads/${file.name}')
+                                    .getDownloadURL();
+                                displayUploadedFileCv(urlDownload, file.name);
                               }
-                            } else {
-                              // User canceled the file picker
+                            } catch (e) {
+                              print('Error uploading CV: $e');
+                              // Handle error
                             }
-                          },
-                        ),
-                      ],
+                          } else {
+                            // User canceled the file picker
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 50,
+            ),
+            Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      translation(context).currentCountry,
+                      style: TextStyle(
+                          fontFamily: 'Poppins', fontWeight: FontWeight.bold),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        translation(context).currentCountry,
-                        style: TextStyle(
-                            fontFamily: 'Poppins', fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 60),
-                      Text(
-                        translation(context).currentState,
-                        style: TextStyle(
-                            fontFamily: 'Poppins', fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 60,
-                      ),
-                      Text(
-                        translation(context).currentCity,
-                        style: TextStyle(
-                            fontFamily: 'Poppins', fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  SizedBox(
-                    width: 200,
-                    child: CountryStateCityPicker(
-                        country: controller.country,
-                        state: controller.state,
-                        city: controller.city,
-                        textFieldDecoration: InputDecoration(
-                            fillColor: Colors.white,
-                            filled: true,
-                            suffixIcon: const Icon(
-                              Icons.arrow_downward_rounded,
-                              size: 20,
-                            ),
-                            border: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black)))),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        translation(context).expectedWage,
-                        style: TextStyle(
-                            fontFamily: 'Poppins', fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 60),
-                      Text(
-                        translation(context).currentWage,
-                        style: TextStyle(
-                            fontFamily: 'Poppins', fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 40,
-                  ),
-                  Column(
-                    children: [
-                      SizedBox(
-                        width: 400,
-                        height: 40,
-                        child: TextFormField(
-                          onChanged: (value) {
-                            // Define your onChanged logic here
-                            // For example, if you want to update the value of `controller.expectedwage`, you can do:
-                            controller.expectedwage.text = value;
-                          },
-                          controller: controller.expectedwage, // Set controller
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
+                    SizedBox(height: 60),
+                    Text(
+                      translation(context).currentState,
+                      style: TextStyle(
+                          fontFamily: 'Poppins', fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 60,
+                    ),
+                    Text(
+                      translation(context).currentCity,
+                      style: TextStyle(
+                          fontFamily: 'Poppins', fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                SizedBox(
+                  width: 200,
+                  child: CountryStateCityPicker(
+                      country: controller.country,
+                      state: controller.state,
+                      city: controller.city,
+                      textFieldDecoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          suffixIcon: const Icon(
+                            Icons.arrow_downward_rounded,
+                            size: 20,
                           ),
+                          border: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black)))),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      translation(context).expectedWage,
+                      style: TextStyle(
+                          fontFamily: 'Poppins', fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 60),
+                    Text(
+                      translation(context).currentWage,
+                      style: TextStyle(
+                          fontFamily: 'Poppins', fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: 40,
+                ),
+                Column(
+                  children: [
+                    SizedBox(
+                      width: 400,
+                      height: 40,
+                      child: TextField(
+                        controller: controller.expectedwage, // Set controller
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
                         ),
                       ),
-                      SizedBox(height: 40),
-                      SizedBox(
-                        width: 400,
-                        height: 40,
-                        child: TextFormField(
-                          controller: controller.currentwage,
-                          onChanged: (value) {
-                            // Define your onChanged logic here
-                            // For example, if you want to update the value of `controller.expectedwage`, you can do:
-                            controller.currentwage.text = value;
-                          }, // Set controller
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                          ),
+                    ),
+                    SizedBox(height: 40),
+                    SizedBox(
+                      width: 400,
+                      height: 40,
+                      child: TextField(
+                        controller: controller.currentwage,
+                        // Set controller
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 250,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CustomButton(
-                    text: translation(context).back,
-                    onPressed: () {
-                      Navigator.push(
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 250,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CustomButton(
+                  text: translation(context).back,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Registration()),
+                    );
+                  },
+                ),
+                SizedBox(width: 50),
+                CustomButton(
+                  text: translation(context).next,
+                  onPressed: () async {
+                    try {
+                      // Prepare data to pass to the payment page
+                      final Map<String, Object> data = {
+                        'name': controller.name.text,
+                        'email': controller.email.text,
+                        'mobile': controller.mobile.text,
+                        'worktitle': controller.worktitle.text,
+                        "aadharno": controller.aadharno.text,
+                        "gender": controller.gender.text,
+                        "workexp": controller.workexp.text,
+                        "qualification": controller.qualification.text,
+                        "state": controller.state.text,
+                        "address": controller.address.text,
+                        'workins': controller.workins,
+                        "city": controller.city.text,
+                        "country": controller.country.text,
+                        'skills': controller.skills,
+                        "label": controller.selectedOption.text,
+                        "expectedwage": controller.expectedwage.text,
+                        "currentwage": controller.currentwage.text,
+                        "imageUrls1": pictureImageUrls,
+                        "imageUrls2": aadharImageUrls,
+                        "imageUrls3": voteImageUrls,
+                        "imageUrls4": expImageUrls,
+                        "imageUrls5": cvImageUrls,
+                      };
+
+                      // Navigate to the payment page with user data and image URLs
+                      Navigator.pushNamed(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => const Registration()),
+                        '/payment',
+                        arguments: data,
                       );
-                    },
-                  ),
-                  SizedBox(width: 50),
-                  CustomButton(
-                    text: translation(context).next,
-                    onPressed: _register,
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _register() async {
-    try {
-      UserCredential userCredential =
-          await _auth.createUserWithEmailAndPassword(
-        email: widget.email!,
-        password: widget.password!,
-      );
-      // User creation successful
-      print("User created: ${userCredential.user!.email}");
-
-      // You can navigate to another page or perform any post-registration tasks here.
-    } catch (e) {
-      // Handle any errors that occurred during user creation
-      print("Error creating user: $e");
-      // You can display an error message to the user or handle it in any way you prefer.
-    }
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => NewUserPayment(
-          name: widget.name!,
-          email: widget.email!.trim(),
-          password: widget.password!,
+                    } catch (e) {
+                      print('Error navigating to payment page: $e');
+                      // Handle error
+                    }
+                  },
+                ),
+              ],
+            )
+          ],
         ),
       ),
     );
