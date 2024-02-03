@@ -26,8 +26,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as path;
 
-import 'package:flutter/services.dart' show rootBundle;
-
 class NewUserUpload extends StatefulWidget {
   final Function(String)? handleForm;
   final Candidate? candidate;
@@ -35,6 +33,16 @@ class NewUserUpload extends StatefulWidget {
   final String? name;
   final String? email;
   final String? password;
+  final String? mobile;
+  final String? worktitle;
+  final String? aadharno;
+  final String? gender;
+  final String? workexp;
+  final String? qualification;
+  final String? address;
+  final String? label;
+  final List<String>? skills;
+  final List<String>? workins;
   const NewUserUpload({
     this.handleForm,
     this.candidate,
@@ -42,6 +50,16 @@ class NewUserUpload extends StatefulWidget {
     this.password,
     this.name,
     this.email,
+    this.address,
+    this.aadharno,
+    this.gender,
+    this.label,
+    this.worktitle,
+    this.mobile,
+    this.qualification,
+    this.skills,
+    this.workexp,
+    this.workins,
   }) : assert(name != null && email != null && password != null);
 
   @override
@@ -51,40 +69,15 @@ class NewUserUpload extends StatefulWidget {
 class _NewUserUpload extends State<NewUserUpload> {
   bool isChecked = false;
   String? uploadedMessage;
-  String? uploadedImageUrlAadhar;
-  String? uploadedImageUrlForPicture;
-  String? uploadedImageUrlForCV;
-  String? uploadedImageUrlForVoterId;
-  String? uploadedImageUrlForExperienceProof;
-  String? downloadURL1;
-  String? downloadURL2;
-  String? downloadURL3;
-  String? downloadURL4;
-  String? downloadURL5;
-  PlatformFile? pickedFile;
 
   UploadTask? uploadTask;
   final _formKey = GlobalKey<FormState>();
-  final List<String> items = ['Tamil', 'English', 'French', 'Malayalam'];
-  String? selectedValue;
-
-  String name = '';
-  String mobile = '';
-  String worktitle = '';
-
-  bool login = false;
-  String? countryValue;
-  String? stateValue;
-  String? cityValue;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   List<File> images = [];
-
   List<String> cvImageUrls = [];
   List<String> expImageUrls = [];
   List<String> voteImageUrls = [];
   List<String> pictureImageUrls = [];
   List<String> aadharImageUrls = [];
-  String _title = '';
   CandidateFormController controller = CandidateFormController();
 
   @override
@@ -93,118 +86,6 @@ class _NewUserUpload extends State<NewUserUpload> {
     controller.bluecoller.dispose();
     controller.state.dispose();
     super.dispose();
-  }
-
-  Future<List<String>> uploadImagesAndStoreUrls() async {
-    try {
-      List<String> imageUrls = await uploadImages(images);
-      await updateFirestoreDocument(imageUrls);
-      return imageUrls;
-    } catch (error) {
-      print('Error uploading images and storing URLs: $error');
-      throw error;
-    }
-  }
-
-  Future<List<String>> uploadImages(List<File> images) async {
-    List<String> imageUrls = [];
-    try {
-      for (File image in images) {
-        String fileName =
-            '${DateTime.now().millisecondsSinceEpoch}_${image.path.split('/').last}';
-        Reference ref =
-            FirebaseStorage.instance.ref().child('candidate_images/$fileName');
-        UploadTask uploadTask = ref.putFile(image);
-        TaskSnapshot snapshot = await uploadTask;
-        String urlDownload = await snapshot.ref.getDownloadURL();
-        imageUrls.add(urlDownload);
-      }
-      return imageUrls;
-    } catch (error) {
-      print('Error uploading images: $error');
-      throw error;
-    }
-  }
-
-  Future<void> updateFirestoreDocument(List<String> imageUrls) async {
-    try {
-      DocumentReference docRef =
-          FirebaseFirestore.instance.collection('users').doc();
-      await docRef.set({
-        'imageUrls': imageUrls,
-      });
-      print('Firestore document updated with image URLs.');
-    } catch (error) {
-      print('Error updating Firestore document with image URLs: $error');
-      throw error;
-    }
-  }
-
-  Future<void> assignUserRole(String uid, String role) async {
-    try {
-      String userCollection = 'greycollaruser';
-
-      // Assign the user role to the user
-      await FirebaseFirestore.instance.collection(userCollection).doc(uid).set({
-        'name': controller.name.text,
-        'email': controller.email.text,
-        'mobile': controller.mobile.text,
-        'worktitle': controller.worktitle.text,
-        "aadharno": controller.aadharno.text,
-        "gender": controller.gender.text,
-        "workexp": controller.workexp.text,
-        "qualification": controller.qualification.text,
-        "state": controller.state.text,
-        "address": controller.address.text,
-        'workins': controller.workins ?? [],
-        "city": controller.city.text,
-        "country": controller.country.text,
-        'skills': controller.skills ?? [],
-        'label': controller.selectedOption.text,
-        // Add additional user-related fields as needed
-      });
-    } catch (e) {
-      print('Error assigning user role: $e');
-    }
-  }
-
-  Future<void> uploadFileToFirestore(String filePath) async {
-    try {
-      final file = File(filePath);
-      final fileName = _extractFileName(filePath);
-
-      // Reference to Firebase Storage
-      final ref = FirebaseStorage.instance.ref().child('uploads/$fileName');
-
-      // Upload file to Firebase Storage
-      await ref.putFile(file);
-
-      // Get download URL
-      final urlDownload = await ref.getDownloadURL();
-
-      // Store file URL in Firestore
-      await FirebaseFirestore.instance
-          .collection('greyusercollar')
-          .doc(fileName)
-          .set({
-        'fileName': fileName,
-        'downloadURL': urlDownload,
-        // Add additional fields as needed
-      });
-
-      print('File uploaded successfully to Firebase Storage and Firestore');
-    } catch (e) {
-      print('Error uploading file to Firebase Storage and Firestore: $e');
-      // Handle the error, e.g., show a message to the user
-    }
-  }
-
-  String _extractFileName(String filePath) {
-    // Split the file path by the platform-specific separator
-    List<String> parts = filePath.split(Platform.pathSeparator);
-    // Get the last part, which represents the file name
-    String fileName = parts.last;
-    return fileName;
   }
 
 // Function to upload file from bytes (for web platform)
@@ -226,108 +107,85 @@ class _NewUserUpload extends State<NewUserUpload> {
     return await storageReference.getDownloadURL();
   }
 
-  Future<void> uploadImageUrlToFirestore(String imageUrl1) async {
-    try {
-      final DocumentReference documentReference =
-          FirebaseFirestore.instance.collection('greyusercollar').doc();
-      await documentReference.set({
-        'imageUrl': imageUrl1,
-        // Add additional fields if needed
-      });
-      print('Image URL uploaded to Firestore successfully.');
-    } catch (error) {
-      print('Error uploading image URL to Firestore: $error');
-      throw error;
-    }
-  }
+  // Future<void> uploadImageUrl1ToFirestore(String imgpic) async {
+  //   try {
+  //     final DocumentReference documentReference =
+  //         FirebaseFirestore.instance.collection('greyusercollar').doc();
+  //     await documentReference.set({
+  //       'imageUrl': imgpic,
+  //       // Add additional fields if needed
+  //     });
+  //     print('Image URL uploaded to Firestore successfully.');
+  //   } catch (error) {
+  //     print('Error uploading image URL to Firestore: $error');
+  //     throw error;
+  //   }
+  // }
 
-  Future<void> uploadImageUrl1ToFirestore(String imageUrl1) async {
-    try {
-      final DocumentReference documentReference =
-          FirebaseFirestore.instance.collection('greyusercollar').doc();
-      await documentReference.set({
-        'imageUrl': imageUrl1,
-        // Add additional fields if needed
-      });
-      print('Image URL uploaded to Firestore successfully.');
-    } catch (error) {
-      print('Error uploading image URL to Firestore: $error');
-      throw error;
-    }
-  }
+  // Future<void> uploadImageUrl2ToFirestore(String imgaadhar) async {
+  //   try {
+  //     final DocumentReference documentReference =
+  //         FirebaseFirestore.instance.collection('greyusercollar').doc();
+  //     await documentReference.set({
+  //       'imageUrl': imgaadhar,
+  //       // Add additional fields if needed
+  //     });
+  //     print('Image URL uploaded to Firestore successfully.');
+  //   } catch (error) {
+  //     print('Error uploading image URL to Firestore: $error');
+  //     throw error;
+  //   }
+  // }
 
-  Future<void> uploadImageUrl2ToFirestore(String imageUrl2) async {
-    try {
-      final DocumentReference documentReference =
-          FirebaseFirestore.instance.collection('greyusercollar').doc();
-      await documentReference.set({
-        'imageUrl': imageUrl2,
-        // Add additional fields if needed
-      });
-      print('Image URL uploaded to Firestore successfully.');
-    } catch (error) {
-      print('Error uploading image URL to Firestore: $error');
-      throw error;
-    }
-  }
+  // Future<void> uploadImageUrl3ToFirestore(String imgvoter) async {
+  //   try {
+  //     final DocumentReference documentReference =
+  //         FirebaseFirestore.instance.collection('greyusercollar').doc();
+  //     await documentReference.set({
+  //       'imageUrl': imgvoter,
+  //       // Add additional fields if needed
+  //     });
+  //     print('Image URL uploaded to Firestore successfully.');
+  //   } catch (error) {
+  //     print('Error uploading image URL to Firestore: $error');
+  //     throw error;
+  //   }
+  // }
 
-  Future<void> uploadImageUrl3ToFirestore(String imageUrl3) async {
-    try {
-      final DocumentReference documentReference =
-          FirebaseFirestore.instance.collection('greyusercollar').doc();
-      await documentReference.set({
-        'imageUrl': imageUrl3,
-        // Add additional fields if needed
-      });
-      print('Image URL uploaded to Firestore successfully.');
-    } catch (error) {
-      print('Error uploading image URL to Firestore: $error');
-      throw error;
-    }
-  }
+  // Future<void> uploadImageUrl4ToFirestore(String imgexp) async {
+  //   try {
+  //     final DocumentReference documentReference =
+  //         FirebaseFirestore.instance.collection('greyusercollar').doc();
+  //     await documentReference.set({
+  //       'imageUrl': imgexp,
+  //       // Add additional fields if needed
+  //     });
+  //     print('Image URL uploaded to Firestore successfully.');
+  //   } catch (error) {
+  //     print('Error uploading image URL to Firestore: $error');
+  //     throw error;
+  //   }
+  // }
 
-  Future<void> uploadImageUrl4ToFirestore(String imageUrl4) async {
-    try {
-      final DocumentReference documentReference =
-          FirebaseFirestore.instance.collection('greyusercollar').doc();
-      await documentReference.set({
-        'imageUrl': imageUrl4,
-        // Add additional fields if needed
-      });
-      print('Image URL uploaded to Firestore successfully.');
-    } catch (error) {
-      print('Error uploading image URL to Firestore: $error');
-      throw error;
-    }
-  }
+  // Future<void> uploadImageUrl5ToFirestore(String imgcv) async {
+  //   try {
+  //     final DocumentReference documentReference =
+  //         FirebaseFirestore.instance.collection('greyusercollar').doc();
+  //     await documentReference.set({
+  //       'imageUrl': imgcv,
+  //       // Add additional fields if needed
+  //     });
+  //     print('Image URL uploaded to Firestore successfully.');
+  //   } catch (error) {
+  //     print('Error uploading image URL to Firestore: $error');
+  //     throw error;
+  //   }
+  // }
 
-  Future<void> uploadImageUrl5ToFirestore(String imageUrl5) async {
-    try {
-      final DocumentReference documentReference =
-          FirebaseFirestore.instance.collection('greyusercollar').doc();
-      await documentReference.set({
-        'imageUrl': imageUrl5,
-        // Add additional fields if needed
-      });
-      print('Image URL uploaded to Firestore successfully.');
-    } catch (error) {
-      print('Error uploading image URL to Firestore: $error');
-      throw error;
-    }
-  }
-
-// Then, you can use the downloadURL to display the image:
-
-// Assuming this is within a StatelessWidget or StatefulWidget
-// and downloadURL is a property of that class.
-
-// Use Image.network to display the image from the URL
-
-// Function to display the uploaded file
   void displayUploadedFilePicture(
       String downloadURL1, String originalFileName1) {
     setState(() {
-      uploadedImageUrlForPicture = downloadURL1;
+      controller.imgpic.text = downloadURL1;
       uploadedMessage = 'File uploaded successfully: $originalFileName1';
     });
   }
@@ -335,7 +193,7 @@ class _NewUserUpload extends State<NewUserUpload> {
   void displayUploadedFileAadhar(
       String downloadURL2, String originalFileName2) {
     setState(() {
-      uploadedImageUrlAadhar = downloadURL2;
+      controller.imgaadhar.text = downloadURL2;
       uploadedMessage = 'File uploaded successfully: $originalFileName2';
     });
   }
@@ -343,7 +201,7 @@ class _NewUserUpload extends State<NewUserUpload> {
   void displayUploadedFileVoterId(
       String downloadURL3, String originalFileName3) {
     setState(() {
-      uploadedImageUrlForVoterId = downloadURL3;
+      controller.imgvoter.text = downloadURL3;
       uploadedMessage = 'File uploaded successfully: $originalFileName3';
     });
   }
@@ -351,20 +209,19 @@ class _NewUserUpload extends State<NewUserUpload> {
   void displayUploadedFileExpProof(
       String downloadURL4, String originalFileName4) {
     setState(() {
-      uploadedImageUrlForExperienceProof = downloadURL4;
+      controller.imgexp.text = downloadURL4;
       uploadedMessage = 'File uploaded successfully: $originalFileName4';
     });
   }
 
   void displayUploadedFileCv(String downloadURL5, String originalFileName5) {
     setState(() {
-      uploadedImageUrlForCV = downloadURL5;
+      controller.imgcv.text = downloadURL5;
       uploadedMessage = 'File uploaded successfully: $originalFileName5';
     });
   }
 
   Widget build(BuildContext context) {
-    final Object? keys = ModalRoute.of(context)!.settings.arguments;
     return Scaffold(
         appBar: AppBar(
           title: HireMeInIndia(),
@@ -685,7 +542,7 @@ class _NewUserUpload extends State<NewUserUpload> {
                     Expanded(
                       child: Column(
                         children: [
-                          if (uploadedImageUrlForPicture != null)
+                          if (controller.imgpic != null)
                             Container(
                               width: 100,
                               height: 150,
@@ -695,7 +552,7 @@ class _NewUserUpload extends State<NewUserUpload> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: CachedNetworkImage(
-                                imageUrl: uploadedImageUrlForPicture!,
+                                imageUrl: controller.imgpic.text,
                                 fit: BoxFit.cover,
                                 progressIndicatorBuilder:
                                     (context, url, downloadProgress) {
@@ -750,8 +607,8 @@ class _NewUserUpload extends State<NewUserUpload> {
                                           await uploadFileToStorage(filePath);
                                     }
 
-                                    // Store the image URL in Firestore
-                                    await uploadImageUrl1ToFirestore(imageUrl);
+                                    // // Store the image URL in Firestore
+                                    // await uploadImageUrl1ToFirestore(imageUrl);
                                     pictureImageUrls.add(imageUrl);
 
                                     // Display the uploaded file (Aadhar) with its URL
@@ -780,7 +637,7 @@ class _NewUserUpload extends State<NewUserUpload> {
                     Expanded(
                       child: Column(
                         children: [
-                          if (uploadedImageUrlAadhar != null)
+                          if (controller.imgaadhar != null)
                             Container(
                               width: 100,
                               height: 150,
@@ -790,7 +647,7 @@ class _NewUserUpload extends State<NewUserUpload> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: CachedNetworkImage(
-                                imageUrl: uploadedImageUrlAadhar!,
+                                imageUrl: controller.imgaadhar.text!,
                                 fit: BoxFit.cover,
                                 progressIndicatorBuilder:
                                     (context, url, downloadProgress) {
@@ -825,14 +682,14 @@ class _NewUserUpload extends State<NewUserUpload> {
                               if (result != null) {
                                 try {
                                   for (PlatformFile file in result.files) {
-                                    String imageUrl2;
+                                    String imgaadhar;
                                     if (kIsWeb) {
                                       // For web, use the bytes property instead of path
                                       final String fileName = file.name;
                                       final Uint8List fileBytes = file.bytes!;
 
                                       // Upload file to Firebase Storage
-                                      imageUrl2 = await uploadFileFromBytes(
+                                      imgaadhar = await uploadFileFromBytes(
                                         fileBytes: fileBytes,
                                         originalFileName: fileName,
                                       );
@@ -841,13 +698,13 @@ class _NewUserUpload extends State<NewUserUpload> {
                                       final String filePath = file.path!;
 
                                       // Upload file to Firebase Storage
-                                      imageUrl2 =
+                                      imgaadhar =
                                           await uploadFileToStorage(filePath);
                                     }
 
-                                    // Store the image URL in Firestore
-                                    await uploadImageUrl2ToFirestore(imageUrl2);
-                                    aadharImageUrls.add(imageUrl2);
+                                    // // Store the image URL in Firestore
+                                    // await uploadImageUrl2ToFirestore(imgaadhar);
+                                    aadharImageUrls.add(imgaadhar);
 
                                     // Display the uploaded file (Aadhar) with its URL
                                     final urlDownload = await FirebaseStorage
@@ -875,7 +732,7 @@ class _NewUserUpload extends State<NewUserUpload> {
                     Expanded(
                       child: Column(
                         children: [
-                          if (uploadedImageUrlForVoterId != null)
+                          if (controller.imgvoter != null)
                             Container(
                               width: 100,
                               height: 150,
@@ -885,7 +742,7 @@ class _NewUserUpload extends State<NewUserUpload> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: CachedNetworkImage(
-                                imageUrl: uploadedImageUrlForVoterId!,
+                                imageUrl: controller.imgvoter.text!,
                                 fit: BoxFit.cover,
                                 progressIndicatorBuilder:
                                     (context, url, downloadProgress) {
@@ -941,8 +798,8 @@ class _NewUserUpload extends State<NewUserUpload> {
                                         await uploadFileToStorage(filePath);
                                   }
 
-                                  // Store the image URL in Firestore
-                                  await uploadImageUrl3ToFirestore(imageUrl);
+                                  // // Store the image URL in Firestore
+                                  // await uploadImageUrl3ToFirestore(imageUrl);
                                   voteImageUrls.add(imageUrl);
 
                                   // Display the uploaded file (Voter ID) with its URL
@@ -966,7 +823,7 @@ class _NewUserUpload extends State<NewUserUpload> {
                     Expanded(
                       child: Column(
                         children: [
-                          if (uploadedImageUrlForExperienceProof != null)
+                          if (controller.imgexp != null)
                             Container(
                               width: 100,
                               height: 150,
@@ -976,7 +833,7 @@ class _NewUserUpload extends State<NewUserUpload> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: CachedNetworkImage(
-                                imageUrl: uploadedImageUrlForExperienceProof!,
+                                imageUrl: controller.imgexp.text!,
                                 fit: BoxFit.cover,
                                 progressIndicatorBuilder:
                                     (context, url, downloadProgress) {
@@ -1031,8 +888,8 @@ class _NewUserUpload extends State<NewUserUpload> {
                                         await uploadFileToStorage(filePath);
                                   }
 
-                                  // Store the image URL in Firestore
-                                  await uploadImageUrl4ToFirestore(imageUrl);
+                                  // // Store the image URL in Firestore
+                                  // await uploadImageUrl4ToFirestore(imageUrl);
                                   expImageUrls.add(imageUrl);
 
                                   // Display the uploaded file (Experience Proof) with its URL
@@ -1056,7 +913,7 @@ class _NewUserUpload extends State<NewUserUpload> {
                     Expanded(
                       child: Column(
                         children: [
-                          if (uploadedImageUrlForCV != null)
+                          if (controller.imgcv != null)
                             Container(
                               width: 100,
                               height: 150,
@@ -1066,7 +923,7 @@ class _NewUserUpload extends State<NewUserUpload> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: CachedNetworkImage(
-                                imageUrl: uploadedImageUrlForCV!,
+                                imageUrl: controller.imgcv.text!,
                                 fit: BoxFit.cover,
                                 progressIndicatorBuilder:
                                     (context, url, downloadProgress) {
@@ -1122,8 +979,8 @@ class _NewUserUpload extends State<NewUserUpload> {
                                           await uploadFileToStorage(filePath);
                                     }
 
-                                    // Store the image URL in Firestore
-                                    await uploadImageUrl5ToFirestore(imageUrl);
+                                    // // Store the image URL in Firestore
+                                    // await uploadImageUrl5ToFirestore(imageUrl);
                                     cvImageUrls.add(
                                         imageUrl); // Add the image URL to cvImageUrls
 
@@ -1273,7 +1130,57 @@ class _NewUserUpload extends State<NewUserUpload> {
                     ),
                     SizedBox(width: 50),
                     CustomButton(
-                        text: translation(context).next, onPressed: _register),
+                      text: translation(context).next,
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          String state = controller.state.text;
+                          String city = controller.city.text;
+                          String country = controller.country.text;
+                          String expectedwage = controller.expectedwage.text;
+
+                          String currentwage = controller.currentwage.text;
+                          String imgaadhar = controller.imgaadhar.text;
+                          String imgpic = controller.imgpic.text;
+                          String imgcv = controller.imgcv.text;
+                          String imgvoter = controller.imgvoter.text;
+                          String imgexp = controller.imgexp.text;
+                          List<String> imageUrls = [
+                            imgpic,
+                            imgaadhar,
+                            imgcv,
+                            imgexp,
+                            imgvoter
+                          ];
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NewUserPayment(
+                                name: widget.name,
+                                email: widget.email,
+                                password: widget.password,
+                                mobile: widget.mobile,
+                                workexp: widget.workexp,
+                                workins: widget.workins,
+                                worktitle: widget.worktitle,
+                                skills: widget.skills,
+                                address: widget.address,
+                                aadharno: widget.aadharno,
+                                qualification: widget.qualification,
+                                label: widget.label,
+                                gender: widget.gender,
+                                state: state,
+                                city: city,
+                                country: country,
+                                currentwage: currentwage,
+                                expectedwage: expectedwage,
+                                imageUrls: imageUrls,
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                    ),
                   ],
                 )
               ],
@@ -1282,32 +1189,27 @@ class _NewUserUpload extends State<NewUserUpload> {
         ));
   }
 
-  void _register() async {
+  Future<void> uploadImageUrlsToFirestore(List<String> imageUrls, String imgpic,
+      String impaadhar, String imgexp, String imgcv, String imgvoter) async {
     try {
-      UserCredential userCredential =
-          await _auth.createUserWithEmailAndPassword(
-        email: widget.email!,
-        password: widget.password!,
-      );
-      // User creation successful
-      print("User created: ${userCredential.user!.email}");
+      final DocumentReference documentReference =
+          FirebaseFirestore.instance.collection('registeruser').doc();
 
-      // You can navigate to another page or perform any post-registration tasks here.
-    } catch (e) {
-      // Handle any errors that occurred during user creation
-      print("Error creating user: $e");
-      // You can display an error message to the user or handle it in any way you prefer.
+      await documentReference.set({
+        'imgVoter': imgvoter,
+        'imgAadhar': impaadhar,
+        'imageCV': imgcv,
+        'imagePicture': imgpic,
+        'imgExperience': imgexp,
+        'imageUrls': imageUrls,
+        // Add additional fields if needed
+      });
+
+      print('Data including image URLs uploaded to Firestore successfully.');
+    } catch (error) {
+      print('Error uploading data to Firestore: $error');
+      throw error;
     }
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => NewUserPayment(
-          name: widget.name!,
-          email: widget.email!.trim(),
-          password: widget.password!,
-        ),
-      ),
-    );
   }
 
   Widget buildProgress() => StreamBuilder<TaskSnapshot>(
@@ -1342,35 +1244,4 @@ class _NewUserUpload extends State<NewUserUpload> {
           );
         }
       });
-
-  Future<void> addCandidate(CandidateFormController controller) async {
-    try {
-      List<String> imageUrls = await uploadImages(images);
-      await controller.reference.set({
-        'name': controller.name.text,
-        'email': controller.email.text,
-        'mobile': controller.mobile.text,
-        'worktitle': controller.worktitle.text,
-        "aadharno": controller.aadharno.text,
-        "gender": controller.gender.text,
-        "workexp": controller.workexp.text,
-        "qualification": controller.qualification.text,
-        "state": controller.state.text,
-        "address": controller.address.text,
-        'workins': controller.workins,
-        "city": controller.city.text,
-        "country": controller.country.text,
-        'skills': controller.skills,
-        "label": controller.selectedOption.text,
-        "expectedwage": controller.expectedwage,
-        "currentwage": controller.currentwage,
-        "imageUrls": imageUrls,
-      }, SetOptions(merge: true));
-
-      print('Candidate added successfully');
-    } catch (error) {
-      print('Error adding candidate: $error');
-      throw error;
-    }
-  }
 }

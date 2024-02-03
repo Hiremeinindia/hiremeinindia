@@ -1021,14 +1021,14 @@ class _RegistrationState extends State<Registration> {
                             child: Column(
                               children: [
                                 CustomTextfield(
-                                  validator: nameValidator,
+                                  // validator: nameValidator,
                                   controller: controller.name,
                                 ),
                                 SizedBox(
                                   height: 40,
                                 ),
                                 CustomTextfield(
-                                  validator: nameValidator,
+                                  // validator: nameValidator,
                                   controller: controller.worktitle,
                                 ),
                                 SizedBox(
@@ -1083,14 +1083,14 @@ class _RegistrationState extends State<Registration> {
                             child: Column(
                               children: [
                                 CustomTextfield(
-                                  validator: nameValidator,
+                                  // validator: nameValidator,
                                   controller: controller.gender,
                                 ),
                                 SizedBox(
                                   height: 40,
                                 ),
                                 CustomTextfield(
-                                  validator: workexpValidator,
+                                  // validator: workexpValidator,
                                   controller: controller.workexp,
                                 ),
                                 SizedBox(
@@ -1202,7 +1202,7 @@ class _RegistrationState extends State<Registration> {
                         SizedBox(width: 60),
                         Expanded(
                             child: CustomTextfield(
-                          validator: workexpValidator,
+                          // validator: workexpValidator,
                           controller: controller.address,
                         )),
                         SizedBox(
@@ -1221,7 +1221,7 @@ class _RegistrationState extends State<Registration> {
                         SizedBox(width: 60),
                         Expanded(
                             child: CustomTextfield(
-                          validator: validatePassword,
+                          // validator: validatePassword,
                           onsaved: (value) {
                             setState(() {
                               password = value;
@@ -1244,12 +1244,12 @@ class _RegistrationState extends State<Registration> {
                         Expanded(
                             child: CustomTextfield(
                           controller: controller.mobile,
-                          validator: (value) {
-                            if (value!.length != 10)
-                              return 'Mobile Number must be of 10 digit';
-                            else
-                              return null;
-                          },
+                          // validator: (value) {
+                          //   if (value!.length != 10)
+                          //     return 'Mobile Number must be of 10 digit';
+                          //   else
+                          //     return null;
+                          // },
                         )),
                         SizedBox(
                           height: 30,
@@ -1996,75 +1996,40 @@ class _RegistrationState extends State<Registration> {
                             text: translation(context).next,
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                // Sign up with email and password
-                                // Navigator.pushNamed(
-                                //   context,
-                                //   '/document',
-                                //   arguments: {
-                                //     'name': controller.name.text,
-                                //     'email': controller.email.text,
-                                //     'mobile': controller.mobile.text,
-                                //     'worktitle': controller.worktitle.text,
-                                //     "aadharno": controller.aadharno.text,
-                                //     "gender": controller.gender.text,
-                                //     "workexp": controller.workexp.text,
-                                //     "qualification":
-                                //         controller.qualification.text,
-                                //     "address": controller.address.text,
-                                //     'workins':
-                                //         controller.workins,
-                                //     'skills': controller.skills,
-                                //     'label': controller.selectedOption.text,
-                                //   }, // Pass only keys to the next page
-                                // );
-                                // UserCredential userCredential =
-                                //     await _auth.createUserWithEmailAndPassword(
-                                //   email: controller.email.text,
-                                //   password: controller.password.text,
-                                // );
-                                // await assignUserRole(
-                                //     userCredential.user!.uid, 'Blue');
-                                print('Name: ${controller.name.text}');
-                                print('Email: ${controller.email.text.trim()}');
-                                print('Password: ${controller.password.text}');
                                 String name = controller.name.text;
                                 String email = controller.email.text.trim();
                                 String password = controller.password.text;
-
-                                if (name.isNotEmpty &&
-                                    email.isNotEmpty &&
-                                    password.isNotEmpty) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => NewUserUpload(
-                                        name: name,
-                                        email: email,
-                                        password: password,
-                                      ),
+                                String mobile = controller.mobile.text;
+                                String worktitle = controller.worktitle.text;
+                                String adharno = controller.aadharno.text;
+                                String gender = controller.gender.text;
+                                String workexp = controller.workexp.text;
+                                String qualification =
+                                    controller.qualification.text;
+                                String address = controller.address.text;
+                                List<String> workins = controller.workins;
+                                List<String> skills = controller.skills;
+                                String label = controller.selectedOption.text;
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => NewUserUpload(
+                                      name: name,
+                                      email: email,
+                                      password: password,
+                                      mobile: mobile,
+                                      workexp: workexp,
+                                      workins: workins,
+                                      worktitle: worktitle,
+                                      skills: skills,
+                                      address: address,
+                                      aadharno: adharno,
+                                      qualification: qualification,
+                                      label: label,
+                                      gender: gender,
                                     ),
-                                  );
-                                } else {
-                                  // Display an error message or handle the case where one or more arguments are empty or null
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Text('Error'),
-                                        content:
-                                            Text('Please fill in all fields.'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text('OK'),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                }
+                                  ),
+                                );
                               }
                             },
                           ),
@@ -2082,34 +2047,6 @@ class _RegistrationState extends State<Registration> {
         ),
       ),
     );
-  }
-
-  Future<void> assignUserRole(String uid, String role) async {
-    try {
-      String userCollection = 'users';
-
-      // Assign the user role to the user
-      await FirebaseFirestore.instance.collection(userCollection).doc(uid).set({
-        'name': controller.name.text,
-        'email': controller.email.text,
-        'mobile': controller.mobile.text,
-        'worktitle': controller.worktitle.text,
-        "aadharno": controller.aadharno.text,
-        "gender": controller.gender.text,
-        "workexp": controller.workexp.text,
-        "qualification": controller.qualification.text,
-        "state": controller.state.text,
-        "address": controller.address.text,
-        'workins': controller.workins,
-        "city": controller.city.text,
-        "country": controller.country.text,
-        'skills': controller.skills,
-        'label': controller.selectedOption.text,
-        // Add additional user-related fields as needed
-      });
-    } catch (e) {
-      print('Error assigning user role: $e');
-    }
   }
 
   String? validatePassword(String? value) {
