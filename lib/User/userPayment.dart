@@ -37,14 +37,8 @@ class NewUserPayment extends StatefulWidget {
     this.address,
     this.workins,
     this.skills,
-    this.label,
     this.expectedwage,
     this.currentwage,
-    this.imageUrl1,
-    this.imageUrl2,
-    this.imageUrl3,
-    this.imageUrl4,
-    this.imageUrl5,
     this.imageUrls,
     this.city,
     this.state,
@@ -68,15 +62,10 @@ class NewUserPayment extends StatefulWidget {
   final String? country;
   final List<String>? skills;
   final String? workexp;
-  final String? label;
   final String? expectedwage;
   final String? currentwage;
   final List<String>? imageUrls;
-  final String? imageUrl1;
-  final String? imageUrl2;
-  final String? imageUrl3;
-  final String? imageUrl4;
-  final String? imageUrl5;
+
   final Candidate? candidate;
 
   @override
@@ -88,12 +77,6 @@ class _NewUserPayment extends State<NewUserPayment> {
   bool isChecked = false;
   bool isProcessing = false;
   PlatformFile? _cashReceipt;
-  late final String? imageUrl = "";
-  late final String? imageUrl1 = "";
-  late final String? imageUrl2 = "";
-  late final String? imageUrl3 = "";
-  late final String? imageUrl4 = "";
-  late final String? imageUrl5 = "";
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   CandidateFormController controller = CandidateFormController();
@@ -139,7 +122,7 @@ class _NewUserPayment extends State<NewUserPayment> {
         'imageUrl': imageUrl,
         // You can add more fields if needed
       });
-
+      controller.cashrecipt.text = imageUrl;
       print('Image URL uploaded to Firestore successfully.');
     } catch (error) {
       print('Error uploading image URL to Firestore: $error');
@@ -176,9 +159,12 @@ class _NewUserPayment extends State<NewUserPayment> {
       String imageUrl = await reference.getDownloadURL();
 
       // Upload the image URL to Firestore
-      await uploadImageUrlToFirestore(
-          imageUrl); // Pass the imageUrl to this method
+      // await uploadImageUrlToFirestore(
+      //     imageUrl); // Pass the imageUrl to this method
 
+      await imageUrl; // Pass the imageUrl to this method
+
+      controller.cashrecipt.text = imageUrl;
       // Return the image URL
       return imageUrl;
     } catch (error) {
@@ -253,12 +239,6 @@ class _NewUserPayment extends State<NewUserPayment> {
         "label": controller.selectedOption.text,
         "expectedwage": controller.expectedwage,
         "currentwage": controller.currentwage,
-        "imageUrl": imageUrls,
-        "imageUrl1": imageUrl1,
-        "imageUrl2": imageUrl2,
-        "imageUrl3": imageUrl3,
-        "imageUrl4": imageUrl4,
-        "imageUrl5": imageUrl5,
       }, SetOptions(merge: true));
 
       print('Candidate added successfully');
@@ -683,54 +663,83 @@ class _NewUserPayment extends State<NewUserPayment> {
                   EdgeInsets.only(left: 125, right: 125, top: 20, bottom: 20),
               child: Column(children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Checkbox(
-                      value: isChecked,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          isChecked = value ?? false;
-                        });
-                      },
-                      fillColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.selected)) {
-                            return Colors.indigo.shade900;
-                          }
-                          return Colors.transparent;
-                        },
-                      ),
-                      checkColor: Colors.black,
-                      side: BorderSide(
-                        color: Colors.black,
-                        width: 2.0,
-                      ),
-                    ),
-                    Text(translation(context).greyColler),
-                    Checkbox(
-                      value: isChecked,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          isChecked = value ?? false;
-                        });
-                      },
-                      fillColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.selected)) {
-                            return Colors.grey;
-                          }
-                          return Colors.transparent;
-                        },
-                      ),
-                      checkColor: Colors.black,
-                      side: BorderSide(
-                        color: Colors.black,
-                        width: 2.0,
-                      ),
-                    ),
-                    Text(
-                      translation(context).greyColler,
-                    ),
+                    if (widget.selectedOption == 'Blue')
+                      Row(
+                        children: [
+                          Radio(
+                            value: widget.selectedOption,
+                            groupValue: widget.selectedOption,
+                            onChanged: (value) {
+                              // Handle radio button state change if needed
+                              setState(() {
+                                controller.selectedOption.text =
+                                    value.toString();
+                              });
+                            },
+                          ),
+                          Text(
+                            'Blue Collar',
+                            style: TextStyle(
+                                color: Colors.grey.shade500,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.bold),
+                          ),
+                          IgnorePointer(
+                            child: Radio(
+                                value: widget.selectedOption,
+                                groupValue: controller.selectedOption.text,
+                                onChanged: null),
+                          ),
+                          IgnorePointer(
+                            child: Text(
+                              'Grey Collar',
+                              style: TextStyle(
+                                  color: Colors.grey.shade800,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      )
+                    else if (widget.selectedOption == 'Grey')
+                      Row(
+                        children: [
+                          IgnorePointer(
+                            child: Radio(
+                                value: widget.selectedOption,
+                                groupValue: controller.selectedOption.text,
+                                onChanged: null),
+                          ),
+                          IgnorePointer(
+                            child: Text(
+                              'Blue Collar',
+                              style: TextStyle(
+                                  color: Colors.grey.shade500,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Radio(
+                            value: widget.selectedOption,
+                            groupValue: widget.selectedOption,
+                            onChanged: (value) {
+                              // Handle radio button state change if needed
+                              setState(() {
+                                controller.selectedOption.text =
+                                    value.toString();
+                              });
+                            },
+                          ),
+                          Text(
+                            'Grey Collar',
+                            style: TextStyle(
+                                color: Colors.grey.shade800,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      )
                   ],
                 ),
                 SizedBox(
@@ -837,39 +846,13 @@ class _NewUserPayment extends State<NewUserPayment> {
     } catch (e) {
       print("Error creating user: $e");
     }
-
     Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => NewUserPayment(
-          name: widget.name,
-          email: widget.email!.trim(),
-          mobile: widget.mobile,
-          workexp: widget.workexp,
-          worktitle: widget.worktitle,
-          aadharno: widget.aadharno,
-          address: widget.address,
-          gender: widget.gender,
-          workins: widget.workins,
-          qualification: widget.qualification,
-          label: widget.label,
-          skills: widget.skills,
-          state: widget.state,
-          city: widget.city,
-          country: widget.country,
-          expectedwage: widget.expectedwage,
-          currentwage: widget.currentwage,
-        ),
-      ),
-    );
+        context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 
   Future<void> assignUserRole(String uid, String role) async {
     try {
-      String userCollection = 'registeruser';
-
-      List<String> imageUrls = await uploadImages(controller);
-      // Assign the user role to the user
+      String userCollection = 'greycollaruser';
       await FirebaseFirestore.instance.collection(userCollection).doc(uid).set({
         'name': widget.name,
         'email': widget.email,
@@ -889,6 +872,7 @@ class _NewUserPayment extends State<NewUserPayment> {
         "currentwage": widget.currentwage,
         'label': widget.selectedOption,
         "imageUrl": widget.imageUrls,
+        "cashrecipt": controller.cashrecipt.text
         // Add additional user-related fields as needed
       });
     } catch (e) {

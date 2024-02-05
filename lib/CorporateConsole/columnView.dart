@@ -20,6 +20,7 @@ class _ColumnViewState extends State<ColumnView> {
   }
 
   late Query<Map<String, dynamic>> query;
+
   Future<int> totalCandidatesCount() async {
     int blueCount = await BlueResult();
     int greyCount = await GreyResult();
@@ -339,24 +340,14 @@ class CandidateListSource extends DataTableSource {
       index: index,
       cells: [
         // DataCell(Text((index + 1).toString())),
-        DataCell(Text(e.name.toString())),
-        DataCell(SizedBox(
-          width: 27,
-          height: 27,
-          child: CircleAvatar(
-            backgroundColor: const Color.fromARGB(255, 51, 116, 53),
-          ),
-        )),
-        DataCell(Text(e.qualification?.toString() ?? 'nill')),
-        DataCell(
-          Text(e.skills!.isNotEmpty ? e.skills![0] : ''),
-        ),
-        DataCell(
-          Text(e.skills!.isNotEmpty ? e.skills![1] : ''),
-        ),
-        DataCell(Text(e.selectedOption?.toString() ?? '- - - -')),
-        DataCell(Text(e.mobile.toString())),
-        DataCell(Text(e.name.toString())),
+        DataCell(Text(e.name ?? 'Nil')),
+        DataCell(Text(e.name ?? 'Nil')),
+        DataCell(Text(e.name ?? 'Nil')),
+        DataCell(Text(e.name ?? 'Nil')),
+        DataCell(Text(e.name ?? 'Nil')),
+        DataCell(Text(e.name ?? 'Nil')),
+        DataCell(Text(e.name ?? 'Nil')),
+        DataCell(Text(e.name ?? 'Nil')),
       ],
     );
   }

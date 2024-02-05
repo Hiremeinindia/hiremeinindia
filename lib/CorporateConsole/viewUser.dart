@@ -110,212 +110,842 @@ class _CompanyViewUser extends State<CompanyViewUser> {
         ),
         body: Container(
           child: Padding(
-            padding: const EdgeInsets.all(50.0),
+            padding: const EdgeInsets.all(80.0),
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      child: Row(
-                        children: [
-                          Icon(Icons.arrow_back_ios_new_outlined),
-                          Text(
-                            'Back',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.indigo.shade900,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                Container(
+                  child: Row(
+                    children: [
+                      CustomRectButton(
+                        onPressed: () {},
+                        child: ImageIcon(AssetImage("table.png"),
+                            size: 40, color: Colors.indigo.shade900),
+                        colors: Colors.green.shade200,
+                        bottomleft: Radius.circular(5),
+                        topleft: Radius.circular(5),
+                        bottomright: Radius.zero,
+                        topright: Radius.zero,
                       ),
-                    ),
-                    Container(
-                      child: Row(
-                        children: [
-                          Text(
-                            'Status',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.indigo.shade900,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 30,
-                            width: 125,
-                            child: CustomDropDown<Candidate?>(
-                              value: verified,
-                              onChanged: (Candidate? item) {
-                                setState(() {
-                                  verified = item;
-                                });
-                              },
-                              items: [
-                                DropdownMenuItem<Candidate?>(
-                                  value: Candidate(
-                                      /* your verified candidate instance */),
-                                  child: Text('Verified'),
-                                ),
-                                DropdownMenuItem<Candidate?>(
-                                  value:
-                                      null, // You can set this to represent "Not Verified"
-                                  child: Text('Not Verified'),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                      CustomRectButton(
+                        onPressed: () {},
+                        child: ImageIcon(AssetImage("table.png"),
+                            size: 30, color: Colors.indigo.shade900),
+                        colors: Colors.grey.shade200,
+                        bottomleft: Radius.zero,
+                        topleft: Radius.zero,
+                        bottomright: Radius.zero,
+                        topright: Radius.zero,
                       ),
-                    ),
-                    Container(
-                      child: Row(
-                        children: [
-                          CustomRectButton(
-                            onPressed: () {},
-                            child: ImageIcon(AssetImage("table.png"),
-                                size: 40, color: Colors.indigo.shade900),
-                            colors: Colors.green.shade200,
-                            bottomleft: Radius.circular(5),
-                            topleft: Radius.circular(5),
-                            bottomright: Radius.zero,
-                            topright: Radius.zero,
-                          ),
-                          CustomRectButton(
-                            onPressed: () {},
-                            child: ImageIcon(AssetImage("table.png"),
-                                size: 30, color: Colors.indigo.shade900),
-                            colors: Colors.grey.shade200,
-                            bottomleft: Radius.zero,
-                            topleft: Radius.zero,
-                            bottomright: Radius.zero,
-                            topright: Radius.zero,
-                          ),
-                          CustomRectButton(
-                            onPressed: () {},
-                            child: ImageIcon(AssetImage("table.png"),
-                                size: 50, color: Colors.indigo.shade900),
-                            colors: Colors.red.shade200,
-                            bottomleft: Radius.zero,
-                            topleft: Radius.zero,
-                            bottomright: Radius.circular(5),
-                            topright: Radius.circular(5),
-                          ),
-                        ],
+                      CustomRectButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return FullPagePopup(); // Your custom full-page pop-up widget
+                            },
+                          );
+                        },
+                        child: ImageIcon(AssetImage("table.png"),
+                            size: 50, color: Colors.indigo.shade900),
+                        colors: Colors.red.shade200,
+                        bottomleft: Radius.zero,
+                        topleft: Radius.zero,
+                        bottomright: Radius.circular(5),
+                        topright: Radius.circular(5),
                       ),
-                    )
-                  ],
-                ),
-                Row(
-                  textDirection: TextDirection.ltr,
-                  children: [
-                    Flexible(
-                      flex: 2,
-                      fit: FlexFit.tight,
-                      child: Container(
-                        width: 300,
-                        margin: const EdgeInsets.only(bottom: 6.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              offset: Offset(0.0, 1.0), //(x,y)
-                              blurRadius: 6.0,
-                            ),
-                          ],
-                        ),
-                        child: Column(children: [
-                          CircleAvatar(
-                            backgroundColor: Colors.indigo.shade900,
-                            maxRadius: 68,
-                            minRadius: 67.5,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              maxRadius: 66,
-                              minRadius: 60,
-                              child: CircleAvatar(
-                                backgroundImage: AssetImage('imguser.jpg'),
-                                maxRadius: 59,
-                                minRadius: 56,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            'Name',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.indigo.shade900,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'Designation',
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.indigo.shade900,
-                                height: 0),
-                          ),
-                        ]),
-                      ),
-                    ),
-                    Flexible(
-                      flex: 2,
-                      fit: FlexFit.tight,
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 6.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey,
-                              offset: Offset(0.0, 1.0), //(x,y)
-                              blurRadius: 6.0,
-                            ),
-                          ],
-                        ),
-                        child: Column(children: [
-                          CircleAvatar(
-                            backgroundColor: Colors.indigo.shade900,
-                            maxRadius: 68,
-                            minRadius: 67.5,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              maxRadius: 66,
-                              minRadius: 60,
-                              child: CircleAvatar(
-                                backgroundImage: AssetImage('imguser.jpg'),
-                                maxRadius: 59,
-                                minRadius: 56,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            'Name',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.indigo.shade900,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'Designation',
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.indigo.shade900,
-                                height: 0),
-                          ),
-                        ]),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
         ));
+  }
+}
+
+class FullPagePopup extends StatelessWidget {
+  Candidate? verified;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      // The Dialog widget provides a full-page overlay
+      child: Container(
+        height: 1000,
+        width: 1500,
+        child: Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  CustomRectButton(
+                    onPressed: () {},
+                    child: ImageIcon(AssetImage("table.png"),
+                        size: 40, color: Colors.indigo.shade900),
+                    colors: Colors.green.shade200,
+                    bottomleft: Radius.circular(5),
+                    topleft: Radius.circular(5),
+                    bottomright: Radius.zero,
+                    topright: Radius.zero,
+                  ),
+                  CustomRectButton(
+                    onPressed: () {},
+                    child: ImageIcon(AssetImage("table.png"),
+                        size: 30, color: Colors.indigo.shade900),
+                    colors: Colors.grey.shade200,
+                    bottomleft: Radius.zero,
+                    topleft: Radius.zero,
+                    bottomright: Radius.zero,
+                    topright: Radius.zero,
+                  ),
+                  CustomRectButton(
+                    onPressed: () {},
+                    child: ImageIcon(AssetImage("table.png"),
+                        size: 50, color: Colors.indigo.shade900),
+                    colors: Colors.red.shade200,
+                    bottomleft: Radius.zero,
+                    topleft: Radius.zero,
+                    bottomright: Radius.circular(5),
+                    topright: Radius.circular(5),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(30.0),
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        SizedBox(
+                          height: 200,
+                        ),
+                        Container(
+                          width: 300,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.0),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(0.0, 1.0), //(x,y)
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(30.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 140,
+                                  ),
+                                  Text(
+                                    'Designation about the candidate',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.indigo.shade900,
+                                        height: 0),
+                                  ),
+                                  SizedBox(
+                                    height: 40,
+                                  ),
+                                  Text(
+                                    'Skills',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.indigo.shade900,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        height: 25,
+                                        width: 100,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: const Color(0xFF000000),
+                                                style: BorderStyle
+                                                    .solid), //Border.all
+                                            /*** The BorderRadius widget  is here ***/
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(25),
+                                            ), //BorderRadius.all
+                                          ), //BoxDecoration
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 30,
+                                      ),
+                                      SizedBox(
+                                        height: 25,
+                                        width: 100,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: const Color(0xFF000000),
+                                                style: BorderStyle
+                                                    .solid), //Border.all
+                                            /*** The BorderRadius widget  is here ***/
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(15),
+                                            ), //BorderRadius.all
+                                          ), //BoxDecoration
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        height: 25,
+                                        width: 100,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: const Color(0xFF000000),
+                                                style: BorderStyle
+                                                    .solid), //Border.all
+                                            /*** The BorderRadius widget  is here ***/
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(25),
+                                            ), //BorderRadius.all
+                                          ), //BoxDecoration
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 30,
+                                      ),
+                                      SizedBox(
+                                        height: 25,
+                                        width: 100,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: const Color(0xFF000000),
+                                                style: BorderStyle
+                                                    .solid), //Border.all
+                                            /*** The BorderRadius widget  is here ***/
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(15),
+                                            ), //BorderRadius.all
+                                          ), //BoxDecoration
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 60,
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                      minimumSize: const Size.fromHeight(45),
+                                      fixedSize:
+                                          const Size.fromWidth(double.infinity),
+                                      backgroundColor:
+                                          Color.fromARGB(255, 113, 46, 168),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            5), // Adjust border radius as needed
+                                      ),
+                                    ),
+                                    child: Row(children: [
+                                      Icon(
+                                        Icons.calendar_month_outlined,
+                                        size: 25,
+                                        color: Colors.white,
+                                      ),
+                                      Text(
+                                        'Schedule an interview',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ]),
+                                  ),
+                                  SizedBox(
+                                    height: 30,
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                      minimumSize: const Size.fromHeight(45),
+                                      fixedSize:
+                                          const Size.fromWidth(double.infinity),
+                                      backgroundColor:
+                                          Color.fromARGB(255, 58, 206, 63),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            5), // Adjust border radius as needed
+                                      ),
+                                    ),
+                                    child: Row(children: [
+                                      Icon(
+                                        Icons.call_rounded,
+                                        size: 25,
+                                        color: Colors.white,
+                                      ),
+                                      Text(
+                                        'Make a call',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ]),
+                                  ),
+                                ]),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 200,
+                        ),
+                        Positioned(
+                          bottom: 400,
+                          left: 70,
+                          child: Container(
+                            child: Column(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: Colors.indigo.shade900,
+                                  maxRadius: 68,
+                                  minRadius: 67.5,
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    maxRadius: 66,
+                                    minRadius: 60,
+                                    child: CircleAvatar(
+                                      backgroundImage:
+                                          AssetImage('imguser.jpg'),
+                                      maxRadius: 59,
+                                      minRadius: 56,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  'Name',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.indigo.shade900,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  'Designation',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.indigo.shade900,
+                                      height: 0),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Container(
+                      child: Column(children: [
+                        Container(
+                          //basic detail container opening
+                          width: 800,
+                          height: 300,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.0),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(0.0, 1.0), //(x,y)
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                width: 800,
+                                height: 50,
+                                decoration: const BoxDecoration(
+                                    color: Color.fromARGB(255, 146, 176, 226),
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(5),
+                                        topRight: Radius.circular(5))),
+                                child: Text(
+                                  'Basic Details',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.indigo.shade900,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                padding: const EdgeInsets.only(left: 20),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Text(
+                                          'Age',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.indigo.shade900,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          '22',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.indigo.shade900,
+                                              height: 0),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          'Work Experience',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.indigo.shade900,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          '8 months',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.indigo.shade900,
+                                              height: 0),
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          'Contact Number',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.indigo.shade900,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          '7897897897',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.indigo.shade900,
+                                              height: 0),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          'CTC',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.indigo.shade900,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          '2.3 Lakh',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.indigo.shade900,
+                                              height: 0),
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          'Email address',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.indigo.shade900,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          'mail@gmail.com',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.indigo.shade900,
+                                              height: 0),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          'Location',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.indigo.shade900,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          'location',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.indigo.shade900,
+                                              height: 0),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      height: 40,
+                                      width: 230,
+                                      child: ElevatedButton(
+                                        onPressed: () {},
+                                        style: ElevatedButton.styleFrom(
+                                          minimumSize:
+                                              const Size.fromHeight(45),
+                                          fixedSize: const Size.fromWidth(
+                                              double.infinity),
+                                          backgroundColor:
+                                              Colors.indigo.shade900,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                5), // Adjust border radius as needed
+                                          ),
+                                        ),
+                                        child: Row(children: [
+                                          Icon(
+                                            Icons.download,
+                                            size: 25,
+                                            color: Colors.white,
+                                          ),
+                                          Text(
+                                            'Download CV',
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ]),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 30,
+                                    ),
+                                    SizedBox(
+                                      height: 40,
+                                      width: 230,
+                                      child: ElevatedButton(
+                                        onPressed: () {},
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              Colors.indigo.shade900,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                5), // Adjust border radius as needed
+                                          ),
+                                        ),
+                                        child: Row(children: [
+                                          Icon(
+                                            Icons.download,
+                                            size: 25,
+                                            color: Colors.white,
+                                          ),
+                                          Text(
+                                            'Download Documents',
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ]),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ), //basic detail container closing
+                        SizedBox(
+                          height: 50,
+                        ),
+                        Container(
+                          //basic detail container opening
+                          width: 800,
+                          height: 300,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.0),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(0.0, 1.0), //(x,y)
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                width: 800,
+                                height: 50,
+                                decoration: const BoxDecoration(
+                                    color: Color.fromARGB(255, 146, 176, 226),
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(5),
+                                        topRight: Radius.circular(5))),
+                                child: Text(
+                                  'Basic Details',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.indigo.shade900,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                padding: const EdgeInsets.only(left: 20),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Text(
+                                          'Age',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.indigo.shade900,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          '22',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.indigo.shade900,
+                                              height: 0),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          'Work Experience',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.indigo.shade900,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          '8 months',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.indigo.shade900,
+                                              height: 0),
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          'Contact Number',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.indigo.shade900,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          '7897897897',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.indigo.shade900,
+                                              height: 0),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          'CTC',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.indigo.shade900,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          '2.3 Lakh',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.indigo.shade900,
+                                              height: 0),
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          'Email address',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.indigo.shade900,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          'mail@gmail.com',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.indigo.shade900,
+                                              height: 0),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          'Location',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.indigo.shade900,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          'location',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.indigo.shade900,
+                                              height: 0),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      height: 40,
+                                      width: 230,
+                                      child: ElevatedButton(
+                                        onPressed: () {},
+                                        style: ElevatedButton.styleFrom(
+                                          minimumSize:
+                                              const Size.fromHeight(45),
+                                          fixedSize: const Size.fromWidth(
+                                              double.infinity),
+                                          backgroundColor:
+                                              Colors.indigo.shade900,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                5), // Adjust border radius as needed
+                                          ),
+                                        ),
+                                        child: Row(children: [
+                                          Icon(
+                                            Icons.download,
+                                            size: 25,
+                                            color: Colors.white,
+                                          ),
+                                          Text(
+                                            'Download CV',
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ]),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 30,
+                                    ),
+                                    SizedBox(
+                                      height: 40,
+                                      width: 230,
+                                      child: ElevatedButton(
+                                        onPressed: () {},
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              Colors.indigo.shade900,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                5), // Adjust border radius as needed
+                                          ),
+                                        ),
+                                        child: Row(children: [
+                                          Icon(
+                                            Icons.download,
+                                            size: 25,
+                                            color: Colors.white,
+                                          ),
+                                          Text(
+                                            'Download Documents',
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ]),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ), //basic detail container closing
+                      ]),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(height: 16.0),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
