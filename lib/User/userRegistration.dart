@@ -39,8 +39,6 @@ class Registration extends StatefulWidget {
 }
 
 class _RegistrationState extends State<Registration> {
-  bool isGreyEnabled = false;
-  bool isBlueEnabled = false;
   late EmailAuth emailAuth;
   late String sessionName = "";
   late String recipientMail = "";
@@ -49,11 +47,17 @@ class _RegistrationState extends State<Registration> {
 
   void initState() {
     super.initState();
+    emailAuth = new EmailAuth(
+      sessionName: "Sample session",
+    );
+    var remoteServerConfig = {
+      "server":
+          "https://app-authenticator.herokuapp.com/dart/auth/${recipientMail}?CompanyName=${this.sessionName}",
+      "serverKey": "AIzaSyBKUuhUeiA2DpvZD4od15RdHEBZyjsuVlA"
+    };
 
-    controller =
-        CandidateFormController(initialSelectedOption: widget.selectedOption);
-    isBlueEnabled = widget.selectedOption == 'Blue';
-    isGreyEnabled = widget.selectedOption == 'Grey';
+    /// Configuring the remote server
+    emailAuth.config(remoteServerConfig);
   }
 
   void _sendOtp() async {
@@ -186,13 +190,11 @@ class _RegistrationState extends State<Registration> {
   final _formKey = GlobalKey<FormState>();
   EmailOTP myauth = EmailOTP();
   CandidateFormController controller = CandidateFormController();
-  final TextEditingController _otpController = TextEditingController();
-  List<String> selectedSkill = [];
-  List<String> selectedWorkin = [];
-  var label = 'Grey';
+  // final TextEditingController _otpController = TextEditingController();
+
   String? skillvalue;
   String? wokinvalue;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  // final FirebaseAuth _auth = FirebaseAuth.instance;
   static const GreySkill = [
     'Plumber',
     'Senior Plumber',
@@ -887,30 +889,12 @@ class _RegistrationState extends State<Registration> {
                 padding: const EdgeInsets.only(left: 160),
                 child: Row(
                   children: [
-                    if (widget.selectedOption == 'Grey')
-                      IgnorePointer(
-                        child: Row(
-                          children: [
-                            Radio(
-                                value: widget.selectedOption,
-                                groupValue: widget.selectedOption,
-                                onChanged: null),
-                            Text(
-                              'Blue Collar',
-                              style: TextStyle(
-                                  color: Colors.grey.shade500,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      )
-                    else if (widget.selectedOption == 'Blue')
+                    if (widget.selectedOption == 'Blue')
                       Row(
                         children: [
                           Radio(
-                            value: 'Blue',
-                            groupValue: controller.selectedOption.text,
+                            value: widget.selectedOption,
+                            groupValue: widget.selectedOption,
                             onChanged: (value) {
                               // Handle radio button state change if needed
                               setState(() {
@@ -922,24 +906,56 @@ class _RegistrationState extends State<Registration> {
                           Text(
                             'Blue Collar',
                             style: TextStyle(
-                                color: Colors.grey.shade800,
+                                color: Colors.grey.shade500,
                                 fontFamily: 'Poppins',
                                 fontWeight: FontWeight.bold),
                           ),
+                          IgnorePointer(
+                            child: Radio(
+                                value: widget.selectedOption,
+                                groupValue: controller.selectedOption.text,
+                                onChanged: null),
+                          ),
+                          IgnorePointer(
+                            child: Text(
+                              'Grey Collar',
+                              style: TextStyle(
+                                  color: Colors.grey.shade800,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
                         ],
-                      ),
-                    if (widget.selectedOption == 'Grey')
+                      )
+                    else if (widget.selectedOption == 'Grey')
                       Row(
                         children: [
+                          IgnorePointer(
+                            child: Radio(
+                                value: widget.selectedOption,
+                                groupValue: controller.selectedOption.text,
+                                onChanged: null),
+                          ),
+                          IgnorePointer(
+                            child: Text(
+                              'Blue Collar',
+                              style: TextStyle(
+                                  color: Colors.grey.shade500,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
                           Radio(
-                              value: 'Grey',
-                              groupValue: controller.selectedOption.text,
-                              onChanged: (value) {
-                                setState(() {
-                                  controller.selectedOption.text =
-                                      value.toString();
-                                });
-                              }),
+                            value: widget.selectedOption,
+                            groupValue: widget.selectedOption,
+                            onChanged: (value) {
+                              // Handle radio button state change if needed
+                              setState(() {
+                                controller.selectedOption.text =
+                                    value.toString();
+                              });
+                            },
+                          ),
                           Text(
                             'Grey Collar',
                             style: TextStyle(
@@ -949,23 +965,6 @@ class _RegistrationState extends State<Registration> {
                           ),
                         ],
                       )
-                    else if (widget.selectedOption == 'Blue')
-                      IgnorePointer(
-                          child: Row(
-                        children: [
-                          Radio(
-                              value: widget.selectedOption,
-                              groupValue: widget.selectedOption,
-                              onChanged: null),
-                          Text(
-                            'Blue Collar',
-                            style: TextStyle(
-                                color: Colors.grey.shade500,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      )),
                   ],
                 ),
               ),
@@ -2009,7 +2008,7 @@ class _RegistrationState extends State<Registration> {
                                 String address = controller.address.text;
                                 List<String> workins = controller.workins;
                                 List<String> skills = controller.skills;
-                                String label = controller.selectedOption.text;
+                                String? selectedOption = widget.selectedOption;
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -2025,7 +2024,7 @@ class _RegistrationState extends State<Registration> {
                                       address: address,
                                       aadharno: adharno,
                                       qualification: qualification,
-                                      label: label,
+                                      selectedOption: selectedOption,
                                       gender: gender,
                                     ),
                                   ),

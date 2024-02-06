@@ -4,7 +4,9 @@ import 'package:hiremeinindiaapp/homepage.dart';
 
 import '../User/user.dart';
 import '../classes/language_constants.dart';
+import '../widgets/custombutton.dart';
 import '../widgets/customcard.dart';
+import '../widgets/customdropdown.dart';
 
 class ColumnView extends StatefulWidget {
   @override
@@ -14,6 +16,8 @@ class ColumnView extends StatefulWidget {
 class _ColumnViewState extends State<ColumnView> {
   Widget? child;
   IconData? icon;
+  Candidate? verified;
+  bool isExpanded = false;
   void initState() {
     query = agentsRef;
     super.initState();
@@ -299,8 +303,910 @@ class _ColumnViewState extends State<ColumnView> {
                               // (Get.height ~/ kMinInteractiveDimension) -
                               //     4,
                               columns: CandidateListSource.getColumns(),
-                              source: CandidateListSource(candidates,
-                                  context: context),
+                              source: CandidateListSource(
+                                candidates,
+                                context: context,
+                                onSelect: (candidate) {
+                                  // Show details dialog when a row is selected
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return Dialog(
+                                        // The Dialog widget provides a full-page overlay
+                                        child: Container(
+                                          height: 1000,
+                                          width: 1500,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(30.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                Container(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      TextButton.icon(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          icon: Icon(
+                                                            Icons
+                                                                .arrow_back_ios_new_outlined,
+                                                            size: 15,
+                                                            color: Colors.indigo
+                                                                .shade900,
+                                                          ),
+                                                          label: Text(
+                                                            'Back',
+                                                            style: TextStyle(
+                                                              fontSize: 18,
+                                                              color: Colors
+                                                                  .indigo
+                                                                  .shade900,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          )),
+                                                      Container(
+                                                        child: Row(
+                                                          children: [
+                                                            Text(
+                                                              'Status',
+                                                              style: TextStyle(
+                                                                fontSize: 18,
+                                                                color: Colors
+                                                                    .indigo
+                                                                    .shade900,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 15,
+                                                            ),
+                                                            SizedBox(
+                                                              height: 30,
+                                                              width: 125,
+                                                              child:
+                                                                  CustomDropDown<
+                                                                      Candidate?>(
+                                                                value: verified,
+                                                                onChanged:
+                                                                    (Candidate) {},
+                                                                items: [
+                                                                  DropdownMenuItem<
+                                                                      Candidate?>(
+                                                                    value: Candidate(
+                                                                        verify:
+                                                                            'awaiting_response'),
+                                                                    child: Text(
+                                                                        'Awaiting response'),
+                                                                  ),
+                                                                  DropdownMenuItem<
+                                                                      Candidate?>(
+                                                                    value: Candidate(
+                                                                        verify:
+                                                                            'interview_scheduled'),
+                                                                    child: Text(
+                                                                        'Interview Scheduled'),
+                                                                  ),
+                                                                  DropdownMenuItem<
+                                                                      Candidate?>(
+                                                                    value: Candidate(
+                                                                        verify:
+                                                                            'curated'),
+                                                                    child: Text(
+                                                                        'Curated'),
+                                                                  ),
+                                                                  DropdownMenuItem<
+                                                                      Candidate?>(
+                                                                    value: Candidate(
+                                                                        verify:
+                                                                            'rejected'),
+                                                                    child: Text(
+                                                                        'Rejected'),
+                                                                  ),
+                                                                  DropdownMenuItem<
+                                                                      Candidate?>(
+                                                                    value: Candidate(
+                                                                        verify:
+                                                                            'hired'),
+                                                                    child: Text(
+                                                                        'Hired'),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        child: Row(
+                                                          children: [
+                                                            CustomRectButton(
+                                                              onPressed: () {},
+                                                              child: ImageIcon(
+                                                                  AssetImage(
+                                                                      "table.png"),
+                                                                  size: 40,
+                                                                  color: Colors
+                                                                      .indigo
+                                                                      .shade900),
+                                                              colors: Colors
+                                                                  .green
+                                                                  .shade200,
+                                                              bottomleft: Radius
+                                                                  .circular(5),
+                                                              topleft: Radius
+                                                                  .circular(5),
+                                                              bottomright:
+                                                                  Radius.zero,
+                                                              topright:
+                                                                  Radius.zero,
+                                                            ),
+                                                            CustomRectButton(
+                                                              onPressed: () {},
+                                                              child: ImageIcon(
+                                                                  AssetImage(
+                                                                      "table.png"),
+                                                                  size: 30,
+                                                                  color: Colors
+                                                                      .indigo
+                                                                      .shade900),
+                                                              colors: Colors
+                                                                  .grey
+                                                                  .shade200,
+                                                              bottomleft:
+                                                                  Radius.zero,
+                                                              topleft:
+                                                                  Radius.zero,
+                                                              bottomright:
+                                                                  Radius.zero,
+                                                              topright:
+                                                                  Radius.zero,
+                                                            ),
+                                                            CustomRectButton(
+                                                              onPressed: () {},
+                                                              child: ImageIcon(
+                                                                  AssetImage(
+                                                                      "table.png"),
+                                                                  size: 50,
+                                                                  color: Colors
+                                                                      .indigo
+                                                                      .shade900),
+                                                              colors: Colors
+                                                                  .red.shade200,
+                                                              bottomleft:
+                                                                  Radius.zero,
+                                                              topleft:
+                                                                  Radius.zero,
+                                                              bottomright:
+                                                                  Radius
+                                                                      .circular(
+                                                                          5),
+                                                              topright: Radius
+                                                                  .circular(5),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 50,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 30.0,
+                                                              right: 30,
+                                                              bottom: 20),
+                                                      child: Stack(
+                                                        clipBehavior: Clip.none,
+                                                        children: [
+                                                          SizedBox(
+                                                            height: 200,
+                                                          ),
+                                                          Container(
+                                                            width: 300,
+                                                            height: 700,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5.0),
+                                                              color:
+                                                                  Colors.white,
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  offset: Offset(
+                                                                      0.0,
+                                                                      1.0), //(x,y)
+                                                                  blurRadius:
+                                                                      6.0,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(
+                                                                      30.0),
+                                                              child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    SizedBox(
+                                                                      height:
+                                                                          140,
+                                                                    ),
+                                                                    Text(
+                                                                      'Designation about the candidate',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              15,
+                                                                          color: Colors
+                                                                              .indigo
+                                                                              .shade900,
+                                                                          height:
+                                                                              0),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height:
+                                                                          40,
+                                                                    ),
+                                                                    Text(
+                                                                      'Skills',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontSize:
+                                                                            16,
+                                                                        color: Colors
+                                                                            .indigo
+                                                                            .shade900,
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height:
+                                                                          10,
+                                                                    ),
+                                                                    Row(
+                                                                      children: [
+                                                                        SizedBox(
+                                                                          height:
+                                                                              25,
+                                                                          child:
+                                                                              Container(
+                                                                            padding:
+                                                                                EdgeInsets.all(3),
+                                                                            child:
+                                                                                Text(
+                                                                              '${candidate.skills![0]}',
+                                                                              style: TextStyle(fontSize: 15, color: Colors.indigo.shade900, height: 0),
+                                                                            ),
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              border: Border.all(color: const Color(0xFF000000), style: BorderStyle.solid), //Border.all
+                                                                              /*** The BorderRadius widget  is here ***/
+                                                                              borderRadius: BorderRadius.all(
+                                                                                Radius.circular(15),
+                                                                              ), //BorderRadius.all
+                                                                            ), //BoxDecoration
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(
+                                                                          width:
+                                                                              5,
+                                                                        ),
+                                                                        SizedBox(
+                                                                          height:
+                                                                              25,
+                                                                          child:
+                                                                              Container(
+                                                                            padding:
+                                                                                EdgeInsets.all(3),
+                                                                            child:
+                                                                                Text(
+                                                                              '${candidate.skills![1]}',
+                                                                              style: TextStyle(fontSize: 15, color: Colors.indigo.shade900, height: 0),
+                                                                            ),
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              border: Border.all(color: const Color(0xFF000000), style: BorderStyle.solid), //Border.all
+                                                                              /*** The BorderRadius widget  is here ***/
+                                                                              borderRadius: BorderRadius.all(
+                                                                                Radius.circular(15),
+                                                                              ), //BorderRadius.all
+                                                                            ), //BoxDecoration
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height:
+                                                                          10,
+                                                                    ),
+                                                                    Row(
+                                                                      children: [
+                                                                        SizedBox(
+                                                                          height:
+                                                                              25,
+                                                                          child:
+                                                                              Container(
+                                                                            padding:
+                                                                                EdgeInsets.all(3),
+                                                                            child:
+                                                                                Text(
+                                                                              '${candidate.workins![0] ?? '- - -'}',
+                                                                              style: TextStyle(fontSize: 15, color: Colors.indigo.shade900, height: 0),
+                                                                            ),
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              border: Border.all(color: const Color(0xFF000000), style: BorderStyle.solid), //Border.all
+                                                                              /*** The BorderRadius widget  is here ***/
+                                                                              borderRadius: BorderRadius.all(
+                                                                                Radius.circular(15),
+                                                                              ), //BorderRadius.all
+                                                                            ), //BoxDecoration
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(
+                                                                          width:
+                                                                              5,
+                                                                        ),
+                                                                        SizedBox(
+                                                                          height:
+                                                                              25,
+                                                                          child:
+                                                                              Container(
+                                                                            padding:
+                                                                                EdgeInsets.all(3),
+                                                                            child:
+                                                                                Text(
+                                                                              '',
+                                                                              style: TextStyle(fontSize: 15, color: Colors.indigo.shade900, height: 0),
+                                                                            ),
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              border: Border.all(color: const Color(0xFF000000), style: BorderStyle.solid), //Border.all
+                                                                              /*** The BorderRadius widget  is here ***/
+                                                                              borderRadius: BorderRadius.all(
+                                                                                Radius.circular(15),
+                                                                              ), //BorderRadius.all
+                                                                            ), //BoxDecoration
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height:
+                                                                          60,
+                                                                    ),
+                                                                    ElevatedButton(
+                                                                      onPressed:
+                                                                          () {},
+                                                                      style: ElevatedButton
+                                                                          .styleFrom(
+                                                                        minimumSize: const Size
+                                                                            .fromHeight(
+                                                                            45),
+                                                                        fixedSize: const Size
+                                                                            .fromWidth(
+                                                                            double.infinity),
+                                                                        backgroundColor: Color.fromARGB(
+                                                                            255,
+                                                                            113,
+                                                                            46,
+                                                                            168),
+                                                                        shape:
+                                                                            RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(5), // Adjust border radius as needed
+                                                                        ),
+                                                                      ),
+                                                                      child: Row(
+                                                                          children: [
+                                                                            Icon(
+                                                                              Icons.calendar_month_outlined,
+                                                                              size: 25,
+                                                                              color: Colors.white,
+                                                                            ),
+                                                                            Text(
+                                                                              'Schedule an interview',
+                                                                              style: TextStyle(
+                                                                                fontSize: 15,
+                                                                                color: Colors.white,
+                                                                                fontWeight: FontWeight.bold,
+                                                                              ),
+                                                                            ),
+                                                                          ]),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height:
+                                                                          30,
+                                                                    ),
+                                                                    ElevatedButton(
+                                                                      onPressed:
+                                                                          () {},
+                                                                      style: ElevatedButton
+                                                                          .styleFrom(
+                                                                        minimumSize: const Size
+                                                                            .fromHeight(
+                                                                            45),
+                                                                        fixedSize: const Size
+                                                                            .fromWidth(
+                                                                            double.infinity),
+                                                                        backgroundColor: Color.fromARGB(
+                                                                            255,
+                                                                            58,
+                                                                            206,
+                                                                            63),
+                                                                        shape:
+                                                                            RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(5), // Adjust border radius as needed
+                                                                        ),
+                                                                      ),
+                                                                      child: Row(
+                                                                          children: [
+                                                                            Icon(
+                                                                              Icons.call_rounded,
+                                                                              size: 25,
+                                                                              color: Colors.white,
+                                                                            ),
+                                                                            Text(
+                                                                              'Make a call',
+                                                                              style: TextStyle(
+                                                                                fontSize: 15,
+                                                                                color: Colors.white,
+                                                                                fontWeight: FontWeight.bold,
+                                                                              ),
+                                                                            ),
+                                                                          ]),
+                                                                    ),
+                                                                  ]),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 200,
+                                                          ),
+                                                          Positioned(
+                                                            bottom: 570,
+                                                            left: 80,
+                                                            child: Container(
+                                                              child: Column(
+                                                                children: [
+                                                                  CircleAvatar(
+                                                                    backgroundColor: Colors
+                                                                        .indigo
+                                                                        .shade900,
+                                                                    maxRadius:
+                                                                        68,
+                                                                    minRadius:
+                                                                        67.5,
+                                                                    child:
+                                                                        CircleAvatar(
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .white,
+                                                                      maxRadius:
+                                                                          66,
+                                                                      minRadius:
+                                                                          60,
+                                                                      child:
+                                                                          CircleAvatar(
+                                                                        backgroundImage:
+                                                                            AssetImage('imguser.jpg'),
+                                                                        maxRadius:
+                                                                            59,
+                                                                        minRadius:
+                                                                            56,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    '${candidate.name}',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          18,
+                                                                      color: Colors
+                                                                          .indigo
+                                                                          .shade900,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    '${candidate.skills![0]}',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            15,
+                                                                        color: Colors
+                                                                            .indigo
+                                                                            .shade900,
+                                                                        height:
+                                                                            0),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              15.0),
+                                                      child: Container(
+                                                        child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Container(
+                                                                //basic detail container opening
+                                                                width: 800,
+                                                                height: 300,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              5.0),
+                                                                  color: Colors
+                                                                      .white,
+                                                                  boxShadow: [
+                                                                    BoxShadow(
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      offset: Offset(
+                                                                          0.0,
+                                                                          1.0), //(x,y)
+                                                                      blurRadius:
+                                                                          6.0,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                child: Column(
+                                                                  children: [
+                                                                    Container(
+                                                                      width:
+                                                                          800,
+                                                                      height:
+                                                                          50,
+                                                                      decoration: const BoxDecoration(
+                                                                          color: Color.fromARGB(
+                                                                              255,
+                                                                              146,
+                                                                              176,
+                                                                              226),
+                                                                          borderRadius: BorderRadius.only(
+                                                                              topLeft: Radius.circular(5),
+                                                                              topRight: Radius.circular(5))),
+                                                                      child:
+                                                                          Text(
+                                                                        'Basic Details',
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              18,
+                                                                          color: Colors
+                                                                              .indigo
+                                                                              .shade900,
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                        ),
+                                                                      ),
+                                                                      padding: const EdgeInsets
+                                                                          .only(
+                                                                          top:
+                                                                              10,
+                                                                          left:
+                                                                              20),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          20.0),
+                                                                      child:
+                                                                          Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.spaceBetween,
+                                                                        children: [
+                                                                          Column(
+                                                                            children: [
+                                                                              Text(
+                                                                                'Age',
+                                                                                style: TextStyle(
+                                                                                  fontSize: 16,
+                                                                                  color: Colors.indigo.shade900,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                ),
+                                                                              ),
+                                                                              Text(
+                                                                                '22',
+                                                                                style: TextStyle(fontSize: 15, color: Colors.indigo.shade900, height: 0),
+                                                                              ),
+                                                                              SizedBox(
+                                                                                height: 20,
+                                                                              ),
+                                                                              Text(
+                                                                                'Work Experience',
+                                                                                style: TextStyle(
+                                                                                  fontSize: 16,
+                                                                                  color: Colors.indigo.shade900,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                ),
+                                                                              ),
+                                                                              Text(
+                                                                                '8 months',
+                                                                                style: TextStyle(fontSize: 15, color: Colors.indigo.shade900, height: 0),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          Column(
+                                                                            children: [
+                                                                              Text(
+                                                                                'Contact Number',
+                                                                                style: TextStyle(
+                                                                                  fontSize: 16,
+                                                                                  color: Colors.indigo.shade900,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                ),
+                                                                              ),
+                                                                              Text(
+                                                                                '${candidate.mobile}',
+                                                                                style: TextStyle(fontSize: 15, color: Colors.indigo.shade900, height: 0),
+                                                                              ),
+                                                                              SizedBox(
+                                                                                height: 20,
+                                                                              ),
+                                                                              Text(
+                                                                                'CTC',
+                                                                                style: TextStyle(
+                                                                                  fontSize: 16,
+                                                                                  color: Colors.indigo.shade900,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                ),
+                                                                              ),
+                                                                              Text(
+                                                                                '2.3 Lakh',
+                                                                                style: TextStyle(fontSize: 15, color: Colors.indigo.shade900, height: 0),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          Column(
+                                                                            children: [
+                                                                              Text(
+                                                                                'Email address',
+                                                                                style: TextStyle(
+                                                                                  fontSize: 16,
+                                                                                  color: Colors.indigo.shade900,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                ),
+                                                                              ),
+                                                                              Text(
+                                                                                '${candidate.email}',
+                                                                                style: TextStyle(fontSize: 15, color: Colors.indigo.shade900, height: 0),
+                                                                              ),
+                                                                              SizedBox(
+                                                                                height: 20,
+                                                                              ),
+                                                                              Text(
+                                                                                'Location',
+                                                                                style: TextStyle(
+                                                                                  fontSize: 16,
+                                                                                  color: Colors.indigo.shade900,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                ),
+                                                                              ),
+                                                                              Text(
+                                                                                '${candidate.address}',
+                                                                                style: TextStyle(fontSize: 15, color: Colors.indigo.shade900, height: 0),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          20.0),
+                                                                      child:
+                                                                          Row(
+                                                                        children: [
+                                                                          SizedBox(
+                                                                            height:
+                                                                                40,
+                                                                            width:
+                                                                                230,
+                                                                            child:
+                                                                                ElevatedButton(
+                                                                              onPressed: () {},
+                                                                              style: ElevatedButton.styleFrom(
+                                                                                minimumSize: const Size.fromHeight(45),
+                                                                                fixedSize: const Size.fromWidth(double.infinity),
+                                                                                backgroundColor: Colors.indigo.shade900,
+                                                                                shape: RoundedRectangleBorder(
+                                                                                  borderRadius: BorderRadius.circular(5), // Adjust border radius as needed
+                                                                                ),
+                                                                              ),
+                                                                              child: Row(children: [
+                                                                                Icon(
+                                                                                  Icons.download,
+                                                                                  size: 25,
+                                                                                  color: Colors.white,
+                                                                                ),
+                                                                                Text(
+                                                                                  'Download CV',
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 15,
+                                                                                    color: Colors.white,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                  ),
+                                                                                ),
+                                                                              ]),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                30,
+                                                                          ),
+                                                                          SizedBox(
+                                                                            height:
+                                                                                40,
+                                                                            width:
+                                                                                230,
+                                                                            child:
+                                                                                ElevatedButton(
+                                                                              onPressed: () {},
+                                                                              style: ElevatedButton.styleFrom(
+                                                                                backgroundColor: Colors.indigo.shade900,
+                                                                                shape: RoundedRectangleBorder(
+                                                                                  borderRadius: BorderRadius.circular(5), // Adjust border radius as needed
+                                                                                ),
+                                                                              ),
+                                                                              child: Row(children: [
+                                                                                Icon(
+                                                                                  Icons.download,
+                                                                                  size: 25,
+                                                                                  color: Colors.white,
+                                                                                ),
+                                                                                Text(
+                                                                                  'Download Documents',
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 15,
+                                                                                    color: Colors.white,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                  ),
+                                                                                ),
+                                                                              ]),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              ), //basic detail container closing
+                                                              SizedBox(
+                                                                height: 50,
+                                                              ),
+                                                              Container(
+                                                                  width: 800,
+                                                                  height:
+                                                                      isExpanded
+                                                                          ? 300
+                                                                          : 50,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            5.0),
+                                                                    color: Colors
+                                                                        .amber,
+                                                                    boxShadow: [
+                                                                      BoxShadow(
+                                                                        color: Colors
+                                                                            .grey,
+                                                                        offset: Offset(
+                                                                            0.0,
+                                                                            1.0), //(x,y)
+                                                                        blurRadius:
+                                                                            6.0,
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  child: Column(
+                                                                    children: [
+                                                                      AnimatedContainer(
+                                                                        duration:
+                                                                            Duration(microseconds: 500),
+                                                                        width:
+                                                                            800,
+                                                                        height:
+                                                                            50,
+                                                                        decoration: const BoxDecoration(
+                                                                            color: Color.fromARGB(
+                                                                                255,
+                                                                                146,
+                                                                                176,
+                                                                                226),
+                                                                            borderRadius:
+                                                                                BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5))),
+                                                                        child:
+                                                                            Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.spaceBetween,
+                                                                          children: [
+                                                                            Text(
+                                                                              'Work Experience',
+                                                                              style: TextStyle(
+                                                                                fontSize: 18,
+                                                                                color: Colors.indigo.shade900,
+                                                                                fontWeight: FontWeight.bold,
+                                                                              ),
+                                                                            ),
+                                                                            IconButton(
+                                                                              hoverColor: Colors.transparent,
+                                                                              icon: Icon(Icons.arrow_drop_down_circle_rounded),
+                                                                              iconSize: 30,
+                                                                              color: Colors.indigo.shade900,
+                                                                              onPressed: () {
+                                                                                setState(() {
+                                                                                  isExpanded = !isExpanded;
+                                                                                });
+                                                                              },
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        padding: const EdgeInsets
+                                                                            .only(
+                                                                            top:
+                                                                                10,
+                                                                            left:
+                                                                                20),
+                                                                      ),
+                                                                    ],
+                                                                  )),
+                                                            ]),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                                SizedBox(height: 16.0),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         ],
@@ -328,7 +1234,9 @@ class _ColumnViewState extends State<ColumnView> {
 class CandidateListSource extends DataTableSource {
   final List<Candidate> candidates;
   final BuildContext context;
-  CandidateListSource(this.candidates, {required this.context});
+  final Function(Candidate) onSelect;
+  CandidateListSource(this.candidates,
+      {required this.context, required this.onSelect});
 
   @override
   DataRow? getRow(int index) {
@@ -339,7 +1247,12 @@ class CandidateListSource extends DataTableSource {
       index: index,
       cells: [
         // DataCell(Text((index + 1).toString())),
-        DataCell(Text(e.name.toString())),
+        DataCell(
+          Text(e.name.toString()),
+          onTap: () {
+            onSelect(e);
+          },
+        ),
         DataCell(SizedBox(
           width: 27,
           height: 27,

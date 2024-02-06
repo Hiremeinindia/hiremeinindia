@@ -12,9 +12,7 @@ class Candidate {
   final String? workexp;
   final String? state;
   final String? address;
-  final List<String>? skills;
   final String? qualification;
-  final List<String>? workins;
   final String? workin;
   final String? password;
   final String? otpm;
@@ -25,12 +23,16 @@ class Candidate {
   final String? expectedwage;
   final String? currentwage;
   final String? confirmPassword;
+  final String? verify;
   final String? imageUrl1;
   final String? imageUrl2;
   final String? imageUrl3;
   final String? imageUrl4;
   final String? imageUrl5;
   final String? imageUrl;
+  final List<String>? skills;
+  final List<String>? workins;
+  final List<String>? imageUrls;
   final DocumentReference? reference;
 
   Candidate({
@@ -57,6 +59,8 @@ class Candidate {
     this.expectedwage,
     this.city,
     this.currentwage,
+    this.verify,
+    this.imageUrls,
     this.imageUrl1,
     this.imageUrl2,
     this.imageUrl3,
@@ -83,7 +87,7 @@ class Candidate {
         "password": password,
         "otpm": otpm,
         "code": code,
-        "selectedOption": selectedOption,
+        "label": selectedOption,
         "country": country,
         "confirmPassword": confirmPassword,
         "city": city,
@@ -94,10 +98,11 @@ class Candidate {
         "imageUrl3": imageUrl3,
         "imageUrl4": imageUrl4,
         "imageUrl5": imageUrl5,
-        "imageUrl": imageUrl,
+        "imageUrl": imageUrls,
       };
 
-  factory Candidate.fromSnapshot(DocumentSnapshot snapshot) {
+  factory Candidate.fromSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
     var data = snapshot.data() as Map<String, dynamic>;
     return Candidate(
       name: data["name"],
@@ -107,7 +112,7 @@ class Candidate {
       workexp: data["workexp"],
       aadharno: data["aadharno"],
       gender: data["gender"],
-      selectedOption: data["selectedOption"],
+      selectedOption: data["label"],
       worktitle: data["worktitle"],
       qualification: data["qualification"],
       state: data["state"],
@@ -128,7 +133,7 @@ class Candidate {
       imageUrl3: data["imageUrl3"],
       imageUrl4: data["imageUrl4"],
       imageUrl5: data["imageUrl5"],
-      imageUrl: data["imageUrl"],
+      imageUrls: List<String>.from(data["imageUrl"] ?? []),
     );
   }
 
@@ -142,7 +147,7 @@ class Candidate {
         workexp: json["workexp"],
         aadharno: json["aadharno"],
         gender: json["gender"],
-        selectedOption: json["selectedOption"],
+        selectedOption: json["label"],
         qualification: json["qualification"],
         worktitle: json["worktitle"],
         state: json["state"],
@@ -162,7 +167,7 @@ class Candidate {
         imageUrl3: json["imageUrl3"],
         imageUrl4: json["imageUrl4"],
         imageUrl5: json["imageUrl5"],
-        imageUrl: json["imageUrl"],
+        imageUrls: List<String>.from(json["imageUrl"] ?? []),
         confirmPassword: json["confirmPassword"]);
   }
 

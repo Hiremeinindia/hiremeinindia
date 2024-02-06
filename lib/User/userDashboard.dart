@@ -67,6 +67,7 @@ class _UserDashboard extends State<UserDashboard> {
           title: HireMeInIndia(),
           centerTitle: false,
           toolbarHeight: 80,
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           actions: [
