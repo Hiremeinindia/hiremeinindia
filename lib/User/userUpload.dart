@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui_web';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
