@@ -190,12 +190,11 @@ class _RegistrationState extends State<Registration> {
   final _formKey = GlobalKey<FormState>();
   EmailOTP myauth = EmailOTP();
   CandidateFormController controller = CandidateFormController();
-  final TextEditingController _otpController = TextEditingController();
-  List<String> selectedSkill = [];
-  List<String> selectedWorkin = [];
+  // final TextEditingController _otpController = TextEditingController();
+
   String? skillvalue;
   String? wokinvalue;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  // final FirebaseAuth _auth = FirebaseAuth.instance;
   static const GreySkill = [
     'Plumber',
     'Senior Plumber',

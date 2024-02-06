@@ -17,154 +17,11 @@ import '../Widgets/customTextstyle.dart';
 import '../gen_l10n/app_localizations.dart';
 import '../main.dart';
 
-class CompanyViewUser extends StatefulWidget {
-  CompanyViewUser();
-  @override
-  State<CompanyViewUser> createState() => _CompanyViewUser();
-}
-
-class _CompanyViewUser extends State<CompanyViewUser> {
-  String? selectedValue;
-
-  bool dropdownValue = false;
-  bool isArrowClick = false;
-  bool val1 = false;
-  Candidate? verified;
-
-  bool isPressed = false;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: HireMeInIndia(),
-          automaticallyImplyLeading: false,
-          centerTitle: false,
-          toolbarHeight: 80,
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 50.0, top: 10),
-              child: Row(
-                children: [
-                  Text(
-                    'Corporate Console',
-                    style: TextStyle(
-                        fontSize: 25,
-                        color: Colors.indigo.shade900,
-                        fontFamily: 'Poppins'),
-                  ),
-                  SizedBox(width: 40),
-                  SizedBox(
-                    height: 38,
-                    width: 38,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.black,
-                      child: SizedBox(
-                        width: 36,
-                        height: 36,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.person_outline_outlined,
-                            size: 35,
-                            color: Colors.indigo.shade900,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 8.0),
-                  Padding(
-                    padding: EdgeInsets.only(top: 15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Name',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.indigo.shade900,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          'Designation',
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.indigo.shade900,
-                              height: 0),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-        body: Container(
-          child: Padding(
-            padding: const EdgeInsets.all(80.0),
-            child: Column(
-              children: [
-                Container(
-                  child: Row(
-                    children: [
-                      CustomRectButton(
-                        onPressed: () {},
-                        child: ImageIcon(AssetImage("table.png"),
-                            size: 40, color: Colors.indigo.shade900),
-                        colors: Colors.green.shade200,
-                        bottomleft: Radius.circular(5),
-                        topleft: Radius.circular(5),
-                        bottomright: Radius.zero,
-                        topright: Radius.zero,
-                      ),
-                      CustomRectButton(
-                        onPressed: () {},
-                        child: ImageIcon(AssetImage("table.png"),
-                            size: 30, color: Colors.indigo.shade900),
-                        colors: Colors.grey.shade200,
-                        bottomleft: Radius.zero,
-                        topleft: Radius.zero,
-                        bottomright: Radius.zero,
-                        topright: Radius.zero,
-                      ),
-                      CustomRectButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return FullPagePopup(); // Your custom full-page pop-up widget
-                            },
-                          );
-                        },
-                        child: ImageIcon(AssetImage("table.png"),
-                            size: 50, color: Colors.indigo.shade900),
-                        colors: Colors.red.shade200,
-                        bottomleft: Radius.zero,
-                        topleft: Radius.zero,
-                        bottomright: Radius.circular(5),
-                        topright: Radius.circular(5),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ));
-  }
-}
-
+// ignore: must_be_immutable
 class FullPagePopup extends StatelessWidget {
   Candidate? verified;
+
+  FullPagePopup({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -181,39 +38,102 @@ class FullPagePopup extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-              Row(
-                children: [
-                  CustomRectButton(
-                    onPressed: () {},
-                    child: ImageIcon(AssetImage("table.png"),
-                        size: 40, color: Colors.indigo.shade900),
-                    colors: Colors.green.shade200,
-                    bottomleft: Radius.circular(5),
-                    topleft: Radius.circular(5),
-                    bottomright: Radius.zero,
-                    topright: Radius.zero,
-                  ),
-                  CustomRectButton(
-                    onPressed: () {},
-                    child: ImageIcon(AssetImage("table.png"),
-                        size: 30, color: Colors.indigo.shade900),
-                    colors: Colors.grey.shade200,
-                    bottomleft: Radius.zero,
-                    topleft: Radius.zero,
-                    bottomright: Radius.zero,
-                    topright: Radius.zero,
-                  ),
-                  CustomRectButton(
-                    onPressed: () {},
-                    child: ImageIcon(AssetImage("table.png"),
-                        size: 50, color: Colors.indigo.shade900),
-                    colors: Colors.red.shade200,
-                    bottomleft: Radius.zero,
-                    topleft: Radius.zero,
-                    bottomright: Radius.circular(5),
-                    topright: Radius.circular(5),
-                  ),
-                ],
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton.icon(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        icon: Icon(
+                          Icons.arrow_back_ios_new_outlined,
+                          size: 15,
+                          color: Colors.indigo.shade900,
+                        ),
+                        label: Text(
+                          'Back',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.indigo.shade900,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )),
+                    Container(
+                      child: Row(
+                        children: [
+                          Text(
+                            'Status',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.indigo.shade900,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          SizedBox(
+                            height: 30,
+                            width: 125,
+                            child: CustomDropDown<Candidate?>(
+                              value: verified,
+                              onChanged: (Candidate) {},
+                              items: [
+                                DropdownMenuItem<Candidate?>(
+                                  value: Candidate(
+                                      /* your verified candidate instance */),
+                                  child: Text('Verified'),
+                                ),
+                                DropdownMenuItem<Candidate?>(
+                                  value:
+                                      null, // You can set this to represent "Not Verified"
+                                  child: Text('Not Verified'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      child: Row(
+                        children: [
+                          CustomRectButton(
+                            onPressed: () {},
+                            child: ImageIcon(AssetImage("table.png"),
+                                size: 40, color: Colors.indigo.shade900),
+                            colors: Colors.green.shade200,
+                            bottomleft: Radius.circular(5),
+                            topleft: Radius.circular(5),
+                            bottomright: Radius.zero,
+                            topright: Radius.zero,
+                          ),
+                          CustomRectButton(
+                            onPressed: () {},
+                            child: ImageIcon(AssetImage("table.png"),
+                                size: 30, color: Colors.indigo.shade900),
+                            colors: Colors.grey.shade200,
+                            bottomleft: Radius.zero,
+                            topleft: Radius.zero,
+                            bottomright: Radius.zero,
+                            topright: Radius.zero,
+                          ),
+                          CustomRectButton(
+                            onPressed: () {},
+                            child: ImageIcon(AssetImage("table.png"),
+                                size: 50, color: Colors.indigo.shade900),
+                            colors: Colors.red.shade200,
+                            bottomleft: Radius.zero,
+                            topleft: Radius.zero,
+                            bottomright: Radius.circular(5),
+                            topright: Radius.circular(5),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
               SizedBox(
                 height: 50,
@@ -444,7 +364,7 @@ class FullPagePopup extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  'Name',
+                                  'can',
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.indigo.shade900,

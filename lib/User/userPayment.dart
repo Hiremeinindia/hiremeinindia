@@ -57,13 +57,13 @@ class NewUserPayment extends StatefulWidget {
   final String? qualification;
   final String? state;
   final String? address;
-  final List<String>? workins;
   final String? city;
   final String? country;
-  final List<String>? skills;
   final String? workexp;
   final String? expectedwage;
   final String? currentwage;
+  final List<String>? skills;
+  final List<String>? workins;
   final List<String>? imageUrls;
 
   final Candidate? candidate;
@@ -218,91 +218,91 @@ class _NewUserPayment extends State<NewUserPayment> {
     return imageUrls;
   }
 
-  Future<void> addCandidate(CandidateFormController controller) async {
-    try {
-      List<String> imageUrls = await uploadImages(controller);
-      await controller.reference.set({
-        'name': controller.name.text,
-        'email': controller.email.text,
-        'mobile': controller.mobile.text,
-        'worktitle': controller.worktitle.text,
-        "aadharno": controller.aadharno.text,
-        "gender": controller.gender.text,
-        "workexp": controller.workexp.text,
-        "qualification": controller.qualification.text,
-        "state": controller.state.text,
-        "address": controller.address.text,
-        'workins': controller.workins,
-        "city": controller.city.text,
-        "country": controller.country.text,
-        'skills': controller.skills,
-        "label": controller.selectedOption.text,
-        "expectedwage": controller.expectedwage,
-        "currentwage": controller.currentwage,
-      }, SetOptions(merge: true));
+  // Future<void> addCandidate(CandidateFormController controller) async {
+  //   try {
+  //     List<String> imageUrls = await uploadImages(controller);
+  //     await controller.reference.set({
+  //       'name': controller.name.text,
+  //       'email': controller.email.text,
+  //       'mobile': controller.mobile.text,
+  //       'worktitle': controller.worktitle.text,
+  //       "aadharno": controller.aadharno.text,
+  //       "gender": controller.gender.text,
+  //       "workexp": controller.workexp.text,
+  //       "qualification": controller.qualification.text,
+  //       "state": controller.state.text,
+  //       "address": controller.address.text,
+  //       'workins': controller.workins,
+  //       "city": controller.city.text,
+  //       "country": controller.country.text,
+  //       'skills': controller.skills,
+  //       "label": controller.selectedOption.text,
+  //       "expectedwage": controller.expectedwage,
+  //       "currentwage": controller.currentwage,
+  //     }, SetOptions(merge: true));
 
-      print('Candidate added successfully');
-    } catch (error) {
-      print('Error adding candidate: $error');
-      throw error;
-    }
-  }
+  //     print('Candidate added successfully');
+  //   } catch (error) {
+  //     print('Error adding candidate: $error');
+  //     throw error;
+  //   }
+  // }
 
-  Future<void> uploadUserData() async {
-    try {
-      List<String> imageUrls = await uploadImages(controller);
-      // Prepare user registration data
-      Map<String, dynamic> registrationData = {
-        'name': controller.name.text,
-        'email': controller.email.text,
-        'mobile': controller.mobile.text,
-        'worktitle': controller.worktitle.text,
-        "aadharno": controller.aadharno.text,
-        "gender": controller.gender.text,
-        "workexp": controller.workexp.text,
-        "qualification": controller.qualification.text,
-        "state": controller.state.text,
-        "address": controller.address.text,
-        'workins': controller.workins,
-        "city": controller.city.text,
-        "country": controller.country.text,
-        'skills': controller.skills,
-        "label": controller.selectedOption.text,
-        "expectedwage": controller.expectedwage,
-        "currentwage": controller.currentwage,
-        "imageUrls": imageUrls,
-        // Add other registration data fields as needed
-      };
+  // Future<void> uploadUserData() async {
+  //   try {
+  //     List<String> imageUrls = await uploadImages(controller);
+  //     // Prepare user registration data
+  //     Map<String, dynamic> registrationData = {
+  //       'name': controller.name.text,
+  //       'email': controller.email.text,
+  //       'mobile': controller.mobile.text,
+  //       'worktitle': controller.worktitle.text,
+  //       "aadharno": controller.aadharno.text,
+  //       "gender": controller.gender.text,
+  //       "workexp": controller.workexp.text,
+  //       "qualification": controller.qualification.text,
+  //       "state": controller.state.text,
+  //       "address": controller.address.text,
+  //       'workins': controller.workins,
+  //       "city": controller.city.text,
+  //       "country": controller.country.text,
+  //       'skills': controller.skills,
+  //       "label": controller.selectedOption.text,
+  //       "expectedwage": controller.expectedwage,
+  //       "currentwage": controller.currentwage,
+  //       "imageUrls": imageUrls,
+  //       // Add other registration data fields as needed
+  //     };
 
-      // Prepare documentation upload data
-      // Example:
-      Map<String, dynamic> documentationData = {
-        'document1Url': 'url_to_document1.pdf',
-        'document2Url': 'url_to_document2.pdf',
-        // Add other documentation data fields as needed
-      };
+  //     // Prepare documentation upload data
+  //     // Example:
+  //     Map<String, dynamic> documentationData = {
+  //       'document1Url': 'url_to_document1.pdf',
+  //       'document2Url': 'url_to_document2.pdf',
+  //       // Add other documentation data fields as needed
+  //     };
 
-      // Prepare payment receipt data
-      // Example:
-      Map<String, dynamic> paymentReceiptData = {
-        'receiptUrl': 'url_to_receipt.pdf',
-        'amountPaid': 100,
-        // Add other payment receipt data fields as needed
-      };
+  //     // Prepare payment receipt data
+  //     // Example:
+  //     Map<String, dynamic> paymentReceiptData = {
+  //       'receiptUrl': 'url_to_receipt.pdf',
+  //       'amountPaid': 100,
+  //       // Add other payment receipt data fields as needed
+  //     };
 
-      // Upload all data to Firestore
-      await FirebaseFirestore.instance.collection('greyusercollar').add({
-        'registrationData': registrationData,
-        'documentationData': documentationData,
-        'paymentReceiptData': paymentReceiptData,
-      });
+  //     // Upload all data to Firestore
+  //     await FirebaseFirestore.instance.collection('greyusercollar').add({
+  //       'registrationData': registrationData,
+  //       'documentationData': documentationData,
+  //       'paymentReceiptData': paymentReceiptData,
+  //     });
 
-      print('User data uploaded successfully');
-    } catch (e) {
-      print('Error uploading user data: $e');
-      // Handle error scenario
-    }
-  }
+  //     print('User data uploaded successfully');
+  //   } catch (e) {
+  //     print('Error uploading user data: $e');
+  //     // Handle error scenario
+  //   }
+  // }
 
   Future<List<int>> _readFileAsBytes(String path) async {
     // Read the content of the file as bytes
@@ -871,7 +871,7 @@ class _NewUserPayment extends State<NewUserPayment> {
         "expectedwage": widget.expectedwage,
         "currentwage": widget.currentwage,
         'label': widget.selectedOption,
-        "imageUrl": widget.imageUrls,
+        "imageUrl": widget.imageUrls ?? [],
         "cashrecipt": controller.cashrecipt.text
         // Add additional user-related fields as needed
       });
