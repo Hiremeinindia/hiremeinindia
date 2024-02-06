@@ -907,7 +907,7 @@ class _RegistrationState extends State<Registration> {
                           Text(
                             'Blue Collar',
                             style: TextStyle(
-                                color: Colors.grey.shade500,
+                                color: Colors.grey.shade800,
                                 fontFamily: 'Poppins',
                                 fontWeight: FontWeight.bold),
                           ),
@@ -921,7 +921,7 @@ class _RegistrationState extends State<Registration> {
                             child: Text(
                               'Grey Collar',
                               style: TextStyle(
-                                  color: Colors.grey.shade800,
+                                  color: Colors.grey.shade500,
                                   fontFamily: 'Poppins',
                                   fontWeight: FontWeight.bold),
                             ),
