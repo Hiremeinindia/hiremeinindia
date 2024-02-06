@@ -67,6 +67,7 @@ class _UserDashboard extends State<UserDashboard> {
           title: HireMeInIndia(),
           centerTitle: false,
           toolbarHeight: 80,
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           actions: [
@@ -443,16 +444,6 @@ class _UserDashboard extends State<UserDashboard> {
               Flexible(
                   child: Padding(
                 padding: const EdgeInsets.all(2.0),
-                child: CustomButton(
-                  text: translation(context).registerforOther,
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => const AdminConsole()),
-                    // );
-                  },
-                ),
               ))
             ])));
   }

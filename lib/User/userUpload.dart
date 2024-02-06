@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui_web';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -40,7 +41,6 @@ class NewUserUpload extends StatefulWidget {
   final String? workexp;
   final String? qualification;
   final String? address;
-  final String? label;
   final List<String>? skills;
   final List<String>? workins;
   const NewUserUpload({
@@ -53,7 +53,6 @@ class NewUserUpload extends StatefulWidget {
     this.address,
     this.aadharno,
     this.gender,
-    this.label,
     this.worktitle,
     this.mobile,
     this.qualification,
@@ -476,53 +475,90 @@ class _NewUserUpload extends State<NewUserUpload> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Checkbox(
-                      value: isChecked,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          isChecked = value ?? false;
-                        });
-                      },
-                      fillColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.selected)) {
-                            return Colors.indigo.shade900;
-                          }
-                          return Colors.transparent;
-                        },
-                      ),
-                      checkColor: Colors.black,
-                      side: BorderSide(
-                        color: Colors.black,
-                        width: 2.0,
-                      ),
-                    ),
-                    Text(translation(context).blueColler),
-                    Checkbox(
-                      value: false,
-                      onChanged: null,
-                      fillColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.selected)) {
-                            return Colors.grey;
-                          }
-                          return Colors.transparent;
-                        },
-                      ),
-                      checkColor: Colors.black,
-                      side: BorderSide(
-                        color: Colors.black,
-                        width: 2.0,
-                      ),
-                    ),
-                    Text(translation(context).greyColler),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(left: 35),
+                  child: Row(
+                    children: [
+                      if (widget.selectedOption == 'Blue')
+                        Row(
+                          children: [
+                            Radio(
+                              value: widget.selectedOption,
+                              groupValue: widget.selectedOption,
+                              onChanged: (value) {
+                                // Handle radio button state change if needed
+                                setState(() {
+                                  controller.selectedOption.text =
+                                      value.toString();
+                                });
+                              },
+                            ),
+                            Text(
+                              'Blue Collar',
+                              style: TextStyle(
+                                  color: Colors.grey.shade500,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            IgnorePointer(
+                              child: Radio(
+                                  value: widget.selectedOption,
+                                  groupValue: controller.selectedOption.text,
+                                  onChanged: null),
+                            ),
+                            IgnorePointer(
+                              child: Text(
+                                'Grey Collar',
+                                style: TextStyle(
+                                    color: Colors.grey.shade800,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        )
+                      else if (widget.selectedOption == 'Grey')
+                        Row(
+                          children: [
+                            IgnorePointer(
+                              child: Radio(
+                                  value: widget.selectedOption,
+                                  groupValue: controller.selectedOption.text,
+                                  onChanged: null),
+                            ),
+                            IgnorePointer(
+                              child: Text(
+                                'Blue Collar',
+                                style: TextStyle(
+                                    color: Colors.grey.shade500,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Radio(
+                              value: widget.selectedOption,
+                              groupValue: widget.selectedOption,
+                              onChanged: (value) {
+                                // Handle radio button state change if needed
+                                setState(() {
+                                  controller.selectedOption.text =
+                                      value.toString();
+                                });
+                              },
+                            ),
+                            Text(
+                              'Grey Collar',
+                              style: TextStyle(
+                                  color: Colors.grey.shade800,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        )
+                    ],
+                  ),
                 ),
-                SizedBox(
-                  height: 40,
-                ),
+                SizedBox(height: 37),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -1167,7 +1203,7 @@ class _NewUserUpload extends State<NewUserUpload> {
                                 address: widget.address,
                                 aadharno: widget.aadharno,
                                 qualification: widget.qualification,
-                                label: widget.label,
+                                selectedOption: widget.selectedOption,
                                 gender: widget.gender,
                                 state: state,
                                 city: city,
@@ -1178,6 +1214,8 @@ class _NewUserUpload extends State<NewUserUpload> {
                               ),
                             ),
                           );
+                          print(
+                              '.....................................................           ${widget.selectedOption}              ...................................................');
                         }
                       },
                     ),
@@ -1189,28 +1227,28 @@ class _NewUserUpload extends State<NewUserUpload> {
         ));
   }
 
-  Future<void> uploadImageUrlsToFirestore(List<String> imageUrls, String imgpic,
-      String impaadhar, String imgexp, String imgcv, String imgvoter) async {
-    try {
-      final DocumentReference documentReference =
-          FirebaseFirestore.instance.collection('registeruser').doc();
+  // Future<void> uploadImageUrlsToFirestore(List<String> imageUrls, String imgpic,
+  //     String impaadhar, String imgexp, String imgcv, String imgvoter) async {
+  //   try {
+  //     final DocumentReference documentReference =
+  //         FirebaseFirestore.instance.collection('registeruser').doc();
 
-      await documentReference.set({
-        'imgVoter': imgvoter,
-        'imgAadhar': impaadhar,
-        'imageCV': imgcv,
-        'imagePicture': imgpic,
-        'imgExperience': imgexp,
-        'imageUrls': imageUrls,
-        // Add additional fields if needed
-      });
+  //     await documentReference.set({
+  //       'imgVoter': imgvoter,
+  //       'imgAadhar': impaadhar,
+  //       'imageCV': imgcv,
+  //       'imagePicture': imgpic,
+  //       'imgExperience': imgexp,
+  //       'imageUrls': imageUrls,
+  //       // Add additional fields if needed
+  //     });
 
-      print('Data including image URLs uploaded to Firestore successfully.');
-    } catch (error) {
-      print('Error uploading data to Firestore: $error');
-      throw error;
-    }
-  }
+  //     print('Data including image URLs uploaded to Firestore successfully.');
+  //   } catch (error) {
+  //     print('Error uploading data to Firestore: $error');
+  //     throw error;
+  //   }
+  // }
 
   Widget buildProgress() => StreamBuilder<TaskSnapshot>(
       stream:

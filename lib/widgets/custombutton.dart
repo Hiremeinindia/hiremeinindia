@@ -85,34 +85,32 @@ final class ViewButton extends StatelessWidget {
   Widget? child;
   final Function()? onPressed;
   IconData? icon;
+  final Color? colors;
 
   ViewButton({
     super.key,
     this.onPressed,
     this.icon,
     this.child,
+    this.colors,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 50,
-      width: 50,
+      height: 55,
+      width: 100,
       child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          fixedSize: const Size.fromWidth(double.infinity),
-          primary: Colors.indigo.shade900,
-          shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.circular(0.1), // Adjust border radius as needed
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            fixedSize: const Size.fromWidth(double.infinity),
+            backgroundColor: colors,
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(0.5), // Adjust border radius as needed
+            ),
           ),
-        ),
-        child: Icon(
-          icon,
-          color: Colors.white,
-        ),
-      ),
+          child: child),
     );
   }
 }

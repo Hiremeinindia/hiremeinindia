@@ -7,9 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'user.dart';
 
 class CandidateFormController {
-  CandidateFormController({String? initialSelectedOption}) {
-    selectedOption = TextEditingController(text: initialSelectedOption);
-  }
+  CandidateFormController();
   final name = TextEditingController();
   final mobile = TextEditingController();
   final email = TextEditingController();
@@ -35,10 +33,11 @@ class CandidateFormController {
   final imgexp = TextEditingController();
   final imgaadhar = TextEditingController();
   final imgvoter = TextEditingController();
+  final cashrecipt = TextEditingController();
+  final selectedOption = TextEditingController();
   List<File> images = [];
   List<String> skills = [];
   List<String> workins = [];
-  late TextEditingController selectedOption;
   File? image;
   File? imageUrl;
   File? imageUrl1;

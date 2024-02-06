@@ -419,11 +419,12 @@ class _HiredState extends State<Hired> {
             CustomButton(
               text: 'SignUp',
               onPressed: () {
+                String selectedOption = 'Blue';
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => Registration(
-                            selectedOption: 'Blue',
+                            selectedOption: selectedOption,
                           )),
                 );
               },
@@ -457,14 +458,17 @@ void _showgreyDialog(BuildContext context) {
           CustomButton(
             text: 'SignUp',
             onPressed: () {
+              String selectedOption = 'Grey';
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => Registration(
-                    selectedOption: 'Grey',
+                    selectedOption: selectedOption,
                   ),
                 ),
               );
+              print(
+                  '.....................................................           $selectedOption              ...................................................');
             },
           )
         ],

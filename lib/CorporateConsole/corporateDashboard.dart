@@ -22,16 +22,6 @@ class CorporateDashboard extends StatefulWidget {
 }
 
 class _CorporateDashboard extends State<CorporateDashboard> {
-  final List<String> items = [
-    'Item1',
-    'Item2',
-    'Item3',
-    'Item4',
-    'Item5',
-    'Item6',
-    'Item7',
-    'Item8',
-  ];
   String? selectedValue;
 
   bool dropdownValue = false;
