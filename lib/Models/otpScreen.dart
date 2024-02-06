@@ -1,5 +1,3 @@
-import 'package:email_otp/email_otp.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hiremeinindiaapp/homepage.dart';
@@ -42,8 +40,10 @@ class Otp extends StatelessWidget {
 }
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({Key? key, required this.myauth}) : super(key: key);
-  final EmailOTP myauth;
+  const OtpScreen(
+    Key? key,
+  ) : super(key: key);
+  // final EmailOTP myauth;
   @override
   State<OtpScreen> createState() => _OtpScreenState();
 }
@@ -113,22 +113,22 @@ class _OtpScreenState extends State<OtpScreen> {
           ),
           ElevatedButton(
             onPressed: () async {
-              if (await widget.myauth.verifyOTP(
-                      otp: otp1Controller.text +
-                          otp2Controller.text +
-                          otp3Controller.text +
-                          otp4Controller.text) ==
-                  true) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("OTP is verified"),
-                ));
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const HomePage()));
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Invalid OTP"),
-                ));
-              }
+              //   if (await widget.myauth.verifyOTP(
+              //           otp: otp1Controller.text +
+              //               otp2Controller.text +
+              //               otp3Controller.text +
+              //               otp4Controller.text) ==
+              //       true) {
+              //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              //       content: Text("OTP is verified"),
+              //     ));
+              //     Navigator.push(context,
+              //         MaterialPageRoute(builder: (context) => const HomePage()));
+              //   } else {
+              //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              //       content: Text("Invalid OTP"),
+              //     ));
+              //   }
             },
             child: const Text(
               "Confirm",

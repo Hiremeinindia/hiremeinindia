@@ -444,16 +444,6 @@ class _UserDashboard extends State<UserDashboard> {
               Flexible(
                   child: Padding(
                 padding: const EdgeInsets.all(2.0),
-                child: CustomButton(
-                  text: translation(context).registerforOther,
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => const AdminConsole()),
-                    // );
-                  },
-                ),
               ))
             ])));
   }
