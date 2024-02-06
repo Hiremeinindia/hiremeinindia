@@ -1081,9 +1081,45 @@ class _RegistrationState extends State<Registration> {
                           Expanded(
                             child: Column(
                               children: [
-                                CustomTextfield(
-                                  // validator: nameValidator,
-                                  controller: controller.gender,
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: RadioListTile<String>(
+                                        title: const Text("Male"),
+                                        value: "male",
+                                        groupValue: controller.gender.text,
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            controller.gender.text = value!;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: RadioListTile<String>(
+                                        title: const Text("Female"),
+                                        value: "female",
+                                        groupValue: controller.gender.text,
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            controller.gender.text = value!;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: RadioListTile<String>(
+                                        title: const Text("Others"),
+                                        value: "others",
+                                        groupValue: controller.gender.text,
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            controller.gender.text = value!;
+                                          });
+                                        },
+                                      ),
+                                    )
+                                  ],
                                 ),
                                 SizedBox(
                                   height: 40,
