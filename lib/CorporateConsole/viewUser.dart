@@ -8,6 +8,7 @@ import 'package:hiremeinindiaapp/CorporateConsole/multipleFilter.dart';
 import 'package:hiremeinindiaapp/Providers/session.dart';
 import 'package:hiremeinindiaapp/User/user.dart';
 import 'package:hiremeinindiaapp/widgets/custombutton.dart';
+import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../Classes/language.dart';
 import '../Classes/language_constants.dart';
@@ -19,6 +20,8 @@ import '../main.dart';
 
 // ignore: must_be_immutable
 class FullPagePopup extends StatefulWidget {
+  final Candidate candidate;
+  const FullPagePopup({Key? key, required this.candidate}) : super(key: key);
   @override
   _FullPagePopupState createState() => _FullPagePopupState();
 }
@@ -28,6 +31,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
   IconData? icon;
   Candidate? verified;
 
+  DateTime? _selectedDateTime;
   void initState() {
     super.initState();
   }
@@ -36,12 +40,13 @@ class _FullPagePopupState extends State<FullPagePopup> {
   bool expandCertificate = false;
   bool expandCourse = false;
   bool expandProject = false;
-  _makingPhoneCall() async {
-    var url = Uri.parse("tel:9776765434");
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
+  void _callNumber(String? mobile) async {
+    String url = "tel://$mobile";
+    print('Mobile Number:$mobile');
+    if (await canLaunch(url)) {
+      await launch(url);
     } else {
-      throw 'Could not launch $url';
+      throw 'Could not call $mobile';
     }
   }
 
@@ -233,7 +238,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                         child: Container(
                                           padding: EdgeInsets.all(3),
                                           child: Text(
-                                            'skill',
+                                            '${widget.candidate.skills![0]}',
                                             style: TextStyle(
                                                 fontSize: 15,
                                                 color: Colors.indigo.shade900,
@@ -259,7 +264,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                         child: Container(
                                           padding: EdgeInsets.all(3),
                                           child: Text(
-                                            'skills1',
+                                            '${widget.candidate.skills![1]}',
                                             style: TextStyle(
                                                 fontSize: 15,
                                                 color: Colors.indigo.shade900,
@@ -288,24 +293,22 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                         height: 25,
                                         child: Container(
                                           padding: EdgeInsets.all(3),
-
+                                          child: Text(
+                                            '${widget.candidate.workins![0] ?? '- - -'}',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.indigo.shade900,
+                                                height: 0),
+                                          ),
                                           decoration: BoxDecoration(
                                             border: Border.all(
                                                 color: const Color(0xFF000000),
                                                 style: BorderStyle
                                                     .solid), //Border.all
                                             /*** The BorderRadius widget  is here ***/
-                                            borderRadius:
-                                                const BorderRadius.all(
+                                            borderRadius: BorderRadius.all(
                                               Radius.circular(15),
                                             ), //BorderRadius.all
-                                          ),
-                                          child: Text(
-                                            '- - -',
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.indigo.shade900,
-                                                height: 0),
                                           ), //BoxDecoration
                                         ),
                                       ),
@@ -341,7 +344,61 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                     height: 60,
                                   ),
                                   ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                      DateTime? dateTime =
+                                          await showOmniDateTimePicker(
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime(1600).subtract(
+                                            const Duration(days: 3652)),
+                                        lastDate: DateTime.now().add(
+                                          const Duration(days: 3652),
+                                        ),
+                                        is24HourMode: false,
+                                        isShowSeconds: false,
+                                        minutesInterval: 1,
+                                        secondsInterval: 1,
+                                        isForce2Digits: true,
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(16)),
+                                        constraints: const BoxConstraints(
+                                          maxWidth: 350,
+                                          maxHeight: 650,
+                                        ),
+                                        transitionBuilder:
+                                            (context, anim1, anim2, child) {
+                                          return FadeTransition(
+                                            opacity: anim1.drive(
+                                              Tween(
+                                                begin: 0,
+                                                end: 1,
+                                              ),
+                                            ),
+                                            child: child,
+                                          );
+                                        },
+                                        transitionDuration:
+                                            const Duration(milliseconds: 200),
+                                        barrierDismissible: true,
+                                        selectableDayPredicate: (dateTime) {
+                                          // Disable 25th Feb 2023
+                                          if (dateTime ==
+                                              DateTime(2023, 2, 25)) {
+                                            return false;
+                                          } else {
+                                            return true;
+                                          }
+                                        },
+                                      );
+
+                                      if (dateTime != null) {
+                                        setState(() {
+                                          _selectedDateTime = dateTime;
+                                        });
+                                      }
+
+                                      print("dateTime: $dateTime");
+                                    },
                                     style: ElevatedButton.styleFrom(
                                       minimumSize: const Size.fromHeight(45),
                                       fixedSize:
@@ -353,27 +410,33 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                             5), // Adjust border radius as needed
                                       ),
                                     ),
-                                    child: const Row(children: [
-                                      Icon(
-                                        Icons.calendar_month_outlined,
-                                        size: 25,
-                                        color: Colors.white,
-                                      ),
-                                      Text(
-                                        'Schedule an interview',
-                                        style: TextStyle(
-                                          fontSize: 15,
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.calendar_month_outlined,
+                                          size: 25,
                                           color: Colors.white,
-                                          fontWeight: FontWeight.bold,
                                         ),
-                                      ),
-                                    ]),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          _selectedDateTime != null
+                                              ? "${_selectedDateTime.toString()}"
+                                              : 'Schedule an interview',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 30,
                                   ),
                                   ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () =>
+                                        _callNumber(widget.candidate.mobile),
                                     style: ElevatedButton.styleFrom(
                                       minimumSize: const Size.fromHeight(45),
                                       fixedSize:
@@ -400,7 +463,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                         ),
                                       ),
                                     ]),
-                                  ),
+                                  )
                                 ]),
                           ),
                         ),
@@ -430,7 +493,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                   ),
                                 ),
                                 Text(
-                                  'name',
+                                  '${widget.candidate.name}',
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.indigo.shade900,
@@ -438,7 +501,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                   ),
                                 ),
                                 Text(
-                                  'skill',
+                                  '${widget.candidate.skills![0]}',
                                   style: TextStyle(
                                       fontSize: 15,
                                       color: Colors.indigo.shade900,
@@ -545,7 +608,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                           ),
                                         ),
                                         Text(
-                                          'number',
+                                          '${widget.candidate.mobile}',
                                           style: TextStyle(
                                               fontSize: 15,
                                               color: Colors.indigo.shade900,
@@ -582,7 +645,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                           ),
                                         ),
                                         Text(
-                                          'email',
+                                          '${widget.candidate.email}',
                                           style: TextStyle(
                                               fontSize: 15,
                                               color: Colors.indigo.shade900,
@@ -600,7 +663,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                           ),
                                         ),
                                         Text(
-                                          'address',
+                                          '${widget.candidate.address}',
                                           style: TextStyle(
                                               fontSize: 15,
                                               color: Colors.indigo.shade900,
@@ -1176,17 +1239,6 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                       ),
                                     ],
                                   )),
-                        ElevatedButton(
-                          onPressed: _makingPhoneCall,
-                          style: ButtonStyle(
-                            padding: MaterialStateProperty.all(
-                                const EdgeInsets.all(5.0)),
-                            textStyle: MaterialStateProperty.all(
-                              const TextStyle(color: Colors.black),
-                            ),
-                          ),
-                          child: const Text('Here'),
-                        ),
                       ])
                 ],
               ),

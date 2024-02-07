@@ -1,76 +1,142 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
+import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
-class DownloadButton extends StatefulWidget {
+class Sample extends StatefulWidget {
   @override
-  _DownloadButtonState createState() => _DownloadButtonState();
+  _SampleState createState() => _SampleState();
 }
 
-class _DownloadButtonState extends State<DownloadButton> {
-  bool _downloading = false;
-  String _downloadMessage = '';
-
-  Future<void> _downloadImage() async {
-    setState(() {
-      _downloading = true;
-      _downloadMessage = 'Downloading image...';
-    });
-
-    // Retrieve the image from Firestore
-    final String imageUrl =
-        'YOUR_IMAGE_URL_HERE'; // Replace with your Firestore image URL
-    final firebase_storage.Reference ref =
-        firebase_storage.FirebaseStorage.instance.ref(imageUrl);
-
-    try {
-      // Download the image to temporary directory
-      final Directory tempDir = await getTemporaryDirectory();
-      final File file = File('${tempDir.path}/image.jpg');
-
-      await ref.writeToFile(file);
-
-      setState(() {
-        _downloadMessage = 'Image downloaded successfully!';
-      });
-    } catch (e) {
-      print('Error downloading image: $e');
-      setState(() {
-        _downloadMessage = 'Error downloading image';
-      });
-    } finally {
-      setState(() {
-        _downloading = false;
-      });
-    }
-  }
-
+class _SampleState extends State<Sample> {
+  DateTime? _selectedDateTime;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Download Image'),
+    return MaterialApp(
+      title: 'Omni DateTime Picker',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: Colors.deepPurple,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: _downloading ? null : _downloadImage,
-              child: Text('Download Image'),
-            ),
-            SizedBox(height: 20.0),
-            Text(_downloadMessage),
-          ],
+      home: Scaffold(
+        body: Center(
+          child: Column(
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  DateTime? dateTime = await showOmniDateTimePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate:
+                        DateTime(1600).subtract(const Duration(days: 3652)),
+                    lastDate: DateTime.now().add(
+                      const Duration(days: 3652),
+                    ),
+                    is24HourMode: false,
+                    isShowSeconds: false,
+                    minutesInterval: 1,
+                    secondsInterval: 1,
+                    isForce2Digits: true,
+                    borderRadius: const BorderRadius.all(Radius.circular(16)),
+                    constraints: const BoxConstraints(
+                      maxWidth: 350,
+                      maxHeight: 650,
+                    ),
+                    transitionBuilder: (context, anim1, anim2, child) {
+                      return FadeTransition(
+                        opacity: anim1.drive(
+                          Tween(
+                            begin: 0,
+                            end: 1,
+                          ),
+                        ),
+                        child: child,
+                      );
+                    },
+                    transitionDuration: const Duration(milliseconds: 200),
+                    barrierDismissible: true,
+                    selectableDayPredicate: (dateTime) {
+                      // Disable 25th Feb 2023
+                      if (dateTime == DateTime(2023, 2, 25)) {
+                        return false;
+                      } else {
+                        return true;
+                      }
+                    },
+                  );
+
+                  if (dateTime != null) {
+                    setState(() {
+                      _selectedDateTime = dateTime;
+                    });
+                  }
+                },
+                child: const Text("Show DateTime Picker"),
+              ),
+              SizedBox(height: 20),
+              if (_selectedDateTime != null)
+                Text(
+                  "Selected Date and Time: ${_selectedDateTime.toString()}",
+                  style: TextStyle(fontSize: 16),
+                ),
+              ElevatedButton(
+                onPressed: () async {
+                  List<DateTime>? dateTimeList =
+                      await showOmniDateTimeRangePicker(
+                    context: context,
+                    startInitialDate: DateTime.now(),
+                    startFirstDate:
+                        DateTime(1600).subtract(const Duration(days: 3652)),
+                    startLastDate: DateTime.now().add(
+                      const Duration(days: 3652),
+                    ),
+                    endInitialDate: DateTime.now(),
+                    endFirstDate:
+                        DateTime(1600).subtract(const Duration(days: 3652)),
+                    endLastDate: DateTime.now().add(
+                      const Duration(days: 3652),
+                    ),
+                    is24HourMode: false,
+                    isShowSeconds: false,
+                    minutesInterval: 1,
+                    secondsInterval: 1,
+                    isForce2Digits: true,
+                    borderRadius: const BorderRadius.all(Radius.circular(16)),
+                    constraints: const BoxConstraints(
+                      maxWidth: 350,
+                      maxHeight: 650,
+                    ),
+                    transitionBuilder: (context, anim1, anim2, child) {
+                      return FadeTransition(
+                        opacity: anim1.drive(
+                          Tween(
+                            begin: 0,
+                            end: 1,
+                          ),
+                        ),
+                        child: child,
+                      );
+                    },
+                    transitionDuration: const Duration(milliseconds: 200),
+                    barrierDismissible: true,
+                    selectableDayPredicate: (dateTime) {
+                      // Disable 25th Feb 2023
+                      if (dateTime == DateTime(2023, 2, 25)) {
+                        return false;
+                      } else {
+                        return true;
+                      }
+                    },
+                  );
+
+                  print("Start dateTime: ${dateTimeList?[0]}");
+                  print("End dateTime: ${dateTimeList?[1]}");
+                },
+                child: const Text("Show DateTime Range Picker"),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: DownloadButton(),
-  ));
 }
