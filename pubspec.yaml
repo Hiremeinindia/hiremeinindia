@@ -80,6 +80,8 @@ dependencies:
   auth: ^8.2.0+02
   mailer: ^6.0.1
   sendgrid_mailer: ^0.1.3
+  url_launcher: ^6.2.4
+  image_picker: ^1.0.7
   
 
 dev_dependencies:

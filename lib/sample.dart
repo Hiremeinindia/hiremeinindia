@@ -1,46 +1,76 @@
-import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
-class Sample extends StatefulWidget {
-  const Sample({Key? key}) : super(key: key);
-
+class DownloadButton extends StatefulWidget {
   @override
-  State<Sample> createState() => _SampleState();
+  _DownloadButtonState createState() => _DownloadButtonState();
 }
 
-class _SampleState extends State<Sample> {
-  bool isExpanded = false;
+class _DownloadButtonState extends State<DownloadButton> {
+  bool _downloading = false;
+  String _downloadMessage = '';
+
+  Future<void> _downloadImage() async {
+    setState(() {
+      _downloading = true;
+      _downloadMessage = 'Downloading image...';
+    });
+
+    // Retrieve the image from Firestore
+    final String imageUrl =
+        'YOUR_IMAGE_URL_HERE'; // Replace with your Firestore image URL
+    final firebase_storage.Reference ref =
+        firebase_storage.FirebaseStorage.instance.ref(imageUrl);
+
+    try {
+      // Download the image to temporary directory
+      final Directory tempDir = await getTemporaryDirectory();
+      final File file = File('${tempDir.path}/image.jpg');
+
+      await ref.writeToFile(file);
+
+      setState(() {
+        _downloadMessage = 'Image downloaded successfully!';
+      });
+    } catch (e) {
+      print('Error downloading image: $e');
+      setState(() {
+        _downloadMessage = 'Error downloading image';
+      });
+    } finally {
+      setState(() {
+        _downloading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            // Toggle the expanded state on button click
-            setState(() {
-              isExpanded = !isExpanded;
-            });
-          },
-          child: Text('Toggle Container'),
-        ),
-        SizedBox(height: 20),
-
-        // AnimatedContainer that expands or collapses based on isExpanded
-        AnimatedContainer(
-          duration: Duration(milliseconds: 500),
-          width: 200,
-          height: isExpanded ? 200 : 50,
-          color: Colors.blue,
-          child: Center(
-            child: Text(
-              'Expanded Container',
-              style: TextStyle(color: Colors.white),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Download Image'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: _downloading ? null : _downloadImage,
+              child: Text('Download Image'),
             ),
-          ),
+            SizedBox(height: 20.0),
+            Text(_downloadMessage),
+          ],
         ),
-      ],
+      ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: DownloadButton(),
+  ));
 }
