@@ -38,8 +38,11 @@ class NewUserUpload extends StatefulWidget {
   final String? aadharno;
   final String? gender;
   final String? workexp;
+  final String? workexpcount;
   final String? qualification;
   final String? address;
+  final String? course;
+  final String? project;
   final List<String>? skills;
   final List<String>? workins;
   const NewUserUpload({
@@ -52,10 +55,13 @@ class NewUserUpload extends StatefulWidget {
     this.address,
     this.aadharno,
     this.gender,
+    this.course,
+    this.project,
     this.worktitle,
     this.mobile,
     this.qualification,
     this.skills,
+    this.workexpcount,
     this.workexp,
     this.workins,
   }) : assert(name != null && email != null && password != null);
@@ -1113,6 +1119,12 @@ class _NewUserUpload extends State<NewUserUpload> {
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.bold),
                         ),
+                        Text(
+                          'CTC',
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.bold),
+                        ),
                       ],
                     ),
                     SizedBox(
@@ -1137,6 +1149,18 @@ class _NewUserUpload extends State<NewUserUpload> {
                           height: 40,
                           child: TextField(
                             controller: controller.currentwage,
+                            // Set controller
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 40),
+                        SizedBox(
+                          width: 400,
+                          height: 40,
+                          child: TextField(
+                            controller: controller.ctc,
                             // Set controller
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
@@ -1171,6 +1195,7 @@ class _NewUserUpload extends State<NewUserUpload> {
                           String state = controller.state.text;
                           String city = controller.city.text;
                           String country = controller.country.text;
+                          String ctc = controller.ctc.text;
                           String expectedwage = controller.expectedwage.text;
 
                           String currentwage = controller.currentwage.text;
@@ -1196,16 +1221,20 @@ class _NewUserUpload extends State<NewUserUpload> {
                                 password: widget.password,
                                 mobile: widget.mobile,
                                 workexp: widget.workexp,
+                                workexpcount: widget.workexpcount,
                                 workins: widget.workins,
                                 worktitle: widget.worktitle,
                                 skills: widget.skills,
                                 address: widget.address,
+                                course: widget.course,
+                                project: widget.project,
                                 aadharno: widget.aadharno,
                                 qualification: widget.qualification,
                                 selectedOption: widget.selectedOption,
                                 gender: widget.gender,
                                 state: state,
                                 city: city,
+                                ctc: ctc,
                                 country: country,
                                 currentwage: currentwage,
                                 expectedwage: expectedwage,

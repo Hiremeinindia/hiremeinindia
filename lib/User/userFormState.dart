@@ -15,16 +15,22 @@ class CandidateFormController {
   final aadharno = TextEditingController();
   final gender = TextEditingController();
   final workexp = TextEditingController();
+  final workexpcount = TextEditingController();
   final state = TextEditingController();
   final address = TextEditingController();
   final password = TextEditingController();
   final otpm = TextEditingController();
   final code = TextEditingController();
   final otp = TextEditingController();
+  final course = TextEditingController();
+  final project = TextEditingController();
   final qualification = TextEditingController();
+  final qualiDescription = TextEditingController();
+  final aboutYou = TextEditingController();
   final city = TextEditingController();
   final expectedwage = TextEditingController();
   final currentwage = TextEditingController();
+  final ctc = TextEditingController();
   final bluecoller = TextEditingController();
   final country = TextEditingController();
   final confirmPassword = TextEditingController();
@@ -63,8 +69,13 @@ class CandidateFormController {
         workexp: workexp.text,
         state: state.text,
         address: address.text,
+        course: course.text,
+        project: project.text,
         skills: skills,
         qualification: qualification.text,
+        aboutYou: aboutYou.text,
+        qualiDescription: qualiDescription.text,
+        ctc: ctc.text,
         workins: workins,
         password: password.text,
         otpm: otpm.text,

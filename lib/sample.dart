@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 class Sample extends StatefulWidget {
@@ -34,7 +35,6 @@ class _SampleState extends State<Sample> {
                     is24HourMode: false,
                     isShowSeconds: false,
                     minutesInterval: 1,
-                    secondsInterval: 1,
                     isForce2Digits: true,
                     borderRadius: const BorderRadius.all(Radius.circular(16)),
                     constraints: const BoxConstraints(
@@ -69,8 +69,40 @@ class _SampleState extends State<Sample> {
                       _selectedDateTime = dateTime;
                     });
                   }
+
+                  print("dateTime: $dateTime");
                 },
-                child: const Text("Show DateTime Picker"),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(45),
+                  fixedSize: const Size.fromWidth(double.infinity),
+                  backgroundColor: Color.fromARGB(255, 113, 46, 168),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        5), // Adjust border radius as needed
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.calendar_month_outlined,
+                      size: 25,
+                      color: Colors.white,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      _selectedDateTime != null
+                          ? DateFormat.yMMMd()
+                              .add_jm()
+                              .format(_selectedDateTime!)
+                          : 'Schedule an interview',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 20),
               if (_selectedDateTime != null)
