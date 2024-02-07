@@ -33,7 +33,10 @@ class NewUserPayment extends StatefulWidget {
     this.aadharno,
     this.gender,
     this.workexp,
+    this.workexpcount,
     this.qualification,
+    this.course,
+    this.project,
     this.address,
     this.workins,
     this.skills,
@@ -41,6 +44,7 @@ class NewUserPayment extends StatefulWidget {
     this.currentwage,
     this.imageUrls,
     this.city,
+    this.ctc,
     this.state,
     this.country,
     this.candidate,
@@ -58,10 +62,14 @@ class NewUserPayment extends StatefulWidget {
   final String? state;
   final String? address;
   final String? city;
+  final String? course;
+  final String? project;
   final String? country;
   final String? workexp;
+  final String? workexpcount;
   final String? expectedwage;
   final String? currentwage;
+  final String? ctc;
   final List<String>? skills;
   final List<String>? workins;
   final List<String>? imageUrls;
@@ -861,13 +869,17 @@ class _NewUserPayment extends State<NewUserPayment> {
         "aadharno": widget.aadharno,
         "gender": widget.gender,
         "workexp": widget.workexp,
+        "workexpcount": widget.workexpcount,
         "qualification": widget.qualification,
         "state": widget.state,
         "address": widget.address,
         'workins': widget.workins ?? [],
         "city": widget.city,
+        "project": widget.project,
+        "course": widget.course,
         "country": widget.country,
         'skills': widget.skills ?? [],
+        "ctc": widget.ctc,
         "expectedwage": widget.expectedwage,
         "currentwage": widget.currentwage,
         'label': widget.selectedOption,
