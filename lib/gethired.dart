@@ -305,7 +305,7 @@ class _HiredState extends State<Hired> {
                     SizedBox(
                         height: 200,
                         width: 200,
-                        child: Image(image: AssetImage('imgman.jpg'))),
+                        child: Image.asset('imgman.jpg')),
                     SizedBox(
                       height: 2,
                     ),
@@ -350,7 +350,7 @@ class _HiredState extends State<Hired> {
                     SizedBox(
                         height: 200,
                         width: 200,
-                        child: Image(image: AssetImage('imggirl.jpg'))),
+                        child: Image.asset('imggirl.jpg')),
                     SizedBox(
                       height: 2,
                     ),
