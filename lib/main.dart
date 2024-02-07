@@ -12,7 +12,7 @@ import 'package:hiremeinindiaapp/homepage.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 
 import 'package:hiremeinindiaapp/User/userPayment.dart';
-import 'package:hiremeinindiaapp/sample.dart';
+
 import 'package:provider/provider.dart';
 import 'classes/language_constants.dart';
 

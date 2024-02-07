@@ -57,7 +57,7 @@ dependencies:
   slang_flutter: ^3.26.2
   email_auth: ^1.0.0
   flutter_dialogs: ^3.0.0
-  email_otp: ^2.0.1
+  
   otp_text_field: ^1.1.3
   http: ^0.13.6
   flutter_localizations:

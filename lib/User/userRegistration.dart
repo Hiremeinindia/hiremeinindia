@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:email_otp/email_otp.dart';
+
 import 'package:email_auth/email_auth.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:hiremeinindiaapp/User/user.dart';
@@ -174,6 +174,7 @@ class _RegistrationState extends State<Registration> {
   bool submitValid = false;
 
   String enteredOTP = '';
+  String? gender = "male";
   String smscode = "";
   String phoneNumber = "", data = "", phone = "";
   bool isVerified = false;
@@ -188,7 +189,7 @@ class _RegistrationState extends State<Registration> {
   late final Candidate? candidate;
   var isLoading = false;
   final _formKey = GlobalKey<FormState>();
-  EmailOTP myauth = EmailOTP();
+  // EmailOTP myauth = EmailOTP();
   CandidateFormController controller = CandidateFormController();
   // final TextEditingController _otpController = TextEditingController();
 
@@ -906,7 +907,7 @@ class _RegistrationState extends State<Registration> {
                           Text(
                             'Blue Collar',
                             style: TextStyle(
-                                color: Colors.grey.shade500,
+                                color: Colors.grey.shade800,
                                 fontFamily: 'Poppins',
                                 fontWeight: FontWeight.bold),
                           ),
@@ -920,7 +921,7 @@ class _RegistrationState extends State<Registration> {
                             child: Text(
                               'Grey Collar',
                               style: TextStyle(
-                                  color: Colors.grey.shade800,
+                                  color: Colors.grey.shade500,
                                   fontFamily: 'Poppins',
                                   fontWeight: FontWeight.bold),
                             ),
@@ -1397,7 +1398,7 @@ class _RegistrationState extends State<Registration> {
                               //   otpLength: 4,
                               //   otpType: OTPType.digitsOnly,
                               // );
-                              _sendOtp();
+
                               _showOtpDialog(otp);
 
                               // // Send OTP to email
