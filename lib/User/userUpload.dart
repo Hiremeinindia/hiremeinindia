@@ -42,6 +42,9 @@ class NewUserUpload extends StatefulWidget {
   final String? qualification;
   final String? address;
   final String? course;
+  final String? qualiDescription;
+  final String? age;
+  final String? aboutYou;
   final String? project;
   final List<String>? skills;
   final List<String>? workins;
@@ -58,6 +61,9 @@ class NewUserUpload extends StatefulWidget {
     this.course,
     this.project,
     this.worktitle,
+    this.aboutYou,
+    this.age,
+    this.qualiDescription,
     this.mobile,
     this.qualification,
     this.skills,
@@ -76,14 +82,9 @@ class _NewUserUpload extends State<NewUserUpload> {
 
   UploadTask? uploadTask;
   final _formKey = GlobalKey<FormState>();
-  List<File> images = [];
-  List<String> cvImageUrls = [];
-  List<String> expImageUrls = [];
-  List<String> voteImageUrls = [];
-  List<String> pictureImageUrls = [];
-  List<String> aadharImageUrls = [];
   CandidateFormController controller = CandidateFormController();
 
+  UploadTask? uploadTasks;
   @override
   void dispose() {
     // Dispose controllers when the widget is disposed
@@ -92,137 +93,58 @@ class _NewUserUpload extends State<NewUserUpload> {
     super.dispose();
   }
 
-// Function to upload file from bytes (for web platform)
-  Future<String> uploadFileFromBytes(
-      {required Uint8List fileBytes, required String originalFileName}) async {
-    final Reference storageReference =
-        FirebaseStorage.instance.ref().child('uploads/$originalFileName');
-    final UploadTask uploadTask = storageReference.putData(fileBytes);
-    await uploadTask;
-    return await storageReference.getDownloadURL();
-  }
-
-  Future<String> uploadFileToStorage(String filePath) async {
-    final Reference storageReference = FirebaseStorage.instance
-        .ref()
-        .child('uploads/${path.basename(filePath)}');
-    final UploadTask uploadTask = storageReference.putFile(File(filePath));
-    await uploadTask;
-    return await storageReference.getDownloadURL();
-  }
-
-  // Future<void> uploadImageUrl1ToFirestore(String imgpic) async {
-  //   try {
-  //     final DocumentReference documentReference =
-  //         FirebaseFirestore.instance.collection('greyusercollar').doc();
-  //     await documentReference.set({
-  //       'imageUrl': imgpic,
-  //       // Add additional fields if needed
-  //     });
-  //     print('Image URL uploaded to Firestore successfully.');
-  //   } catch (error) {
-  //     print('Error uploading image URL to Firestore: $error');
-  //     throw error;
-  //   }
-  // }
-
-  // Future<void> uploadImageUrl2ToFirestore(String imgaadhar) async {
-  //   try {
-  //     final DocumentReference documentReference =
-  //         FirebaseFirestore.instance.collection('greyusercollar').doc();
-  //     await documentReference.set({
-  //       'imageUrl': imgaadhar,
-  //       // Add additional fields if needed
-  //     });
-  //     print('Image URL uploaded to Firestore successfully.');
-  //   } catch (error) {
-  //     print('Error uploading image URL to Firestore: $error');
-  //     throw error;
-  //   }
-  // }
-
-  // Future<void> uploadImageUrl3ToFirestore(String imgvoter) async {
-  //   try {
-  //     final DocumentReference documentReference =
-  //         FirebaseFirestore.instance.collection('greyusercollar').doc();
-  //     await documentReference.set({
-  //       'imageUrl': imgvoter,
-  //       // Add additional fields if needed
-  //     });
-  //     print('Image URL uploaded to Firestore successfully.');
-  //   } catch (error) {
-  //     print('Error uploading image URL to Firestore: $error');
-  //     throw error;
-  //   }
-  // }
-
-  // Future<void> uploadImageUrl4ToFirestore(String imgexp) async {
-  //   try {
-  //     final DocumentReference documentReference =
-  //         FirebaseFirestore.instance.collection('greyusercollar').doc();
-  //     await documentReference.set({
-  //       'imageUrl': imgexp,
-  //       // Add additional fields if needed
-  //     });
-  //     print('Image URL uploaded to Firestore successfully.');
-  //   } catch (error) {
-  //     print('Error uploading image URL to Firestore: $error');
-  //     throw error;
-  //   }
-  // }
-
-  // Future<void> uploadImageUrl5ToFirestore(String imgcv) async {
-  //   try {
-  //     final DocumentReference documentReference =
-  //         FirebaseFirestore.instance.collection('greyusercollar').doc();
-  //     await documentReference.set({
-  //       'imageUrl': imgcv,
-  //       // Add additional fields if needed
-  //     });
-  //     print('Image URL uploaded to Firestore successfully.');
-  //   } catch (error) {
-  //     print('Error uploading image URL to Firestore: $error');
-  //     throw error;
-  //   }
-  // }
-
-  void displayUploadedFilePicture(
-      String downloadURL1, String originalFileName1) {
+  Future<void> selectFile(
+      CandidateFormController controller, String identifier) async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
     setState(() {
-      controller.imgpic.text = downloadURL1;
-      uploadedMessage = 'File uploaded successfully: $originalFileName1';
+      if (identifier == 'imgpic') {
+        controller.imagePic = result;
+      } else if (identifier == 'imgaadhar') {
+        controller.imageAadhar = result;
+      } else if (identifier == 'imgcv') {
+        controller.imageCv = result;
+      } else if (identifier == 'imgvoter') {
+        controller.imageVoter = result;
+      } else if (identifier == 'imgexp') {
+        controller.imageExp = result;
+      }
     });
   }
 
-  void displayUploadedFileAadhar(
-      String downloadURL2, String originalFileName2) {
-    setState(() {
-      controller.imgaadhar.text = downloadURL2;
-      uploadedMessage = 'File uploaded successfully: $originalFileName2';
-    });
-  }
+  Future<String?> uploadFile(
+      CandidateFormController controller, String identifier) async {
+    FilePickerResult? selectedFile;
+    if (identifier == 'imgpic') {
+      selectedFile = controller.imagePic;
+    } else if (identifier == 'imgaadhar') {
+      selectedFile = controller.imageAadhar;
+    } else if (identifier == 'imgcv') {
+      selectedFile = controller.imageCv;
+    } else if (identifier == 'imgexp') {
+      selectedFile = controller.imageExp;
+    } else if (identifier == 'imgvoter') {
+      selectedFile = controller.imageVoter;
+    }
 
-  void displayUploadedFileVoterId(
-      String downloadURL3, String originalFileName3) {
-    setState(() {
-      controller.imgvoter.text = downloadURL3;
-      uploadedMessage = 'File uploaded successfully: $originalFileName3';
-    });
-  }
+    if (selectedFile == null) return null; // Check if a file is picked
 
-  void displayUploadedFileExpProof(
-      String downloadURL4, String originalFileName4) {
-    setState(() {
-      controller.imgexp.text = downloadURL4;
-      uploadedMessage = 'File uploaded successfully: $originalFileName4';
-    });
-  }
+    final fileName = selectedFile.files.first.name;
+    final path = 'files/$fileName';
+    final Uint8List? fileBytes = selectedFile.files.first.bytes;
 
-  void displayUploadedFileCv(String downloadURL5, String originalFileName5) {
-    setState(() {
-      controller.imgcv.text = downloadURL5;
-      uploadedMessage = 'File uploaded successfully: $originalFileName5';
-    });
+    if (fileBytes == null) {
+      // Handle the case where bytes are null
+      return null;
+    }
+
+    final ref = FirebaseStorage.instance.ref().child(path);
+    final uploadTask = ref.putData(fileBytes);
+
+    final snapshot = await uploadTask.whenComplete(() {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
+
+    return urlDownload; // Return download URL
   }
 
   Widget build(BuildContext context) {
@@ -472,118 +394,118 @@ class _NewUserUpload extends State<NewUserUpload> {
             ),
           ],
         ),
-        body: Form(
-          key: _formKey,
-          child: Container(
-            padding:
-                EdgeInsets.only(left: 125, right: 125, top: 20, bottom: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 35),
-                  child: Row(
-                    children: [
-                      if (widget.selectedOption == 'Blue')
-                        Row(
-                          children: [
-                            Radio(
-                              value: widget.selectedOption,
-                              groupValue: widget.selectedOption,
-                              onChanged: (value) {
-                                // Handle radio button state change if needed
-                                setState(() {
-                                  controller.selectedOption.text =
-                                      value.toString();
-                                });
-                              },
-                            ),
-                            Text(
-                              'Blue Collar',
-                              style: TextStyle(
-                                  color: Colors.grey.shade500,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            IgnorePointer(
-                              child: Radio(
-                                  value: widget.selectedOption,
-                                  groupValue: controller.selectedOption.text,
-                                  onChanged: null),
-                            ),
-                            IgnorePointer(
-                              child: Text(
-                                'Grey Collar',
-                                style: TextStyle(
-                                    color: Colors.grey.shade800,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.bold),
+        body: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Container(
+              padding:
+                  EdgeInsets.only(left: 125, right: 125, top: 20, bottom: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 35),
+                    child: Row(
+                      children: [
+                        if (widget.selectedOption == 'Blue')
+                          Row(
+                            children: [
+                              Radio(
+                                value: widget.selectedOption,
+                                groupValue: widget.selectedOption,
+                                onChanged: (value) {
+                                  // Handle radio button state change if needed
+                                  setState(() {
+                                    controller.selectedOption.text =
+                                        value.toString();
+                                  });
+                                },
                               ),
-                            ),
-                          ],
-                        )
-                      else if (widget.selectedOption == 'Grey')
-                        Row(
-                          children: [
-                            IgnorePointer(
-                              child: Radio(
-                                  value: widget.selectedOption,
-                                  groupValue: controller.selectedOption.text,
-                                  onChanged: null),
-                            ),
-                            IgnorePointer(
-                              child: Text(
+                              Text(
                                 'Blue Collar',
                                 style: TextStyle(
                                     color: Colors.grey.shade500,
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.bold),
                               ),
-                            ),
-                            Radio(
-                              value: widget.selectedOption,
-                              groupValue: widget.selectedOption,
-                              onChanged: (value) {
-                                // Handle radio button state change if needed
-                                setState(() {
-                                  controller.selectedOption.text =
-                                      value.toString();
-                                });
-                              },
-                            ),
-                            Text(
-                              'Grey Collar',
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        )
-                    ],
+                              IgnorePointer(
+                                child: Radio(
+                                    value: widget.selectedOption,
+                                    groupValue: controller.selectedOption.text,
+                                    onChanged: null),
+                              ),
+                              IgnorePointer(
+                                child: Text(
+                                  'Grey Collar',
+                                  style: TextStyle(
+                                      color: Colors.grey.shade800,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          )
+                        else if (widget.selectedOption == 'Grey')
+                          Row(
+                            children: [
+                              IgnorePointer(
+                                child: Radio(
+                                    value: widget.selectedOption,
+                                    groupValue: controller.selectedOption.text,
+                                    onChanged: null),
+                              ),
+                              IgnorePointer(
+                                child: Text(
+                                  'Blue Collar',
+                                  style: TextStyle(
+                                      color: Colors.grey.shade500,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Radio(
+                                value: widget.selectedOption,
+                                groupValue: widget.selectedOption,
+                                onChanged: (value) {
+                                  // Handle radio button state change if needed
+                                  setState(() {
+                                    controller.selectedOption.text =
+                                        value.toString();
+                                  });
+                                },
+                              ),
+                              Text(
+                                'Grey Collar',
+                                style: TextStyle(
+                                    color: Colors.grey.shade800,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          )
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 37),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    translation(context).uploadEssentialDocument,
-                    style: TextStyle(
-                        color: Colors.indigo.shade900,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
+                  SizedBox(height: 37),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      translation(context).uploadEssentialDocument,
+                      style: TextStyle(
+                          color: Colors.indigo.shade900,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Column(
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
                         children: [
-                          if (controller.imgpic != null)
+                          if (controller.imagePic != null)
                             Container(
                               width: 100,
                               height: 150,
@@ -592,93 +514,21 @@ class _NewUserUpload extends State<NewUserUpload> {
                                     Border.all(color: Colors.black, width: 2),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: CachedNetworkImage(
-                                imageUrl: controller.imgpic.text,
-                                fit: BoxFit.cover,
-                                progressIndicatorBuilder:
-                                    (context, url, downloadProgress) {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                        value: downloadProgress.progress),
-                                  );
-                                },
-                                errorWidget: (context, url, error) {
-                                  print('Error loading image: $error');
-                                  return Placeholder(); // You can replace this with any placeholder widget
-                                },
+                              child: Image.memory(
+                                Uint8List.fromList(controller.imagePic!.files
+                                    .first.bytes!), // Accessing bytes property
                               ),
                             ),
                           CustomButton(
                             text: translation(context).picture,
-                            onPressed: () async {
-                              FilePickerResult? result =
-                                  await FilePicker.platform.pickFiles(
-                                allowMultiple: true,
-                                type: FileType.custom,
-                                allowedExtensions: [
-                                  'jpg',
-                                  'jpeg',
-                                  'png',
-                                  'pdf',
-                                  'doc',
-                                  'docx'
-                                ],
-                              );
-
-                              if (result != null) {
-                                try {
-                                  for (PlatformFile file in result.files) {
-                                    String imageUrl;
-                                    if (kIsWeb) {
-                                      // For web, use the bytes property instead of path
-                                      final String fileName = file.name;
-                                      final Uint8List fileBytes = file.bytes!;
-
-                                      // Upload file to Firebase Storage
-                                      imageUrl = await uploadFileFromBytes(
-                                        fileBytes: fileBytes,
-                                        originalFileName: fileName,
-                                      );
-                                    } else {
-                                      // For other platforms, handle file uploads using path
-                                      final String filePath = file.path!;
-
-                                      // Upload file to Firebase Storage
-                                      imageUrl =
-                                          await uploadFileToStorage(filePath);
-                                    }
-
-                                    // // Store the image URL in Firestore
-                                    // await uploadImageUrl1ToFirestore(imageUrl);
-                                    pictureImageUrls.add(imageUrl);
-
-                                    // Display the uploaded file (Aadhar) with its URL
-                                    final urlDownload = await FirebaseStorage
-                                        .instance
-                                        .ref()
-                                        .child('uploads/${file.name}')
-                                        .getDownloadURL();
-                                    displayUploadedFilePicture(
-                                        urlDownload, file.name);
-                                  }
-                                } catch (e) {
-                                  print('Error uploading CV: $e');
-                                  // Handle error
-                                }
-                                // Process the selected files
-                              } else {
-                                // User canceled the file picker
-                              }
-                            },
+                            onPressed: () => selectFile(controller, 'imgpic'),
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(width: 40),
-                    Expanded(
-                      child: Column(
+                      SizedBox(width: 40),
+                      Column(
                         children: [
-                          if (controller.imgaadhar != null)
+                          if (controller.imageAadhar != null)
                             Container(
                               width: 100,
                               height: 150,
@@ -687,93 +537,22 @@ class _NewUserUpload extends State<NewUserUpload> {
                                     Border.all(color: Colors.black, width: 2),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: CachedNetworkImage(
-                                imageUrl: controller.imgaadhar.text!,
-                                fit: BoxFit.cover,
-                                progressIndicatorBuilder:
-                                    (context, url, downloadProgress) {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                        value: downloadProgress.progress),
-                                  );
-                                },
-                                errorWidget: (context, url, error) {
-                                  print('Error loading image: $error');
-                                  return Placeholder(); // You can replace this with any placeholder widget
-                                },
+                              child: Image.memory(
+                                Uint8List.fromList(controller.imageAadhar!.files
+                                    .first.bytes!), // Accessing bytes property
                               ),
                             ),
                           CustomButton(
                             text: translation(context).aadhar,
-                            onPressed: () async {
-                              FilePickerResult? result =
-                                  await FilePicker.platform.pickFiles(
-                                allowMultiple: true,
-                                type: FileType.custom,
-                                allowedExtensions: [
-                                  'jpg',
-                                  'jpeg',
-                                  'png',
-                                  'pdf',
-                                  'doc',
-                                  'docx'
-                                ],
-                              );
-
-                              if (result != null) {
-                                try {
-                                  for (PlatformFile file in result.files) {
-                                    String imgaadhar;
-                                    if (kIsWeb) {
-                                      // For web, use the bytes property instead of path
-                                      final String fileName = file.name;
-                                      final Uint8List fileBytes = file.bytes!;
-
-                                      // Upload file to Firebase Storage
-                                      imgaadhar = await uploadFileFromBytes(
-                                        fileBytes: fileBytes,
-                                        originalFileName: fileName,
-                                      );
-                                    } else {
-                                      // For other platforms, handle file uploads using path
-                                      final String filePath = file.path!;
-
-                                      // Upload file to Firebase Storage
-                                      imgaadhar =
-                                          await uploadFileToStorage(filePath);
-                                    }
-
-                                    // // Store the image URL in Firestore
-                                    // await uploadImageUrl2ToFirestore(imgaadhar);
-                                    aadharImageUrls.add(imgaadhar);
-
-                                    // Display the uploaded file (Aadhar) with its URL
-                                    final urlDownload = await FirebaseStorage
-                                        .instance
-                                        .ref()
-                                        .child('uploads/${file.name}')
-                                        .getDownloadURL();
-                                    displayUploadedFileAadhar(
-                                        urlDownload, file.name);
-                                  }
-                                } catch (e) {
-                                  print('Error uploading CV: $e');
-                                  // Handle error
-                                }
-                                // Process the selected files
-                              } else {
-                                // User canceled the file picker
-                              }
-                            },
+                            onPressed: () =>
+                                selectFile(controller, 'imgaadhar'),
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(width: 40),
-                    Expanded(
-                      child: Column(
+                      SizedBox(width: 40),
+                      Column(
                         children: [
-                          if (controller.imgvoter != null)
+                          if (controller.imageVoter != null)
                             Container(
                               width: 100,
                               height: 150,
@@ -782,89 +561,21 @@ class _NewUserUpload extends State<NewUserUpload> {
                                     Border.all(color: Colors.black, width: 2),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: CachedNetworkImage(
-                                imageUrl: controller.imgvoter.text!,
-                                fit: BoxFit.cover,
-                                progressIndicatorBuilder:
-                                    (context, url, downloadProgress) {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                        value: downloadProgress.progress),
-                                  );
-                                },
-                                errorWidget: (context, url, error) {
-                                  print('Error loading image: $error');
-                                  return Placeholder(); // You can replace this with any placeholder widget
-                                },
+                              child: Image.memory(
+                                Uint8List.fromList(controller.imageVoter!.files
+                                    .first.bytes!), // Accessing bytes property
                               ),
                             ),
                           CustomButton(
                             text: translation(context).voterId,
-                            onPressed: () async {
-                              FilePickerResult? result =
-                                  await FilePicker.platform.pickFiles(
-                                allowMultiple: true,
-                                type: FileType.custom,
-                                allowedExtensions: [
-                                  'jpg',
-                                  'jpeg',
-                                  'png',
-                                  'pdf',
-                                  'doc',
-                                  'docx'
-                                ],
-                              );
-
-                              if (result != null) {
-                                // Process the selected files
-                                List<String> imageUrls = [];
-                                for (PlatformFile file in result.files) {
-                                  String imageUrl;
-                                  if (kIsWeb) {
-                                    // For web, use the bytes property instead of path
-                                    final String fileName = file.name;
-                                    final Uint8List fileBytes = file.bytes!;
-
-                                    // Upload file to Firebase Storage
-                                    imageUrl = await uploadFileFromBytes(
-                                      fileBytes: fileBytes,
-                                      originalFileName: fileName,
-                                    );
-                                  } else {
-                                    // For other platforms, handle file uploads using path
-                                    final String filePath = file.path!;
-
-                                    // Upload file to Firebase Storage
-                                    imageUrl =
-                                        await uploadFileToStorage(filePath);
-                                  }
-
-                                  // // Store the image URL in Firestore
-                                  // await uploadImageUrl3ToFirestore(imageUrl);
-                                  voteImageUrls.add(imageUrl);
-
-                                  // Display the uploaded file (Voter ID) with its URL
-                                  final urlDownload = await FirebaseStorage
-                                      .instance
-                                      .ref()
-                                      .child('uploads/${file.name}')
-                                      .getDownloadURL();
-                                  displayUploadedFileVoterId(
-                                      urlDownload, file.name);
-                                }
-                              } else {
-                                // User canceled the file picker
-                              }
-                            },
+                            onPressed: () => selectFile(controller, 'imgvoter'),
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(width: 40),
-                    Expanded(
-                      child: Column(
+                      SizedBox(width: 40),
+                      Column(
                         children: [
-                          if (controller.imgexp != null)
+                          if (controller.imageCv != null)
                             Container(
                               width: 100,
                               height: 150,
@@ -873,383 +584,247 @@ class _NewUserUpload extends State<NewUserUpload> {
                                     Border.all(color: Colors.black, width: 2),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: CachedNetworkImage(
-                                imageUrl: controller.imgexp.text!,
-                                fit: BoxFit.cover,
-                                progressIndicatorBuilder:
-                                    (context, url, downloadProgress) {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                        value: downloadProgress.progress),
-                                  );
-                                },
-                                errorWidget: (context, url, error) {
-                                  print('Error loading image: $error');
-                                  return Placeholder(); // You can replace this with any placeholder widget
-                                },
-                              ),
-                            ),
-                          CustomButton(
-                            text: translation(context).experienceProof,
-                            onPressed: () async {
-                              FilePickerResult? result =
-                                  await FilePicker.platform.pickFiles(
-                                allowMultiple: true,
-                                type: FileType.custom,
-                                allowedExtensions: [
-                                  'jpg',
-                                  'jpeg',
-                                  'png',
-                                  'pdf',
-                                  'doc',
-                                  'docx'
-                                ],
-                              );
-
-                              if (result != null) {
-                                // Process the selected files
-                                for (PlatformFile file in result.files) {
-                                  String imageUrl;
-                                  if (kIsWeb) {
-                                    // For web, use the bytes property instead of path
-                                    final String fileName = file.name;
-                                    final Uint8List fileBytes = file.bytes!;
-
-                                    // Upload file to Firebase Storage
-                                    imageUrl = await uploadFileFromBytes(
-                                      fileBytes: fileBytes,
-                                      originalFileName: fileName,
-                                    );
-                                  } else {
-                                    // For other platforms, handle file uploads using path
-                                    final String filePath = file.path!;
-
-                                    // Upload file to Firebase Storage
-                                    imageUrl =
-                                        await uploadFileToStorage(filePath);
-                                  }
-
-                                  // // Store the image URL in Firestore
-                                  // await uploadImageUrl4ToFirestore(imageUrl);
-                                  expImageUrls.add(imageUrl);
-
-                                  // Display the uploaded file (Experience Proof) with its URL
-                                  final urlDownload = await FirebaseStorage
-                                      .instance
-                                      .ref()
-                                      .child('uploads/${file.name}')
-                                      .getDownloadURL();
-                                  displayUploadedFileExpProof(
-                                      urlDownload, file.name);
-                                }
-                              } else {
-                                // User canceled the file picker
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 40),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          if (controller.imgcv != null)
-                            Container(
-                              width: 100,
-                              height: 150,
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.black, width: 2),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: CachedNetworkImage(
-                                imageUrl: controller.imgcv.text!,
-                                fit: BoxFit.cover,
-                                progressIndicatorBuilder:
-                                    (context, url, downloadProgress) {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                        value: downloadProgress.progress),
-                                  );
-                                },
-                                errorWidget: (context, url, error) {
-                                  print('Error loading image: $error');
-                                  return Placeholder(); // You can replace this with any placeholder widget
-                                },
+                              child: Image.memory(
+                                Uint8List.fromList(controller.imageCv!.files
+                                    .first.bytes!), // Accessing bytes property
                               ),
                             ),
                           CustomButton(
                             text: translation(context).cv,
-                            onPressed: () async {
-                              FilePickerResult? result =
-                                  await FilePicker.platform.pickFiles(
-                                allowMultiple: true,
-                                type: FileType.custom,
-                                allowedExtensions: [
-                                  'jpg',
-                                  'jpeg',
-                                  'png',
-                                  'pdf',
-                                  'doc',
-                                  'docx'
-                                ],
-                              );
-
-                              if (result != null) {
-                                try {
-                                  // Process the selected files
-                                  for (PlatformFile file in result.files) {
-                                    String imageUrl;
-                                    if (kIsWeb) {
-                                      // For web, use the bytes property instead of path
-                                      final String fileName = file.name;
-                                      final Uint8List fileBytes = file.bytes!;
-
-                                      // Upload file to Firebase Storage
-                                      imageUrl = await uploadFileFromBytes(
-                                        fileBytes: fileBytes,
-                                        originalFileName: fileName,
-                                      );
-                                    } else {
-                                      // For other platforms, handle file uploads using path
-                                      final String filePath = file.path!;
-
-                                      // Upload file to Firebase Storage
-                                      imageUrl =
-                                          await uploadFileToStorage(filePath);
-                                    }
-
-                                    // // Store the image URL in Firestore
-                                    // await uploadImageUrl5ToFirestore(imageUrl);
-                                    cvImageUrls.add(
-                                        imageUrl); // Add the image URL to cvImageUrls
-
-                                    // Display the uploaded file (CV) with its URL
-                                    final urlDownload = await FirebaseStorage
-                                        .instance
-                                        .ref()
-                                        .child('uploads/${file.name}')
-                                        .getDownloadURL();
-                                    displayUploadedFileCv(
-                                        urlDownload, file.name);
-                                  }
-                                } catch (e) {
-                                  print('Error uploading CV: $e');
-                                  // Handle error
-                                }
-                              } else {
-                                // User canceled the file picker
-                              }
-                            },
+                            onPressed: () => selectFile(controller, 'imgcv'),
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          translation(context).currentCountry,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 60),
-                        Text(
-                          translation(context).currentState,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 60,
-                        ),
-                        Text(
-                          translation(context).currentCity,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    SizedBox(
-                      width: 200,
-                      child: CountryStateCityPicker(
-                          country: controller.country,
-                          state: controller.state,
-                          city: controller.city,
-                          textFieldDecoration: InputDecoration(
-                              fillColor: Colors.white,
-                              filled: true,
-                              suffixIcon: const Icon(
-                                Icons.arrow_downward_rounded,
-                                size: 20,
+                      SizedBox(width: 40),
+                      Column(
+                        children: [
+                          if (controller.imageExp != null)
+                            Container(
+                              width: 100,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.black, width: 2),
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              border: const OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black)))),
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          translation(context).expectedWage,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 60),
-                        Text(
-                          translation(context).currentWage,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'CTC',
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 40,
-                    ),
-                    Column(
-                      children: [
-                        SizedBox(
-                          width: 400,
-                          height: 40,
-                          child: TextField(
-                            controller:
-                                controller.expectedwage, // Set controller
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
+                              child: Image.memory(
+                                Uint8List.fromList(controller.imageExp!.files
+                                    .first.bytes!), // Accessing bytes property
+                              ),
+                            ),
+                          CustomButton(
+                            text: translation(context).experienceProof,
+                            onPressed: () => selectFile(controller, 'imgexp'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            translation(context).currentCountry,
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 60),
+                          Text(
+                            translation(context).currentState,
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 60,
+                          ),
+                          Text(
+                            translation(context).currentCity,
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      SizedBox(
+                        width: 200,
+                        child: CountryStateCityPicker(
+                            country: controller.country,
+                            state: controller.state,
+                            city: controller.city,
+                            textFieldDecoration: InputDecoration(
+                                fillColor: Colors.white,
+                                filled: true,
+                                suffixIcon: const Icon(
+                                  Icons.arrow_downward_rounded,
+                                  size: 20,
+                                ),
+                                border: const OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black)))),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            translation(context).expectedWage,
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 60),
+                          Text(
+                            translation(context).currentWage,
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            'CTC',
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        width: 40,
+                      ),
+                      Column(
+                        children: [
+                          SizedBox(
+                            width: 400,
+                            height: 40,
+                            child: TextField(
+                              controller:
+                                  controller.expectedwage, // Set controller
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 40),
-                        SizedBox(
-                          width: 400,
-                          height: 40,
-                          child: TextField(
-                            controller: controller.currentwage,
-                            // Set controller
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
+                          SizedBox(height: 40),
+                          SizedBox(
+                            width: 400,
+                            height: 40,
+                            child: TextField(
+                              controller: controller.currentwage,
+                              // Set controller
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 40),
-                        SizedBox(
-                          width: 400,
-                          height: 40,
-                          child: TextField(
-                            controller: controller.ctc,
-                            // Set controller
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
+                          SizedBox(height: 40),
+                          SizedBox(
+                            width: 400,
+                            height: 40,
+                            child: TextField(
+                              controller: controller.ctc,
+                              // Set controller
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 250,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    CustomButton(
-                      text: translation(context).back,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Registration()),
-                        );
-                      },
-                    ),
-                    SizedBox(width: 50),
-                    CustomButton(
-                      text: translation(context).next,
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          String state = controller.state.text;
-                          String city = controller.city.text;
-                          String country = controller.country.text;
-                          String ctc = controller.ctc.text;
-                          String expectedwage = controller.expectedwage.text;
-
-                          String currentwage = controller.currentwage.text;
-                          String imgaadhar = controller.imgaadhar.text;
-                          String imgpic = controller.imgpic.text;
-                          String imgcv = controller.imgcv.text;
-                          String imgvoter = controller.imgvoter.text;
-                          String imgexp = controller.imgexp.text;
-                          List<String> imageUrls = [
-                            imgpic,
-                            imgaadhar,
-                            imgcv,
-                            imgexp,
-                            imgvoter
-                          ];
-
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 250,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CustomButton(
+                        text: translation(context).back,
+                        onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => NewUserPayment(
-                                name: widget.name,
-                                email: widget.email,
-                                password: widget.password,
-                                mobile: widget.mobile,
-                                workexp: widget.workexp,
-                                workexpcount: widget.workexpcount,
-                                workins: widget.workins,
-                                worktitle: widget.worktitle,
-                                skills: widget.skills,
-                                address: widget.address,
-                                course: widget.course,
-                                project: widget.project,
-                                aadharno: widget.aadharno,
-                                qualification: widget.qualification,
-                                selectedOption: widget.selectedOption,
-                                gender: widget.gender,
-                                state: state,
-                                city: city,
-                                ctc: ctc,
-                                country: country,
-                                currentwage: currentwage,
-                                expectedwage: expectedwage,
-                                imageUrls: imageUrls,
-                              ),
-                            ),
+                                builder: (context) => const Registration()),
                           );
-                          print(
-                              '.....................................................           ${widget.selectedOption}              ...................................................');
-                        }
-                      },
-                    ),
-                  ],
-                )
-              ],
+                        },
+                      ),
+                      SizedBox(width: 50),
+                      CustomButton(
+                        text: translation(context).next,
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            String state = controller.state.text;
+                            String city = controller.city.text;
+                            String country = controller.country.text;
+                            String ctc = controller.ctc.text;
+                            String expectedwage = controller.expectedwage.text;
+                            String? imgpic =
+                                await uploadFile(controller, 'imgpic');
+                            String? imgaadhar =
+                                await uploadFile(controller, 'imgaadhar');
+                            String? imgcv =
+                                await uploadFile(controller, 'imgcv');
+                            String? imgexp =
+                                await uploadFile(controller, 'imgexp');
+                            String? imgvoter =
+                                await uploadFile(controller, 'imgvoter');
+                            String currentwage = controller.currentwage.text;
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => NewUserPayment(
+                                  name: widget.name,
+                                  email: widget.email,
+                                  password: widget.password,
+                                  mobile: widget.mobile,
+                                  workexp: widget.workexp,
+                                  workexpcount: widget.workexpcount,
+                                  workins: widget.workins,
+                                  worktitle: widget.worktitle,
+                                  skills: widget.skills,
+                                  address: widget.address,
+                                  age: widget.age,
+                                  aboutYou: widget.aboutYou,
+                                  qualiDescription: widget.qualiDescription,
+                                  course: widget.course,
+                                  project: widget.project,
+                                  aadharno: widget.aadharno,
+                                  qualification: widget.qualification,
+                                  selectedOption: widget.selectedOption,
+                                  imgpic: imgpic,
+                                  imgaadhar: imgaadhar,
+                                  imgcv: imgcv,
+                                  imgexp: imgexp,
+                                  imgvoter: imgvoter,
+                                  gender: widget.gender,
+                                  state: state,
+                                  city: city,
+                                  ctc: ctc,
+                                  country: country,
+                                  currentwage: currentwage,
+                                  expectedwage: expectedwage,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ));

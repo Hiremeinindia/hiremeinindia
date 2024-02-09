@@ -43,6 +43,140 @@ class _RegistrationState extends State<Registration> {
   late String sessionName = "";
   late String recipientMail = "";
   bool _isVerifiedEmail = false;
+  bool submitValid = false;
+  String enteredOTP = '';
+  String? gender = "male";
+  String smscode = "";
+  String phoneNumber = "";
+  String data = "";
+  String phone = "";
+  String? skillvalue;
+  String? wokinvalue;
+  bool isVerified = false;
+  bool isVerifiedEmail = false;
+  bool isOtpValid = true; // Replace this line with actual verification logic
+  List<String> _values = [];
+  List<String> _value = [];
+  bool blueChecked = false;
+  bool greyChecked = false;
+  bool focusTagEnabled = false;
+  String password = '';
+  late final Candidate? candidate;
+  var isLoading = false;
+  final _formKey = GlobalKey<FormState>();
+  // EmailOTP myauth = EmailOTP();
+  CandidateFormController controller = CandidateFormController();
+  // final TextEditingController _otpController = TextEditingController();
+
+  // final FirebaseAuth _auth = FirebaseAuth.instance;
+  static const GreySkill = [
+    'Plumber',
+    'Senior Plumber',
+    'Junior Plumber',
+    'Skill 1',
+    'Electrician',
+    'Senior Electrician',
+    'Junior Electrician',
+    'Skill 2',
+  ];
+  static const GreyWorkin = [
+    'Plumber',
+    'Senior Plumber',
+    'Junior Plumber',
+    'Skill 1',
+    'Electrician',
+    'Senior Electrician',
+    'Junior Electrician',
+    'Skill 2',
+  ];
+  List<String> BlueSkill = [
+    'Electrician',
+    'Mechanic',
+    'Construction Helper ',
+    'Meson ',
+    'Ac Technician',
+    'Telecom Technician',
+    'Plumber',
+    'Construction Worker',
+    'Welder',
+    'Fitter',
+    'Carpenter',
+    'Machine Operators',
+    'Operator',
+    'Drivers',
+    'Painter ',
+    'Aircraft mechanic',
+    'Security',
+    'Logistics Labours',
+    'Airport Ground workers',
+    'Delivery Workers',
+    'Cleaners',
+    'Cook',
+    'Office Boy',
+    'Maid',
+    'Collection Staff',
+    'Shop Keepers',
+    'Electronic repair Technicians ',
+    'Barber',
+    'Beautician',
+    'Catering Workers',
+    'Pest Control'
+  ];
+  List<String> BlueWorkin = [
+    'Electrician',
+    'Mechanic',
+    'Construction Helper ',
+    'Meson ',
+    'Ac Technician',
+    'Telecom Technician',
+    'Plumber',
+    'Construction Worker',
+    'Welder',
+    'Fitter',
+    'Carpenter',
+    'Machine Operators',
+    'Operator',
+    'Drivers',
+    'Painter ',
+    'Aircraft mechanic',
+    'Security',
+    'Logistics Labours',
+    'Airport Ground workers',
+    'Delivery Workers',
+    'Cleaners',
+    'Cook',
+    'Office Boy',
+    'Maid',
+    'Collection Staff',
+    'Shop Keepers',
+    'Electronic repair Technicians ',
+    'Barber',
+    'Beautician',
+    'Catering Workers',
+    'Pest Control'
+  ];
+  _onDelete(index) {
+    setState(() {
+      _values.removeAt(index);
+    });
+  }
+
+  _onDeletee(indexx) {
+    _value.removeAt(indexx);
+  }
+
+  _submit() {
+    final isValid = _formKey.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
+    _formKey.currentState!.save();
+  }
+
+  dispose() {
+    controller.name.dispose();
+    super.dispose();
+  }
   // Define Firebase Config manually
 
   void initState() {
@@ -171,140 +305,6 @@ class _RegistrationState extends State<Registration> {
     }
   }
 
-  bool submitValid = false;
-
-  String enteredOTP = '';
-  String? gender = "male";
-  String smscode = "";
-  String phoneNumber = "", data = "", phone = "";
-  bool isVerified = false;
-  bool isVerifiedEmail = false;
-  bool isOtpValid = true; // Replace this line with actual verification logic
-  List<String> _values = [];
-  List<String> _value = [];
-  bool blueChecked = false;
-  bool greyChecked = false;
-  bool focusTagEnabled = false;
-  String password = '';
-  late final Candidate? candidate;
-  var isLoading = false;
-  final _formKey = GlobalKey<FormState>();
-  // EmailOTP myauth = EmailOTP();
-  CandidateFormController controller = CandidateFormController();
-  // final TextEditingController _otpController = TextEditingController();
-
-  String? skillvalue;
-  String? wokinvalue;
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
-  static const GreySkill = [
-    'Plumber',
-    'Senior Plumber',
-    'Junior Plumber',
-    'Skill 1',
-    'Electrician',
-    'Senior Electrician',
-    'Junior Electrician',
-    'Skill 2',
-  ];
-  static const GreyWorkin = [
-    'Plumber',
-    'Senior Plumber',
-    'Junior Plumber',
-    'Skill 1',
-    'Electrician',
-    'Senior Electrician',
-    'Junior Electrician',
-    'Skill 2',
-  ];
-  List<String> BlueSkill = [
-    'Electrician',
-    'Mechanic',
-    'Construction Helper ',
-    'Meson ',
-    'Ac Technician',
-    'Telecom Technician',
-    'Plumber',
-    'Construction Worker',
-    'Welder',
-    'Fitter',
-    'Carpenter',
-    'Machine Operators',
-    'Operator',
-    'Drivers',
-    'Painter ',
-    'Aircraft mechanic',
-    'Security',
-    'Logistics Labours',
-    'Airport Ground workers',
-    'Delivery Workers',
-    'Cleaners',
-    'Cook',
-    'Office Boy',
-    'Maid',
-    'Collection Staff',
-    'Shop Keepers',
-    'Electronic repair Technicians ',
-    'Barber',
-    'Beautician',
-    'Catering Workers',
-    'Pest Control'
-  ];
-  List<String> BlueWorkin = [
-    'Electrician',
-    'Mechanic',
-    'Construction Helper ',
-    'Meson ',
-    'Ac Technician',
-    'Telecom Technician',
-    'Plumber',
-    'Construction Worker',
-    'Welder',
-    'Fitter',
-    'Carpenter',
-    'Machine Operators',
-    'Operator',
-    'Drivers',
-    'Painter ',
-    'Aircraft mechanic',
-    'Security',
-    'Logistics Labours',
-    'Airport Ground workers',
-    'Delivery Workers',
-    'Cleaners',
-    'Cook',
-    'Office Boy',
-    'Maid',
-    'Collection Staff',
-    'Shop Keepers',
-    'Electronic repair Technicians ',
-    'Barber',
-    'Beautician',
-    'Catering Workers',
-    'Pest Control'
-  ];
-  _onDelete(index) {
-    setState(() {
-      _values.removeAt(index);
-    });
-  }
-
-  _onDeletee(indexx) {
-    _value.removeAt(indexx);
-  }
-
-  _submit() {
-    final isValid = _formKey.currentState!.validate();
-    if (!isValid) {
-      return;
-    }
-    _formKey.currentState!.save();
-  }
-
-  dispose() {
-    controller.name.dispose();
-    super.dispose();
-  }
-
   bool isValidName(String name) {
     final RegExp nameRegExp = RegExp(r"^[A-Za-z']+([- ][A-Za-z']+)*$");
     return nameRegExp.hasMatch(name);
@@ -313,6 +313,13 @@ class _RegistrationState extends State<Registration> {
   bool isValidWorkexp(String workexp) {
     final RegExp pattern = RegExp(r"^[A-Za-z0-9]+$");
     return pattern.hasMatch(workexp);
+  }
+
+  bool isValidEmail(String email) {
+    // Regular expression for basic email validation
+    // This is a simple example and may not cover all valid email formats
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return emailRegex.hasMatch(email);
   }
 
   String? workexpValidator(String? value) {
@@ -331,6 +338,29 @@ class _RegistrationState extends State<Registration> {
       return 'Invalid format';
     }
     return null;
+  }
+
+  String? emailValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return '*Required';
+    } else if (!isValidEmail(value)) {
+      return 'Invalid email format';
+    }
+    return null;
+  }
+
+  String? validatePassword(String? value) {
+    RegExp regex =
+        RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+    if (value!.isEmpty) {
+      return 'Please enter password';
+    } else {
+      if (!regex.hasMatch(value)) {
+        return 'Enter valid password';
+      } else {
+        return null;
+      }
+    }
   }
 
   void showErrorDialog(String errorMessage) {
@@ -1001,6 +1031,20 @@ class _RegistrationState extends State<Registration> {
                                 ),
                                 SizedBox(height: 60),
                                 Text(
+                                  translation(context).gender,
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(height: 60),
+                                Text(
+                                  'Age',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(height: 60),
+                                Text(
                                   translation(context).workTitle,
                                   style: TextStyle(
                                       fontFamily: 'Poppins',
@@ -1008,14 +1052,28 @@ class _RegistrationState extends State<Registration> {
                                 ),
                                 SizedBox(height: 60),
                                 Text(
-                                  translation(context).aadhar,
+                                  'Certified Courses',
                                   style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontWeight: FontWeight.bold),
                                 ),
                                 SizedBox(height: 60),
                                 Text(
-                                  'Qualification Description',
+                                  translation(context).workExperience,
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(height: 60),
+                                Text(
+                                  'Qualification ',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(height: 60),
+                                Text(
+                                  translation(context).mobile,
                                   style: TextStyle(
                                       fontFamily: 'Poppins',
                                       fontWeight: FontWeight.bold),
@@ -1035,12 +1093,415 @@ class _RegistrationState extends State<Registration> {
                                   SizedBox(
                                     height: 40,
                                   ),
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Radio(
+                                          value: "male",
+                                          groupValue: controller.gender.text,
+                                          onChanged: (String? value) {
+                                            setState(() {
+                                              controller.gender.text = value!;
+                                            });
+                                          },
+                                        ),
+                                        Text("Male"),
+                                        SizedBox(
+                                            width:
+                                                8), // Adjust the width according to your preference
+                                        Radio(
+                                          value: "female",
+                                          groupValue: controller.gender.text,
+                                          onChanged: (String? value) {
+                                            setState(() {
+                                              controller.gender.text = value!;
+                                            });
+                                          },
+                                        ),
+                                        Text("Female"),
+                                        SizedBox(
+                                            width:
+                                                8), // Adjust the width according to your preference
+                                        Radio(
+                                          value: "others",
+                                          groupValue: controller.gender.text,
+                                          onChanged: (String? value) {
+                                            setState(() {
+                                              controller.gender.text = value!;
+                                            });
+                                          },
+                                        ),
+                                        Text("Others"),
+                                      ]),
+                                  SizedBox(
+                                    height: 40,
+                                  ),
+                                  CustomTextfield(
+                                    // validator: nameValidator,
+                                    controller: controller.age,
+                                  ),
+                                  SizedBox(
+                                    height: 40,
+                                  ),
                                   CustomTextfield(
                                     // validator: nameValidator,
                                     controller: controller.worktitle,
                                   ),
                                   SizedBox(
                                     height: 40,
+                                  ),
+                                  CustomTextfield(
+                                    // validator: nameValidator,
+                                    controller: controller.course,
+                                  ),
+                                  SizedBox(
+                                    height: 40,
+                                  ),
+                                  DropdownButtonHideUnderline(
+                                    child: DropdownButton2<String>(
+                                      value: controller
+                                              .workexpcount.text.isNotEmpty
+                                          ? controller.workexpcount.text
+                                          : '1 Month', // Provide a default value if it's empty
+                                      items: <String>[
+                                        '1 Month',
+                                        '2 Months',
+                                        '3 Months',
+                                        '4 Months',
+                                        '5 Months',
+                                        '6 Months',
+                                        '1 Year',
+                                        '2 Years',
+                                        'More than 2 Years'
+                                      ].map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          // Step 2: Update controller when dropdown value changes
+                                          controller.workexpcount.text =
+                                              newValue!;
+                                        });
+                                      },
+                                      buttonStyleData: ButtonStyleData(
+                                        height: 30,
+                                        width: 200,
+                                        padding: const EdgeInsets.only(
+                                            left: 14, right: 14),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                          border: Border.all(
+                                            color: Colors.black26,
+                                          ),
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      iconStyleData: const IconStyleData(
+                                        icon: Icon(
+                                          Icons.arrow_drop_down_sharp,
+                                        ),
+                                        iconSize: 25,
+                                        iconEnabledColor: Colors.black,
+                                        iconDisabledColor: null,
+                                      ),
+                                      dropdownStyleData: DropdownStyleData(
+                                        maxHeight: 210,
+                                        width: 250,
+                                        elevation: 1,
+                                        padding: EdgeInsets.only(
+                                            left: 5,
+                                            right: 5,
+                                            top: 5,
+                                            bottom: 5),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          border:
+                                              Border.all(color: Colors.black),
+                                          color: Colors.white,
+                                        ),
+                                        scrollPadding: EdgeInsets.all(5),
+                                        scrollbarTheme: ScrollbarThemeData(
+                                          thickness:
+                                              MaterialStateProperty.all<double>(
+                                                  6),
+                                          thumbVisibility:
+                                              MaterialStateProperty.all<bool>(
+                                                  true),
+                                        ),
+                                      ),
+                                      menuItemStyleData:
+                                          const MenuItemStyleData(
+                                        height: 25,
+                                        padding: EdgeInsets.only(
+                                            left: 14, right: 14),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 40,
+                                  ),
+                                  DropdownButtonHideUnderline(
+                                    child: DropdownButton2<String>(
+                                      value: controller
+                                              .qualification.text.isNotEmpty
+                                          ? controller.qualification.text
+                                          : 'Nill', // Provide a default value if it's empty
+                                      items: <String>[
+                                        'Nill',
+                                        'ITI',
+                                        'Diploma',
+                                        '10th Pass',
+                                        '12th Pass',
+                                        'Under Graduate',
+                                        'Post Graduate'
+                                      ].map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          // Step 2: Update controller when dropdown value changes
+                                          controller.qualification.text =
+                                              newValue!;
+                                        });
+                                      },
+                                      buttonStyleData: ButtonStyleData(
+                                        height: 30,
+                                        width: 200,
+                                        padding: const EdgeInsets.only(
+                                            left: 14, right: 14),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                          border: Border.all(
+                                            color: Colors.black26,
+                                          ),
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      iconStyleData: const IconStyleData(
+                                        icon: Icon(
+                                          Icons.arrow_drop_down_sharp,
+                                        ),
+                                        iconSize: 25,
+                                        iconEnabledColor: Colors.black,
+                                        iconDisabledColor: null,
+                                      ),
+                                      dropdownStyleData: DropdownStyleData(
+                                        maxHeight: 210,
+                                        width: 250,
+                                        elevation: 1,
+                                        padding: EdgeInsets.only(
+                                            left: 5,
+                                            right: 5,
+                                            top: 5,
+                                            bottom: 5),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          border:
+                                              Border.all(color: Colors.black),
+                                          color: Colors.white,
+                                        ),
+                                        scrollPadding: EdgeInsets.all(5),
+                                        scrollbarTheme: ScrollbarThemeData(
+                                          thickness:
+                                              MaterialStateProperty.all<double>(
+                                                  6),
+                                          thumbVisibility:
+                                              MaterialStateProperty.all<bool>(
+                                                  true),
+                                        ),
+                                      ),
+                                      menuItemStyleData:
+                                          const MenuItemStyleData(
+                                        height: 25,
+                                        padding: EdgeInsets.only(
+                                            left: 14, right: 14),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 40,
+                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 200,
+                                        child: CustomTextfield(
+                                          controller: controller.mobile,
+                                          // validator: (value) {
+                                          //   if (value!.length != 10)
+                                          //     return 'Mobile Number must be of 10 digit';
+                                          //   else
+                                          //     return null;
+                                          // },
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 30,
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Colors.indigo.shade900,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(0.1),
+                                            ),
+                                          ),
+                                          onPressed: () async {
+                                            print("phone1");
+                                            String mobileNumber =
+                                                controller.mobile.text;
+                                            print(mobileNumber);
+
+                                            // Check if the user is already registered or in the blocklist
+                                            bool isUserRegistered =
+                                                await _signInWithMobileNumber();
+                                            print(
+                                                'Is User Registered: $isUserRegistered');
+
+                                            // Update the button text to "Verified" if isUserRegistered is false
+                                            setState(() {
+                                              isVerified = !isUserRegistered;
+                                            });
+
+                                            // If the verification is successful, show the "Verified" button
+                                            if (!isUserRegistered) {
+                                              // Proceed with OTP verification logic here...
+                                              // When OTP is successfully verified, set isVerified to true
+                                              // Example:
+                                              // isVerified = true;
+                                            }
+                                          },
+                                          child: isVerified
+                                              ? Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(Icons.check,
+                                                        color: Colors.green),
+                                                    SizedBox(width: 8),
+                                                    Text(
+                                                      translation(context)
+                                                          .verified,
+                                                    ),
+                                                  ],
+                                                )
+                                              : Text(
+                                                  translation(context).verify,
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: 43,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Describe about yourself',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(height: 60),
+                                Text(
+                                  translation(context).address,
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  translation(context).aadhar,
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(height: 60),
+                                Text(
+                                  translation(context).password,
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(height: 60),
+                                Text(
+                                  'Project Worked',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(height: 60),
+                                Text(
+                                  'Work Description',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(height: 60),
+                                Text(
+                                  'Qualification Description',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(height: 60),
+                                Text(
+                                  translation(context).email,
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: 28,
+                            ),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Container(
+                                    child: TextField(
+                                      style: TextStyle(height: 1),
+                                      controller: controller.aboutYou,
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.all(5.0),
+                                        border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(1))),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 50,
+                                  ),
+                                  CustomTextfield(
+                                    // validator: nameValidator,
+                                    controller: controller.address,
+                                  ),
+                                  SizedBox(
+                                    height: 50,
                                   ),
                                   CustomTextfield(
                                     // validator: (value) {
@@ -1054,295 +1515,147 @@ class _RegistrationState extends State<Registration> {
                                     controller: controller.aadharno,
                                   ),
                                   SizedBox(
-                                    height: 40,
+                                    height: 50,
+                                  ),
+                                  CustomTextfield(
+                                    // validator: validatePassword,
+                                    onsaved: (value) {
+                                      setState(() {
+                                        password = value;
+                                      });
+                                    },
+                                    controller: controller.password,
+                                  ),
+                                  SizedBox(
+                                    height: 50,
                                   ),
                                   CustomTextfield(
                                     // validator: nameValidator,
-                                    controller: controller.aboutYou,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              width: 43,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  translation(context).gender,
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(height: 60),
-                                Text(
-                                  translation(context).workExperience,
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(height: 60),
-                                Text(
-                                  translation(context).qualification,
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(height: 60),
-                                Text(
-                                  'Qualification Description',
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: 28,
-                            ),
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: RadioListTile<String>(
-                                          title: const Text("Male"),
-                                          value: "male",
-                                          groupValue: controller.gender.text,
-                                          onChanged: (String? value) {
-                                            setState(() {
-                                              controller.gender.text = value!;
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: RadioListTile<String>(
-                                          title: const Text("Female"),
-                                          value: "female",
-                                          groupValue: controller.gender.text,
-                                          onChanged: (String? value) {
-                                            setState(() {
-                                              controller.gender.text = value!;
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: RadioListTile<String>(
-                                          title: const Text("Others"),
-                                          value: "others",
-                                          groupValue: controller.gender.text,
-                                          onChanged: (String? value) {
-                                            setState(() {
-                                              controller.gender.text = value!;
-                                            });
-                                          },
-                                        ),
-                                      )
-                                    ],
+                                    controller: controller.project,
                                   ),
                                   SizedBox(
-                                    height: 40,
+                                    height: 50,
+                                  ),
+                                  CustomTextfield(
+                                    // validator: nameValidator,
+                                    controller: controller.workexp,
+                                  ),
+                                  SizedBox(
+                                    height: 50,
+                                  ),
+                                  CustomTextfield(
+                                    // validator: nameValidator,
+                                    controller: controller.qualiDescription,
+                                  ),
+                                  SizedBox(
+                                    height: 50,
                                   ),
                                   Row(
                                     children: [
                                       SizedBox(
-                                        width: 190,
-                                        height: 35,
-                                        child: DropdownButtonHideUnderline(
-                                          child: DropdownButton2<String>(
-                                            value: controller.workexpcount.text
-                                                    .isNotEmpty
-                                                ? controller.workexpcount.text
-                                                : '1 Month', // Provide a default value if it's empty
-                                            items: <String>[
-                                              '1 Month',
-                                              '2 Months',
-                                              '3 Months',
-                                              '4 Months',
-                                              '5 Months',
-                                              '6 Months',
-                                              '1 Year',
-                                              '2 Years',
-                                              'More than 2 Years'
-                                            ].map<DropdownMenuItem<String>>(
-                                                (String value) {
-                                              return DropdownMenuItem<String>(
-                                                value: value,
-                                                child: Text(value),
-                                              );
-                                            }).toList(),
-                                            onChanged: (String? newValue) {
-                                              setState(() {
-                                                // Step 2: Update controller when dropdown value changes
-                                                controller.workexpcount.text =
-                                                    newValue!;
-                                              });
-                                            },
-                                            buttonStyleData: ButtonStyleData(
-                                              height: 30,
-                                              width: 200,
-                                              padding: const EdgeInsets.only(
-                                                  left: 14, right: 14),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(4),
-                                                border: Border.all(
-                                                  color: Colors.black26,
+                                        width: 200,
+                                        child: CustomTextfield(
+                                          controller: controller.email,
+
+                                          validator: emailValidator,
+                                          //(val) {
+                                          //   if (AppSession()
+                                          //       .candidates
+                                          //       .where((element) =>
+                                          //           element.email!.toLowerCase() ==
+                                          //           val?.toLowerCase())
+                                          //       .isNotEmpty) {
+                                          //     return "Already User Exist";
+                                          //   }
+                                          //   ;
+                                          //   MultiValidator([
+                                          //     RequiredValidator(errorText: "* Required"),
+                                          //     EmailValidator(
+                                          //         errorText: "Enter valid email id"),
+                                          //   ]);
+                                          //   return null;
+                                          // }
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 30,
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Colors.indigo.shade900,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(0.1),
+                                            ),
+                                          ),
+                                          onPressed: () async {
+                                            String otp = "";
+                                            print("otp1");
+
+                                            // Set OTP configuration
+                                            // myauth.setConfig(
+                                            //   appEmail: "contact@hdevcoder.com",
+                                            //   appName: "OTP for Registration",
+                                            //   userEmail: controller.email.text,
+                                            //   otpLength: 4,
+                                            //   otpType: OTPType.digitsOnly,
+                                            // );
+
+                                            _showOtpDialog(otp);
+
+                                            // // Send OTP to email
+                                            // bool otpSent = await myauth.sendOTP();
+
+                                            // // Show OTP entry dialog
+
+                                            // // Check if OTP sending is successful
+                                            // if (!otpSent) {
+                                            //   // Display error pop-up for failed OTP sending
+                                            //   showDialog(
+                                            //     context: context,
+                                            //     builder: (BuildContext context) {
+                                            //       return AlertDialog(
+                                            //         title: Text("Error"),
+                                            //         content:
+                                            //             Text("Oops, OTP sending failed."),
+                                            //         actions: <Widget>[
+                                            //           TextButton(
+                                            //             onPressed: () {
+                                            //               Navigator.of(context).pop();
+                                            //             },
+                                            //             child: Text("OK"),
+                                            //           ),
+                                            //         ],
+                                            //       );
+                                            //     },
+                                            //   );
+                                            // }
+                                          },
+                                          child: isVerifiedEmail
+                                              ? Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(Icons.check,
+                                                        color: Colors.green),
+                                                    SizedBox(width: 8),
+                                                    Text(
+                                                      translation(context)
+                                                          .verified,
+                                                    ),
+                                                  ],
+                                                )
+                                              : Text(
+                                                  translation(context).verify,
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            iconStyleData: const IconStyleData(
-                                              icon: Icon(
-                                                Icons.arrow_drop_down_sharp,
-                                              ),
-                                              iconSize: 25,
-                                              iconEnabledColor: Colors.black,
-                                              iconDisabledColor: null,
-                                            ),
-                                            dropdownStyleData:
-                                                DropdownStyleData(
-                                              maxHeight: 210,
-                                              width: 250,
-                                              elevation: 1,
-                                              padding: EdgeInsets.only(
-                                                  left: 5,
-                                                  right: 5,
-                                                  top: 5,
-                                                  bottom: 5),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                border: Border.all(
-                                                    color: Colors.black),
-                                                color: Colors.white,
-                                              ),
-                                              scrollPadding: EdgeInsets.all(5),
-                                              scrollbarTheme:
-                                                  ScrollbarThemeData(
-                                                thickness: MaterialStateProperty
-                                                    .all<double>(6),
-                                                thumbVisibility:
-                                                    MaterialStateProperty.all<
-                                                        bool>(true),
-                                              ),
-                                            ),
-                                            menuItemStyleData:
-                                                const MenuItemStyleData(
-                                              height: 25,
-                                              padding: EdgeInsets.only(
-                                                  left: 14, right: 14),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Expanded(
-                                        child: SizedBox(
-                                          width: 400,
-                                          child: CustomTextfield(
-                                            // validator: workexpValidator,
-                                            controller: controller.workexp,
-                                          ),
                                         ),
                                       ),
                                     ],
-                                  ),
-                                  SizedBox(
-                                    height: 40,
-                                  ),
-                                  SizedBox(
-                                    width: 700,
-                                    height: 35,
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton2<String>(
-                                        value: controller
-                                                .qualification.text.isNotEmpty
-                                            ? controller.qualification.text
-                                            : 'Nill', // Provide a default value if it's empty
-                                        items: <String>[
-                                          'Nill',
-                                          'ITI',
-                                          'Diploma',
-                                          '10th Pass',
-                                          '12th Pass',
-                                          'Under Graduate',
-                                          'Post Graduate'
-                                        ].map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList(),
-                                        onChanged: (String? newValue) {
-                                          setState(() {
-                                            // Step 2: Update controller when dropdown value changes
-                                            controller.qualification.text =
-                                                newValue!;
-                                          });
-                                        },
-                                        buttonStyleData: ButtonStyleData(
-                                          height: 30,
-                                          width: 200,
-                                          padding: const EdgeInsets.only(
-                                              left: 14, right: 14),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                            border: Border.all(
-                                              color: Colors.black26,
-                                            ),
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        iconStyleData: const IconStyleData(
-                                          icon: Icon(
-                                            Icons.arrow_drop_down_sharp,
-                                          ),
-                                          iconSize: 25,
-                                          iconEnabledColor: Colors.black,
-                                          iconDisabledColor: null,
-                                        ),
-                                        dropdownStyleData: DropdownStyleData(
-                                          maxHeight: 210,
-                                          width: 250,
-                                          elevation: 1,
-                                          padding: EdgeInsets.only(
-                                              left: 5,
-                                              right: 5,
-                                              top: 5,
-                                              bottom: 5),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            border:
-                                                Border.all(color: Colors.black),
-                                            color: Colors.white,
-                                          ),
-                                          scrollPadding: EdgeInsets.all(5),
-                                          scrollbarTheme: ScrollbarThemeData(
-                                            thickness: MaterialStateProperty
-                                                .all<double>(6),
-                                            thumbVisibility:
-                                                MaterialStateProperty.all<bool>(
-                                                    true),
-                                          ),
-                                        ),
-                                        menuItemStyleData:
-                                            const MenuItemStyleData(
-                                          height: 25,
-                                          padding: EdgeInsets.only(
-                                              left: 14, right: 14),
-                                        ),
-                                      ),
-                                    ),
                                   ),
                                 ],
                               ),
@@ -1350,310 +1663,51 @@ class _RegistrationState extends State<Registration> {
                           ],
                         ),
                         SizedBox(
-                          height: 40,
-                        ),
-                        Row(children: [
-                          Text(
-                            translation(context).address,
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(width: 60),
-                          Expanded(
-                              child: CustomTextfield(
-                            // validator: workexpValidator,
-                            controller: controller.address,
-                          )),
-                          SizedBox(
-                            height: 40,
-                          ),
-                          SizedBox(
-                            height: 40,
-                            width: 70,
-                          ),
-                          Text(
-                            translation(context).password,
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(width: 60),
-                          Expanded(
-                              child: CustomTextfield(
-                            // validator: validatePassword,
-                            onsaved: (value) {
-                              setState(() {
-                                password = value;
-                              });
-                            },
-                            controller: controller.password,
-                          )),
-                        ]),
-                        SizedBox(
-                          height: 45,
-                        ),
-                        Row(children: [
-                          Text(
-                            'Cretified Courses',
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(width: 60),
-                          Expanded(
-                              child: CustomTextfield(
-                            // validator: workexpValidator,
-                            controller: controller.course,
-                          )),
-                          SizedBox(
-                            height: 40,
-                          ),
-                          SizedBox(
-                            height: 40,
-                            width: 70,
-                          ),
-                          Text(
-                            'Project Worked',
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(width: 60),
-                          Expanded(
-                              child: CustomTextfield(
-                            // validator: validatePassword,
-                            controller: controller.project,
-                          )),
-                        ]),
-                        Row(children: [
-                          Text(
-                            translation(context).mobile,
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(width: 65),
-                          Expanded(
-                              child: CustomTextfield(
-                            controller: controller.mobile,
-                            // validator: (value) {
-                            //   if (value!.length != 10)
-                            //     return 'Mobile Number must be of 10 digit';
-                            //   else
-                            //     return null;
-                            // },
-                          )),
-                          SizedBox(
-                            height: 30,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.indigo.shade900,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(0.1),
-                                ),
-                              ),
-                              onPressed: () async {
-                                print("phone1");
-                                String mobileNumber = controller.mobile.text;
-                                print(mobileNumber);
-
-                                // Check if the user is already registered or in the blocklist
-                                bool isUserRegistered =
-                                    await _signInWithMobileNumber();
-                                print('Is User Registered: $isUserRegistered');
-
-                                // Update the button text to "Verified" if isUserRegistered is false
-                                setState(() {
-                                  isVerified = !isUserRegistered;
-                                });
-
-                                // If the verification is successful, show the "Verified" button
-                                if (!isUserRegistered) {
-                                  // Proceed with OTP verification logic here...
-                                  // When OTP is successfully verified, set isVerified to true
-                                  // Example:
-                                  // isVerified = true;
-                                }
-                              },
-                              child: isVerified
-                                  ? Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(Icons.check, color: Colors.green),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          translation(context).verified,
-                                        ),
-                                      ],
-                                    )
-                                  : Text(
-                                      translation(context).verify,
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.normal,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 40,
-                          ),
-                          SizedBox(
-                            height: 40,
-                            width: 70,
-                          ),
-                          Text(
-                            translation(context).email,
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(width: 55),
-                          Expanded(
-                              child: CustomTextfield(
-                            controller: controller.email,
-
-                            validator: emailValidator,
-                            //(val) {
-                            //   if (AppSession()
-                            //       .candidates
-                            //       .where((element) =>
-                            //           element.email!.toLowerCase() ==
-                            //           val?.toLowerCase())
-                            //       .isNotEmpty) {
-                            //     return "Already User Exist";
-                            //   }
-                            //   ;
-                            //   MultiValidator([
-                            //     RequiredValidator(errorText: "* Required"),
-                            //     EmailValidator(
-                            //         errorText: "Enter valid email id"),
-                            //   ]);
-                            //   return null;
-                            // }
-                          )),
-                          SizedBox(
-                            height: 30,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.indigo.shade900,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(0.1),
-                                ),
-                              ),
-                              onPressed: () async {
-                                String otp = "";
-                                print("otp1");
-
-                                // Set OTP configuration
-                                // myauth.setConfig(
-                                //   appEmail: "contact@hdevcoder.com",
-                                //   appName: "OTP for Registration",
-                                //   userEmail: controller.email.text,
-                                //   otpLength: 4,
-                                //   otpType: OTPType.digitsOnly,
-                                // );
-
-                                _showOtpDialog(otp);
-
-                                // // Send OTP to email
-                                // bool otpSent = await myauth.sendOTP();
-
-                                // // Show OTP entry dialog
-
-                                // // Check if OTP sending is successful
-                                // if (!otpSent) {
-                                //   // Display error pop-up for failed OTP sending
-                                //   showDialog(
-                                //     context: context,
-                                //     builder: (BuildContext context) {
-                                //       return AlertDialog(
-                                //         title: Text("Error"),
-                                //         content:
-                                //             Text("Oops, OTP sending failed."),
-                                //         actions: <Widget>[
-                                //           TextButton(
-                                //             onPressed: () {
-                                //               Navigator.of(context).pop();
-                                //             },
-                                //             child: Text("OK"),
-                                //           ),
-                                //         ],
-                                //       );
-                                //     },
-                                //   );
-                                // }
-                              },
-                              child: isVerifiedEmail
-                                  ? Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(Icons.check, color: Colors.green),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          translation(context).verified,
-                                        ),
-                                      ],
-                                    )
-                                  : Text(
-                                      translation(context).verify,
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.normal,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                            ),
-                          ),
-                        ]),
-                        SizedBox(
-                          height: 40,
+                          height: 50,
                         ),
                         widget.selectedOption == 'Blue'
-                            ? Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        translation(context).skills,
-                                        style: TextStyle(
-                                          fontFamily: 'Poppins',
-                                          fontWeight: FontWeight.bold,
+                            ? Container(
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          translation(context).skills,
+                                          style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 120,
-                                      ),
-                                      Wrap(
-                                        spacing: 8.0,
-                                        runSpacing: 8.0,
-                                        children: controller.skills
-                                            .map(
-                                              (value) => Chip(
-                                                backgroundColor:
-                                                    Colors.indigo.shade900,
-                                                label: Text(
-                                                  value,
-                                                  style: TextStyle(
-                                                      color: Colors.white),
+                                        SizedBox(
+                                          width: 120,
+                                        ),
+                                        Wrap(
+                                          spacing: 8.0,
+                                          runSpacing: 8.0,
+                                          children: controller.skills
+                                              .map(
+                                                (value) => Chip(
+                                                  backgroundColor:
+                                                      Colors.indigo.shade900,
+                                                  label: Text(
+                                                    value,
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                  onDeleted: () {
+                                                    setState(() {
+                                                      controller.skills
+                                                          .remove(value);
+                                                    });
+                                                  },
                                                 ),
-                                                onDeleted: () {
-                                                  setState(() {
-                                                    controller.skills
-                                                        .remove(value);
-                                                  });
-                                                },
-                                              ),
-                                            )
-                                            .toList(),
-                                      ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Expanded(
-                                        child: Container(
+                                              )
+                                              .toList(),
+                                        ),
+                                        SizedBox(
+                                          width: 20,
+                                        ),
+                                        Container(
                                             height: 30,
                                             decoration: BoxDecoration(
                                               borderRadius:
@@ -1761,190 +1815,56 @@ class _RegistrationState extends State<Registration> {
                                                 ).toList(),
                                               ),
                                             )),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 40,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        translation(context).lookingWork,
-                                        style: TextStyle(
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 40,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          translation(context).skills,
+                                          style: TextStyle(
                                             fontFamily: 'Poppins',
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Wrap(
-                                        spacing: 8.0,
-                                        runSpacing: 8.0,
-                                        children: controller.workins
-                                            .map(
-                                              (value) => Chip(
-                                                backgroundColor:
-                                                    Colors.indigo.shade900,
-                                                label: Text(
-                                                  value,
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                                onDeleted: () {
-                                                  setState(() {
-                                                    controller.workins
-                                                        .remove(value);
-                                                  });
-                                                },
-                                              ),
-                                            )
-                                            .toList(),
-                                      ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          height: 30,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(1),
-                                              border: Border.all(
-                                                  color: Colors.black)),
-                                          child: DropdownButtonHideUnderline(
-                                            child: DropdownButton2<String>(
-                                              value: wokinvalue,
-                                              buttonStyleData: ButtonStyleData(
-                                                height: 30,
-                                                width: 200,
-                                                elevation: 1,
-                                                padding: const EdgeInsets.only(
-                                                    left: 14, right: 14),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(4),
-                                                  border: Border.all(
-                                                    color: Colors.black26,
-                                                  ),
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              iconStyleData:
-                                                  const IconStyleData(
-                                                icon: Icon(
-                                                  Icons.arrow_drop_down_sharp,
-                                                ),
-                                                iconSize: 25,
-                                                iconEnabledColor: Colors.white,
-                                                iconDisabledColor: null,
-                                              ),
-                                              dropdownStyleData:
-                                                  DropdownStyleData(
-                                                maxHeight: 210,
-                                                width: 300,
-                                                elevation: 0,
-                                                padding: EdgeInsets.only(
-                                                    left: 10,
-                                                    right: 10,
-                                                    top: 5,
-                                                    bottom: 15),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  border: Border.all(
-                                                      color: Colors.black),
-                                                  color: Colors.indigo.shade900,
-                                                ),
-                                                scrollPadding:
-                                                    EdgeInsets.all(5),
-                                                scrollbarTheme:
-                                                    ScrollbarThemeData(
-                                                  thickness:
-                                                      MaterialStateProperty.all<
-                                                          double>(6),
-                                                  thumbVisibility:
-                                                      MaterialStateProperty.all<
-                                                          bool>(true),
-                                                ),
-                                              ),
-                                              menuItemStyleData:
-                                                  const MenuItemStyleData(
-                                                height: 25,
-                                                padding: EdgeInsets.only(
-                                                    left: 14, right: 14),
-                                              ),
-                                              style: const TextStyle(
-                                                  color: Colors.white),
-                                              underline: Container(
-                                                height: 0,
-                                              ),
-                                              onChanged: (String? newValue) {
-                                                setState(() {
-                                                  if (newValue != null &&
-                                                      !controller.workins
-                                                          .contains(newValue)) {
-                                                    controller.workins
-                                                        .add(newValue);
-                                                  }
-                                                });
-                                              },
-                                              items: BlueWorkin.map<
-                                                      DropdownMenuItem<String>>(
-                                                  (String value) {
-                                                return DropdownMenuItem<String>(
-                                                  value: value,
-                                                  child: Text(value),
-                                                );
-                                              }).toList(),
-                                            ),
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            : Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        translation(context).skills,
-                                        style: TextStyle(
-                                          fontFamily: 'Poppins',
-                                          fontWeight: FontWeight.bold,
+                                        SizedBox(
+                                          width: 120,
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 120,
-                                      ),
-                                      Wrap(
-                                        spacing: 8.0,
-                                        runSpacing: 8.0,
-                                        children: controller.skills
-                                            .map(
-                                              (value) => Chip(
-                                                backgroundColor:
-                                                    Colors.indigo.shade900,
-                                                label: Text(
-                                                  value,
-                                                  style: TextStyle(
-                                                      color: Colors.white),
+                                        Wrap(
+                                          spacing: 8.0,
+                                          runSpacing: 8.0,
+                                          children: controller.skills
+                                              .map(
+                                                (value) => Chip(
+                                                  backgroundColor:
+                                                      Colors.indigo.shade900,
+                                                  label: Text(
+                                                    value,
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                  onDeleted: () {
+                                                    setState(() {
+                                                      controller.skills
+                                                          .remove(value);
+                                                    });
+                                                  },
                                                 ),
-                                                onDeleted: () {
-                                                  setState(() {
-                                                    controller.skills
-                                                        .remove(value);
-                                                  });
-                                                },
-                                              ),
-                                            )
-                                            .toList(),
-                                      ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Expanded(
-                                        child: Container(
+                                              )
+                                              .toList(),
+                                        ),
+                                        SizedBox(
+                                          width: 20,
+                                        ),
+                                        Container(
                                             height: 30,
                                             decoration: BoxDecoration(
                                               borderRadius:
@@ -2052,49 +1972,40 @@ class _RegistrationState extends State<Registration> {
                                                 ).toList(),
                                               ),
                                             )),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 40,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        translation(context).lookingWork,
-                                        style: TextStyle(
-                                            fontFamily: 'Poppins',
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Wrap(
-                                        spacing: 8.0,
-                                        runSpacing: 8.0,
-                                        children: controller.workins
-                                            .map(
-                                              (value) => Chip(
-                                                backgroundColor:
-                                                    Colors.indigo.shade900,
-                                                label: Text(
-                                                  value,
-                                                  style: TextStyle(
-                                                      color: Colors.white),
+                                        Text(
+                                          translation(context).lookingWork,
+                                          style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Wrap(
+                                          spacing: 8.0,
+                                          runSpacing: 8.0,
+                                          children: controller.workins
+                                              .map(
+                                                (value) => Chip(
+                                                  backgroundColor:
+                                                      Colors.indigo.shade900,
+                                                  label: Text(
+                                                    value,
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                  onDeleted: () {
+                                                    setState(() {
+                                                      controller.workins
+                                                          .remove(value);
+                                                    });
+                                                  },
                                                 ),
-                                                onDeleted: () {
-                                                  setState(() {
-                                                    controller.workins
-                                                        .remove(value);
-                                                  });
-                                                },
-                                              ),
-                                            )
-                                            .toList(),
-                                      ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Expanded(
-                                        child: Container(
+                                              )
+                                              .toList(),
+                                        ),
+                                        SizedBox(
+                                          width: 20,
+                                        ),
+                                        Container(
                                           height: 30,
                                           decoration: BoxDecoration(
                                               borderRadius:
@@ -2189,10 +2100,13 @@ class _RegistrationState extends State<Registration> {
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 40,
+                                    ),
+                                  ],
+                                ),
                               ),
                         SizedBox(
                           height: 35,
@@ -2210,10 +2124,12 @@ class _RegistrationState extends State<Registration> {
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   String name = controller.name.text;
+                                  String age = controller.name.text;
                                   String email = controller.email.text.trim();
                                   String password = controller.password.text;
                                   String mobile = controller.mobile.text;
                                   String worktitle = controller.worktitle.text;
+                                  String aboutYou = controller.aboutYou.text;
                                   String adharno = controller.aadharno.text;
                                   String gender = controller.gender.text;
                                   String workexp = controller.workexp.text;
@@ -2221,6 +2137,8 @@ class _RegistrationState extends State<Registration> {
                                       controller.workexpcount.text;
                                   String qualification =
                                       controller.qualification.text;
+                                  String qualiDescription =
+                                      controller.qualiDescription.text;
                                   String address = controller.address.text;
                                   String course = controller.course.text;
                                   String project = controller.project.text;
@@ -2244,6 +2162,9 @@ class _RegistrationState extends State<Registration> {
                                         address: address,
                                         project: project,
                                         course: course,
+                                        age: age,
+                                        aboutYou: aboutYou,
+                                        qualiDescription: qualiDescription,
                                         aadharno: adharno,
                                         qualification: qualification,
                                         selectedOption: selectedOption,
@@ -2269,36 +2190,6 @@ class _RegistrationState extends State<Registration> {
         ),
       ),
     );
-  }
-
-  String? validatePassword(String? value) {
-    RegExp regex =
-        RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
-    if (value!.isEmpty) {
-      return 'Please enter password';
-    } else {
-      if (!regex.hasMatch(value)) {
-        return 'Enter valid password';
-      } else {
-        return null;
-      }
-    }
-  }
-
-  bool isValidEmail(String email) {
-    // Regular expression for basic email validation
-    // This is a simple example and may not cover all valid email formats
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    return emailRegex.hasMatch(email);
-  }
-
-  String? emailValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return '*Required';
-    } else if (!isValidEmail(value)) {
-      return 'Invalid email format';
-    }
-    return null;
   }
 }
 
