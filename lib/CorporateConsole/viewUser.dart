@@ -38,6 +38,8 @@ class _FullPagePopupState extends State<FullPagePopup> {
     super.initState();
   }
 
+  Color? labelColor;
+  String labelText = '';
   bool expandWork = false;
   bool expandCertificate = false;
   bool expandCourse = false;
@@ -107,44 +109,47 @@ class _FullPagePopupState extends State<FullPagePopup> {
                       SizedBox(
                         width: 15,
                       ),
-                      SizedBox(
-                        height: 30,
-                        width: 125,
-                        child: CustomDropDown<Candidate?>(
-                          value: verified,
-                          onChanged: (Candidate) {},
-                          items: [
-                            DropdownMenuItem<Candidate?>(
-                              value: Candidate(verify: 'awaiting_response'),
-                              child: Text('Awaiting response'),
-                            ),
-                            DropdownMenuItem<Candidate?>(
-                              value: Candidate(verify: 'interview_scheduled'),
-                              child: Text('Interview Scheduled'),
-                            ),
-                            DropdownMenuItem<Candidate?>(
-                              value: Candidate(verify: 'curated'),
-                              child: Text('Curated'),
-                            ),
-                            DropdownMenuItem<Candidate?>(
-                              value: Candidate(verify: 'rejected'),
-                              child: Text('Rejected'),
-                            ),
-                            DropdownMenuItem<Candidate?>(
-                              value: Candidate(verify: 'hired'),
-                              child: Text('Hired'),
-                            ),
-                          ],
+                      Container(
+                        width: 130,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color:
+                                labelColor, // Use labelColor variable directly
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: Text(
+                          '${widget.candidate.status}',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.indigo.shade900,
+                          ),
                         ),
+                        padding: const EdgeInsets.only(top: 10, left: 20),
                       ),
                     ],
                   ),
                   Row(
                     children: [
                       CustomRectButton(
-                        onPressed: () {},
-                        child: ImageIcon(AssetImage("table.png"),
-                            size: 40, color: Colors.indigo.shade900),
+                        onPressed: () {
+                          setState(() {
+                            labelText = 'Selected';
+                            labelColor = Colors.green.shade200;
+                          });
+                          FirebaseFirestore.instance
+                              .collection('greycollaruser')
+                              .doc(widget.candidate.docId)
+                              .update({
+                            'labelText': labelText,
+                          });
+                        },
+                        child: SizedBox(
+                          width: 50,
+                          child: Icon(
+                            Icons.check,
+                            color: Colors.indigo.shade900,
+                            size: 30,
+                          ),
+                        ),
                         colors: Colors.green.shade200,
                         bottomleft: Radius.circular(5),
                         topleft: Radius.circular(5),
@@ -152,19 +157,53 @@ class _FullPagePopupState extends State<FullPagePopup> {
                         topright: Radius.zero,
                       ),
                       CustomRectButton(
-                        onPressed: () {},
-                        child: ImageIcon(AssetImage("table.png"),
-                            size: 30, color: Colors.indigo.shade900),
-                        colors: Colors.grey.shade200,
+                        onPressed: () {
+                          setState(() {
+                            labelText = 'Curated';
+                            labelColor = Colors.yellow.shade200;
+                          });
+                          FirebaseFirestore.instance
+                              .collection('greycollaruser')
+                              .doc(widget.candidate.docId)
+                              .update({
+                            'labelText': labelText,
+                          });
+                        },
+                        child: SizedBox(
+                          height: 50,
+                          child: Icon(
+                            Icons.question_mark,
+                            color: Colors.indigo.shade900,
+                            size: 30,
+                          ),
+                        ),
+                        colors: Colors.yellow.shade200,
                         bottomleft: Radius.zero,
                         topleft: Radius.zero,
                         bottomright: Radius.zero,
                         topright: Radius.zero,
                       ),
                       CustomRectButton(
-                        onPressed: () {},
-                        child: ImageIcon(AssetImage("table.png"),
-                            size: 50, color: Colors.indigo.shade900),
+                        onPressed: () {
+                          setState(() {
+                            labelText = 'Rejected';
+                            labelColor = Colors.red.shade200;
+                          });
+                          FirebaseFirestore.instance
+                              .collection('greycollaruser')
+                              .doc(widget.candidate.docId)
+                              .update({
+                            'labelText': labelText,
+                          });
+                        },
+                        child: SizedBox(
+                          width: 50,
+                          child: Icon(
+                            Icons.cancel,
+                            color: Colors.indigo.shade900,
+                            size: 30,
+                          ),
+                        ),
                         colors: Colors.red.shade200,
                         bottomleft: Radius.zero,
                         topleft: Radius.zero,
@@ -410,6 +449,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                     ),
                                   ),
                                   child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(
                                         Icons.calendar_month_outlined,
@@ -449,21 +489,24 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                           5), // Adjust border radius as needed
                                     ),
                                   ),
-                                  child: Row(children: [
-                                    Icon(
-                                      Icons.call_rounded,
-                                      size: 25,
-                                      color: Colors.white,
-                                    ),
-                                    Text(
-                                      'Make a call',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ]),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.call_rounded,
+                                          size: 25,
+                                          color: Colors.white,
+                                        ),
+                                        Text(
+                                          'Make a call',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ]),
                                 )
                               ]),
                         ),
@@ -482,30 +525,15 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                 maxRadius: 68,
                                 minRadius: 67.5,
                                 child: CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  maxRadius: 66,
-                                  minRadius: 60,
-                                  child: FutureBuilder(
-                                      future: FireStoreDataBase()
-                                          .getData(Candidate()),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasError) {
-                                          return Text('somethign went wrong');
-                                        }
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.done) {
-                                          return CircleAvatar(
-                                            backgroundImage: NetworkImage(
-                                                snapshot.data.toString()),
-                                            maxRadius: 59,
-                                            minRadius: 56,
-                                          );
-                                        }
-                                        return Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }),
-                                ),
+                                    backgroundColor: Colors.white,
+                                    maxRadius: 66,
+                                    minRadius: 60,
+                                    child: CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                          '${widget.candidate.imgPic}'),
+                                      maxRadius: 59,
+                                      minRadius: 56,
+                                    )),
                               ),
                               Text(
                                 '${widget.candidate.name}',
@@ -693,8 +721,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                 child: Row(
                                   children: [
                                     SizedBox(
-                                      height: 40,
-                                      width: 230,
+                                      width: 170,
                                       child: ElevatedButton(
                                         onPressed: () {
                                           downloadImage(
@@ -733,8 +760,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                       width: 30,
                                     ),
                                     SizedBox(
-                                      height: 40,
-                                      width: 230,
+                                      width: 225,
                                       child: ElevatedButton(
                                         onPressed: () {
                                           downloadImage(
@@ -747,6 +773,10 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                               '${widget.candidate.imgAadhar}');
                                         },
                                         style: ElevatedButton.styleFrom(
+                                          minimumSize:
+                                              const Size.fromHeight(45),
+                                          fixedSize: const Size.fromWidth(
+                                              double.infinity),
                                           backgroundColor:
                                               Colors.indigo.shade900,
                                           shape: RoundedRectangleBorder(
@@ -845,9 +875,6 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                         ),
                                       ),
                                       ListTile(
-                                          leading: CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.deepPurple.shade200),
                                           title: Text(
                                             '${widget.candidate.workexp}',
                                             style: TextStyle(
@@ -878,10 +905,8 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                           decoration: const BoxDecoration(
                                               color: Color.fromARGB(
                                                   255, 146, 176, 226),
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(5),
-                                                  topRight:
-                                                      Radius.circular(5))),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5))),
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -984,9 +1009,6 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                         ),
                                       ),
                                       ListTile(
-                                          leading: CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.deepPurple.shade200),
                                           title: Text(
                                             '${widget.candidate.qualification}',
                                             style: TextStyle(
@@ -1018,10 +1040,8 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                           decoration: const BoxDecoration(
                                               color: Color.fromARGB(
                                                   255, 146, 176, 226),
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(5),
-                                                  topRight:
-                                                      Radius.circular(5))),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5))),
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -1124,9 +1144,6 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                         ),
                                       ),
                                       ListTile(
-                                          leading: CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.deepPurple.shade200),
                                           title: Text(
                                             '${widget.candidate.course}',
                                             style: TextStyle(
@@ -1151,10 +1168,8 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                           decoration: const BoxDecoration(
                                               color: Color.fromARGB(
                                                   255, 146, 176, 226),
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(5),
-                                                  topRight:
-                                                      Radius.circular(5))),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5))),
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -1257,9 +1272,6 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                         ),
                                       ),
                                       ListTile(
-                                          leading: CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.deepPurple.shade200),
                                           title: Text(
                                             '${widget.candidate.project}',
                                             style: TextStyle(
@@ -1284,10 +1296,8 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                           decoration: const BoxDecoration(
                                               color: Color.fromARGB(
                                                   255, 146, 176, 226),
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(5),
-                                                  topRight:
-                                                      Radius.circular(5))),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5))),
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -1335,23 +1345,23 @@ class _FullPagePopupState extends State<FullPagePopup> {
   }
 }
 
-class FireStoreDataBase {
-  String? dowloadURL;
-  Future getData(Candidate candidate) async {
-    try {
-      await downloadURLExample(candidate);
-      return dowloadURL;
-    } catch (e) {
-      debugPrint("Error - $e");
-      return null;
-    }
-  }
+// class FireStoreDataBase {
+//   String? dowloadURL;
+//   Future getData() async {
+//     try {
+//       await downloadURLExample();
+//       return dowloadURL;
+//     } catch (e) {
+//       debugPrint("Error - $e");
+//       return null;
+//     }
+//   }
 
-  Future<void> downloadURLExample(Candidate candidate) async {
-    dowloadURL = await FirebaseStorage.instance
-        .ref()
-        .child('Files/${candidate.imgPic}')
-        .getDownloadURL();
-    debugPrint(dowloadURL.toString());
-  }
-}
+//   Future<void> downloadURLExample() async {
+//     dowloadURL = await FirebaseStorage.instance
+//         .ref()
+//         .child('${widget.candidate.qualification}')
+//         .getDownloadURL();
+//     debugPrint(dowloadURL.toString());
+//   }
+// }

@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum CandidateStatus { verified, notVerified }
 
+enum ActiveStatus { selected, curated, rejected }
+
 class Candidate {
   final String? name;
   final String? email;
@@ -12,6 +14,7 @@ class Candidate {
   final String? workexp;
   final String? workexpcount;
   final String? state;
+  final String? status;
   final String? address;
   final String? qualification;
   final String? aboutYou;
@@ -36,6 +39,7 @@ class Candidate {
   final String? imgCv;
   final String? imgAadhar;
   final String? imgExp;
+  String? get docId => reference!.id;
   final List<String>? skills;
   final List<String>? workins;
   final DocumentReference? reference;
@@ -57,6 +61,7 @@ class Candidate {
       this.ctc,
       this.age,
       this.skills,
+      this.status,
       this.course,
       this.project,
       this.workins,
@@ -98,6 +103,7 @@ class Candidate {
         "password": password,
         "imgpic": imgPic,
         "imgcv": imgCv,
+        "docId": docId,
         "imgvoter": imgVoter,
         "imgaadhar": imgAadhar,
         "imgexp": imgExp,
@@ -215,6 +221,33 @@ class Candidate {
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((doc) => Candidate.fromSnapshot(doc)).toList();
+    });
+  }
+
+  Future<void> curated() {
+    return FirebaseFirestore.instance
+        .collection('greycollaruser')
+        .doc(docId)
+        .update({
+      "status": ActiveStatus.curated.index,
+    });
+  }
+
+  Future<void> selected() {
+    return FirebaseFirestore.instance
+        .collection('greycollaruser')
+        .doc(docId)
+        .update({
+      "status": ActiveStatus.selected.index,
+    });
+  }
+
+  Future<void> rejected() {
+    return FirebaseFirestore.instance
+        .collection('greycollaruser')
+        .doc(docId)
+        .update({
+      "status": ActiveStatus.rejected.index,
     });
   }
 }
