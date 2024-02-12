@@ -1082,23 +1082,23 @@ class _RegistrationState extends State<Registration> {
                           Expanded(
                             child: Column(
                               children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: RadioListTile<String>(
-                                        title: const Text("Male"),
-                                        value: "male",
-                                        groupValue: controller.gender.text,
-                                        onChanged: (String? value) {
-                                          setState(() {
-                                            controller.gender.text = value!;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: RadioListTile<String>(
-                                        title: const Text("Female"),
+                                Row(children: [
+                                  Radio(
+                                    value: "male",
+                                    groupValue: controller.gender.text,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        controller.gender.text = value!;
+                                      });
+                                    },
+                                  ),
+                                  Text("Male"),
+                                  SizedBox(
+                                      width:
+                                          8), // Adjust the width according to your preference
+                                  Row(
+                                    children: [
+                                      Radio(
                                         value: "female",
                                         groupValue: controller.gender.text,
                                         onChanged: (String? value) {
@@ -1107,9 +1107,11 @@ class _RegistrationState extends State<Registration> {
                                           });
                                         },
                                       ),
-                                    ),
-                                    Expanded(
-                                      child: RadioListTile<String>(
+                                      Text("Female"),
+                                      SizedBox(
+                                          width:
+                                              8), // Adjust the width according to your preference
+                                      RadioListTile<String>(
                                         title: const Text("Others"),
                                         value: "others",
                                         groupValue: controller.gender.text,
@@ -1119,9 +1121,9 @@ class _RegistrationState extends State<Registration> {
                                           });
                                         },
                                       ),
-                                    )
-                                  ],
-                                ),
+                                    ],
+                                  ),
+                                ]),
                                 SizedBox(
                                   height: 40,
                                 ),
