@@ -39,11 +39,18 @@ class NewUserPayment extends StatefulWidget {
     this.project,
     this.address,
     this.workins,
+    this.imgpic,
+    this.imgaadhar,
+    this.imgcv,
+    this.imgvoter,
+    this.imgexp,
     this.skills,
     this.expectedwage,
     this.currentwage,
-    this.imageUrls,
     this.city,
+    this.aboutYou,
+    this.age,
+    this.qualiDescription,
     this.ctc,
     this.state,
     this.country,
@@ -70,9 +77,16 @@ class NewUserPayment extends StatefulWidget {
   final String? expectedwage;
   final String? currentwage;
   final String? ctc;
+  final String? qualiDescription;
+  final String? age;
+  final String? aboutYou;
+  final String? imgpic;
+  final String? imgaadhar;
+  final String? imgexp;
+  final String? imgvoter;
+  final String? imgcv;
   final List<String>? skills;
   final List<String>? workins;
-  final List<String>? imageUrls;
 
   final Candidate? candidate;
 
@@ -850,6 +864,8 @@ class _NewUserPayment extends State<NewUserPayment> {
       );
       // User creation successful
       print("User created: ${userCredential.user!.email}");
+      print(
+          'ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss          ${widget.imgpic}               sssssssssssssssssssssssssssssssssssssssssss');
       await assignUserRole(userCredential.user!.uid, 'Blue');
     } catch (e) {
       print("Error creating user: $e");
@@ -877,13 +893,20 @@ class _NewUserPayment extends State<NewUserPayment> {
         "city": widget.city,
         "project": widget.project,
         "course": widget.course,
+        "imgpic": widget.imgpic,
+        "imgaadhar": widget.imgaadhar,
+        "imgcv": widget.imgcv,
+        "imgvoter": widget.imgvoter,
+        "imgexp": widget.imgexp,
         "country": widget.country,
         'skills': widget.skills ?? [],
         "ctc": widget.ctc,
+        "aboutYou": widget.aboutYou,
+        "age": widget.age,
+        "qualiDescription": widget.qualiDescription,
         "expectedwage": widget.expectedwage,
         "currentwage": widget.currentwage,
         'label': widget.selectedOption,
-        "imageUrl": widget.imageUrls ?? [],
         "cashrecipt": controller.cashrecipt.text
         // Add additional user-related fields as needed
       });

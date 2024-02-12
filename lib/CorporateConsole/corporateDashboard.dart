@@ -9,10 +9,10 @@ import 'package:hiremeinindiaapp/Providers/session.dart';
 import '../Classes/language.dart';
 import '../Classes/language_constants.dart';
 import '../Widgets/hiremeinindia.dart';
-import 'columnView.dart';
 import '../Widgets/customTextstyle.dart';
 import '../gen_l10n/app_localizations.dart';
 import '../main.dart';
+import 'columnView.dart';
 
 class CorporateDashboard extends StatefulWidget {
   final User user;
