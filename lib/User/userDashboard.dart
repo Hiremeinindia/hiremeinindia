@@ -27,6 +27,7 @@ class _UserDashboard extends State<UserDashboard> {
   bool dropdownValue = false;
   bool isArrowClick = false;
   late Stream<Map<String, dynamic>?> userStream;
+  List<String> _image = [];
   String _userName = '';
   List<String> _skills = [];
 
@@ -47,8 +48,10 @@ class _UserDashboard extends State<UserDashboard> {
           Map<String, dynamic> data = documentSnapshot.data()!;
           String name = data['name'];
           List<String> skills = List<String>.from(data['skills']);
+          List<String> imageUrls = List<String>.from(data['imageUrl']);
           _userName = name;
           _skills = skills;
+          _image = imageUrls;
           return data;
         } else {
           print('Document does not exist');
@@ -299,7 +302,7 @@ class _UserDashboard extends State<UserDashboard> {
                                 ),
                               ),
                               Text(
-                                '$_skills',
+                                '${_skills[0]}',
                                 style: TextStyle(
                                     fontSize: 15,
                                     color: Colors.indigo.shade900,
@@ -334,11 +337,27 @@ class _UserDashboard extends State<UserDashboard> {
                   backgroundColor: Colors.white,
                   maxRadius: 66,
                   minRadius: 60,
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage('imguser.jpg'),
-                    maxRadius: 59,
-                    minRadius: 56,
-                  ),
+                  child: StreamBuilder<Map<String, dynamic>?>(
+                      stream: userStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData && snapshot.data != null) {
+                          return ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: NetworkImage('${_image[0]}'),
+                                maxRadius: 59,
+                                minRadius: 56,
+                              ),
+                            ],
+                          );
+                        } else {
+                          // Loading or error state
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      }),
                 ),
               ),
               SizedBox(

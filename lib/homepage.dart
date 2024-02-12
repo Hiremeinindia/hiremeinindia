@@ -290,7 +290,7 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                         height: 200,
                         width: 200,
-                        child: Image(image: AssetImage('imgbuilding.jpeg'))),
+                        child: Image.asset('imgbuilding.jpeg')),
                     SizedBox(
                       width: 200,
                       height: 40,
@@ -307,9 +307,7 @@ class _HomePageState extends State<HomePage> {
                 Column(
                   children: [
                     SizedBox(
-                        height: 200,
-                        width: 200,
-                        child: Image(image: AssetImage('img.jpg'))),
+                        height: 200, width: 200, child: Image.asset('img.jpg')),
                     SizedBox(
                         width: 200,
                         height: 40,

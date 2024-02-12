@@ -10,17 +10,23 @@ class Candidate {
   final String? aadharno;
   final String? gender;
   final String? workexp;
+  final String? workexpcount;
   final String? state;
   final String? address;
   final String? qualification;
+  final String? aboutYou;
+  final String? qualiDescription;
   final String? workin;
   final String? password;
   final String? otpm;
   final String? code;
+  final String? course;
+  final String? project;
   final String? selectedOption;
   final String? country;
   final String? city;
   final String? expectedwage;
+  final String? ctc;
   final String? currentwage;
   final String? confirmPassword;
   final String? verify;
@@ -43,10 +49,16 @@ class Candidate {
     this.aadharno,
     this.gender,
     this.workexp,
+    this.workexpcount,
     this.state,
     this.address,
+    this.qualiDescription,
     this.qualification,
+    this.aboutYou,
+    this.ctc,
     this.skills,
+    this.course,
+    this.project,
     this.workins,
     this.workin,
     this.password,
@@ -77,16 +89,22 @@ class Candidate {
         "worktitle": worktitle,
         "aadharno": aadharno,
         "gender": gender,
+        "workexpcount": workexpcount,
         "workexp": workexp,
         "state": state,
         "address": address,
         "qualification": qualification,
+        "qualiDescription": qualiDescription,
         "skills": skills,
         "workins": workins,
         "workin": workin,
         "password": password,
+        "aboutYou": aboutYou,
         "otpm": otpm,
         "code": code,
+        "course": course,
+        "project": project,
+        "ctc": ctc,
         "label": selectedOption,
         "country": country,
         "confirmPassword": confirmPassword,
@@ -109,13 +127,18 @@ class Candidate {
       email: data["email"],
       mobile: data["mobile"],
       reference: snapshot.reference,
+      workexpcount: data["workexpcount"],
       workexp: data["workexp"],
       aadharno: data["aadharno"],
       gender: data["gender"],
       selectedOption: data["label"],
       worktitle: data["worktitle"],
       qualification: data["qualification"],
+      qualiDescription: data["qualiDescription"],
       state: data["state"],
+      project: data["project"],
+      aboutYou: data["aboutYou"],
+      course: data["course"],
       address: data["address"],
       skills: List<String>.from(data["skills"] ?? []),
       workins: List<String>.from(data["workins"] ?? []),
@@ -126,6 +149,7 @@ class Candidate {
       country: data["country"],
       confirmPassword: data["confirmPassword"],
       city: data["city"],
+      ctc: data["ctc"],
       expectedwage: data["expectedwage"],
       currentwage: data["currentwage"],
       imageUrl1: data["imageUrl1"],
@@ -145,10 +169,13 @@ class Candidate {
         // reference: json["reference"],
         reference: reference,
         workexp: json["workexp"],
+        workexpcount: json["workexpcount"],
         aadharno: json["aadharno"],
         gender: json["gender"],
         selectedOption: json["label"],
         qualification: json["qualification"],
+        qualiDescription: json["qualiDescription"],
+        aboutYou: json["aboutYou"],
         worktitle: json["worktitle"],
         state: json["state"],
         address: json["address"],
@@ -157,9 +184,12 @@ class Candidate {
         workin: json["workin"],
         password: json["password"],
         otpm: json["otpm"],
+        project: json["project"],
+        course: json["course"],
         code: json["code"],
         country: json["country"],
         city: json["city"],
+        ctc: json["ctc"],
         expectedwage: json["expectedwage"],
         currentwage: json["currentwage"],
         imageUrl1: json["imageUrl1"],
