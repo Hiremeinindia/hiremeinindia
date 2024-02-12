@@ -386,7 +386,7 @@ class _NewUserPayment extends State<NewUserPayment> {
 
       if (response.statusCode == 200) {
         print("cash3");
-        print('Waiting for 3 minutes before showing verification result...');
+        print('Waiting for 1 minutes before showing verification result...');
         // Wait for 3 minutes before showing verification result
         await Future.delayed(Duration(minutes: 1));
 
