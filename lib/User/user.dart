@@ -43,6 +43,7 @@ class Candidate {
   final List<String>? skills;
   final List<String>? workins;
   final DocumentReference? reference;
+  ActiveStatus activeStatus;
 
   Candidate(
       {this.name,
@@ -80,6 +81,7 @@ class Candidate {
       this.imgAadhar,
       this.imgCv,
       this.imgExp,
+      this.activeStatus = ActiveStatus.curated,
       this.imgPic,
       this.imgVoter});
 
@@ -115,6 +117,7 @@ class Candidate {
         "project": project,
         "ctc": ctc,
         "label": selectedOption,
+        "labelText": activeStatus.index,
         "country": country,
         "confirmPassword": confirmPassword,
         "city": city,
@@ -135,6 +138,9 @@ class Candidate {
         aadharno: data["aadharno"],
         gender: data["gender"],
         selectedOption: data["label"],
+        activeStatus: data["labelText"] == null
+            ? ActiveStatus.curated
+            : ActiveStatus.values.elementAt(data["labelText"]),
         worktitle: data["worktitle"],
         qualification: data["qualification"],
         qualiDescription: data["qualiDescription"],
@@ -175,6 +181,9 @@ class Candidate {
         aadharno: json["aadharno"],
         gender: json["gender"],
         selectedOption: json["label"],
+        activeStatus: json["labelText"] == null
+            ? ActiveStatus.curated
+            : ActiveStatus.values.elementAt(json["labelText"]),
         qualification: json["qualification"],
         qualiDescription: json["qualiDescription"],
         aboutYou: json["aboutYou"],
@@ -229,7 +238,7 @@ class Candidate {
         .collection('greycollaruser')
         .doc(docId)
         .update({
-      "status": ActiveStatus.curated.index,
+      "labelText": ActiveStatus.curated.index,
     });
   }
 
@@ -238,7 +247,7 @@ class Candidate {
         .collection('greycollaruser')
         .doc(docId)
         .update({
-      "status": ActiveStatus.selected.index,
+      "labelText": ActiveStatus.selected.index,
     });
   }
 
@@ -247,7 +256,7 @@ class Candidate {
         .collection('greycollaruser')
         .doc(docId)
         .update({
-      "status": ActiveStatus.rejected.index,
+      "labelText": ActiveStatus.rejected.index,
     });
   }
 }
