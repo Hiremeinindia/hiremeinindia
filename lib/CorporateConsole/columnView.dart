@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/viewUser.dart';
 import 'package:hiremeinindiaapp/homepage.dart';
@@ -21,10 +22,12 @@ class _ColumnViewState extends State<ColumnView> {
   IconData? icon;
   Candidate? verified;
   Candidate? candidate;
+  Stream<QuerySnapshot<Map<String, dynamic>>>? _currentStream;
   late Stream<Map<String, dynamic>?> userStream;
   void initState() {
     query = agentsRef;
     super.initState();
+    _currentStream = AllCandidates();
   }
 
   DateTime? _selectedDateTime;
@@ -32,6 +35,7 @@ class _ColumnViewState extends State<ColumnView> {
   bool expandWork = false;
   bool expandCertificate = false;
   bool expandCourse = false;
+  final ScrollController _scrollController = ScrollController();
   bool expandProject = false;
   late Query<Map<String, dynamic>> query;
   void _callNumber(String? mobile) async {
@@ -54,6 +58,38 @@ class _ColumnViewState extends State<ColumnView> {
   final fireStore =
       FirebaseFirestore.instance.collection('greycollaruser').snapshots();
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> AllCandidates() {
+    return FirebaseFirestore.instance.collection("greycollaruser").snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> BlueCandidates() {
+    return FirebaseFirestore.instance
+        .collection("greycollaruser")
+        .where('label', isEqualTo: 'Blue')
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> GreyCandidates() {
+    return FirebaseFirestore.instance
+        .collection("greycollaruser")
+        .where('label', isEqualTo: 'Grey')
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> CuratedCandidates() {
+    return FirebaseFirestore.instance
+        .collection("greycollaruser")
+        .where('labelText', isEqualTo: 'Curated')
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> SelectedCandidates() {
+    return FirebaseFirestore.instance
+        .collection("greycollaruser")
+        .where('labelText', isEqualTo: 'Selected')
+        .snapshots();
+  }
+
   Future<int> BlueResult() async {
     var query = await FirebaseFirestore.instance
         .collection("greycollaruser")
@@ -72,7 +108,27 @@ class _ColumnViewState extends State<ColumnView> {
     return count; // Add this line to return the count
   }
 
-  final agentsRef = FirebaseFirestore.instance.collection("greycollaruser");
+  Future<int> CuratedResult() async {
+    var query = await FirebaseFirestore.instance
+        .collection("greycollaruser")
+        .where('labelText', isEqualTo: 'Curated');
+    var snapshot = await query.get();
+    var count = snapshot.size;
+    return count; // Add this line to return the count
+  }
+
+  Future<int> SelectedResult() async {
+    var query = await FirebaseFirestore.instance
+        .collection("greycollaruser")
+        .where('labelText', isEqualTo: 'Selected');
+    var snapshot = await query.get();
+    var count = snapshot.size;
+    return count; // Add this line to return the count
+  }
+
+  final agentsRef = FirebaseFirestore.instance
+      .collection("greycollaruser")
+      .where('label', isEqualTo: 'Blue');
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +138,11 @@ class _ColumnViewState extends State<ColumnView> {
         child: Row(
           children: [
             InkWell(
-              onTap: () {},
+              onTap: () {
+                setState(() {
+                  _currentStream = AllCandidates();
+                });
+              },
               child: Container(
                 height: 100,
                 width: 200,
@@ -141,7 +201,11 @@ class _ColumnViewState extends State<ColumnView> {
               width: 60,
             ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                setState(() {
+                  _currentStream = BlueCandidates();
+                });
+              },
               child: Container(
                 height: 100,
                 width: 200,
@@ -200,7 +264,11 @@ class _ColumnViewState extends State<ColumnView> {
               width: 60,
             ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                setState(() {
+                  _currentStream = GreyCandidates();
+                });
+              },
               child: Container(
                 height: 100,
                 width: 200,
@@ -213,7 +281,7 @@ class _ColumnViewState extends State<ColumnView> {
                     ),
                   ],
                   borderRadius: BorderRadius.circular(10.0),
-                  color: Colors.indigo.shade900,
+                  color: Color.fromARGB(255, 197, 197, 197),
                 ),
                 child: Center(
                   child: Column(
@@ -258,29 +326,129 @@ class _ColumnViewState extends State<ColumnView> {
             SizedBox(
               width: 60,
             ),
-            Expanded(
-              child: CustomCard(
-                color: Color.fromARGB(223, 251, 217, 84),
-                title1: translation(context).curatedCandidates,
-                title2: '50',
+            InkWell(
+              onTap: () {
+                setState(() {
+                  _currentStream = CuratedCandidates();
+                });
+              },
+              child: Container(
+                height: 100,
+                width: 200,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color.fromARGB(255, 140, 138, 138),
+                      spreadRadius: 0.5, //spread radius
+                      blurRadius: 4, // blu
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Color.fromARGB(223, 251, 217, 84),
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        translation(context).curatedCandidates,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      FutureBuilder<int>(
+                        future: CuratedResult(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            int docCount = snapshot.data ?? 0;
+                            return Text(
+                              ' $docCount',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
             SizedBox(
               width: 60,
             ),
-            Expanded(
-              child: CustomCard(
-                color: Color.fromARGB(224, 92, 181, 95),
-                title1: translation(context).selectedCandidates,
-                title2: '50',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
-                  );
-                },
+            InkWell(
+              onTap: () {
+                setState(() {
+                  _currentStream = SelectedCandidates();
+                });
+              },
+              child: Container(
+                height: 100,
+                width: 200,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color.fromARGB(255, 140, 138, 138),
+                      spreadRadius: 0.5, //spread radius
+                      blurRadius: 4, // blu
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Color.fromARGB(224, 92, 181, 95),
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        translation(context).selectedCandidates,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      FutureBuilder<int>(
+                        future: SelectedResult(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            int docCount = snapshot.data ?? 0;
+                            return Text(
+                              ' $docCount',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -289,27 +457,32 @@ class _ColumnViewState extends State<ColumnView> {
       ),
       Container(
         height: 550,
-        child: StreamBuilder(
-          stream: query.snapshots(),
-          builder: (BuildContext context,
-              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-            if (snapshot.connectionState == ConnectionState.active ||
-                snapshot.hasData) {
-              List<Candidate> candidates = [];
-              candidates = snapshot.data!.docs
-                  .map((e) => Candidate.fromSnapshot(e))
-                  .toList();
-              if (candidates.isEmpty) {
-                return const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(32.0),
-                    child: Text("No users are added yet"),
-                  ),
-                );
+        child: SizedBox(
+          child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            stream: _currentStream, // Use the BlueCandidates query's stream
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return Center(child: Text('No blue label candidates found'));
               } else {
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Card(
+                // Map documents to Candidate objects
+                List<Candidate> blueCandidates = snapshot.data!.docs
+                    .map((doc) => Candidate.fromSnapshot(doc))
+                    .toList();
+
+                return Listener(
+                  onPointerSignal: (event) {
+                    if (event is PointerScrollEvent) {
+                      final offset = event.scrollDelta.dy;
+                      _scrollController
+                          .jumpTo(_scrollController.offset + offset);
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
@@ -317,10 +490,11 @@ class _ColumnViewState extends State<ColumnView> {
                             width: double.maxFinite,
                             child: PaginatedDataTable(
                               showFirstLastButtons: true,
-                              rowsPerPage: 20,
+                              controller: _scrollController,
+                              rowsPerPage: 8,
                               columns: CandidateListSource.getColumns(),
                               source: CandidateListSource(
-                                candidates,
+                                blueCandidates,
                                 context: context,
                                 onSelect: (candidate) {
                                   // Show details dialog when a row is selected
@@ -341,18 +515,10 @@ class _ColumnViewState extends State<ColumnView> {
                   ),
                 );
               }
-            }
-            if (snapshot.hasError) {
-              return Center(
-                child: SelectableText(snapshot.data.toString()),
-              );
-            }
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
+            },
+          ),
         ),
-      )
+      ),
     ]);
   }
 }
@@ -427,4 +593,47 @@ class CandidateListSource extends DataTableSource {
   @override
   // TODO: implement selectedRowCount
   int get selectedRowCount => 0;
+}
+
+class BlueCollarCandidatesScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(translation(context).blueColler),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('greycollaruser')
+            .where('label', isEqualTo: 'Blue')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.data!.docs.isEmpty) {
+            return Center(child: Text('No blue label candidates found'));
+          } else {
+            // Map documents to Candidate objects
+            List<Candidate> blueCandidates = snapshot.data!.docs
+                .map((doc) => Candidate.fromSnapshot(
+                    doc as DocumentSnapshot<Map<String, dynamic>>))
+                .toList();
+
+            return ListView.builder(
+              itemCount: blueCandidates.length,
+              itemBuilder: (context, index) {
+                // Build UI to display blue label candidates
+                return ListTile(
+                  title: Text(blueCandidates[index].name ?? ''),
+                  // Other ListTile content...
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
+  }
 }

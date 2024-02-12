@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
+import 'widgets/custombutton.dart';
+
 class Sample extends StatefulWidget {
   @override
   _SampleState createState() => _SampleState();
@@ -21,6 +23,7 @@ class _SampleState extends State<Sample> {
       home: Scaffold(
         body: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
                 onPressed: () async {
@@ -165,6 +168,63 @@ class _SampleState extends State<Sample> {
                 },
                 child: const Text("Show DateTime Range Picker"),
               ),
+              Row(
+                children: [
+                  CustomRectButton(
+                    onPressed: () {},
+                    child: Icon(
+                      Icons.check,
+                      color: Colors.indigo.shade900,
+                      size: 30,
+                    ),
+                    colors: Colors.green.shade200,
+                    bottomleft: Radius.circular(5),
+                    topleft: Radius.circular(5),
+                    bottomright: Radius.zero,
+                    topright: Radius.zero,
+                  ),
+                  SizedBox(
+                    width: 50,
+                    child: CustomRectButton(
+                      onPressed: () {},
+                      child: Icon(
+                        Icons.question_mark,
+                        color: Colors.indigo.shade900,
+                        size: 20,
+                      ),
+                      colors: Colors.grey.shade200,
+                      bottomleft: Radius.zero,
+                      topleft: Radius.zero,
+                      bottomright: Radius.zero,
+                      topright: Radius.zero,
+                    ),
+                  ),
+                  CustomRectButton(
+                    onPressed: () {},
+                    child: SizedBox(
+                      width: 60,
+                      child: Icon(
+                        Icons.cancel,
+                        color: Colors.indigo.shade900,
+                        size: 30,
+                      ),
+                    ),
+                    colors: Colors.red.shade200,
+                    bottomleft: Radius.zero,
+                    topleft: Radius.zero,
+                    bottomright: Radius.circular(5),
+                    topright: Radius.circular(5),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: Icon(
+                      Icons.cancel,
+                      color: Colors.indigo.shade900,
+                      size: 30,
+                    ),
+                  )
+                ],
+              )
             ],
           ),
         ),

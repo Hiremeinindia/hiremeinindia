@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/corporate.dart';
@@ -37,6 +38,8 @@ class _FullPagePopupState extends State<FullPagePopup> {
     super.initState();
   }
 
+  Color? labelColor;
+  String labelText = '';
   bool expandWork = false;
   bool expandCertificate = false;
   bool expandCourse = false;
@@ -49,6 +52,15 @@ class _FullPagePopupState extends State<FullPagePopup> {
     } else {
       throw 'Could not call $mobile';
     }
+  }
+
+  void downloadImage(String imageUrl) async {
+    // Check if the URL is not null or empty
+    if (imageUrl.isNotEmpty) {
+      // Use url_launcher package to launch the URL
+      await launch(imageUrl);
+    }
+    print('image url:$imageUrl');
   }
 
   @override
@@ -97,44 +109,47 @@ class _FullPagePopupState extends State<FullPagePopup> {
                       SizedBox(
                         width: 15,
                       ),
-                      SizedBox(
-                        height: 30,
-                        width: 125,
-                        child: CustomDropDown<Candidate?>(
-                          value: verified,
-                          onChanged: (Candidate) {},
-                          items: [
-                            DropdownMenuItem<Candidate?>(
-                              value: Candidate(verify: 'awaiting_response'),
-                              child: Text('Awaiting response'),
-                            ),
-                            DropdownMenuItem<Candidate?>(
-                              value: Candidate(verify: 'interview_scheduled'),
-                              child: Text('Interview Scheduled'),
-                            ),
-                            DropdownMenuItem<Candidate?>(
-                              value: Candidate(verify: 'curated'),
-                              child: Text('Curated'),
-                            ),
-                            DropdownMenuItem<Candidate?>(
-                              value: Candidate(verify: 'rejected'),
-                              child: Text('Rejected'),
-                            ),
-                            DropdownMenuItem<Candidate?>(
-                              value: Candidate(verify: 'hired'),
-                              child: Text('Hired'),
-                            ),
-                          ],
+                      Container(
+                        width: 130,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color:
+                                labelColor, // Use labelColor variable directly
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        child: Text(
+                          '${widget.candidate.status}',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.indigo.shade900,
+                          ),
                         ),
+                        padding: const EdgeInsets.only(top: 10, left: 20),
                       ),
                     ],
                   ),
                   Row(
                     children: [
                       CustomRectButton(
-                        onPressed: () {},
-                        child: ImageIcon(AssetImage("table.png"),
-                            size: 40, color: Colors.indigo.shade900),
+                        onPressed: () {
+                          setState(() {
+                            labelText = 'Selected';
+                            labelColor = Colors.green.shade200;
+                          });
+                          FirebaseFirestore.instance
+                              .collection('greycollaruser')
+                              .doc(widget.candidate.docId)
+                              .update({
+                            'labelText': labelText,
+                          });
+                        },
+                        child: SizedBox(
+                          width: 50,
+                          child: Icon(
+                            Icons.check,
+                            color: Colors.indigo.shade900,
+                            size: 30,
+                          ),
+                        ),
                         colors: Colors.green.shade200,
                         bottomleft: Radius.circular(5),
                         topleft: Radius.circular(5),
@@ -142,19 +157,53 @@ class _FullPagePopupState extends State<FullPagePopup> {
                         topright: Radius.zero,
                       ),
                       CustomRectButton(
-                        onPressed: () {},
-                        child: ImageIcon(AssetImage("table.png"),
-                            size: 30, color: Colors.indigo.shade900),
-                        colors: Colors.grey.shade200,
+                        onPressed: () {
+                          setState(() {
+                            labelText = 'Curated';
+                            labelColor = Colors.yellow.shade200;
+                          });
+                          FirebaseFirestore.instance
+                              .collection('greycollaruser')
+                              .doc(widget.candidate.docId)
+                              .update({
+                            'labelText': labelText,
+                          });
+                        },
+                        child: SizedBox(
+                          height: 50,
+                          child: Icon(
+                            Icons.question_mark,
+                            color: Colors.indigo.shade900,
+                            size: 30,
+                          ),
+                        ),
+                        colors: Colors.yellow.shade200,
                         bottomleft: Radius.zero,
                         topleft: Radius.zero,
                         bottomright: Radius.zero,
                         topright: Radius.zero,
                       ),
                       CustomRectButton(
-                        onPressed: () {},
-                        child: ImageIcon(AssetImage("table.png"),
-                            size: 50, color: Colors.indigo.shade900),
+                        onPressed: () {
+                          setState(() {
+                            labelText = 'Rejected';
+                            labelColor = Colors.red.shade200;
+                          });
+                          FirebaseFirestore.instance
+                              .collection('greycollaruser')
+                              .doc(widget.candidate.docId)
+                              .update({
+                            'labelText': labelText,
+                          });
+                        },
+                        child: SizedBox(
+                          width: 50,
+                          child: Icon(
+                            Icons.cancel,
+                            color: Colors.indigo.shade900,
+                            size: 30,
+                          ),
+                        ),
                         colors: Colors.red.shade200,
                         bottomleft: Radius.zero,
                         topleft: Radius.zero,
@@ -201,7 +250,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                   height: 120,
                                 ),
                                 Text(
-                                  'Designation about the candidate',
+                                  '${widget.candidate.aboutYou}',
                                   style: TextStyle(
                                       fontSize: 15,
                                       color: Colors.indigo.shade900,
@@ -400,6 +449,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                     ),
                                   ),
                                   child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(
                                         Icons.calendar_month_outlined,
@@ -439,21 +489,24 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                           5), // Adjust border radius as needed
                                     ),
                                   ),
-                                  child: Row(children: [
-                                    Icon(
-                                      Icons.call_rounded,
-                                      size: 25,
-                                      color: Colors.white,
-                                    ),
-                                    Text(
-                                      'Make a call',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ]),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.call_rounded,
+                                          size: 25,
+                                          color: Colors.white,
+                                        ),
+                                        Text(
+                                          'Make a call',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ]),
                                 )
                               ]),
                         ),
@@ -472,15 +525,15 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                 maxRadius: 68,
                                 minRadius: 67.5,
                                 child: CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  maxRadius: 66,
-                                  minRadius: 60,
-                                  child: CircleAvatar(
-                                    backgroundImage: AssetImage('imguser.jpg'),
-                                    maxRadius: 59,
-                                    minRadius: 56,
-                                  ),
-                                ),
+                                    backgroundColor: Colors.white,
+                                    maxRadius: 66,
+                                    minRadius: 60,
+                                    child: CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                          '${widget.candidate.imgPic}'),
+                                      maxRadius: 59,
+                                      minRadius: 56,
+                                    )),
                               ),
                               Text(
                                 '${widget.candidate.name}',
@@ -560,7 +613,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                           ),
                                         ),
                                         Text(
-                                          '22',
+                                          '${widget.candidate.age}',
                                           style: TextStyle(
                                               fontSize: 15,
                                               color: Colors.indigo.shade900,
@@ -578,7 +631,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                           ),
                                         ),
                                         Text(
-                                          '8 months',
+                                          '${widget.candidate.workexpcount}',
                                           style: TextStyle(
                                               fontSize: 15,
                                               color: Colors.indigo.shade900,
@@ -668,10 +721,12 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                 child: Row(
                                   children: [
                                     SizedBox(
-                                      height: 40,
-                                      width: 230,
+                                      width: 170,
                                       child: ElevatedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          downloadImage(
+                                              '${widget.candidate.imgCv}');
+                                        },
                                         style: ElevatedButton.styleFrom(
                                           minimumSize:
                                               const Size.fromHeight(45),
@@ -705,11 +760,23 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                       width: 30,
                                     ),
                                     SizedBox(
-                                      height: 40,
-                                      width: 230,
+                                      width: 225,
                                       child: ElevatedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          downloadImage(
+                                              '${widget.candidate.imgPic}');
+                                          downloadImage(
+                                              '${widget.candidate.imgVoter}');
+                                          downloadImage(
+                                              '${widget.candidate.imgExp}');
+                                          downloadImage(
+                                              '${widget.candidate.imgAadhar}');
+                                        },
                                         style: ElevatedButton.styleFrom(
+                                          minimumSize:
+                                              const Size.fromHeight(45),
+                                          fixedSize: const Size.fromWidth(
+                                              double.infinity),
                                           backgroundColor:
                                               Colors.indigo.shade900,
                                           shape: RoundedRectangleBorder(
@@ -761,48 +828,53 @@ class _FullPagePopupState extends State<FullPagePopup> {
                             child: expandWork
                                 ? Column(
                                     children: [
-                                      Container(
-                                        width: 900,
-                                        height: 50,
-                                        decoration: const BoxDecoration(
-                                            color: Color.fromARGB(
-                                                255, 146, 176, 226),
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(5),
-                                                topRight: Radius.circular(5))),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Work Experience',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                color: Colors.indigo.shade900,
-                                                fontWeight: FontWeight.bold,
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            expandWork = !expandWork;
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 900,
+                                          height: 50,
+                                          decoration: const BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 146, 176, 226),
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(5),
+                                                  topRight:
+                                                      Radius.circular(5))),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Work Experience',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.indigo.shade900,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            ),
-                                            IconButton(
-                                              hoverColor: Colors.transparent,
-                                              icon: Icon(Icons
-                                                  .arrow_drop_down_circle_rounded),
-                                              iconSize: 30,
-                                              color: Colors.indigo.shade900,
-                                              onPressed: () {
-                                                setState(() {
-                                                  expandWork = !expandWork;
-                                                });
-                                              },
-                                            ),
-                                          ],
+                                              IconButton(
+                                                hoverColor: Colors.transparent,
+                                                icon: Icon(Icons
+                                                    .arrow_drop_down_circle_rounded),
+                                                iconSize: 30,
+                                                color: Colors.indigo.shade900,
+                                                onPressed: () {
+                                                  setState(() {
+                                                    expandWork = !expandWork;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                          padding: const EdgeInsets.only(
+                                              top: 5, left: 20),
                                         ),
-                                        padding: const EdgeInsets.only(
-                                            top: 5, left: 20),
                                       ),
                                       ListTile(
-                                          leading: CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.deepPurple.shade200),
                                           title: Text(
                                             '${widget.candidate.workexp}',
                                             style: TextStyle(
@@ -821,43 +893,49 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                   )
                                 : Column(
                                     children: [
-                                      Container(
-                                        width: 900,
-                                        height: 50,
-                                        decoration: const BoxDecoration(
-                                            color: Color.fromARGB(
-                                                255, 146, 176, 226),
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(5),
-                                                topRight: Radius.circular(5))),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Work Experience',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                color: Colors.indigo.shade900,
-                                                fontWeight: FontWeight.bold,
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            expandWork = !expandWork;
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 900,
+                                          height: 50,
+                                          decoration: const BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 146, 176, 226),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5))),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Work Experience',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.indigo.shade900,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            ),
-                                            IconButton(
-                                              hoverColor: Colors.transparent,
-                                              icon: Icon(Icons
-                                                  .arrow_drop_down_circle_rounded),
-                                              iconSize: 30,
-                                              color: Colors.indigo.shade900,
-                                              onPressed: () {
-                                                setState(() {
-                                                  expandWork = !expandWork;
-                                                });
-                                              },
-                                            ),
-                                          ],
+                                              IconButton(
+                                                hoverColor: Colors.transparent,
+                                                icon: Icon(Icons
+                                                    .arrow_drop_down_circle_rounded),
+                                                iconSize: 30,
+                                                color: Colors.indigo.shade900,
+                                                onPressed: () {
+                                                  setState(() {
+                                                    expandWork = !expandWork;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                          padding: const EdgeInsets.only(
+                                              top: 5, left: 20),
                                         ),
-                                        padding: const EdgeInsets.only(
-                                            top: 5, left: 20),
                                       ),
                                     ],
                                   )),
@@ -882,58 +960,64 @@ class _FullPagePopupState extends State<FullPagePopup> {
                             child: expandCertificate
                                 ? Column(
                                     children: [
-                                      Container(
-                                        width: 900,
-                                        height: 50,
-                                        decoration: const BoxDecoration(
-                                            color: Color.fromARGB(
-                                                255, 146, 176, 226),
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(5),
-                                                topRight: Radius.circular(5))),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Educational Qualification',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                color: Colors.indigo.shade900,
-                                                fontWeight: FontWeight.bold,
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            expandCertificate =
+                                                !expandCertificate;
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 900,
+                                          height: 50,
+                                          decoration: const BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 146, 176, 226),
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(5),
+                                                  topRight:
+                                                      Radius.circular(5))),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Educational Qualification',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.indigo.shade900,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            ),
-                                            IconButton(
-                                              hoverColor: Colors.transparent,
-                                              icon: Icon(Icons
-                                                  .arrow_drop_down_circle_rounded),
-                                              iconSize: 30,
-                                              color: Colors.indigo.shade900,
-                                              onPressed: () {
-                                                setState(() {
-                                                  expandCertificate =
-                                                      !expandCertificate;
-                                                });
-                                              },
-                                            ),
-                                          ],
+                                              IconButton(
+                                                hoverColor: Colors.transparent,
+                                                icon: Icon(Icons
+                                                    .arrow_drop_down_circle_rounded),
+                                                iconSize: 30,
+                                                color: Colors.indigo.shade900,
+                                                onPressed: () {
+                                                  setState(() {
+                                                    expandCertificate =
+                                                        !expandCertificate;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                          padding: const EdgeInsets.only(
+                                              top: 5, left: 20),
                                         ),
-                                        padding: const EdgeInsets.only(
-                                            top: 5, left: 20),
                                       ),
                                       ListTile(
-                                          leading: CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.deepPurple.shade200),
                                           title: Text(
-                                            '${widget.candidate.workexp}',
+                                            '${widget.candidate.qualification}',
                                             style: TextStyle(
                                                 fontSize: 15,
                                                 color: Colors.indigo.shade900,
                                                 height: 0),
                                           ),
                                           subtitle: Text(
-                                            '${widget.candidate.workexpcount}',
+                                            '${widget.candidate.qualiDescription}',
                                             style: TextStyle(
                                                 fontSize: 13,
                                                 color: Colors.indigo.shade900,
@@ -943,44 +1027,51 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                   )
                                 : Column(
                                     children: [
-                                      Container(
-                                        width: 900,
-                                        height: 50,
-                                        decoration: const BoxDecoration(
-                                            color: Color.fromARGB(
-                                                255, 146, 176, 226),
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(5),
-                                                topRight: Radius.circular(5))),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Educational Qualification',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                color: Colors.indigo.shade900,
-                                                fontWeight: FontWeight.bold,
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            expandCertificate =
+                                                !expandCertificate;
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 900,
+                                          height: 50,
+                                          decoration: const BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 146, 176, 226),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5))),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Educational Qualification',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.indigo.shade900,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            ),
-                                            IconButton(
-                                              hoverColor: Colors.transparent,
-                                              icon: Icon(Icons
-                                                  .arrow_drop_down_circle_rounded),
-                                              iconSize: 30,
-                                              color: Colors.indigo.shade900,
-                                              onPressed: () {
-                                                setState(() {
-                                                  expandCertificate =
-                                                      !expandCertificate;
-                                                });
-                                              },
-                                            ),
-                                          ],
+                                              IconButton(
+                                                hoverColor: Colors.transparent,
+                                                icon: Icon(Icons
+                                                    .arrow_drop_down_circle_rounded),
+                                                iconSize: 30,
+                                                color: Colors.indigo.shade900,
+                                                onPressed: () {
+                                                  setState(() {
+                                                    expandCertificate =
+                                                        !expandCertificate;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                          padding: const EdgeInsets.only(
+                                              top: 5, left: 20),
                                         ),
-                                        padding: const EdgeInsets.only(
-                                            top: 5, left: 20),
                                       ),
                                     ],
                                   )),
@@ -1005,103 +1096,110 @@ class _FullPagePopupState extends State<FullPagePopup> {
                             child: expandCourse
                                 ? Column(
                                     children: [
-                                      Container(
-                                        width: 900,
-                                        height: 50,
-                                        decoration: const BoxDecoration(
-                                            color: Color.fromARGB(
-                                                255, 146, 176, 226),
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(5),
-                                                topRight: Radius.circular(5))),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Certified Courses',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                color: Colors.indigo.shade900,
-                                                fontWeight: FontWeight.bold,
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            expandCourse = !expandCourse;
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 900,
+                                          height: 50,
+                                          decoration: const BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 146, 176, 226),
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(5),
+                                                  topRight:
+                                                      Radius.circular(5))),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Certified Courses',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.indigo.shade900,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            ),
-                                            IconButton(
-                                              hoverColor: Colors.transparent,
-                                              icon: Icon(Icons
-                                                  .arrow_drop_down_circle_rounded),
-                                              iconSize: 30,
-                                              color: Colors.indigo.shade900,
-                                              onPressed: () {
-                                                setState(() {
-                                                  expandCourse = !expandCourse;
-                                                });
-                                              },
-                                            ),
-                                          ],
+                                              IconButton(
+                                                hoverColor: Colors.transparent,
+                                                icon: Icon(Icons
+                                                    .arrow_drop_down_circle_rounded),
+                                                iconSize: 30,
+                                                color: Colors.indigo.shade900,
+                                                onPressed: () {
+                                                  setState(() {
+                                                    expandCourse =
+                                                        !expandCourse;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                          padding: const EdgeInsets.only(
+                                              top: 5, left: 20),
                                         ),
-                                        padding: const EdgeInsets.only(
-                                            top: 5, left: 20),
                                       ),
                                       ListTile(
-                                          leading: CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.deepPurple.shade200),
                                           title: Text(
-                                            '${widget.candidate.workexp}',
+                                            '${widget.candidate.course}',
                                             style: TextStyle(
                                                 fontSize: 15,
                                                 color: Colors.indigo.shade900,
                                                 height: 0),
                                           ),
-                                          subtitle: Text(
-                                            '${widget.candidate.workexpcount}',
-                                            style: TextStyle(
-                                                fontSize: 13,
-                                                color: Colors.indigo.shade900,
-                                                height: 0),
-                                          )),
+                                          subtitle: Text('')),
                                     ],
                                   )
                                 : Column(
                                     children: [
-                                      Container(
-                                        width: 900,
-                                        height: 50,
-                                        decoration: const BoxDecoration(
-                                            color: Color.fromARGB(
-                                                255, 146, 176, 226),
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(5),
-                                                topRight: Radius.circular(5))),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Certified Courses',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                color: Colors.indigo.shade900,
-                                                fontWeight: FontWeight.bold,
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            expandCourse = !expandCourse;
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 900,
+                                          height: 50,
+                                          decoration: const BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 146, 176, 226),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5))),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Certified Courses',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.indigo.shade900,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            ),
-                                            IconButton(
-                                              hoverColor: Colors.transparent,
-                                              icon: Icon(Icons
-                                                  .arrow_drop_down_circle_rounded),
-                                              iconSize: 30,
-                                              color: Colors.indigo.shade900,
-                                              onPressed: () {
-                                                setState(() {
-                                                  expandCourse = !expandCourse;
-                                                });
-                                              },
-                                            ),
-                                          ],
+                                              IconButton(
+                                                hoverColor: Colors.transparent,
+                                                icon: Icon(Icons
+                                                    .arrow_drop_down_circle_rounded),
+                                                iconSize: 30,
+                                                color: Colors.indigo.shade900,
+                                                onPressed: () {
+                                                  setState(() {
+                                                    expandCourse =
+                                                        !expandCourse;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                          padding: const EdgeInsets.only(
+                                              top: 5, left: 20),
                                         ),
-                                        padding: const EdgeInsets.only(
-                                            top: 5, left: 20),
                                       ),
                                     ],
                                   )),
@@ -1126,105 +1224,110 @@ class _FullPagePopupState extends State<FullPagePopup> {
                             child: expandProject
                                 ? Column(
                                     children: [
-                                      Container(
-                                        width: 900,
-                                        height: 50,
-                                        decoration: const BoxDecoration(
-                                            color: Color.fromARGB(
-                                                255, 146, 176, 226),
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(5),
-                                                topRight: Radius.circular(5))),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Projects Worked',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                color: Colors.indigo.shade900,
-                                                fontWeight: FontWeight.bold,
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            expandProject = !expandProject;
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 900,
+                                          height: 50,
+                                          decoration: const BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 146, 176, 226),
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(5),
+                                                  topRight:
+                                                      Radius.circular(5))),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Projects Worked',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.indigo.shade900,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            ),
-                                            IconButton(
-                                              hoverColor: Colors.transparent,
-                                              icon: Icon(Icons
-                                                  .arrow_drop_down_circle_rounded),
-                                              iconSize: 30,
-                                              color: Colors.indigo.shade900,
-                                              onPressed: () {
-                                                setState(() {
-                                                  expandProject =
-                                                      !expandProject;
-                                                });
-                                              },
-                                            ),
-                                          ],
+                                              IconButton(
+                                                hoverColor: Colors.transparent,
+                                                icon: Icon(Icons
+                                                    .arrow_drop_down_circle_rounded),
+                                                iconSize: 30,
+                                                color: Colors.indigo.shade900,
+                                                onPressed: () {
+                                                  setState(() {
+                                                    expandProject =
+                                                        !expandProject;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                          padding: const EdgeInsets.only(
+                                              top: 5, left: 20),
                                         ),
-                                        padding: const EdgeInsets.only(
-                                            top: 5, left: 20),
                                       ),
                                       ListTile(
-                                          leading: CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.deepPurple.shade200),
                                           title: Text(
-                                            '${widget.candidate.workexp}',
+                                            '${widget.candidate.project}',
                                             style: TextStyle(
                                                 fontSize: 15,
                                                 color: Colors.indigo.shade900,
                                                 height: 0),
                                           ),
-                                          subtitle: Text(
-                                            '${widget.candidate.workexpcount}',
-                                            style: TextStyle(
-                                                fontSize: 13,
-                                                color: Colors.indigo.shade900,
-                                                height: 0),
-                                          )),
+                                          subtitle: Text('')),
                                     ],
                                   )
                                 : Column(
                                     children: [
-                                      Container(
-                                        width: 900,
-                                        height: 50,
-                                        decoration: const BoxDecoration(
-                                            color: Color.fromARGB(
-                                                255, 146, 176, 226),
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(5),
-                                                topRight: Radius.circular(5))),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Projects Worked',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                color: Colors.indigo.shade900,
-                                                fontWeight: FontWeight.bold,
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            expandProject = !expandProject;
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 900,
+                                          height: 50,
+                                          decoration: const BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 146, 176, 226),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5))),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Projects Worked',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.indigo.shade900,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            ),
-                                            IconButton(
-                                              hoverColor: Colors.transparent,
-                                              icon: Icon(Icons
-                                                  .arrow_drop_down_circle_rounded),
-                                              iconSize: 30,
-                                              color: Colors.indigo.shade900,
-                                              onPressed: () {
-                                                setState(() {
-                                                  expandProject =
-                                                      !expandProject;
-                                                });
-                                              },
-                                            ),
-                                          ],
+                                              IconButton(
+                                                hoverColor: Colors.transparent,
+                                                icon: Icon(Icons
+                                                    .arrow_drop_down_circle_rounded),
+                                                iconSize: 30,
+                                                color: Colors.indigo.shade900,
+                                                onPressed: () {
+                                                  setState(() {
+                                                    expandProject =
+                                                        !expandProject;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                          padding: const EdgeInsets.only(
+                                              top: 5, left: 20),
                                         ),
-                                        padding: const EdgeInsets.only(
-                                            top: 5, left: 20),
                                       ),
                                     ],
                                   )),
@@ -1241,3 +1344,24 @@ class _FullPagePopupState extends State<FullPagePopup> {
     );
   }
 }
+
+// class FireStoreDataBase {
+//   String? dowloadURL;
+//   Future getData() async {
+//     try {
+//       await downloadURLExample();
+//       return dowloadURL;
+//     } catch (e) {
+//       debugPrint("Error - $e");
+//       return null;
+//     }
+//   }
+
+//   Future<void> downloadURLExample() async {
+//     dowloadURL = await FirebaseStorage.instance
+//         .ref()
+//         .child('${widget.candidate.qualification}')
+//         .getDownloadURL();
+//     debugPrint(dowloadURL.toString());
+//   }
+// }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -11,6 +12,7 @@ class CandidateFormController {
   final name = TextEditingController();
   final mobile = TextEditingController();
   final email = TextEditingController();
+  final age = TextEditingController();
   final worktitle = TextEditingController();
   final aadharno = TextEditingController();
   final gender = TextEditingController();
@@ -44,13 +46,11 @@ class CandidateFormController {
   List<File> images = [];
   List<String> skills = [];
   List<String> workins = [];
-  File? image;
-  File? imageUrl;
-  File? imageUrl1;
-  File? imageUrl2;
-  File? imageUrl3;
-  File? imageUrl4;
-  File? imageUrl5;
+  FilePickerResult? imagePic;
+  FilePickerResult? imageExp;
+  FilePickerResult? imageCv;
+  FilePickerResult? imageVoter;
+  FilePickerResult? imageAadhar;
   DocumentReference? _reference;
 
   DocumentReference get reference {
@@ -59,42 +59,37 @@ class CandidateFormController {
   }
 
   Candidate get candidate => Candidate(
-        reference: reference,
-        name: name.text,
-        email: email.text,
-        mobile: mobile.text,
-        worktitle: worktitle.text,
-        aadharno: aadharno.text,
-        gender: gender.text,
-        workexp: workexp.text,
-        state: state.text,
-        address: address.text,
-        course: course.text,
-        project: project.text,
-        skills: skills,
-        qualification: qualification.text,
-        aboutYou: aboutYou.text,
-        qualiDescription: qualiDescription.text,
-        ctc: ctc.text,
-        workins: workins,
-        password: password.text,
-        otpm: otpm.text,
-        code: code.text,
-        selectedOption: selectedOption.text,
-        confirmPassword: confirmPassword.text,
-        country: country.text,
-        city: city.text,
-        expectedwage: expectedwage.text,
-        currentwage: currentwage.text,
-        imageUrl: '',
-        imageUrl1: '',
-        imageUrl2: '',
-        imageUrl3: '',
-        imageUrl4: '',
-        imageUrl5: '',
-      );
-
-  Future<void> setImage(File imageFile) async {
-    image = imageFile;
-  }
+      reference: reference,
+      name: name.text,
+      email: email.text,
+      mobile: mobile.text,
+      worktitle: worktitle.text,
+      aadharno: aadharno.text,
+      gender: gender.text,
+      workexp: workexp.text,
+      state: state.text,
+      address: address.text,
+      course: course.text,
+      age: age.text,
+      project: project.text,
+      skills: skills,
+      qualification: qualification.text,
+      aboutYou: aboutYou.text,
+      qualiDescription: qualiDescription.text,
+      ctc: ctc.text,
+      workins: workins,
+      password: password.text,
+      otpm: otpm.text,
+      code: code.text,
+      selectedOption: selectedOption.text,
+      confirmPassword: confirmPassword.text,
+      country: country.text,
+      city: city.text,
+      expectedwage: expectedwage.text,
+      currentwage: currentwage.text,
+      imgAadhar: imgaadhar.text,
+      imgCv: imgcv.text,
+      imgExp: imgexp.text,
+      imgPic: imgpic.text,
+      imgVoter: imgvoter.text);
 }
