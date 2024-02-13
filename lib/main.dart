@@ -1,18 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:hiremeinindiaapp/CorporateConsole/viewUser.dart';
 import 'package:hiremeinindiaapp/User/userUpload.dart';
-import 'package:hiremeinindiaapp/User/userRegistration.dart';
-
 import 'package:hiremeinindiaapp/functions/firestoreservice.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
 import 'package:hiremeinindiaapp/gethired.dart';
-import 'package:hiremeinindiaapp/homepage.dart';
-import 'package:hiremeinindiaapp/loginpage.dart';
-
 import 'package:hiremeinindiaapp/User/userPayment.dart';
-import 'package:hiremeinindiaapp/sample.dart';
 import 'package:provider/provider.dart';
 import 'classes/language_constants.dart';
 

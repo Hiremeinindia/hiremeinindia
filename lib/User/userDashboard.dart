@@ -27,8 +27,8 @@ class _UserDashboard extends State<UserDashboard> {
   bool dropdownValue = false;
   bool isArrowClick = false;
   late Stream<Map<String, dynamic>?> userStream;
-  List<String> _image = [];
   String _userName = '';
+  String _image = '';
   List<String> _skills = [];
 
   @override
@@ -47,11 +47,11 @@ class _UserDashboard extends State<UserDashboard> {
         if (documentSnapshot.exists) {
           Map<String, dynamic> data = documentSnapshot.data()!;
           String name = data['name'];
+          String image = data['imgpic'];
           List<String> skills = List<String>.from(data['skills']);
-          List<String> imageUrls = List<String>.from(data['imageUrl']);
           _userName = name;
+          _image = image;
           _skills = skills;
-          _image = imageUrls;
           return data;
         } else {
           print('Document does not exist');
@@ -70,7 +70,6 @@ class _UserDashboard extends State<UserDashboard> {
           title: HireMeInIndia(),
           centerTitle: false,
           toolbarHeight: 80,
-          automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           actions: [
@@ -192,71 +191,68 @@ class _UserDashboard extends State<UserDashboard> {
                         decoration: BoxDecoration(
                           color: Colors.indigo.shade900,
                         ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton2<String>(
-                            isExpanded: true,
-                            items: [
-                              DropdownMenuItem<String>(
-                                value: 'Option 1',
-                                child: Text('Option 1'),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: 'Option 2',
-                                child: Text('Option 1'),
-                              ),
-                              // Add more options as needed
-                            ],
-                            onChanged: (value) {
-                              // Handle option selection
-                            },
-                            hint: Text(
-                              AppLocalizations.of(context)!.findaJob,
-                              style: TextStyle(color: Colors.white),
+                        child: DropdownButton2<String>(
+                          isExpanded: true,
+                          items: [
+                            DropdownMenuItem<String>(
+                              value: 'Option 1',
+                              child: Text('Option 1'),
                             ),
-                            buttonStyleData: ButtonStyleData(
-                              height: 30,
-                              width: 200,
-                              elevation: 1,
-                              padding:
-                                  const EdgeInsets.only(left: 14, right: 14),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                  color: Colors.black26,
-                                ),
-                                color: Colors.indigo.shade900,
-                              ),
+                            DropdownMenuItem<String>(
+                              value: 'Option 2',
+                              child: Text('Option 1'),
                             ),
-                            iconStyleData: const IconStyleData(
-                              icon: Icon(
-                                Icons.arrow_drop_down_sharp,
+                            // Add more options as needed
+                          ],
+                          onChanged: (value) {
+                            // Handle option selection
+                          },
+                          hint: Text(
+                            AppLocalizations.of(context)!.findaJob,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          buttonStyleData: ButtonStyleData(
+                            height: 30,
+                            width: 200,
+                            elevation: 1,
+                            padding: const EdgeInsets.only(left: 14, right: 14),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: Colors.black26,
                               ),
-                              iconSize: 25,
-                              iconEnabledColor: Colors.white,
-                              iconDisabledColor: null,
+                              color: Colors.indigo.shade900,
                             ),
-                            dropdownStyleData: DropdownStyleData(
-                              maxHeight: 210,
-                              width: 156,
-                              elevation: 0,
-                              padding: EdgeInsets.only(
-                                  left: 10, right: 10, top: 5, bottom: 15),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(color: Colors.black),
-                                color: Colors.indigo.shade900,
-                              ),
-                              scrollPadding: EdgeInsets.all(5),
-                              scrollbarTheme: ScrollbarThemeData(
-                                thickness: MaterialStateProperty.all<double>(6),
-                                thumbVisibility:
-                                    MaterialStateProperty.all<bool>(true),
-                              ),
+                          ),
+                          iconStyleData: const IconStyleData(
+                            icon: Icon(
+                              Icons.arrow_drop_down_sharp,
                             ),
-                            menuItemStyleData: const MenuItemStyleData(
-                              height: 25,
-                              padding: EdgeInsets.only(left: 14, right: 14),
+                            iconSize: 25,
+                            iconEnabledColor: Colors.white,
+                            iconDisabledColor: null,
+                          ),
+                          dropdownStyleData: DropdownStyleData(
+                            maxHeight: 210,
+                            width: 156,
+                            elevation: 0,
+                            padding: EdgeInsets.only(
+                                left: 10, right: 10, top: 5, bottom: 15),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(color: Colors.black),
+                              color: Colors.indigo.shade900,
                             ),
+                            scrollPadding: EdgeInsets.all(5),
+                            scrollbarTheme: ScrollbarThemeData(
+                              thickness: MaterialStateProperty.all<double>(6),
+                              thumbVisibility:
+                                  MaterialStateProperty.all<bool>(true),
+                            ),
+                          ),
+                          menuItemStyleData: const MenuItemStyleData(
+                            height: 25,
+                            padding: EdgeInsets.only(left: 14, right: 14),
                           ),
                         ),
                       ),
@@ -302,7 +298,7 @@ class _UserDashboard extends State<UserDashboard> {
                                 ),
                               ),
                               Text(
-                                '${_skills[0]}',
+                                '${_skills![0]}',
                                 style: TextStyle(
                                     fontSize: 15,
                                     color: Colors.indigo.shade900,
@@ -337,27 +333,11 @@ class _UserDashboard extends State<UserDashboard> {
                   backgroundColor: Colors.white,
                   maxRadius: 66,
                   minRadius: 60,
-                  child: StreamBuilder<Map<String, dynamic>?>(
-                      stream: userStream,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData && snapshot.data != null) {
-                          return ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              CircleAvatar(
-                                backgroundImage: NetworkImage('${_image[0]}'),
-                                maxRadius: 59,
-                                minRadius: 56,
-                              ),
-                            ],
-                          );
-                        } else {
-                          // Loading or error state
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      }),
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage('imguser.jpg'),
+                    maxRadius: 59,
+                    minRadius: 56,
+                  ),
                 ),
               ),
               SizedBox(
@@ -416,7 +396,7 @@ class _UserDashboard extends State<UserDashboard> {
                               return Visibility(
                                 visible: isArrowClick,
                                 child: Text(
-                                  '$_skills',
+                                  '${_skills![0]}',
                                   style: TextStyle(
                                       fontSize: 15,
                                       color: Colors.indigo.shade900,
@@ -463,6 +443,16 @@ class _UserDashboard extends State<UserDashboard> {
               Flexible(
                   child: Padding(
                 padding: const EdgeInsets.all(2.0),
+                child: CustomButton(
+                  text: translation(context).registerforOther,
+                  onPressed: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => const AdminConsole()),
+                    // );
+                  },
+                ),
               ))
             ])));
   }

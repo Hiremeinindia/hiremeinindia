@@ -1,17 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:hiremeinindiaapp/CorporateConsole/corporate.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/multipleFilter.dart';
-import 'package:hiremeinindiaapp/Providers/session.dart';
-import '../Classes/language.dart';
-import '../Classes/language_constants.dart';
 import '../Widgets/hiremeinindia.dart';
 import '../Widgets/customTextstyle.dart';
-import '../gen_l10n/app_localizations.dart';
-import '../main.dart';
 import 'columnView.dart';
 
 class CorporateDashboard extends StatefulWidget {

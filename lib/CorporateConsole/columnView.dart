@@ -2,15 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/viewUser.dart';
-import 'package:hiremeinindiaapp/homepage.dart';
-import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../User/user.dart';
 import '../classes/language_constants.dart';
-import '../widgets/custombutton.dart';
-import '../widgets/customcard.dart';
-import '../widgets/customdropdown.dart';
 
 class ColumnView extends StatefulWidget {
   @override
@@ -30,7 +25,6 @@ class _ColumnViewState extends State<ColumnView> {
     _currentStream = AllCandidates();
   }
 
-  DateTime? _selectedDateTime;
   bool scheduledata = false;
   bool expandWork = false;
   bool expandCertificate = false;
@@ -466,7 +460,7 @@ class _ColumnViewState extends State<ColumnView> {
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                return Center(child: Text('No blue label candidates found'));
+                return Center(child: Text('No candidates were found'));
               } else {
                 // Map documents to Candidate objects
                 List<Candidate> blueCandidates = snapshot.data!.docs
@@ -613,7 +607,7 @@ class BlueCollarCandidatesScreen extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No blue label candidates found'));
+            return Center(child: Text('No candidates were found'));
           } else {
             // Map documents to Candidate objects
             List<Candidate> blueCandidates = snapshot.data!.docs

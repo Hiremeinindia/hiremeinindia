@@ -1,19 +1,11 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:hiremeinindiaapp/User/user.dart';
 import 'package:hiremeinindiaapp/User/userRegistration.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
 import 'package:hiremeinindiaapp/User/userPayment.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
 import '../widgets/hiremeinindia.dart';
 import 'userFormState.dart';
 import '../classes/language.dart';
@@ -24,7 +16,6 @@ import '../widgets/custombutton.dart';
 import 'package:file_picker/file_picker.dart';
 
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path/path.dart' as path;
 
 class NewUserUpload extends StatefulWidget {
   final Function(String)? handleForm;

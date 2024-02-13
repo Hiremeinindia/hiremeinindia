@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 enum CandidateStatus { verified, notVerified }
 
@@ -117,7 +118,7 @@ class Candidate {
         "project": project,
         "ctc": ctc,
         "label": selectedOption,
-        "labelText": activeStatus.index,
+        "labelText": status,
         "country": country,
         "confirmPassword": confirmPassword,
         "city": city,
@@ -138,9 +139,7 @@ class Candidate {
         aadharno: data["aadharno"],
         gender: data["gender"],
         selectedOption: data["label"],
-        activeStatus: data["labelText"] == null
-            ? ActiveStatus.curated
-            : ActiveStatus.values.elementAt(data["labelText"]),
+        status: data["labelText"],
         worktitle: data["worktitle"],
         qualification: data["qualification"],
         qualiDescription: data["qualiDescription"],
@@ -181,9 +180,7 @@ class Candidate {
         aadharno: json["aadharno"],
         gender: json["gender"],
         selectedOption: json["label"],
-        activeStatus: json["labelText"] == null
-            ? ActiveStatus.curated
-            : ActiveStatus.values.elementAt(json["labelText"]),
+        status: json["labelText"],
         qualification: json["qualification"],
         qualiDescription: json["qualiDescription"],
         aboutYou: json["aboutYou"],
@@ -238,7 +235,7 @@ class Candidate {
         .collection('greycollaruser')
         .doc(docId)
         .update({
-      "labelText": ActiveStatus.curated.index,
+      "labelText": 'Curated',
     });
   }
 
@@ -247,7 +244,7 @@ class Candidate {
         .collection('greycollaruser')
         .doc(docId)
         .update({
-      "labelText": ActiveStatus.selected.index,
+      "labelText": 'Selected',
     });
   }
 
@@ -256,7 +253,17 @@ class Candidate {
         .collection('greycollaruser')
         .doc(docId)
         .update({
-      "labelText": ActiveStatus.rejected.index,
+      "labelText": 'Rejected',
+    });
+  }
+
+  Future<void> updateLabel(String labelText, Color labelColor) {
+    return FirebaseFirestore.instance
+        .collection('greycollaruser')
+        .doc(docId)
+        .update({
+      'labelText': labelText,
+      'labelColor': labelColor.value.toString(),
     });
   }
 }

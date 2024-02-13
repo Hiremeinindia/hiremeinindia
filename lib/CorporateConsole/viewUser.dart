@@ -1,24 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:hiremeinindiaapp/CorporateConsole/corporate.dart';
-import 'package:hiremeinindiaapp/CorporateConsole/multipleFilter.dart';
-import 'package:hiremeinindiaapp/Providers/session.dart';
 import 'package:hiremeinindiaapp/User/user.dart';
 import 'package:hiremeinindiaapp/widgets/custombutton.dart';
 import 'package:intl/intl.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../Classes/language.dart';
-import '../Classes/language_constants.dart';
-import '../Widgets/hiremeinindia.dart';
-import '../widgets/customdropdown.dart';
-import '../Widgets/customTextstyle.dart';
-import '../gen_l10n/app_localizations.dart';
-import '../main.dart';
 
 // ignore: must_be_immutable
 class FullPagePopup extends StatefulWidget {
@@ -61,6 +47,14 @@ class _FullPagePopupState extends State<FullPagePopup> {
       await launch(imageUrl);
     }
     print('image url:$imageUrl');
+  }
+
+  void _updateCandidateLabelText(String newText, Color newColor) {
+    setState(() {
+      labelText = newText;
+      labelColor = newColor;
+    });
+    widget.candidate.updateLabel(newText, newColor);
   }
 
   @override
@@ -116,14 +110,26 @@ class _FullPagePopupState extends State<FullPagePopup> {
                             color:
                                 labelColor, // Use labelColor variable directly
                             borderRadius: BorderRadius.all(Radius.circular(5))),
-                        child: Text(
-                          '${widget.candidate.status}',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.indigo.shade900,
+                        child: Center(
+                          child: StreamBuilder<DocumentSnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('greycollaruser')
+                                .doc(widget.candidate.docId)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return CircularProgressIndicator();
+                              }
+                              return Text(
+                                snapshot.data!.get('labelText') ?? '',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.indigo.shade900,
+                                ),
+                              );
+                            },
                           ),
                         ),
-                        padding: const EdgeInsets.only(top: 10, left: 20),
                       ),
                     ],
                   ),
@@ -133,13 +139,8 @@ class _FullPagePopupState extends State<FullPagePopup> {
                         onPressed: () {
                           setState(() {
                             labelText = 'Selected';
-                            labelColor = Colors.green.shade200;
-                          });
-                          FirebaseFirestore.instance
-                              .collection('greycollaruser')
-                              .doc(widget.candidate.docId)
-                              .update({
-                            'labelText': labelText,
+                            _updateCandidateLabelText(
+                                'Selected', Colors.green.shade200);
                           });
                         },
                         child: SizedBox(
@@ -159,14 +160,8 @@ class _FullPagePopupState extends State<FullPagePopup> {
                       CustomRectButton(
                         onPressed: () {
                           setState(() {
-                            labelText = 'Curated';
-                            labelColor = Colors.yellow.shade200;
-                          });
-                          FirebaseFirestore.instance
-                              .collection('greycollaruser')
-                              .doc(widget.candidate.docId)
-                              .update({
-                            'labelText': labelText,
+                            _updateCandidateLabelText(
+                                'Curated', Colors.yellow.shade200);
                           });
                         },
                         child: SizedBox(
@@ -186,14 +181,8 @@ class _FullPagePopupState extends State<FullPagePopup> {
                       CustomRectButton(
                         onPressed: () {
                           setState(() {
-                            labelText = 'Rejected';
-                            labelColor = Colors.red.shade200;
-                          });
-                          FirebaseFirestore.instance
-                              .collection('greycollaruser')
-                              .doc(widget.candidate.docId)
-                              .update({
-                            'labelText': labelText,
+                            _updateCandidateLabelText(
+                                'Rejected', Colors.red.shade200);
                           });
                         },
                         child: SizedBox(
@@ -333,7 +322,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                       child: Container(
                                         padding: EdgeInsets.all(3),
                                         child: Text(
-                                          '${widget.candidate.workins![0] ?? '- - -'}',
+                                          '${widget.candidate.workins![0]}',
                                           style: TextStyle(
                                               fontSize: 15,
                                               color: Colors.indigo.shade900,
