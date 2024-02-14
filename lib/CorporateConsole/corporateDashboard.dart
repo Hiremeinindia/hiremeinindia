@@ -1,9 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/multipleFilter.dart';
 import '../Widgets/hiremeinindia.dart';
 import '../Widgets/customTextstyle.dart';
+import '../classes/language.dart';
+import '../classes/language_constants.dart';
+import '../gen_l10n/app_localizations.dart';
+import '../main.dart';
 import 'columnView.dart';
 
 class CorporateDashboard extends StatefulWidget {
@@ -64,72 +69,69 @@ class _CorporateDashboard extends State<CorporateDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: HireMeInIndia(),
           automaticallyImplyLeading: false,
           centerTitle: false,
           toolbarHeight: 80,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
+          title: Padding(
+            padding: const EdgeInsets.only(top: 40, left: 100),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                HireMeInIndia(),
+                Text(
+                  translation(context).corporateconsole,
+                  style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.indigo.shade900,
+                      fontFamily: 'Poppins'),
+                ),
+              ],
+            ),
+          ),
           actions: [
             Padding(
-              padding: EdgeInsets.only(right: 50.0, top: 10),
+              padding: const EdgeInsets.only(right: 40, top: 35),
               child: Row(
                 children: [
-                  Text(
-                    'Corporate Console',
-                    style: TextStyle(
-                        fontSize: 25,
-                        color: Colors.indigo.shade900,
-                        fontFamily: 'Poppins'),
-                  ),
-                  SizedBox(width: 40),
-                  SizedBox(
-                    height: 38,
-                    width: 38,
+                  CircleAvatar(
+                    backgroundColor: Colors.black,
                     child: CircleAvatar(
-                      backgroundColor: Colors.black,
-                      child: SizedBox(
-                        width: 36,
-                        height: 36,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.person_outline_outlined,
-                            size: 35,
-                            color: Colors.indigo.shade900,
-                          ),
-                        ),
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.person_outline_outlined,
+                        size: 35,
+                        color: Colors.indigo.shade900,
                       ),
                     ),
                   ),
-                  SizedBox(width: 8.0),
+                  SizedBox(width: 15),
                   StreamBuilder<Map<String, dynamic>?>(
                     stream: userStream,
                     builder: (context, snapshot) {
                       if (snapshot.hasData && snapshot.data != null) {
                         // Display the user's name
-                        return Padding(
-                          padding: EdgeInsets.only(top: 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '$_userName',
-                                style: TextStyle(
-                                  fontSize: 18,
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '$_userName',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.indigo.shade900,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              '$_designation',
+                              style: TextStyle(
+                                  fontSize: 15,
                                   color: Colors.indigo.shade900,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '$_designation',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.indigo.shade900,
-                                    height: 0),
-                              ),
-                            ],
-                          ),
+                                  height: 0),
+                            ),
+                          ],
                         );
                       } else {
                         // Loading or error state
@@ -158,7 +160,9 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                     Align(
                       alignment: Alignment.bottomRight,
                       child: Text(
-                        isPressed ? 'Multiple View' : 'Column View',
+                        isPressed
+                            ? translation(context).multiplefilter
+                            : translation(context).columnview,
                         style: TextStyle(
                           color: Colors.grey,
                           fontWeight: FontWeight.bold,
@@ -183,7 +187,7 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                                       child: Row(
                                         children: [
                                           Text(
-                                            'Hello $_userName',
+                                            "${translation(context).hello} $_userName",
                                             style: CustomTextStyle.nameOfUser,
                                             overflow: TextOverflow.ellipsis,
                                           ),
@@ -272,12 +276,18 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                                         isPressed = !isPressed;
                                       });
                                     },
-                                    child: ImageIcon(
-                                      AssetImage("filter.png"),
-                                      size: 25,
-                                      color: isPressed
-                                          ? Colors.white
-                                          : Colors.indigo.shade900,
+                                    child: SizedBox(
+                                      height: 40,
+                                      width: 40,
+                                      child: ImageIcon(
+                                        NetworkImage(
+                                          'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/filter.png?alt=media&token=fb12f309-716f-4b68-94b0-2c551dd998b5',
+                                        ),
+                                        size: 25,
+                                        color: isPressed
+                                            ? Colors.white
+                                            : Colors.indigo.shade900,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -299,12 +309,18 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                                         isPressed = !isPressed;
                                       });
                                     },
-                                    child: ImageIcon(
-                                      AssetImage("table.png"),
-                                      size: 25,
-                                      color: isPressed
-                                          ? Colors.indigo.shade900
-                                          : Colors.white,
+                                    child: SizedBox(
+                                      height: 40,
+                                      width: 40,
+                                      child: ImageIcon(
+                                        NetworkImage(
+                                          'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/table.png?alt=media&token=75eaa626-2b1f-4faf-8ce5-73480c3141df',
+                                        ),
+                                        size: 25,
+                                        color: isPressed
+                                            ? Colors.indigo.shade900
+                                            : Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -315,7 +331,7 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                       ],
                     ),
                     SizedBox(
-                      height: 5,
+                      height: 20,
                     ),
                     isPressed ? MultipleFilter() : ColumnView(),
                   ]),

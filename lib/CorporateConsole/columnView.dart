@@ -19,12 +19,6 @@ class _ColumnViewState extends State<ColumnView> {
   Candidate? candidate;
   Stream<QuerySnapshot<Map<String, dynamic>>>? _currentStream;
   late Stream<Map<String, dynamic>?> userStream;
-  void initState() {
-    query = agentsRef;
-    super.initState();
-    _currentStream = AllCandidates();
-  }
-
   bool scheduledata = false;
   bool expandWork = false;
   bool expandCertificate = false;
@@ -32,6 +26,18 @@ class _ColumnViewState extends State<ColumnView> {
   final ScrollController _scrollController = ScrollController();
   bool expandProject = false;
   late Query<Map<String, dynamic>> query;
+  final agentsRef = FirebaseFirestore.instance
+      .collection("greycollaruser")
+      .where('label', isEqualTo: 'Blue');
+  final fireStore =
+      FirebaseFirestore.instance.collection('greycollaruser').snapshots();
+
+  void initState() {
+    query = agentsRef;
+    super.initState();
+    _currentStream = AllCandidates();
+  }
+
   void _callNumber(String? mobile) async {
     String url = "tel://$mobile";
     print('Mobile Number:$mobile');
@@ -48,9 +54,6 @@ class _ColumnViewState extends State<ColumnView> {
 
     return blueCount + greyCount;
   }
-
-  final fireStore =
-      FirebaseFirestore.instance.collection('greycollaruser').snapshots();
 
   Stream<QuerySnapshot<Map<String, dynamic>>> AllCandidates() {
     return FirebaseFirestore.instance.collection("greycollaruser").snapshots();
@@ -119,10 +122,6 @@ class _ColumnViewState extends State<ColumnView> {
     var count = snapshot.size;
     return count; // Add this line to return the count
   }
-
-  final agentsRef = FirebaseFirestore.instance
-      .collection("greycollaruser")
-      .where('label', isEqualTo: 'Blue');
 
   @override
   Widget build(BuildContext context) {
@@ -460,7 +459,8 @@ class _ColumnViewState extends State<ColumnView> {
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                return Center(child: Text('No candidates were found'));
+                return Center(
+                    child: Text(translation(context).nocandidateswereadded));
               } else {
                 // Map documents to Candidate objects
                 List<Candidate> blueCandidates = snapshot.data!.docs
@@ -486,7 +486,8 @@ class _ColumnViewState extends State<ColumnView> {
                               showFirstLastButtons: true,
                               controller: _scrollController,
                               rowsPerPage: 8,
-                              columns: CandidateListSource.getColumns(),
+                              columns: CandidateListSource.getColumns(
+                                  context), // Pass context here
                               source: CandidateListSource(
                                 blueCandidates,
                                 context: context,
@@ -521,38 +522,35 @@ class CandidateListSource extends DataTableSource {
   final List<Candidate> candidates;
   final BuildContext context;
   final Function(Candidate) onSelect;
+
   CandidateListSource(this.candidates,
       {required this.context, required this.onSelect});
 
   @override
   DataRow? getRow(int index) {
-    // TODO: implement getRow
-    final e = candidates[(index)];
+    final e = candidates[index];
 
     return DataRow.byIndex(
       index: index,
       cells: [
-        // DataCell(Text((index + 1).toString())),
         DataCell(
           Text(e.name.toString()),
           onTap: () {
             onSelect(e);
           },
         ),
-        DataCell(SizedBox(
-          width: 27,
-          height: 27,
-          child: CircleAvatar(
-            backgroundColor: const Color.fromARGB(255, 51, 116, 53),
+        DataCell(
+          SizedBox(
+            width: 27,
+            height: 27,
+            child: CircleAvatar(
+              backgroundColor: const Color.fromARGB(255, 51, 116, 53),
+            ),
           ),
-        )),
+        ),
         DataCell(Text(e.qualification?.toString() ?? 'nill')),
-        DataCell(
-          Text(e.skills!.isNotEmpty ? e.skills![0] : ''),
-        ),
-        DataCell(
-          Text(e.skills!.isNotEmpty ? e.skills![1] : ''),
-        ),
+        DataCell(Text(e.skills!.isNotEmpty ? e.skills![0] : '')),
+        DataCell(Text(e.skills!.isNotEmpty ? e.skills![1] : '')),
         DataCell(Text(e.selectedOption?.toString() ?? '- - - -')),
         DataCell(Text(e.mobile.toString())),
         DataCell(Text(e.name.toString())),
@@ -560,74 +558,25 @@ class CandidateListSource extends DataTableSource {
     );
   }
 
-  static List<DataColumn> getColumns() {
-    List<DataColumn> list = [];
-    list.addAll([
-      // const DataColumn(label: Text("S.No")),
-      const DataColumn(label: Text('Candidate')),
-      const DataColumn(label: Text('Verified')),
-      const DataColumn(label: Text('Qualification')),
-      const DataColumn(label: Text('Job Classification 1')),
-      const DataColumn(label: Text('Job Classification 2')),
-      const DataColumn(label: Text('Label')),
-      const DataColumn(label: Text('No of Days Open')),
-      const DataColumn(label: Text('CV Docs')),
-    ]);
-    return list;
+  static List<DataColumn> getColumns(BuildContext context) {
+    return [
+      DataColumn(label: Text(translation(context).candidate)),
+      DataColumn(label: Text(translation(context).verified)),
+      DataColumn(label: Text(translation(context).qualification)),
+      DataColumn(label: Text(translation(context).jobClassification)),
+      DataColumn(label: Text(translation(context).jobClassification)),
+      DataColumn(label: Text(translation(context).label)),
+      DataColumn(label: Text(translation(context).noOfDaysOpen)),
+      DataColumn(label: Text(translation(context).cvDocs)),
+    ];
   }
 
   @override
-  // TODO: implement isRowCountApproximate
   bool get isRowCountApproximate => false;
 
   @override
-  // TODO: implement rowCount
-  int get rowCount => (candidates.length);
+  int get rowCount => candidates.length;
 
   @override
-  // TODO: implement selectedRowCount
   int get selectedRowCount => 0;
-}
-
-class BlueCollarCandidatesScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(translation(context).blueColler),
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('greycollaruser')
-            .where('label', isEqualTo: 'Blue')
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No candidates were found'));
-          } else {
-            // Map documents to Candidate objects
-            List<Candidate> blueCandidates = snapshot.data!.docs
-                .map((doc) => Candidate.fromSnapshot(
-                    doc as DocumentSnapshot<Map<String, dynamic>>))
-                .toList();
-
-            return ListView.builder(
-              itemCount: blueCandidates.length,
-              itemBuilder: (context, index) {
-                // Build UI to display blue label candidates
-                return ListTile(
-                  title: Text(blueCandidates[index].name ?? ''),
-                  // Other ListTile content...
-                );
-              },
-            );
-          }
-        },
-      ),
-    );
-  }
 }

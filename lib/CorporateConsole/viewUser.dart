@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../classes/language_constants.dart';
+
 // ignore: must_be_immutable
 class FullPagePopup extends StatefulWidget {
   final Candidate candidate;
@@ -20,16 +22,16 @@ class _FullPagePopupState extends State<FullPagePopup> {
   Candidate? verified;
 
   DateTime? _selectedDateTime;
-  void initState() {
-    super.initState();
-  }
-
   Color? labelColor;
   String labelText = '';
   bool expandWork = false;
   bool expandCertificate = false;
   bool expandCourse = false;
   bool expandProject = false;
+  void initState() {
+    super.initState();
+  }
+
   void _callNumber(String? mobile) async {
     String url = "tel://$mobile";
     print('Mobile Number:$mobile');
@@ -66,7 +68,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
             const EdgeInsets.only(left: 80.0, right: 80, top: 50, bottom: 50),
         child: Container(
           height: 1000,
-          width: 1500,
+          width: 1280,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -83,7 +85,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                         color: Colors.indigo.shade900,
                       ),
                       label: Text(
-                        'Back',
+                        translation(context).back,
                         style: TextStyle(
                           fontSize: 18,
                           color: Colors.indigo.shade900,
@@ -93,7 +95,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                   Row(
                     children: [
                       Text(
-                        'Status',
+                        translation(context).status,
                         style: TextStyle(
                           fontSize: 18,
                           color: Colors.indigo.shade900,
@@ -138,9 +140,10 @@ class _FullPagePopupState extends State<FullPagePopup> {
                       CustomRectButton(
                         onPressed: () {
                           setState(() {
-                            labelText = 'Selected';
+                            labelText = translation(context).selected;
                             _updateCandidateLabelText(
-                                'Selected', Colors.green.shade200);
+                                translation(context).selected,
+                                Colors.green.shade200);
                           });
                         },
                         child: SizedBox(
@@ -161,7 +164,8 @@ class _FullPagePopupState extends State<FullPagePopup> {
                         onPressed: () {
                           setState(() {
                             _updateCandidateLabelText(
-                                'Curated', Colors.yellow.shade200);
+                                translation(context).curated,
+                                Colors.yellow.shade200);
                           });
                         },
                         child: SizedBox(
@@ -182,7 +186,8 @@ class _FullPagePopupState extends State<FullPagePopup> {
                         onPressed: () {
                           setState(() {
                             _updateCandidateLabelText(
-                                'Rejected', Colors.red.shade200);
+                                translation(context).rejected,
+                                Colors.red.shade200);
                           });
                         },
                         child: SizedBox(
@@ -249,7 +254,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                   height: 40,
                                 ),
                                 Text(
-                                  'Skills',
+                                  translation(context).skills,
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.indigo.shade900,
@@ -290,7 +295,6 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                     SizedBox(
                                       height: 25,
                                       child: Container(
-                                        padding: EdgeInsets.all(3),
                                         child: Text(
                                           '${widget.candidate.skills![1]}',
                                           style: TextStyle(
@@ -320,7 +324,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                     SizedBox(
                                       height: 25,
                                       child: Container(
-                                        padding: EdgeInsets.all(3),
+                                        padding: EdgeInsets.all(5),
                                         child: Text(
                                           '${widget.candidate.workins![0]}',
                                           style: TextStyle(
@@ -346,7 +350,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                     SizedBox(
                                       height: 25,
                                       child: Container(
-                                        padding: EdgeInsets.all(3),
+                                        padding: EdgeInsets.all(5),
                                         child: Text(
                                           '',
                                           style: TextStyle(
@@ -451,7 +455,8 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                             ? DateFormat.yMMMd()
                                                 .add_jm()
                                                 .format(_selectedDateTime!)
-                                            : 'Schedule an interview',
+                                            : translation(context)
+                                                .scheduleaninterview,
                                         style: TextStyle(
                                           fontSize: 15,
                                           color: Colors.white,
@@ -488,7 +493,7 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                           color: Colors.white,
                                         ),
                                         Text(
-                                          'Make a call',
+                                          translation(context).makeacall,
                                           style: TextStyle(
                                             fontSize: 15,
                                             color: Colors.white,
@@ -546,13 +551,265 @@ class _FullPagePopupState extends State<FullPagePopup> {
                     ],
                   ),
                   SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 55.0),
-                      child: Column(children: [
-                        Container(
-                          //basic detail container opening
+                    child: Column(children: [
+                      Container(
+                        //basic detail container opening
+                        width: 900,
+                        height: 255,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(0.0, 1.0), //(x,y)
+                              blurRadius: 6.0,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: 900,
+                              height: 50,
+                              decoration: const BoxDecoration(
+                                  color: Color.fromARGB(255, 146, 176, 226),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(5),
+                                      topRight: Radius.circular(5))),
+                              child: Text(
+                                translation(context).basicdetails,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.indigo.shade900,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              padding: const EdgeInsets.only(top: 10, left: 20),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        translation(context).age,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.indigo.shade900,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${widget.candidate.age}',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.indigo.shade900,
+                                            height: 0),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        translation(context).workExperience,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.indigo.shade900,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${widget.candidate.workexpcount}',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.indigo.shade900,
+                                            height: 0),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      SizedBox(
+                                        width: 170,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            downloadImage(
+                                                '${widget.candidate.imgCv}');
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            minimumSize:
+                                                const Size.fromHeight(45),
+                                            fixedSize: const Size.fromWidth(
+                                                double.infinity),
+                                            backgroundColor:
+                                                Colors.indigo.shade900,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(
+                                                  5), // Adjust border radius as needed
+                                            ),
+                                          ),
+                                          child: Row(children: [
+                                            Icon(
+                                              Icons.download,
+                                              size: 25,
+                                              color: Colors.white,
+                                            ),
+                                            Text(
+                                              translation(context).downloadcv,
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ]),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        translation(context).contactnumber,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.indigo.shade900,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${widget.candidate.mobile}',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.indigo.shade900,
+                                            height: 0),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        'CTC',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.indigo.shade900,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${widget.candidate.ctc}',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.indigo.shade900,
+                                            height: 0),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      SizedBox(
+                                        width: 225,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            downloadImage(
+                                                '${widget.candidate.imgPic}');
+                                            downloadImage(
+                                                '${widget.candidate.imgVoter}');
+                                            downloadImage(
+                                                '${widget.candidate.imgExp}');
+                                            downloadImage(
+                                                '${widget.candidate.imgAadhar}');
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            minimumSize:
+                                                const Size.fromHeight(45),
+                                            fixedSize: const Size.fromWidth(
+                                                double.infinity),
+                                            backgroundColor:
+                                                Colors.indigo.shade900,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(
+                                                  5), // Adjust border radius as needed
+                                            ),
+                                          ),
+                                          child: Row(children: [
+                                            Icon(
+                                              Icons.download,
+                                              size: 25,
+                                              color: Colors.white,
+                                            ),
+                                            Text(
+                                              translation(context).downloaddoc,
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ]),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        translation(context).emailaddress,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.indigo.shade900,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${widget.candidate.email}',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.indigo.shade900,
+                                            height: 0),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        translation(context).location,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.indigo.shade900,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${widget.candidate.address}',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.indigo.shade900,
+                                            height: 0),
+                                      ),
+                                      SizedBox(
+                                        height: 60,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ), //basic detail container closing
+                      SizedBox(
+                        height: 10,
+                      ),
+                      AnimatedContainer(
+                          duration: Duration(milliseconds: 300),
                           width: 900,
-                          height: 255,
+                          height: expandWork ? 255 : 50,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5.0),
                             color: Colors.white,
@@ -564,306 +821,59 @@ class _FullPagePopupState extends State<FullPagePopup> {
                               ),
                             ],
                           ),
-                          child: Column(
-                            children: [
-                              Container(
-                                width: 900,
-                                height: 50,
-                                decoration: const BoxDecoration(
-                                    color: Color.fromARGB(255, 146, 176, 226),
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(5),
-                                        topRight: Radius.circular(5))),
-                                child: Text(
-                                  'Basic Details',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.indigo.shade900,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                padding:
-                                    const EdgeInsets.only(top: 10, left: 20),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                          child: expandWork
+                              ? Column(
                                   children: [
-                                    Column(
-                                      children: [
-                                        Text(
-                                          'Age',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.indigo.shade900,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          '${widget.candidate.age}',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.indigo.shade900,
-                                              height: 0),
-                                        ),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        Text(
-                                          'Work Experience',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.indigo.shade900,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          '${widget.candidate.workexpcount}',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.indigo.shade900,
-                                              height: 0),
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        Text(
-                                          'Contact Number',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.indigo.shade900,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          '${widget.candidate.mobile}',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.indigo.shade900,
-                                              height: 0),
-                                        ),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        Text(
-                                          'CTC',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.indigo.shade900,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          '${widget.candidate.ctc}',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.indigo.shade900,
-                                              height: 0),
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        Text(
-                                          'Email address',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.indigo.shade900,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          '${widget.candidate.email}',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.indigo.shade900,
-                                              height: 0),
-                                        ),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        Text(
-                                          'Location',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.indigo.shade900,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          '${widget.candidate.address}',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.indigo.shade900,
-                                              height: 0),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 170,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          downloadImage(
-                                              '${widget.candidate.imgCv}');
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          minimumSize:
-                                              const Size.fromHeight(45),
-                                          fixedSize: const Size.fromWidth(
-                                              double.infinity),
-                                          backgroundColor:
-                                              Colors.indigo.shade900,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                5), // Adjust border radius as needed
-                                          ),
-                                        ),
-                                        child: Row(children: [
-                                          Icon(
-                                            Icons.download,
-                                            size: 25,
-                                            color: Colors.white,
-                                          ),
-                                          Text(
-                                            'Download CV',
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ]),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 30,
-                                    ),
-                                    SizedBox(
-                                      width: 225,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          downloadImage(
-                                              '${widget.candidate.imgPic}');
-                                          downloadImage(
-                                              '${widget.candidate.imgVoter}');
-                                          downloadImage(
-                                              '${widget.candidate.imgExp}');
-                                          downloadImage(
-                                              '${widget.candidate.imgAadhar}');
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          minimumSize:
-                                              const Size.fromHeight(45),
-                                          fixedSize: const Size.fromWidth(
-                                              double.infinity),
-                                          backgroundColor:
-                                              Colors.indigo.shade900,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                5), // Adjust border radius as needed
-                                          ),
-                                        ),
-                                        child: Row(children: [
-                                          Icon(
-                                            Icons.download,
-                                            size: 25,
-                                            color: Colors.white,
-                                          ),
-                                          Text(
-                                            'Download Documents',
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ]),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ), //basic detail container closing
-                        SizedBox(
-                          height: 10,
-                        ),
-                        AnimatedContainer(
-                            duration: Duration(milliseconds: 300),
-                            width: 900,
-                            height: expandWork ? 255 : 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5.0),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  offset: Offset(0.0, 1.0), //(x,y)
-                                  blurRadius: 6.0,
-                                ),
-                              ],
-                            ),
-                            child: expandWork
-                                ? Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            expandWork = !expandWork;
-                                          });
-                                        },
-                                        child: Container(
-                                          width: 900,
-                                          height: 50,
-                                          decoration: const BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 146, 176, 226),
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(5),
-                                                  topRight:
-                                                      Radius.circular(5))),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Work Experience',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.indigo.shade900,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                hoverColor: Colors.transparent,
-                                                icon: Icon(Icons
-                                                    .arrow_drop_down_circle_rounded),
-                                                iconSize: 30,
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          expandWork = !expandWork;
+                                        });
+                                      },
+                                      child: Container(
+                                        width: 900,
+                                        height: 50,
+                                        decoration: const BoxDecoration(
+                                            color: Color.fromARGB(
+                                                255, 146, 176, 226),
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(5),
+                                                topRight: Radius.circular(5))),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              translation(context)
+                                                  .workExperience,
+                                              style: TextStyle(
+                                                fontSize: 18,
                                                 color: Colors.indigo.shade900,
-                                                onPressed: () {
-                                                  setState(() {
-                                                    expandWork = !expandWork;
-                                                  });
-                                                },
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                            ],
-                                          ),
-                                          padding: const EdgeInsets.only(
-                                              top: 5, left: 20),
+                                            ),
+                                            IconButton(
+                                              hoverColor: Colors.transparent,
+                                              icon: Icon(Icons
+                                                  .arrow_drop_down_circle_rounded),
+                                              iconSize: 30,
+                                              color: Colors.indigo.shade900,
+                                              onPressed: () {
+                                                setState(() {
+                                                  expandWork = !expandWork;
+                                                });
+                                              },
+                                            ),
+                                          ],
                                         ),
+                                        padding: const EdgeInsets.only(
+                                            top: 5, left: 20),
                                       ),
-                                      ListTile(
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 10, left: 10),
+                                      child: ListTile(
                                           title: Text(
                                             '${widget.candidate.workexp}',
                                             style: TextStyle(
@@ -878,126 +888,131 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                                 color: Colors.indigo.shade900,
                                                 height: 0),
                                           )),
-                                    ],
-                                  )
-                                : Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            expandWork = !expandWork;
-                                          });
-                                        },
-                                        child: Container(
-                                          width: 900,
-                                          height: 50,
-                                          decoration: const BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 146, 176, 226),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5))),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Work Experience',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.indigo.shade900,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                hoverColor: Colors.transparent,
-                                                icon: Icon(Icons
-                                                    .arrow_drop_down_circle_rounded),
-                                                iconSize: 30,
+                                    ),
+                                  ],
+                                )
+                              : Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          expandWork = !expandWork;
+                                        });
+                                      },
+                                      child: Container(
+                                        width: 900,
+                                        height: 50,
+                                        decoration: const BoxDecoration(
+                                            color: Color.fromARGB(
+                                                255, 146, 176, 226),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5))),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              translation(context)
+                                                  .workExperience,
+                                              style: TextStyle(
+                                                fontSize: 18,
                                                 color: Colors.indigo.shade900,
-                                                onPressed: () {
-                                                  setState(() {
-                                                    expandWork = !expandWork;
-                                                  });
-                                                },
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                            ],
-                                          ),
-                                          padding: const EdgeInsets.only(
-                                              top: 5, left: 20),
+                                            ),
+                                            IconButton(
+                                              hoverColor: Colors.transparent,
+                                              icon: Icon(Icons
+                                                  .arrow_drop_down_circle_rounded),
+                                              iconSize: 30,
+                                              color: Colors.indigo.shade900,
+                                              onPressed: () {
+                                                setState(() {
+                                                  expandWork = !expandWork;
+                                                });
+                                              },
+                                            ),
+                                          ],
                                         ),
+                                        padding: const EdgeInsets.only(
+                                            top: 5, left: 20),
                                       ),
-                                    ],
-                                  )),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        AnimatedContainer(
-                            duration: Duration(milliseconds: 300),
-                            width: 900,
-                            height: expandCertificate ? 255 : 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5.0),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  offset: Offset(0.0, 1.0), //(x,y)
-                                  blurRadius: 6.0,
-                                ),
-                              ],
-                            ),
-                            child: expandCertificate
-                                ? Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            expandCertificate =
-                                                !expandCertificate;
-                                          });
-                                        },
-                                        child: Container(
-                                          width: 900,
-                                          height: 50,
-                                          decoration: const BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 146, 176, 226),
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(5),
-                                                  topRight:
-                                                      Radius.circular(5))),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Educational Qualification',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.indigo.shade900,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                hoverColor: Colors.transparent,
-                                                icon: Icon(Icons
-                                                    .arrow_drop_down_circle_rounded),
-                                                iconSize: 30,
+                                    ),
+                                  ],
+                                )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      AnimatedContainer(
+                          duration: Duration(milliseconds: 300),
+                          width: 900,
+                          height: expandCertificate ? 255 : 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.0),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(0.0, 1.0), //(x,y)
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                          ),
+                          child: expandCertificate
+                              ? Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          expandCertificate =
+                                              !expandCertificate;
+                                        });
+                                      },
+                                      child: Container(
+                                        width: 900,
+                                        height: 50,
+                                        decoration: const BoxDecoration(
+                                            color: Color.fromARGB(
+                                                255, 146, 176, 226),
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(5),
+                                                topRight: Radius.circular(5))),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              translation(context)
+                                                  .educationalqualification,
+                                              style: TextStyle(
+                                                fontSize: 18,
                                                 color: Colors.indigo.shade900,
-                                                onPressed: () {
-                                                  setState(() {
-                                                    expandCertificate =
-                                                        !expandCertificate;
-                                                  });
-                                                },
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                            ],
-                                          ),
-                                          padding: const EdgeInsets.only(
-                                              top: 5, left: 20),
+                                            ),
+                                            IconButton(
+                                              hoverColor: Colors.transparent,
+                                              icon: Icon(Icons
+                                                  .arrow_drop_down_circle_rounded),
+                                              iconSize: 30,
+                                              color: Colors.indigo.shade900,
+                                              onPressed: () {
+                                                setState(() {
+                                                  expandCertificate =
+                                                      !expandCertificate;
+                                                });
+                                              },
+                                            ),
+                                          ],
                                         ),
+                                        padding: const EdgeInsets.only(
+                                            top: 5, left: 20),
                                       ),
-                                      ListTile(
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 10, left: 10),
+                                      child: ListTile(
                                           title: Text(
                                             '${widget.candidate.qualification}',
                                             style: TextStyle(
@@ -1012,127 +1027,131 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                                 color: Colors.indigo.shade900,
                                                 height: 0),
                                           )),
-                                    ],
-                                  )
-                                : Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            expandCertificate =
-                                                !expandCertificate;
-                                          });
-                                        },
-                                        child: Container(
-                                          width: 900,
-                                          height: 50,
-                                          decoration: const BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 146, 176, 226),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5))),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Educational Qualification',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.indigo.shade900,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                hoverColor: Colors.transparent,
-                                                icon: Icon(Icons
-                                                    .arrow_drop_down_circle_rounded),
-                                                iconSize: 30,
+                                    ),
+                                  ],
+                                )
+                              : Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          expandCertificate =
+                                              !expandCertificate;
+                                        });
+                                      },
+                                      child: Container(
+                                        width: 900,
+                                        height: 50,
+                                        decoration: const BoxDecoration(
+                                            color: Color.fromARGB(
+                                                255, 146, 176, 226),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5))),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              translation(context)
+                                                  .educationalqualification,
+                                              style: TextStyle(
+                                                fontSize: 18,
                                                 color: Colors.indigo.shade900,
-                                                onPressed: () {
-                                                  setState(() {
-                                                    expandCertificate =
-                                                        !expandCertificate;
-                                                  });
-                                                },
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                            ],
-                                          ),
-                                          padding: const EdgeInsets.only(
-                                              top: 5, left: 20),
+                                            ),
+                                            IconButton(
+                                              hoverColor: Colors.transparent,
+                                              icon: Icon(Icons
+                                                  .arrow_drop_down_circle_rounded),
+                                              iconSize: 30,
+                                              color: Colors.indigo.shade900,
+                                              onPressed: () {
+                                                setState(() {
+                                                  expandCertificate =
+                                                      !expandCertificate;
+                                                });
+                                              },
+                                            ),
+                                          ],
                                         ),
+                                        padding: const EdgeInsets.only(
+                                            top: 5, left: 20),
                                       ),
-                                    ],
-                                  )),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        AnimatedContainer(
-                            duration: Duration(milliseconds: 300),
-                            width: 900,
-                            height: expandCourse ? 255 : 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5.0),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  offset: Offset(0.0, 1.0), //(x,y)
-                                  blurRadius: 6.0,
-                                ),
-                              ],
-                            ),
-                            child: expandCourse
-                                ? Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            expandCourse = !expandCourse;
-                                          });
-                                        },
-                                        child: Container(
-                                          width: 900,
-                                          height: 50,
-                                          decoration: const BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 146, 176, 226),
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(5),
-                                                  topRight:
-                                                      Radius.circular(5))),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Certified Courses',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.indigo.shade900,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                hoverColor: Colors.transparent,
-                                                icon: Icon(Icons
-                                                    .arrow_drop_down_circle_rounded),
-                                                iconSize: 30,
+                                    ),
+                                  ],
+                                )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      AnimatedContainer(
+                          duration: Duration(milliseconds: 300),
+                          width: 900,
+                          height: expandCourse ? 255 : 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.0),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(0.0, 1.0), //(x,y)
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                          ),
+                          child: expandCourse
+                              ? Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          expandCourse = !expandCourse;
+                                        });
+                                      },
+                                      child: Container(
+                                        width: 900,
+                                        height: 50,
+                                        decoration: const BoxDecoration(
+                                            color: Color.fromARGB(
+                                                255, 146, 176, 226),
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(5),
+                                                topRight: Radius.circular(5))),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              translation(context)
+                                                  .certifiedcourses,
+                                              style: TextStyle(
+                                                fontSize: 18,
                                                 color: Colors.indigo.shade900,
-                                                onPressed: () {
-                                                  setState(() {
-                                                    expandCourse =
-                                                        !expandCourse;
-                                                  });
-                                                },
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                            ],
-                                          ),
-                                          padding: const EdgeInsets.only(
-                                              top: 5, left: 20),
+                                            ),
+                                            IconButton(
+                                              hoverColor: Colors.transparent,
+                                              icon: Icon(Icons
+                                                  .arrow_drop_down_circle_rounded),
+                                              iconSize: 30,
+                                              color: Colors.indigo.shade900,
+                                              onPressed: () {
+                                                setState(() {
+                                                  expandCourse = !expandCourse;
+                                                });
+                                              },
+                                            ),
+                                          ],
                                         ),
+                                        padding: const EdgeInsets.only(
+                                            top: 5, left: 20),
                                       ),
-                                      ListTile(
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 10, left: 10),
+                                      child: ListTile(
                                           title: Text(
                                             '${widget.candidate.course}',
                                             style: TextStyle(
@@ -1141,126 +1160,130 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                                 height: 0),
                                           ),
                                           subtitle: Text('')),
-                                    ],
-                                  )
-                                : Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            expandCourse = !expandCourse;
-                                          });
-                                        },
-                                        child: Container(
-                                          width: 900,
-                                          height: 50,
-                                          decoration: const BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 146, 176, 226),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5))),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Certified Courses',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.indigo.shade900,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                hoverColor: Colors.transparent,
-                                                icon: Icon(Icons
-                                                    .arrow_drop_down_circle_rounded),
-                                                iconSize: 30,
+                                    ),
+                                  ],
+                                )
+                              : Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          expandCourse = !expandCourse;
+                                        });
+                                      },
+                                      child: Container(
+                                        width: 900,
+                                        height: 50,
+                                        decoration: const BoxDecoration(
+                                            color: Color.fromARGB(
+                                                255, 146, 176, 226),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5))),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              translation(context)
+                                                  .certifiedcourses,
+                                              style: TextStyle(
+                                                fontSize: 18,
                                                 color: Colors.indigo.shade900,
-                                                onPressed: () {
-                                                  setState(() {
-                                                    expandCourse =
-                                                        !expandCourse;
-                                                  });
-                                                },
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                            ],
-                                          ),
-                                          padding: const EdgeInsets.only(
-                                              top: 5, left: 20),
+                                            ),
+                                            IconButton(
+                                              hoverColor: Colors.transparent,
+                                              icon: Icon(Icons
+                                                  .arrow_drop_down_circle_rounded),
+                                              iconSize: 30,
+                                              color: Colors.indigo.shade900,
+                                              onPressed: () {
+                                                setState(() {
+                                                  expandCourse = !expandCourse;
+                                                });
+                                              },
+                                            ),
+                                          ],
                                         ),
+                                        padding: const EdgeInsets.only(
+                                            top: 5, left: 20),
                                       ),
-                                    ],
-                                  )),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        AnimatedContainer(
-                            duration: Duration(milliseconds: 300),
-                            width: 900,
-                            height: expandProject ? 255 : 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5.0),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  offset: Offset(0.0, 1.0), //(x,y)
-                                  blurRadius: 6.0,
-                                ),
-                              ],
-                            ),
-                            child: expandProject
-                                ? Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            expandProject = !expandProject;
-                                          });
-                                        },
-                                        child: Container(
-                                          width: 900,
-                                          height: 50,
-                                          decoration: const BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 146, 176, 226),
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(5),
-                                                  topRight:
-                                                      Radius.circular(5))),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Projects Worked',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.indigo.shade900,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                hoverColor: Colors.transparent,
-                                                icon: Icon(Icons
-                                                    .arrow_drop_down_circle_rounded),
-                                                iconSize: 30,
+                                    ),
+                                  ],
+                                )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      AnimatedContainer(
+                          duration: Duration(milliseconds: 300),
+                          width: 900,
+                          height: expandProject ? 255 : 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.0),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(0.0, 1.0), //(x,y)
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                          ),
+                          child: expandProject
+                              ? Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          expandProject = !expandProject;
+                                        });
+                                      },
+                                      child: Container(
+                                        width: 900,
+                                        height: 50,
+                                        decoration: const BoxDecoration(
+                                            color: Color.fromARGB(
+                                                255, 146, 176, 226),
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(5),
+                                                topRight: Radius.circular(5))),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              translation(context)
+                                                  .projectworked,
+                                              style: TextStyle(
+                                                fontSize: 18,
                                                 color: Colors.indigo.shade900,
-                                                onPressed: () {
-                                                  setState(() {
-                                                    expandProject =
-                                                        !expandProject;
-                                                  });
-                                                },
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                            ],
-                                          ),
-                                          padding: const EdgeInsets.only(
-                                              top: 5, left: 20),
+                                            ),
+                                            IconButton(
+                                              hoverColor: Colors.transparent,
+                                              icon: Icon(Icons
+                                                  .arrow_drop_down_circle_rounded),
+                                              iconSize: 30,
+                                              color: Colors.indigo.shade900,
+                                              onPressed: () {
+                                                setState(() {
+                                                  expandProject =
+                                                      !expandProject;
+                                                });
+                                              },
+                                            ),
+                                          ],
                                         ),
+                                        padding: const EdgeInsets.only(
+                                            top: 5, left: 20),
                                       ),
-                                      ListTile(
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 10, left: 10),
+                                      child: ListTile(
                                           title: Text(
                                             '${widget.candidate.project}',
                                             style: TextStyle(
@@ -1269,59 +1292,60 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                                 height: 0),
                                           ),
                                           subtitle: Text('')),
-                                    ],
-                                  )
-                                : Column(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            expandProject = !expandProject;
-                                          });
-                                        },
-                                        child: Container(
-                                          width: 900,
-                                          height: 50,
-                                          decoration: const BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 146, 176, 226),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5))),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Projects Worked',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.indigo.shade900,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                hoverColor: Colors.transparent,
-                                                icon: Icon(Icons
-                                                    .arrow_drop_down_circle_rounded),
-                                                iconSize: 30,
+                                    ),
+                                  ],
+                                )
+                              : Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          expandProject = !expandProject;
+                                        });
+                                      },
+                                      child: Container(
+                                        width: 900,
+                                        height: 50,
+                                        decoration: const BoxDecoration(
+                                            color: Color.fromARGB(
+                                                255, 146, 176, 226),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5))),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              translation(context)
+                                                  .projectworked,
+                                              style: TextStyle(
+                                                fontSize: 18,
                                                 color: Colors.indigo.shade900,
-                                                onPressed: () {
-                                                  setState(() {
-                                                    expandProject =
-                                                        !expandProject;
-                                                  });
-                                                },
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                            ],
-                                          ),
-                                          padding: const EdgeInsets.only(
-                                              top: 5, left: 20),
+                                            ),
+                                            IconButton(
+                                              hoverColor: Colors.transparent,
+                                              icon: Icon(Icons
+                                                  .arrow_drop_down_circle_rounded),
+                                              iconSize: 30,
+                                              color: Colors.indigo.shade900,
+                                              onPressed: () {
+                                                setState(() {
+                                                  expandProject =
+                                                      !expandProject;
+                                                });
+                                              },
+                                            ),
+                                          ],
                                         ),
+                                        padding: const EdgeInsets.only(
+                                            top: 5, left: 20),
                                       ),
-                                    ],
-                                  )),
-                      ]),
-                    ),
+                                    ),
+                                  ],
+                                )),
+                    ]),
                   )
                 ],
               ),

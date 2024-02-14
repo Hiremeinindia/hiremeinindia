@@ -434,244 +434,227 @@ class _NewUserPayment extends State<NewUserPayment> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: HireMeInIndia(),
           automaticallyImplyLeading: false,
           centerTitle: false,
           toolbarHeight: 80,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
+          title: Padding(
+            padding: const EdgeInsets.only(top: 40, left: 100),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                HireMeInIndia(),
+                Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.indigo.shade900,
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton2<Language>(
+                          isExpanded: true,
+                          hint: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  translation(context).english,
+                                  style: CustomTextStyle.dropdowntext,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                          onChanged: (Language? language) async {
+                            if (language != null) {
+                              Locale _locale =
+                                  await setLocale(language.languageCode);
+                              HireApp.setLocale(context, _locale);
+                            } else {
+                              language;
+                            }
+                          },
+                          items: Language.languageList()
+                              .map<DropdownMenuItem<Language>>(
+                                (e) => DropdownMenuItem<Language>(
+                                  value: e,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: <Widget>[
+                                      Text(
+                                        e.flag,
+                                        style: CustomTextStyle.dropdowntext,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Text(
+                                        e.langname,
+                                        style: CustomTextStyle.dropdowntext,
+                                        overflow: TextOverflow.ellipsis,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                          buttonStyleData: ButtonStyleData(
+                            height: 30,
+                            width: 150,
+                            elevation: 1,
+                            padding: const EdgeInsets.only(left: 14, right: 14),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: Colors.black26,
+                              ),
+                              color: Colors.indigo.shade900,
+                            ),
+                          ),
+                          iconStyleData: const IconStyleData(
+                            icon: Icon(
+                              Icons.arrow_drop_down_sharp,
+                            ),
+                            iconSize: 25,
+                            iconEnabledColor: Colors.white,
+                            iconDisabledColor: null,
+                          ),
+                          dropdownStyleData: DropdownStyleData(
+                            maxHeight: 210,
+                            elevation: 0,
+                            padding: EdgeInsets.only(
+                                left: 10, right: 10, top: 5, bottom: 15),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(color: Colors.black),
+                              color: Colors.indigo.shade900,
+                            ),
+                            scrollPadding: EdgeInsets.all(5),
+                            scrollbarTheme: ScrollbarThemeData(
+                              thickness: MaterialStateProperty.all<double>(6),
+                              thumbVisibility:
+                                  MaterialStateProperty.all<bool>(true),
+                            ),
+                          ),
+                          menuItemStyleData: const MenuItemStyleData(
+                            height: 25,
+                            padding: EdgeInsets.only(left: 14, right: 14),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.indigo.shade900,
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton2<String>(
+                          isExpanded: true,
+                          items: [
+                            DropdownMenuItem<String>(
+                              value: 'Option 1',
+                              child: Text('Option 1'),
+                            ),
+                            DropdownMenuItem<String>(
+                              value: 'Option 2',
+                              child: Text('Option 1'),
+                            ),
+                            // Add more options as needed
+                          ],
+                          onChanged: (value) {
+                            // Handle option selection
+                          },
+                          hint: Text(
+                            AppLocalizations.of(context)!.findaJob,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          buttonStyleData: ButtonStyleData(
+                            height: 30,
+                            width: 150,
+                            elevation: 1,
+                            padding: const EdgeInsets.only(left: 14, right: 14),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: Colors.black26,
+                              ),
+                              color: Colors.indigo.shade900,
+                            ),
+                          ),
+                          iconStyleData: const IconStyleData(
+                            icon: Icon(
+                              Icons.arrow_drop_down_sharp,
+                            ),
+                            iconSize: 25,
+                            iconEnabledColor: Colors.white,
+                            iconDisabledColor: null,
+                          ),
+                          dropdownStyleData: DropdownStyleData(
+                            maxHeight: 210,
+                            elevation: 0,
+                            padding: EdgeInsets.only(
+                                left: 10, right: 10, top: 5, bottom: 15),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(color: Colors.black),
+                              color: Colors.indigo.shade900,
+                            ),
+                            scrollPadding: EdgeInsets.all(5),
+                            scrollbarTheme: ScrollbarThemeData(
+                              thickness: MaterialStateProperty.all<double>(6),
+                              thumbVisibility:
+                                  MaterialStateProperty.all<bool>(true),
+                            ),
+                          ),
+                          menuItemStyleData: const MenuItemStyleData(
+                            height: 25,
+                            padding: EdgeInsets.only(left: 14, right: 14),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
           actions: [
             Padding(
-              padding: EdgeInsets.only(right: 50.0, top: 10),
+              padding: const EdgeInsets.only(right: 40, top: 35),
               child: Row(
                 children: [
-                  SizedBox(
-                    height: 30,
-                    width: 170,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.indigo.shade900,
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton2<Language>(
-                            isExpanded: true,
-                            hint: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    translation(context).english,
-                                    style: CustomTextStyle.dropdowntext,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            onChanged: (Language? language) async {
-                              if (language != null) {
-                                Locale _locale =
-                                    await setLocale(language.languageCode);
-                                HireApp.setLocale(context, _locale);
-                              } else {
-                                language;
-                              }
-                            },
-                            items: Language.languageList()
-                                .map<DropdownMenuItem<Language>>(
-                                  (e) => DropdownMenuItem<Language>(
-                                    value: e,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: <Widget>[
-                                        Text(
-                                          e.flag,
-                                          style: CustomTextStyle.dropdowntext,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        Text(
-                                          e.langname,
-                                          style: CustomTextStyle.dropdowntext,
-                                          overflow: TextOverflow.ellipsis,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                            buttonStyleData: ButtonStyleData(
-                              height: 30,
-                              width: 200,
-                              elevation: 1,
-                              padding:
-                                  const EdgeInsets.only(left: 14, right: 14),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                  color: Colors.black26,
-                                ),
-                                color: Colors.indigo.shade900,
-                              ),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              icon: Icon(
-                                Icons.arrow_drop_down_sharp,
-                              ),
-                              iconSize: 25,
-                              iconEnabledColor: Colors.white,
-                              iconDisabledColor: null,
-                            ),
-                            dropdownStyleData: DropdownStyleData(
-                              maxHeight: 210,
-                              width: 156,
-                              elevation: 0,
-                              padding: EdgeInsets.only(
-                                  left: 10, right: 10, top: 5, bottom: 15),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(color: Colors.black),
-                                color: Colors.indigo.shade900,
-                              ),
-                              scrollPadding: EdgeInsets.all(5),
-                              scrollbarTheme: ScrollbarThemeData(
-                                thickness: MaterialStateProperty.all<double>(6),
-                                thumbVisibility:
-                                    MaterialStateProperty.all<bool>(true),
-                              ),
-                            ),
-                            menuItemStyleData: const MenuItemStyleData(
-                              height: 25,
-                              padding: EdgeInsets.only(left: 14, right: 14),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  SizedBox(
-                    height: 30,
-                    width: 170,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 13),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.indigo.shade900,
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton2<String>(
-                            isExpanded: true,
-                            items: [
-                              DropdownMenuItem<String>(
-                                value: 'Option 1',
-                                child: Text('Option 1'),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: 'Option 2',
-                                child: Text('Option 1'),
-                              ),
-                              // Add more options as needed
-                            ],
-                            onChanged: (value) {
-                              // Handle option selection
-                            },
-                            hint: Text(
-                              AppLocalizations.of(context)!.findaJob,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            buttonStyleData: ButtonStyleData(
-                              height: 30,
-                              width: 200,
-                              elevation: 1,
-                              padding:
-                                  const EdgeInsets.only(left: 14, right: 14),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                  color: Colors.black26,
-                                ),
-                                color: Colors.indigo.shade900,
-                              ),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              icon: Icon(
-                                Icons.arrow_drop_down_sharp,
-                              ),
-                              iconSize: 25,
-                              iconEnabledColor: Colors.white,
-                              iconDisabledColor: null,
-                            ),
-                            dropdownStyleData: DropdownStyleData(
-                              maxHeight: 210,
-                              width: 156,
-                              elevation: 0,
-                              padding: EdgeInsets.only(
-                                  left: 10, right: 10, top: 5, bottom: 15),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(color: Colors.black),
-                                color: Colors.indigo.shade900,
-                              ),
-                              scrollPadding: EdgeInsets.all(5),
-                              scrollbarTheme: ScrollbarThemeData(
-                                thickness: MaterialStateProperty.all<double>(6),
-                                thumbVisibility:
-                                    MaterialStateProperty.all<bool>(true),
-                              ),
-                            ),
-                            menuItemStyleData: const MenuItemStyleData(
-                              height: 25,
-                              padding: EdgeInsets.only(left: 14, right: 14),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 40),
-                  SizedBox(
-                    height: 38,
-                    width: 38,
+                  CircleAvatar(
+                    backgroundColor: Colors.black,
                     child: CircleAvatar(
-                      backgroundColor: Colors.black,
-                      child: SizedBox(
-                        width: 36,
-                        height: 36,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.person_outline_outlined,
-                            size: 35,
-                            color: Colors.indigo.shade900,
-                          ),
-                        ),
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.person_outline_outlined,
+                        size: 35,
+                        color: Colors.indigo.shade900,
                       ),
                     ),
                   ),
-                  SizedBox(width: 8.0),
-                  Padding(
-                    padding: EdgeInsets.only(top: 15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'New',
-                          style: TextStyle(
-                            fontSize: 18,
+                  SizedBox(width: 15),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        translation(context).newuser,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.indigo.shade900,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        translation(context).user,
+                        style: TextStyle(
+                            fontSize: 15,
                             color: Colors.indigo.shade900,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          'User',
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.indigo.shade900,
-                              height: 0),
-                        ),
-                      ],
-                    ),
+                            height: 0),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -680,178 +663,181 @@ class _NewUserPayment extends State<NewUserPayment> {
         ),
         body: Form(
           key: _formKey,
-          child: Container(
-              padding:
-                  EdgeInsets.only(left: 125, right: 125, top: 20, bottom: 20),
-              child: Column(children: [
-                Row(
-                  children: [
-                    if (widget.selectedOption == 'Blue')
-                      Row(
-                        children: [
-                          Radio(
-                            value: widget.selectedOption,
-                            groupValue: widget.selectedOption,
-                            onChanged: (value) {
-                              // Handle radio button state change if needed
-                              setState(() {
-                                controller.selectedOption.text =
-                                    value.toString();
-                              });
-                            },
-                          ),
-                          Text(
-                            'Blue Collar',
-                            style: TextStyle(
-                                color: Colors.grey.shade500,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          IgnorePointer(
-                            child: Radio(
-                                value: widget.selectedOption,
-                                groupValue: controller.selectedOption.text,
-                                onChanged: null),
-                          ),
-                          IgnorePointer(
-                            child: Text(
-                              'Grey Collar',
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold),
+          child: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 150.0, right: 150, top: 50, bottom: 50),
+                child: Column(children: [
+                  Row(
+                    children: [
+                      if (widget.selectedOption == 'Blue')
+                        Row(
+                          children: [
+                            Radio(
+                              value: widget.selectedOption,
+                              groupValue: widget.selectedOption,
+                              onChanged: (value) {
+                                // Handle radio button state change if needed
+                                setState(() {
+                                  controller.selectedOption.text =
+                                      value.toString();
+                                });
+                              },
                             ),
-                          ),
-                        ],
-                      )
-                    else if (widget.selectedOption == 'Grey')
-                      Row(
-                        children: [
-                          IgnorePointer(
-                            child: Radio(
-                                value: widget.selectedOption,
-                                groupValue: controller.selectedOption.text,
-                                onChanged: null),
-                          ),
-                          IgnorePointer(
-                            child: Text(
+                            Text(
                               'Blue Collar',
                               style: TextStyle(
                                   color: Colors.grey.shade500,
                                   fontFamily: 'Poppins',
                                   fontWeight: FontWeight.bold),
                             ),
-                          ),
-                          Radio(
-                            value: widget.selectedOption,
-                            groupValue: widget.selectedOption,
-                            onChanged: (value) {
-                              // Handle radio button state change if needed
-                              setState(() {
-                                controller.selectedOption.text =
-                                    value.toString();
-                              });
-                            },
-                          ),
-                          Text(
-                            'Grey Collar',
-                            style: TextStyle(
-                                color: Colors.grey.shade800,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      )
-                  ],
-                ),
-                SizedBox(
-                  height: 70,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 40,
-                    ),
-                    Expanded(
-                        child: CustomButton(
-                      text: translation(context).gpay,
-                      onPressed: () {},
-                    )),
-                    SizedBox(
-                      width: 40,
-                    ),
-                    Expanded(
-                        child: CustomButton(
-                      text: translation(context).neft,
-                      onPressed: () {},
-                    )),
-                    SizedBox(
-                      width: 40,
-                    ),
-                    Expanded(
-                      child: CustomButton(
-                        text: translation(context).cash,
-                        onPressed: () async {
-                          print("cash1");
-
-                          // Call the method to upload cash receipt
-                          await uploadCashReceipt();
-
-                          // Display the pop-up dialog only if the receipt is uploaded successfully
-                          if (_cashReceipt != null) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return _buildSendingCashDialog(context);
+                            IgnorePointer(
+                              child: Radio(
+                                  value: widget.selectedOption,
+                                  groupValue: controller.selectedOption.text,
+                                  onChanged: null),
+                            ),
+                            IgnorePointer(
+                              child: Text(
+                                'Grey Collar',
+                                style: TextStyle(
+                                    color: Colors.grey.shade800,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        )
+                      else if (widget.selectedOption == 'Grey')
+                        Row(
+                          children: [
+                            IgnorePointer(
+                              child: Radio(
+                                  value: widget.selectedOption,
+                                  groupValue: controller.selectedOption.text,
+                                  onChanged: null),
+                            ),
+                            IgnorePointer(
+                              child: Text(
+                                'Blue Collar',
+                                style: TextStyle(
+                                    color: Colors.grey.shade500,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Radio(
+                              value: widget.selectedOption,
+                              groupValue: widget.selectedOption,
+                              onChanged: (value) {
+                                // Handle radio button state change if needed
+                                setState(() {
+                                  controller.selectedOption.text =
+                                      value.toString();
+                                });
                               },
-                            );
-
-                            try {
-                              String? imageUrl = '';
-                              // Call the method to send cash notification
-                              await sendCashNotification(imageUrl);
-
-                              // Call the method to retrieve cash receipt after the notification is sent
-                              await getCashReceipt();
-
-                              // The pop-up dialog will be dismissed automatically when the process is complete
-                              // Instead of navigating back immediately, you can handle the response here
-                              // For example, you can show a message or navigate to another page based on the response
-                            } catch (error) {
-                              print('Error handling cash notification: $error');
-                              // Handle the error scenario, e.g., show an error message to the user
-                            }
-                          }
-                        },
+                            ),
+                            Text(
+                              'Grey Collar',
+                              style: TextStyle(
+                                  color: Colors.grey.shade800,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 70,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 40,
                       ),
-                    ),
-                    SizedBox(
-                      width: 40,
-                    ),
-                    Expanded(
+                      Expanded(
+                          child: CustomButton(
+                        text: translation(context).gpay,
+                        onPressed: () {},
+                      )),
+                      SizedBox(
+                        width: 40,
+                      ),
+                      Expanded(
+                          child: CustomButton(
+                        text: translation(context).neft,
+                        onPressed: () {},
+                      )),
+                      SizedBox(
+                        width: 40,
+                      ),
+                      Expanded(
                         child: CustomButton(
-                      text: translation(context).paymentGateway,
-                      onPressed: () {},
-                    )),
-                    SizedBox(
-                      width: 40,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 400,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    CustomButton(
-                        text: translation(context).register,
-                        onPressed: _register),
-                    SizedBox(height: 20),
-                  ],
-                )
-              ])),
+                          text: translation(context).cash,
+                          onPressed: () async {
+                            print("cash1");
+
+                            // Call the method to upload cash receipt
+                            await uploadCashReceipt();
+
+                            // Display the pop-up dialog only if the receipt is uploaded successfully
+                            if (_cashReceipt != null) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return _buildSendingCashDialog(context);
+                                },
+                              );
+
+                              try {
+                                String? imageUrl = '';
+                                // Call the method to send cash notification
+                                await sendCashNotification(imageUrl);
+
+                                // Call the method to retrieve cash receipt after the notification is sent
+                                await getCashReceipt();
+
+                                // The pop-up dialog will be dismissed automatically when the process is complete
+                                // Instead of navigating back immediately, you can handle the response here
+                                // For example, you can show a message or navigate to another page based on the response
+                              } catch (error) {
+                                print(
+                                    'Error handling cash notification: $error');
+                                // Handle the error scenario, e.g., show an error message to the user
+                              }
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        width: 40,
+                      ),
+                      Expanded(
+                          child: CustomButton(
+                        text: translation(context).paymentGateway,
+                        onPressed: () {},
+                      )),
+                      SizedBox(
+                        width: 40,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 400,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CustomButton(
+                          text: translation(context).register,
+                          onPressed: _register),
+                      SizedBox(height: 20),
+                    ],
+                  )
+                ])),
+          ),
         ));
   }
 

@@ -334,7 +334,7 @@ class _UserDashboard extends State<UserDashboard> {
                   maxRadius: 66,
                   minRadius: 60,
                   child: CircleAvatar(
-                    backgroundImage: AssetImage('imguser.jpg'),
+                    backgroundImage: NetworkImage('$_image'),
                     maxRadius: 59,
                     minRadius: 56,
                   ),

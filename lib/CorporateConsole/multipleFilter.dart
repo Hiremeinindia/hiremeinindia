@@ -7,7 +7,9 @@ import 'package:hiremeinindiaapp/widgets/customdropdown.dart';
 
 import '../User/user.dart';
 import '../Providers/session.dart';
+import '../classes/language_constants.dart';
 import '../widgets/custombutton.dart';
+import 'viewUser.dart';
 
 class MultipleFilter extends StatefulWidget {
   @override
@@ -102,563 +104,565 @@ class _MultipleFilterState extends State<MultipleFilter> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          height: 165,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.black),
-            color: Colors.white,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                      hoverColor: Colors.transparent,
-                      icon: Icon(Icons.add),
-                      iconSize: 30,
-                      color: Colors.black,
-                      onPressed: () {
-                        // When the icon button is clicked, add a new item to the list
-                        setState(() {
-                          itemList.add(" ${itemList.length + 2}");
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: 30,
-                      width: 125,
-                      child: CustomDropDown(
-                        value: operator,
-                        onChanged: (item) {
-                          setState(() {
-                            operator = item;
-                          });
-                        },
-                        items: AppSession()
-                            .candidates
-                            .map((skill1Iterable) =>
-                                DropdownMenuItem<Candidate?>(
-                                  value: skill1Iterable,
-                                  child: Text(skill1Iterable
-                                      .skills![0]), // Update this line
-                                ))
-                            .followedBy([
-                          const DropdownMenuItem<Candidate?>(
-                            value: null,
-                            child: Text('And'),
-                          )
-                        ]).toList(),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    SizedBox(
-                      height: 30,
-                      width: 125,
-                      child: CustomDropDown<Candidate?>(
-                        value: verified,
-                        onChanged: (Candidate? item) {
-                          setState(() {
-                            verified = item;
-                          });
-                        },
-                        items: [
-                          DropdownMenuItem<Candidate?>(
-                            value: Candidate(
-                                /* your verified candidate instance */),
-                            child: Text('Verified'),
-                          ),
-                          DropdownMenuItem<Candidate?>(
-                            value:
-                                null, // You can set this to represent "Not Verified"
-                            child: Text('Not Verified'),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    SizedBox(
-                      height: 30,
-                      width: 250,
-                      child: CustomDropDown(
-                        value: skills,
-                        onChanged: (item) {
-                          setState(() {
-                            skills = item;
-                          });
-                        },
-                        items: AppSession()
-                            .candidates
-                            .map((skill1Iterable) =>
-                                DropdownMenuItem<Candidate?>(
-                                  value: skill1Iterable,
-                                  child: Text(skill1Iterable
-                                      .skills![0]), // Update this line
-                                ))
-                            .followedBy([
-                          const DropdownMenuItem<Candidate?>(
-                            value: null,
-                            child: Text('Job Classification'),
-                          )
-                        ]).toList(),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    SizedBox(
-                      height: 30,
-                      width: 250,
-                      child: CustomDropDown(
-                        value: qualification,
-                        items: AppSession()
-                            .candidates
-                            .map((skill2Iterable) =>
-                                DropdownMenuItem<Candidate?>(
-                                  value: skill2Iterable,
-                                  child: Text(skill2Iterable.qualification!),
-                                ))
-                            .followedBy([
-                          const DropdownMenuItem<Candidate?>(
-                            value: null,
-                            child: Text('Qualification Set'),
-                          )
-                        ]).toList(),
-                        onChanged: (item) {
-                          setState(() {
-                            qualification = item;
-                          });
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                      width: 125,
-                      child: CustomDropDown(
-                        value: operator,
-                        onChanged: (item) {
-                          setState(() {
-                            operator = item;
-                          });
-                        },
-                        items: AppSession()
-                            .candidates
-                            .map((skill1Iterable) =>
-                                DropdownMenuItem<Candidate?>(
-                                  value: skill1Iterable,
-                                  child: Text(skill1Iterable
-                                      .skills![0]), // Update this line
-                                ))
-                            .followedBy([
-                          const DropdownMenuItem<Candidate?>(
-                            value: null,
-                            child: Text('Query'),
-                          )
-                        ]).toList(),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.indigo.shade900,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                2), // Adjust border radius as needed
-                          ),
-                        ),
-                        onPressed: () {},
-                        child: ImageIcon(
-                          AssetImage("account.png"),
-                          size: 25,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    SizedBox(
-                      width: 40,
-                    ),
-                    CustomButton(
-                      text: 'Save',
-                      onPressed: () async {
-                        // Execute the query and get the result
-                        QuerySnapshot queryResult = await query.get();
-
-                        // Convert the query result to a list of data
-                        List<Map<String, dynamic>> dataList = queryResult.docs
-                            .map((doc) => doc.data() as Map<String, dynamic>)
-                            .toList();
-
-                        // Save the current query data when the "Save" button is pressed
-                        setState(() {
-                          savedQueries.add(dataList);
-                          print('Saved query: ${savedQueries}');
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    CustomButton(
-                      text: 'Run',
-                      onPressed: () {
-                        runQueries();
-                      },
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    CustomButton(
-                      text: 'Clear',
-                      onPressed: () {
-                        setState(() {
-                          skills = null;
-                          qualification = null;
-                          itemList.clear();
-                          query = originalQuery;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                  ],
-                ),
-                Container(
-                  height: 100,
-                  constraints: BoxConstraints(
-                    maxWidth: 600, // Set your desired maximum width here
+    return Column(children: [
+      Container(
+        height: 165,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black),
+          color: Colors.white,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                    hoverColor: Colors.transparent,
+                    icon: Icon(Icons.add),
+                    iconSize: 30,
+                    color: Colors.black,
+                    onPressed: () {
+                      // When the icon button is clicked, add a new item to the list
+                      setState(() {
+                        itemList.add(" ${itemList.length + 2}");
+                      });
+                    },
                   ),
-                  child: ListView.builder(
-                    itemCount: itemList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      Candidate? skills =
-                          skillsList[index]; // Use skillsList for each item
-                      Candidate? qualification = qualificationList[
-                          index]; // Use qualificationList for each item
+                  SizedBox(
+                    height: 30,
+                    width: 125,
+                    child: CustomDropDown(
+                      value: operator,
+                      onChanged: (item) {
+                        setState(() {
+                          operator = item;
+                        });
+                      },
+                      items: AppSession()
+                          .candidates
+                          .map((skill1Iterable) => DropdownMenuItem<Candidate?>(
+                                value: skill1Iterable,
+                                child: Text(skill1Iterable
+                                    .skills![0]), // Update this line
+                              ))
+                          .followedBy([
+                        const DropdownMenuItem<Candidate?>(
+                          value: null,
+                          child: Text('And'),
+                        )
+                      ]).toList(),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  SizedBox(
+                    height: 30,
+                    width: 125,
+                    child: CustomDropDown<Candidate?>(
+                      value: verified,
+                      onChanged: (Candidate? item) {
+                        setState(() {
+                          verified = item;
+                        });
+                      },
+                      items: [
+                        DropdownMenuItem<Candidate?>(
+                          value:
+                              Candidate(/* your verified candidate instance */),
+                          child: Text(
+                            translation(context).verified,
+                          ),
+                        ),
+                        DropdownMenuItem<Candidate?>(
+                          value:
+                              null, // You can set this to represent "Not Verified"
+                          child: Text(
+                            translation(context).notverified,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  SizedBox(
+                    height: 30,
+                    width: 250,
+                    child: CustomDropDown(
+                      value: skills,
+                      onChanged: (item) {
+                        setState(() {
+                          skills = item;
+                        });
+                      },
+                      items: AppSession()
+                          .candidates
+                          .map((skill1Iterable) => DropdownMenuItem<Candidate?>(
+                                value: skill1Iterable,
+                                child: Text(skill1Iterable
+                                    .skills![0]), // Update this line
+                              ))
+                          .followedBy([
+                        const DropdownMenuItem<Candidate?>(
+                          value: null,
+                          child: Text('Job Classification'),
+                        )
+                      ]).toList(),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  SizedBox(
+                    height: 30,
+                    width: 250,
+                    child: CustomDropDown(
+                      value: qualification,
+                      items: AppSession()
+                          .candidates
+                          .map((skill2Iterable) => DropdownMenuItem<Candidate?>(
+                                value: skill2Iterable,
+                                child: Text(skill2Iterable.qualification!),
+                              ))
+                          .followedBy([
+                        const DropdownMenuItem<Candidate?>(
+                          value: null,
+                          child: Text('Qualification Set'),
+                        )
+                      ]).toList(),
+                      onChanged: (item) {
+                        setState(() {
+                          qualification = item;
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                    width: 125,
+                    child: CustomDropDown(
+                      value: operator,
+                      onChanged: (item) {
+                        setState(() {
+                          operator = item;
+                        });
+                      },
+                      items: AppSession()
+                          .candidates
+                          .map((skill1Iterable) => DropdownMenuItem<Candidate?>(
+                                value: skill1Iterable,
+                                child: Text(skill1Iterable
+                                    .skills![0]), // Update this line
+                              ))
+                          .followedBy([
+                        const DropdownMenuItem<Candidate?>(
+                          value: null,
+                          child: Text('Query'),
+                        )
+                      ]).toList(),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.indigo.shade900,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              2), // Adjust border radius as needed
+                        ),
+                      ),
+                      onPressed: () {},
+                      child: ImageIcon(
+                        AssetImage("account.png"),
+                        size: 25,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  SizedBox(
+                    width: 40,
+                  ),
+                  CustomButton(
+                    text: translation(context).save,
+                    onPressed: () async {
+                      // Execute the query and get the result
+                      QuerySnapshot queryResult = await query.get();
 
-                      return ListTile(
-                        title: Row(
-                          children: [
-                            SizedBox(
-                              height: 30,
-                              width: 250,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                ),
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton2<Candidate?>(
-                                    value: skills,
-                                    isExpanded: true,
-                                    items: AppSession()
-                                        .candidates
-                                        .map((agentIterable) =>
-                                            DropdownMenuItem<Candidate>(
-                                              value: agentIterable,
-                                              child: Text(
-                                                  agentIterable.skills![0]),
-                                            ))
-                                        .followedBy([
-                                      DropdownMenuItem<Candidate>(
-                                        value: null,
-                                        child: Text(
-                                            'Job Classification ${itemList[index]}'),
-                                      )
-                                    ]).toList(),
-                                    onChanged: (item) {
-                                      setState(() {
-                                        skillsList[index] =
-                                            item; // Update skillsList
-                                      });
-                                    },
-                                    buttonStyleData: ButtonStyleData(
-                                      height: 30,
-                                      width: 200,
-                                      elevation: 2,
-                                      padding: const EdgeInsets.only(
-                                          left: 14, right: 14),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(4),
-                                        border: Border.all(
-                                          color: Colors.black26,
-                                        ),
-                                        color: Colors.white,
+                      // Convert the query result to a list of data
+                      List<Map<String, dynamic>> dataList = queryResult.docs
+                          .map((doc) => doc.data() as Map<String, dynamic>)
+                          .toList();
+
+                      // Save the current query data when the "Save" button is pressed
+                      setState(() {
+                        savedQueries.add(dataList);
+                        print('Saved query: ${savedQueries}');
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  CustomButton(
+                    text: translation(context).run,
+                    onPressed: () {
+                      runQueries();
+                    },
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  CustomButton(
+                    text: translation(context).clear,
+                    onPressed: () {
+                      setState(() {
+                        skills = null;
+                        qualification = null;
+                        itemList.clear();
+                        query = originalQuery;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                ],
+              ),
+              Container(
+                height: 100,
+                constraints: BoxConstraints(
+                  maxWidth: 600, // Set your desired maximum width here
+                ),
+                child: ListView.builder(
+                  itemCount: itemList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Candidate? skills =
+                        skillsList[index]; // Use skillsList for each item
+                    Candidate? qualification = qualificationList[
+                        index]; // Use qualificationList for each item
+
+                    return ListTile(
+                      title: Row(
+                        children: [
+                          SizedBox(
+                            height: 30,
+                            width: 250,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton2<Candidate?>(
+                                  value: skills,
+                                  isExpanded: true,
+                                  items: AppSession()
+                                      .candidates
+                                      .map((agentIterable) =>
+                                          DropdownMenuItem<Candidate>(
+                                            value: agentIterable,
+                                            child:
+                                                Text(agentIterable.skills![0]),
+                                          ))
+                                      .followedBy([
+                                    DropdownMenuItem<Candidate>(
+                                      value: null,
+                                      child: Text(
+                                          '${translation(context).jobClassification} ${itemList[index]}'),
+                                    )
+                                  ]).toList(),
+                                  onChanged: (item) {
+                                    setState(() {
+                                      skillsList[index] =
+                                          item; // Update skillsList
+                                    });
+                                  },
+                                  buttonStyleData: ButtonStyleData(
+                                    height: 30,
+                                    width: 200,
+                                    elevation: 2,
+                                    padding: const EdgeInsets.only(
+                                        left: 14, right: 14),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      border: Border.all(
+                                        color: Colors.black26,
                                       ),
+                                      color: Colors.white,
                                     ),
-                                    iconStyleData: const IconStyleData(
-                                      icon: Icon(
-                                        Icons.arrow_drop_down_sharp,
-                                      ),
-                                      iconSize: 25,
-                                      iconEnabledColor: Colors.black,
-                                      iconDisabledColor: null,
+                                  ),
+                                  iconStyleData: const IconStyleData(
+                                    icon: Icon(
+                                      Icons.arrow_drop_down_sharp,
                                     ),
-                                    dropdownStyleData: DropdownStyleData(
-                                      maxHeight: 210,
-                                      width: 250,
-                                      elevation: 1,
-                                      padding: EdgeInsets.only(
-                                          left: 5, right: 5, top: 5, bottom: 5),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        border: Border.all(color: Colors.black),
-                                        color: Colors.white,
-                                      ),
-                                      scrollPadding: EdgeInsets.all(5),
-                                      scrollbarTheme: ScrollbarThemeData(
-                                        thickness:
-                                            MaterialStateProperty.all<double>(
-                                                6),
-                                        thumbVisibility:
-                                            MaterialStateProperty.all<bool>(
-                                                true),
-                                      ),
+                                    iconSize: 25,
+                                    iconEnabledColor: Colors.black,
+                                    iconDisabledColor: null,
+                                  ),
+                                  dropdownStyleData: DropdownStyleData(
+                                    maxHeight: 210,
+                                    width: 250,
+                                    elevation: 1,
+                                    padding: EdgeInsets.only(
+                                        left: 5, right: 5, top: 5, bottom: 5),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(color: Colors.black),
+                                      color: Colors.white,
                                     ),
-                                    menuItemStyleData: const MenuItemStyleData(
-                                      height: 25,
-                                      padding:
-                                          EdgeInsets.only(left: 14, right: 14),
+                                    scrollPadding: EdgeInsets.all(5),
+                                    scrollbarTheme: ScrollbarThemeData(
+                                      thickness:
+                                          MaterialStateProperty.all<double>(6),
+                                      thumbVisibility:
+                                          MaterialStateProperty.all<bool>(true),
                                     ),
+                                  ),
+                                  menuItemStyleData: const MenuItemStyleData(
+                                    height: 25,
+                                    padding:
+                                        EdgeInsets.only(left: 14, right: 14),
                                   ),
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            SizedBox(
-                              height: 30,
-                              width: 250,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                ),
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton2<Candidate?>(
-                                    value: qualification,
-                                    isExpanded: true,
-                                    items: AppSession()
-                                        .candidates
-                                        .map((agentIterable) =>
-                                            DropdownMenuItem<Candidate>(
-                                              value: agentIterable,
-                                              child: Text(
-                                                  agentIterable.qualification!),
-                                            ))
-                                        .followedBy([
-                                      DropdownMenuItem<Candidate>(
-                                        value: null,
-                                        child: Text(
-                                            'Qualification Set ${itemList[index]}'),
-                                      )
-                                    ]).toList(),
-                                    onChanged: (item) {
-                                      setState(() {
-                                        qualificationList[index] =
-                                            item; // Update qualificationList
-                                      });
-                                    },
-                                    buttonStyleData: ButtonStyleData(
-                                      height: 30,
-                                      width: 200,
-                                      elevation: 2,
-                                      padding: const EdgeInsets.only(
-                                          left: 14, right: 14),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(4),
-                                        border: Border.all(
-                                          color: Colors.black26,
-                                        ),
-                                        color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          SizedBox(
+                            height: 30,
+                            width: 250,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton2<Candidate?>(
+                                  value: qualification,
+                                  isExpanded: true,
+                                  items: AppSession()
+                                      .candidates
+                                      .map((agentIterable) =>
+                                          DropdownMenuItem<Candidate>(
+                                            value: agentIterable,
+                                            child: Text(
+                                                agentIterable.qualification!),
+                                          ))
+                                      .followedBy([
+                                    DropdownMenuItem<Candidate>(
+                                      value: null,
+                                      child: Text(
+                                          '${translation(context).qualificationSet} ${itemList[index]}'),
+                                    )
+                                  ]).toList(),
+                                  onChanged: (item) {
+                                    setState(() {
+                                      qualificationList[index] =
+                                          item; // Update qualificationList
+                                    });
+                                  },
+                                  buttonStyleData: ButtonStyleData(
+                                    height: 30,
+                                    width: 200,
+                                    elevation: 2,
+                                    padding: const EdgeInsets.only(
+                                        left: 14, right: 14),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      border: Border.all(
+                                        color: Colors.black26,
                                       ),
-                                    ),
-                                    iconStyleData: const IconStyleData(
-                                      icon: Icon(
-                                        Icons.arrow_drop_down_sharp,
-                                      ),
-                                      iconSize: 25,
-                                      iconEnabledColor: Colors.black,
-                                      iconDisabledColor: null,
-                                    ),
-                                    dropdownStyleData: DropdownStyleData(
-                                      maxHeight: 210,
-                                      width: 250,
-                                      elevation: 1,
-                                      padding: EdgeInsets.only(
-                                          left: 5, right: 5, top: 5, bottom: 5),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        border: Border.all(color: Colors.black),
-                                        color: Colors.white,
-                                      ),
-                                      scrollPadding: EdgeInsets.all(5),
-                                      scrollbarTheme: ScrollbarThemeData(
-                                        thickness:
-                                            MaterialStateProperty.all<double>(
-                                                6),
-                                        thumbVisibility:
-                                            MaterialStateProperty.all<bool>(
-                                                true),
-                                      ),
-                                    ),
-                                    menuItemStyleData: const MenuItemStyleData(
-                                      height: 25,
-                                      padding:
-                                          EdgeInsets.only(left: 14, right: 14),
+                                      color: Colors.white,
                                     ),
                                   ),
+                                  iconStyleData: const IconStyleData(
+                                    icon: Icon(
+                                      Icons.arrow_drop_down_sharp,
+                                    ),
+                                    iconSize: 25,
+                                    iconEnabledColor: Colors.black,
+                                    iconDisabledColor: null,
+                                  ),
+                                  dropdownStyleData: DropdownStyleData(
+                                    maxHeight: 210,
+                                    width: 250,
+                                    elevation: 1,
+                                    padding: EdgeInsets.only(
+                                        left: 5, right: 5, top: 5, bottom: 5),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(color: Colors.black),
+                                      color: Colors.white,
+                                    ),
+                                    scrollPadding: EdgeInsets.all(5),
+                                    scrollbarTheme: ScrollbarThemeData(
+                                      thickness:
+                                          MaterialStateProperty.all<double>(6),
+                                      thumbVisibility:
+                                          MaterialStateProperty.all<bool>(true),
+                                    ),
+                                  ),
+                                  menuItemStyleData: const MenuItemStyleData(
+                                    height: 25,
+                                    padding:
+                                        EdgeInsets.only(left: 14, right: 14),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      SizedBox(
+        height: 30,
+      ),
+      Container(
+          height: 550,
+          child: SizedBox(
+            child: StreamBuilder<List<Candidate>>(
+              stream: query.snapshots().map((snapshot) {
+                return snapshot.docs
+                    .map((doc) => Candidate.fromSnapshot(doc))
+                    .toList();
+              }),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(
+                    child: Text(translation(context).nocandidateswereadded),
+                  );
+                } else {
+                  // Map documents to Candidate objects
+                  List<Candidate> blueCandidates = snapshot.data!;
+
+                  return Listener(
+                    onPointerSignal: (event) {
+                      if (event is PointerScrollEvent) {
+                        final offset = event.scrollDelta.dy;
+                        _scrollController
+                            .jumpTo(_scrollController.offset + offset);
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              width: double.maxFinite,
+                              child: PaginatedDataTable(
+                                showFirstLastButtons: true,
+                                controller: _scrollController,
+                                rowsPerPage: 8,
+                                columns:
+                                    CandidateListSource.getColumns(context),
+                                source: CandidateListSource(
+                                  blueCandidates,
+                                  context: context,
+                                  onSelect: (candidate) {
+                                    // Show details dialog when a row is selected
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return FullPagePopup(
+                                            candidate: candidate);
+                                      },
+                                    );
+                                  },
                                 ),
                               ),
                             ),
                           ],
                         ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 30,
-        ),
-        Container(
-          height: 550,
-          child: SizedBox(
-            child: StreamBuilder<List<Candidate>>(
-                stream: query.snapshots().map((snapshot) {
-                  return snapshot.docs
-                      .map((doc) => Candidate.fromSnapshot(doc))
-                      .toList();
-                }),
-                builder: (context, AsyncSnapshot<List<Candidate>> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.active &&
-                      snapshot.hasData) {
-                    return Listener(
-                      onPointerSignal: (event) {
-                        if (event is PointerScrollEvent) {
-                          final offset = event.scrollDelta.dy;
-                          _scrollController
-                              .jumpTo(_scrollController.offset + offset);
-                        }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: double.maxFinite,
-                                child: PaginatedDataTable(
-                                  showFirstLastButtons: true,
-                                  controller: _scrollController,
-                                  rowsPerPage: 8,
-                                  // (Get.height ~/ kMinInteractiveDimension) -
-                                  //     7,
-                                  columns: CandidateListSource.getColumns(),
-                                  source: CandidateListSource(
-                                    snapshot.data!,
-                                    context: context,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                       ),
-                    );
-                  }
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: SelectableText(snapshot.error.toString()),
-                    );
-                  }
-
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                    ),
                   );
-                }),
-          ),
-        ),
-      ],
-    );
+                }
+              },
+            ),
+          ))
+    ]);
   }
 }
 
 class CandidateListSource extends DataTableSource {
   final List<Candidate> candidates;
   final BuildContext context;
-  CandidateListSource(this.candidates, {required this.context});
+  final Function(Candidate) onSelect;
+
+  CandidateListSource(this.candidates,
+      {required this.context, required this.onSelect});
 
   @override
   DataRow? getRow(int index) {
-    // TODO: implement getRow
-    final e = candidates[(index)];
+    final e = candidates[index];
 
     return DataRow.byIndex(
       index: index,
       cells: [
-        // DataCell(Text((index + 1).toString())),
-        DataCell(Text(e.name.toString())),
-        DataCell(SizedBox(
-          width: 27,
-          height: 27,
-          child: CircleAvatar(
-            backgroundColor: const Color.fromARGB(255, 51, 116, 53),
+        DataCell(
+          Text(e.name.toString()),
+          onTap: () {
+            onSelect(e);
+          },
+        ),
+        DataCell(
+          SizedBox(
+            width: 27,
+            height: 27,
+            child: CircleAvatar(
+              backgroundColor: const Color.fromARGB(255, 51, 116, 53),
+            ),
           ),
-        )),
-        DataCell(Text(e.qualification ?? '')),
-        DataCell(
-          Text(e.skills!.isNotEmpty ? e.skills![0] : ''),
         ),
-        DataCell(
-          Text(e.skills!.isNotEmpty ? e.skills![1] : ''),
-        ),
-        DataCell(Text(e.selectedOption ?? '- - - -')),
-        DataCell(Text(e.mobile ?? '')),
+        DataCell(Text(e.qualification?.toString() ?? 'nill')),
+        DataCell(Text(e.skills!.isNotEmpty ? e.skills![0] : '')),
+        DataCell(Text(e.skills!.isNotEmpty ? e.skills![1] : '')),
+        DataCell(Text(e.selectedOption?.toString() ?? '- - - -')),
+        DataCell(Text(e.mobile.toString())),
         DataCell(Text(e.name.toString())),
       ],
     );
   }
 
-  static List<DataColumn> getColumns() {
-    List<DataColumn> list = [];
-    list.addAll([
-      // const DataColumn(label: Text("S.No")),
-      const DataColumn(label: Text('Candidate')),
-      const DataColumn(label: Text('Verified')),
-      const DataColumn(label: Text('Qualification')),
-      const DataColumn(label: Text('Job Classification 1')),
-      const DataColumn(label: Text('Job Classification 2')),
-      const DataColumn(label: Text('Label')),
-      const DataColumn(label: Text('No of Days Open')),
-      const DataColumn(label: Text('CV Docs')),
-    ]);
-    return list;
+  static List<DataColumn> getColumns(BuildContext context) {
+    return [
+      DataColumn(label: Text(translation(context).candidate)),
+      DataColumn(label: Text(translation(context).verified)),
+      DataColumn(label: Text(translation(context).qualification)),
+      DataColumn(label: Text(translation(context).jobClassification)),
+      DataColumn(label: Text(translation(context).jobClassification)),
+      DataColumn(label: Text(translation(context).label)),
+      DataColumn(label: Text(translation(context).noOfDaysOpen)),
+      DataColumn(label: Text(translation(context).cvDocs)),
+    ];
   }
 
   @override
-  // TODO: implement isRowCountApproximate
   bool get isRowCountApproximate => false;
 
   @override
-  // TODO: implement rowCount
-  int get rowCount => (candidates.length);
+  int get rowCount => candidates.length;
 
   @override
-  // TODO: implement selectedRowCount
   int get selectedRowCount => 0;
 }

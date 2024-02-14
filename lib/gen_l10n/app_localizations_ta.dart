@@ -83,7 +83,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get aadharNo => 'ஆதார் எண்';
 
   @override
-  String get address => 'Address';
+  String get address => 'முகவரி';
 
   @override
   String get mobile => 'கைபேசி';
@@ -152,7 +152,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get noOfDaysOpen => 'திறந்த நாட்களின் எண்ணிக்கை';
 
   @override
-  String get cvDoc => 'பாடத்திட்ட விவர ஆவணம்';
+  String get cvDocs => 'பாடத்திட்ட விவர ஆவணம்';
 
   @override
   String get hello => 'வணக்கம்';
@@ -239,10 +239,10 @@ class AppLocalizationsTa extends AppLocalizations {
   String get meIn => 'mein';
 
   @override
-  String get india => 'India';
+  String get india => 'india';
 
   @override
-  String get currentCountry => 'Current Country';
+  String get currentCountry => 'தற்போதைய நாடு';
 
   @override
   String get confirmPassword => 'Confirm Password';
@@ -251,5 +251,110 @@ class AppLocalizationsTa extends AppLocalizations {
   String get companyName => 'Company Name';
 
   @override
-  String get designation => 'Designation';
+  String get designation => 'பதவி';
+
+  @override
+  String get guest => 'விருந்தினர்';
+
+  @override
+  String get user => 'பயனர்';
+
+  @override
+  String get corporateconsole => 'கார்ப்பரேட் கன்சோல்';
+
+  @override
+  String get candidate => 'வேட்பாளர்';
+
+  @override
+  String get status => 'நிலை';
+
+  @override
+  String get loginorpleaseregister => 'உள்நுழையவும் அல்லது பதிவு செய்யவும்';
+
+  @override
+  String get login => 'உள்நுழைய';
+
+  @override
+  String get signup => 'பதிவு';
+
+  @override
+  String get age => 'வயது';
+
+  @override
+  String get certifiedcourses => 'சான்றளிக்கப்பட்ட படிப்புகள்';
+
+  @override
+  String get projectworked => 'திட்டம் வேலை செய்தது';
+
+  @override
+  String get qualificationdescription => 'தகுதி விவரம்';
+
+  @override
+  String get newuser => 'புதியது';
+
+  @override
+  String get columnview => 'நெடுவரிசைக் காட்சி';
+
+  @override
+  String get multiplefilter => 'பல வடிகட்டி';
+
+  @override
+  String get clear => 'தெளிவு';
+
+  @override
+  String get describeaboutyourself => 'உங்களைப் பற்றி விவரிக்கவும்';
+
+  @override
+  String get workdescription => 'வேலை விளக்கம்';
+
+  @override
+  String get male => 'ஆண்';
+
+  @override
+  String get female => 'பெண்';
+
+  @override
+  String get others => 'மற்றவை';
+
+  @override
+  String get nocandidateswereadded => 'வேட்பாளர்கள் யாரும் சேர்க்கப்படவில்லை';
+
+  @override
+  String get notverified => 'சரிபார்க்கப்படவில்லை';
+
+  @override
+  String get selected => 'தேர்ந்தெடுக்கப்பட்டது';
+
+  @override
+  String get curated => 'குணப்படுத்தப்பட்டது';
+
+  @override
+  String get rejected => 'நிராகரிக்கப்பட்டது';
+
+  @override
+  String get scheduleaninterview => 'ஒரு நேர்காணலைத் திட்டமிடு';
+
+  @override
+  String get makeacall => 'அழைப்பு செய்';
+
+  @override
+  String get basicdetails => 'அடிப்படை விவரங்கள்';
+
+  @override
+  String get contactnumber => 'தொடர்பு எண்';
+
+  @override
+  String get emailaddress => 'மின்னஞ்சல் முகவரி';
+
+  @override
+  String get location => 'இடம்';
+
+  @override
+  String get downloadcv => 'CV ஐப் பதிவிறக்கு';
+
+  @override
+  String get downloaddoc => 'Download Documents';
+
+  @override
+  String get educationalqualification => 'கல்வி தகுதி';
 }

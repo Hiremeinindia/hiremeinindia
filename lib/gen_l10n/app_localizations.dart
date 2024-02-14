@@ -100,7 +100,7 @@ abstract class AppLocalizations {
   /// No description provided for @findaJob.
   ///
   /// In en, this message translates to:
-  /// **'FindaJob'**
+  /// **'Find a Job'**
   String get findaJob;
 
   /// No description provided for @english.
@@ -286,7 +286,7 @@ abstract class AppLocalizations {
   /// No description provided for @workExperience.
   ///
   /// In en, this message translates to:
-  /// **'work Experience'**
+  /// **'Work Experience'**
   String get workExperience;
 
   /// No description provided for @state.
@@ -391,11 +391,11 @@ abstract class AppLocalizations {
   /// **'Number Of Days Open'**
   String get noOfDaysOpen;
 
-  /// No description provided for @cvDoc.
+  /// No description provided for @cvDocs.
   ///
   /// In en, this message translates to:
-  /// **'CV Doc'**
-  String get cvDoc;
+  /// **'CV Docs'**
+  String get cvDocs;
 
   /// No description provided for @hello.
   ///
@@ -484,7 +484,7 @@ abstract class AppLocalizations {
   /// No description provided for @registerforOther.
   ///
   /// In en, this message translates to:
-  /// **'register for Other'**
+  /// **'Register for Other'**
   String get registerforOther;
 
   /// No description provided for @noOfCandidates.
@@ -594,6 +594,216 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Designation'**
   String get designation;
+
+  /// No description provided for @guest.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest'**
+  String get guest;
+
+  /// No description provided for @user.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get user;
+
+  /// No description provided for @corporateconsole.
+  ///
+  /// In en, this message translates to:
+  /// **'Corporate Console'**
+  String get corporateconsole;
+
+  /// No description provided for @candidate.
+  ///
+  /// In en, this message translates to:
+  /// **'Candidate'**
+  String get candidate;
+
+  /// No description provided for @status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
+
+  /// No description provided for @loginorpleaseregister.
+  ///
+  /// In en, this message translates to:
+  /// **'Login or Please Register'**
+  String get loginorpleaseregister;
+
+  /// No description provided for @login.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get login;
+
+  /// No description provided for @signup.
+  ///
+  /// In en, this message translates to:
+  /// **'SignUp'**
+  String get signup;
+
+  /// No description provided for @age.
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get age;
+
+  /// No description provided for @certifiedcourses.
+  ///
+  /// In en, this message translates to:
+  /// **'Certified Courses'**
+  String get certifiedcourses;
+
+  /// No description provided for @projectworked.
+  ///
+  /// In en, this message translates to:
+  /// **'Project Worked'**
+  String get projectworked;
+
+  /// No description provided for @qualificationdescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualification Description'**
+  String get qualificationdescription;
+
+  /// No description provided for @newuser.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get newuser;
+
+  /// No description provided for @columnview.
+  ///
+  /// In en, this message translates to:
+  /// **'Column View'**
+  String get columnview;
+
+  /// No description provided for @multiplefilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Multiple Filter'**
+  String get multiplefilter;
+
+  /// No description provided for @clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// No description provided for @describeaboutyourself.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe about yourself'**
+  String get describeaboutyourself;
+
+  /// No description provided for @workdescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Description'**
+  String get workdescription;
+
+  /// No description provided for @male.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get male;
+
+  /// No description provided for @female.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get female;
+
+  /// No description provided for @others.
+  ///
+  /// In en, this message translates to:
+  /// **'Others'**
+  String get others;
+
+  /// No description provided for @nocandidateswereadded.
+  ///
+  /// In en, this message translates to:
+  /// **'No candidates were added'**
+  String get nocandidateswereadded;
+
+  /// No description provided for @notverified.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Verified'**
+  String get notverified;
+
+  /// No description provided for @selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected'**
+  String get selected;
+
+  /// No description provided for @curated.
+  ///
+  /// In en, this message translates to:
+  /// **'Curated'**
+  String get curated;
+
+  /// No description provided for @rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get rejected;
+
+  /// No description provided for @scheduleaninterview.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule an Interview'**
+  String get scheduleaninterview;
+
+  /// No description provided for @makeacall.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a call'**
+  String get makeacall;
+
+  /// No description provided for @basicdetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Details'**
+  String get basicdetails;
+
+  /// No description provided for @contactnumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Number'**
+  String get contactnumber;
+
+  /// No description provided for @emailaddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Address'**
+  String get emailaddress;
+
+  /// No description provided for @location.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get location;
+
+  /// No description provided for @downloadcv.
+  ///
+  /// In en, this message translates to:
+  /// **'Download CV'**
+  String get downloadcv;
+
+  /// No description provided for @downloaddoc.
+  ///
+  /// In en, this message translates to:
+  /// **'Download Documents'**
+  String get downloaddoc;
+
+  /// No description provided for @educationalqualification.
+  ///
+  /// In en, this message translates to:
+  /// **'Educational Qualification'**
+  String get educationalqualification;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

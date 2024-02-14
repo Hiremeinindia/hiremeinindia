@@ -7,7 +7,7 @@ class HireMeInIndia extends StatelessWidget {
   final FontWeight? fontWeight;
   final Color? color;
 
-  const HireMeInIndia({
+  HireMeInIndia({
     this.size,
     this.fontWeight,
     this.color,
@@ -15,40 +15,37 @@ class HireMeInIndia extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 50),
-      child: RichText(
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: translation(context).hire,
-              style: TextStyle(
-                  decoration: TextDecoration.none,
-                  color: Colors.indigo.shade900,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Poppins',
-                  fontSize: 25),
-            ),
-            TextSpan(
-              text: translation(context).meIn,
-              style: TextStyle(
-                  decoration: TextDecoration.none,
-                  color: Color.fromARGB(255, 27, 105, 178),
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Poppins',
-                  fontSize: 25),
-            ),
-            TextSpan(
-              text: translation(context).india,
-              style: TextStyle(
-                  decoration: TextDecoration.none,
-                  color: const Color.fromARGB(255, 117, 115, 115),
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Poppins',
-                  fontSize: 25),
-            ),
-          ],
-        ),
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: translation(context).hire,
+            style: TextStyle(
+                decoration: TextDecoration.none,
+                color: Colors.indigo.shade900,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Poppins',
+                fontSize: 25),
+          ),
+          TextSpan(
+            text: translation(context).meIn,
+            style: TextStyle(
+                decoration: TextDecoration.none,
+                color: Color.fromARGB(255, 27, 105, 178),
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Poppins',
+                fontSize: 25),
+          ),
+          TextSpan(
+            text: translation(context).india,
+            style: TextStyle(
+                decoration: TextDecoration.none,
+                color: const Color.fromARGB(255, 117, 115, 115),
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Poppins',
+                fontSize: 25),
+          ),
+        ],
       ),
     );
   }
