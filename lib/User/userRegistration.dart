@@ -16,6 +16,7 @@ import 'package:hiremeinindiaapp/widgets/customtextfield.dart';
 import 'package:hiremeinindiaapp/widgets/customtextstyle.dart';
 import 'package:hiremeinindiaapp/widgets/hiremeinindia.dart';
 import 'package:mailer/mailer.dart' as mailer;
+import 'package:sizer/sizer.dart';
 import '../widgets/custombutton.dart';
 import 'package:mailer/smtp_server.dart' as smtp;
 
@@ -81,6 +82,7 @@ class _RegistrationState extends State<Registration> {
     'Skill 2',
   ];
   List<String> BlueSkill = [
+    'Select',
     'Electrician',
     'Mechanic',
     'Construction Helper ',
@@ -658,1648 +660,1628 @@ class _RegistrationState extends State<Registration> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        centerTitle: false,
-        toolbarHeight: 80,
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        title: Padding(
-          padding: const EdgeInsets.only(top: 40, left: 100),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              HireMeInIndia(),
-              Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.indigo.shade900,
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2<Language>(
-                        isExpanded: true,
-                        hint: Row(
+    return Sizer(builder: (context, orientation, deviceType) {
+      return Padding(
+        padding: EdgeInsets.fromLTRB(8.w, 5.h, 8.w, 5.h),
+        child: Dialog(
+          // The Dialog widget provides a full-page overlay
+          child: Material(
+            elevation: 4,
+            child: LayoutBuilder(
+                builder: (BuildContext ctx, BoxConstraints constraints) {
+              if (constraints.maxWidth >= 480) {
+                return Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30)),
+                  child: Form(
+                    key: _formKey,
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding:
+                            EdgeInsets.fromLTRB(2.5.w, 2.5.h, 2.5.w, 2.5.h),
+                        child: Column(
                           children: [
-                            Expanded(
-                              child: Text(
-                                translation(context).english,
-                                style: CustomTextStyle.dropdowntext,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        onChanged: (Language? language) async {
-                          if (language != null) {
-                            Locale _locale =
-                                await setLocale(language.languageCode);
-                            HireApp.setLocale(context, _locale);
-                          } else {
-                            language;
-                          }
-                        },
-                        items: Language.languageList()
-                            .map<DropdownMenuItem<Language>>(
-                              (e) => DropdownMenuItem<Language>(
-                                value: e,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: <Widget>[
-                                    Text(
-                                      e.flag,
-                                      style: CustomTextStyle.dropdowntext,
-                                      overflow: TextOverflow.ellipsis,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                SizedBox(
+                                  height: 40,
+                                  width: 40,
+                                  child: ImageIcon(
+                                    NetworkImage(
+                                      'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/cancel.png?alt=media&token=951094e2-a6f9-46a3-96bc-ddbb3362f08c',
                                     ),
-                                    Text(
-                                      e.langname,
-                                      style: CustomTextStyle.dropdowntext,
-                                      overflow: TextOverflow.ellipsis,
+                                    size: 25,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(3.w, 0, 3.w, 0.5.h),
+                              child: Row(
+                                children: [
+                                  if (widget.selectedOption == 'Blue')
+                                    Row(
+                                      children: [
+                                        Radio(
+                                          value: widget.selectedOption,
+                                          groupValue: widget.selectedOption,
+                                          onChanged: (value) {
+                                            // Handle radio button state change if needed
+                                            setState(() {
+                                              controller.selectedOption.text =
+                                                  value.toString();
+                                            });
+                                          },
+                                        ),
+                                        Text(
+                                          translation(context).blueColler,
+                                          style: TextStyle(
+                                              color: Colors.grey.shade800,
+                                              fontFamily: 'Poppins',
+                                              fontSize: 2.sp,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        IgnorePointer(
+                                          child: Radio(
+                                              value: widget.selectedOption,
+                                              groupValue: controller
+                                                  .selectedOption.text,
+                                              onChanged: null),
+                                        ),
+                                        IgnorePointer(
+                                          child: Text(
+                                            translation(context).greyColler,
+                                            style: TextStyle(
+                                                color: Colors.grey.shade500,
+                                                fontFamily: 'Poppins',
+                                                fontSize: 2.sp,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ],
                                     )
-                                  ],
-                                ),
-                              ),
-                            )
-                            .toList(),
-                        buttonStyleData: ButtonStyleData(
-                          height: 30,
-                          width: 150,
-                          elevation: 1,
-                          padding: const EdgeInsets.only(left: 14, right: 14),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(
-                              color: Colors.black26,
-                            ),
-                            color: Colors.indigo.shade900,
-                          ),
-                        ),
-                        iconStyleData: const IconStyleData(
-                          icon: Icon(
-                            Icons.arrow_drop_down_sharp,
-                          ),
-                          iconSize: 25,
-                          iconEnabledColor: Colors.white,
-                          iconDisabledColor: null,
-                        ),
-                        dropdownStyleData: DropdownStyleData(
-                          maxHeight: 210,
-                          elevation: 0,
-                          padding: EdgeInsets.only(
-                              left: 10, right: 10, top: 5, bottom: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Colors.black),
-                            color: Colors.indigo.shade900,
-                          ),
-                          scrollPadding: EdgeInsets.all(5),
-                          scrollbarTheme: ScrollbarThemeData(
-                            thickness: MaterialStateProperty.all<double>(6),
-                            thumbVisibility:
-                                MaterialStateProperty.all<bool>(true),
-                          ),
-                        ),
-                        menuItemStyleData: const MenuItemStyleData(
-                          height: 25,
-                          padding: EdgeInsets.only(left: 14, right: 14),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.indigo.shade900,
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2<String>(
-                        isExpanded: true,
-                        items: [
-                          DropdownMenuItem<String>(
-                            value: 'Option 1',
-                            child: Text('Option 1'),
-                          ),
-                          DropdownMenuItem<String>(
-                            value: 'Option 2',
-                            child: Text('Option 1'),
-                          ),
-                          // Add more options as needed
-                        ],
-                        onChanged: (value) {
-                          // Handle option selection
-                        },
-                        hint: Text(
-                          AppLocalizations.of(context)!.findaJob,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        buttonStyleData: ButtonStyleData(
-                          height: 30,
-                          width: 150,
-                          elevation: 1,
-                          padding: const EdgeInsets.only(left: 14, right: 14),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(
-                              color: Colors.black26,
-                            ),
-                            color: Colors.indigo.shade900,
-                          ),
-                        ),
-                        iconStyleData: const IconStyleData(
-                          icon: Icon(
-                            Icons.arrow_drop_down_sharp,
-                          ),
-                          iconSize: 25,
-                          iconEnabledColor: Colors.white,
-                          iconDisabledColor: null,
-                        ),
-                        dropdownStyleData: DropdownStyleData(
-                          maxHeight: 210,
-                          elevation: 0,
-                          padding: EdgeInsets.only(
-                              left: 10, right: 10, top: 5, bottom: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Colors.black),
-                            color: Colors.indigo.shade900,
-                          ),
-                          scrollPadding: EdgeInsets.all(5),
-                          scrollbarTheme: ScrollbarThemeData(
-                            thickness: MaterialStateProperty.all<double>(6),
-                            thumbVisibility:
-                                MaterialStateProperty.all<bool>(true),
-                          ),
-                        ),
-                        menuItemStyleData: const MenuItemStyleData(
-                          height: 25,
-                          padding: EdgeInsets.only(left: 14, right: 14),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 40, top: 35),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.black,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.person_outline_outlined,
-                      size: 35,
-                      color: Colors.indigo.shade900,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 15),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      translation(context).newuser,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.indigo.shade900,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      translation(context).user,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.indigo.shade900,
-                          height: 0),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 150.0, right: 150, top: 50, bottom: 50),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      if (widget.selectedOption == 'Blue')
-                        Row(
-                          children: [
-                            Radio(
-                              value: widget.selectedOption,
-                              groupValue: widget.selectedOption,
-                              onChanged: (value) {
-                                // Handle radio button state change if needed
-                                setState(() {
-                                  controller.selectedOption.text =
-                                      value.toString();
-                                });
-                              },
-                            ),
-                            Text(
-                              translation(context).blueColler,
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            IgnorePointer(
-                              child: Radio(
-                                  value: widget.selectedOption,
-                                  groupValue: controller.selectedOption.text,
-                                  onChanged: null),
-                            ),
-                            IgnorePointer(
-                              child: Text(
-                                translation(context).greyColler,
-                                style: TextStyle(
-                                    color: Colors.grey.shade500,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
-                        )
-                      else if (widget.selectedOption == 'Grey')
-                        Row(
-                          children: [
-                            IgnorePointer(
-                              child: Radio(
-                                  value: widget.selectedOption,
-                                  groupValue: controller.selectedOption.text,
-                                  onChanged: null),
-                            ),
-                            IgnorePointer(
-                              child: Text(
-                                translation(context).blueColler,
-                                style: TextStyle(
-                                    color: Colors.grey.shade500,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Radio(
-                              value: widget.selectedOption,
-                              groupValue: widget.selectedOption,
-                              onChanged: (value) {
-                                // Handle radio button state change if needed
-                                setState(() {
-                                  controller.selectedOption.text =
-                                      value.toString();
-                                });
-                              },
-                            ),
-                            Text(
-                              translation(context).greyColler,
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        )
-                    ],
-                  ),
-                  SizedBox(height: 37),
-                  Row(
-                    children: [
-                      Text(
-                        translation(context).registerAsANewUser,
-                        style: TextStyle(fontSize: 30, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 40),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 200,
-                        child: Text(
-                          translation(context).name,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        child: CustomTextfield(
-                          // validator: nameValidator,
-                          controller: controller.name,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 70,
-                      ),
-                      SizedBox(
-                        width: 200,
-                        child: Text(
-                          translation(context).describeaboutyourself,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        child: CustomTextfield(
-                          // validator: nameValidator,
-                          controller: controller.aboutYou,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 200,
-                        child: Text(
-                          translation(context).gender,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 50,
-                        child: Radio(
-                          value: "male",
-                          groupValue: controller.gender.text,
-                          onChanged: (String? value) {
-                            setState(() {
-                              controller.gender.text = value!;
-                            });
-                          },
-                        ),
-                      ),
-
-                      SizedBox(
-                          width: 100, child: Text(translation(context).male)),
-
-                      // Adjust the width according to your preference
-                      SizedBox(
-                        width: 50,
-                        child: Radio(
-                          value: "female",
-                          groupValue: controller.gender.text,
-                          onChanged: (String? value) {
-                            setState(() {
-                              controller.gender.text = value!;
-                            });
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                          width: 100, child: Text(translation(context).female)),
-
-                      // Adjust the width according to your preference
-                      SizedBox(
-                        width: 50,
-                        child: Radio(
-                          value: "others",
-                          groupValue: controller.gender.text,
-                          onChanged: (String? value) {
-                            setState(() {
-                              controller.gender.text = value!;
-                            });
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                          width: 100, child: Text(translation(context).others)),
-                      SizedBox(
-                        width: 200,
-                      ),
-                      SizedBox(
-                        width: 200,
-                        child: Text(
-                          translation(context).address,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        child: CustomTextfield(
-                          // validator: nameValidator,
-                          controller: controller.address,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 200,
-                        child: Text(
-                          translation(context).age,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        child: CustomTextfield(
-                          // validator: nameValidator,
-                          controller: controller.age,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 70,
-                      ),
-                      SizedBox(
-                        width: 200,
-                        child: Text(
-                          translation(context).aadhar,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        child: CustomTextfield(
-                          // validator: (value) {
-                          //   if (value!.isEmpty) {
-                          //     return '*Required';
-                          //   } else if (value.length != 12) {
-                          //     return 'Aadhar Number must be of 12 digit';
-                          //   }
-                          //   return null;
-                          // },
-                          controller: controller.aadharno,
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 200,
-                        child: Text(
-                          translation(context).workTitle,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        child: CustomTextfield(
-                          // validator: nameValidator,
-                          controller: controller.worktitle,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 70,
-                      ),
-                      SizedBox(
-                        width: 200,
-                        child: Text(
-                          translation(context).password,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        child: CustomTextfield(
-                          // validator: validatePassword,
-                          onsaved: (value) {
-                            setState(() {
-                              password = value;
-                            });
-                          },
-                          controller: controller.password,
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 200,
-                        child: Text(
-                          translation(context).certifiedcourses,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        child: CustomTextfield(
-                          // validator: nameValidator,
-                          controller: controller.course,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 70,
-                      ),
-                      SizedBox(
-                        width: 200,
-                        child: Text(
-                          translation(context).projectworked,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        child: CustomTextfield(
-                          // validator: nameValidator,
-                          controller: controller.project,
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 208,
-                        child: Text(
-                          translation(context).workExperience,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton2<String>(
-                            value: controller.workexpcount.text.isNotEmpty
-                                ? controller.workexpcount.text
-                                : '1 Month', // Provide a default value if it's empty
-                            items: <String>[
-                              '1 Month',
-                              '2 Months',
-                              '3 Months',
-                              '4 Months',
-                              '5 Months',
-                              '6 Months',
-                              '1 Year',
-                              '2 Years',
-                              'More than 2 Years'
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                // Step 2: Update controller when dropdown value changes
-                                controller.workexpcount.text = newValue!;
-                              });
-                            },
-                            buttonStyleData: ButtonStyleData(
-                              height: 30,
-                              width: 200,
-                              padding:
-                                  const EdgeInsets.only(left: 14, right: 14),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                  color: Colors.black26,
-                                ),
-                                color: Colors.white,
-                              ),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              icon: Icon(
-                                Icons.arrow_drop_down_sharp,
-                              ),
-                              iconSize: 25,
-                              iconEnabledColor: Colors.black,
-                              iconDisabledColor: null,
-                            ),
-                            dropdownStyleData: DropdownStyleData(
-                              maxHeight: 210,
-                              width: 250,
-                              elevation: 1,
-                              padding: EdgeInsets.only(
-                                  left: 5, right: 5, top: 5, bottom: 5),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(color: Colors.black),
-                                color: Colors.white,
-                              ),
-                              scrollPadding: EdgeInsets.all(5),
-                              scrollbarTheme: ScrollbarThemeData(
-                                thickness: MaterialStateProperty.all<double>(6),
-                                thumbVisibility:
-                                    MaterialStateProperty.all<bool>(true),
-                              ),
-                            ),
-                            menuItemStyleData: const MenuItemStyleData(
-                              height: 25,
-                              padding: EdgeInsets.only(left: 14, right: 14),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 60,
-                      ),
-                      SizedBox(
-                        width: 205,
-                        child: Text(
-                          translation(context).workdescription,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        child: CustomTextfield(
-                          // validator: nameValidator,
-                          controller: controller.workexp,
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 208,
-                        child: Text(
-                          translation(context).qualification,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton2<String>(
-                            value: controller.qualification.text.isNotEmpty
-                                ? controller.qualification.text
-                                : 'Nill', // Provide a default value if it's empty
-                            items: <String>[
-                              'Nill',
-                              'ITI',
-                              'Diploma',
-                              '10th Pass',
-                              '12th Pass',
-                              'Under Graduate',
-                              'Post Graduate'
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                // Step 2: Update controller when dropdown value changes
-                                controller.qualification.text = newValue!;
-                              });
-                            },
-                            buttonStyleData: ButtonStyleData(
-                              height: 30,
-                              width: 200,
-                              padding:
-                                  const EdgeInsets.only(left: 14, right: 14),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                  color: Colors.black26,
-                                ),
-                                color: Colors.white,
-                              ),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              icon: Icon(
-                                Icons.arrow_drop_down_sharp,
-                              ),
-                              iconSize: 25,
-                              iconEnabledColor: Colors.black,
-                              iconDisabledColor: null,
-                            ),
-                            dropdownStyleData: DropdownStyleData(
-                              maxHeight: 210,
-                              width: 250,
-                              elevation: 1,
-                              padding: EdgeInsets.only(
-                                  left: 5, right: 5, top: 5, bottom: 5),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(color: Colors.black),
-                                color: Colors.white,
-                              ),
-                              scrollPadding: EdgeInsets.all(5),
-                              scrollbarTheme: ScrollbarThemeData(
-                                thickness: MaterialStateProperty.all<double>(6),
-                                thumbVisibility:
-                                    MaterialStateProperty.all<bool>(true),
-                              ),
-                            ),
-                            menuItemStyleData: const MenuItemStyleData(
-                              height: 25,
-                              padding: EdgeInsets.only(left: 14, right: 14),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 70,
-                      ),
-                      SizedBox(
-                        width: 205,
-                        child: Text(
-                          translation(context).qualificationdescription,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        child: CustomTextfield(
-                          // validator: nameValidator,
-                          controller: controller.qualiDescription,
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 200,
-                        child: Text(
-                          translation(context).mobile,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        child: CustomTextfield(
-                          controller: controller.mobile,
-                          // validator: (value) {
-                          //   if (value!.length != 10)
-                          //     return 'Mobile Number must be of 10 digit';
-                          //   else
-                          //     return null;
-                          // },
-                        ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.indigo.shade900,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0.1),
-                            ),
-                          ),
-                          onPressed: () async {
-                            print("phone1");
-                            String mobileNumber = controller.mobile.text;
-                            print(mobileNumber);
-
-                            // Check if the user is already registered or in the blocklist
-                            bool isUserRegistered =
-                                await _signInWithMobileNumber();
-                            print('Is User Registered: $isUserRegistered');
-
-                            // Update the button text to "Verified" if isUserRegistered is false
-                            setState(() {
-                              isVerified = !isUserRegistered;
-                            });
-
-                            // If the verification is successful, show the "Verified" button
-                            if (!isUserRegistered) {
-                              // Proceed with OTP verification logic here...
-                              // When OTP is successfully verified, set isVerified to true
-                              // Example:
-                              // isVerified = true;
-                            }
-                          },
-                          child: isVerified
-                              ? Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Icons.check, color: Colors.green),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      translation(context).verified,
-                                    ),
-                                  ],
-                                )
-                              : Text(
-                                  translation(context).verify,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 60,
-                      ),
-                      SizedBox(
-                        width: 200,
-                        child: Text(
-                          translation(context).email,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        child: CustomTextfield(
-                          controller: controller.email,
-
-                          validator: emailValidator,
-                          //(val) {
-                          //   if (AppSession()
-                          //       .candidates
-                          //       .where((element) =>
-                          //           element.email!.toLowerCase() ==
-                          //           val?.toLowerCase())
-                          //       .isNotEmpty) {
-                          //     return "Already User Exist";
-                          //   }
-                          //   ;
-                          //   MultiValidator([
-                          //     RequiredValidator(errorText: "* Required"),
-                          //     EmailValidator(
-                          //         errorText: "Enter valid email id"),
-                          //   ]);
-                          //   return null;
-                          // }
-                        ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.indigo.shade900,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0.1),
-                            ),
-                          ),
-                          onPressed: () async {
-                            String otp = "";
-                            print("otp1");
-
-                            // Set OTP configuration
-                            // myauth.setConfig(
-                            //   appEmail: "contact@hdevcoder.com",
-                            //   appName: "OTP for Registration",
-                            //   userEmail: controller.email.text,
-                            //   otpLength: 4,
-                            //   otpType: OTPType.digitsOnly,
-                            // );
-
-                            _showOtpDialog(otp);
-
-                            // // Send OTP to email
-                            // bool otpSent = await myauth.sendOTP();
-
-                            // // Show OTP entry dialog
-
-                            // // Check if OTP sending is successful
-                            // if (!otpSent) {
-                            //   // Display error pop-up for failed OTP sending
-                            //   showDialog(
-                            //     context: context,
-                            //     builder: (BuildContext context) {
-                            //       return AlertDialog(
-                            //         title: Text("Error"),
-                            //         content:
-                            //             Text("Oops, OTP sending failed."),
-                            //         actions: <Widget>[
-                            //           TextButton(
-                            //             onPressed: () {
-                            //               Navigator.of(context).pop();
-                            //             },
-                            //             child: Text("OK"),
-                            //           ),
-                            //         ],
-                            //       );
-                            //     },
-                            //   );
-                            // }
-                          },
-                          child: isVerifiedEmail
-                              ? Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Icons.check, color: Colors.green),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      translation(context).verified,
-                                    ),
-                                  ],
-                                )
-                              : Text(
-                                  translation(context).verify,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  widget.selectedOption == 'Blue'
-                      ? Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 200,
-                                        child: Text(
-                                          translation(context).skills,
-                                          style: TextStyle(
-                                            fontFamily: 'Poppins',
-                                            fontWeight: FontWeight.bold,
+                                  else if (widget.selectedOption == 'Grey')
+                                    Row(
+                                      children: [
+                                        IgnorePointer(
+                                          child: Radio(
+                                              value: widget.selectedOption,
+                                              groupValue: controller
+                                                  .selectedOption.text,
+                                              onChanged: null),
+                                        ),
+                                        IgnorePointer(
+                                          child: Text(
+                                            translation(context).blueColler,
+                                            style: TextStyle(
+                                                color: Colors.grey.shade500,
+                                                fontFamily: 'Poppins',
+                                                fontSize: 2.sp,
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 200,
-                                        child: Wrap(
-                                          spacing: 8.0,
-                                          runSpacing: 8.0,
-                                          children: controller.skills
-                                              .map(
-                                                (value) => Chip(
-                                                  backgroundColor:
-                                                      Colors.indigo.shade900,
-                                                  label: Text(
-                                                    value,
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                  onDeleted: () {
-                                                    setState(() {
-                                                      controller.skills
-                                                          .remove(value);
-                                                    });
-                                                  },
-                                                ),
-                                              )
-                                              .toList(),
+                                        Radio(
+                                          value: widget.selectedOption,
+                                          groupValue: widget.selectedOption,
+                                          onChanged: (value) {
+                                            // Handle radio button state change if needed
+                                            setState(() {
+                                              controller.selectedOption.text =
+                                                  value.toString();
+                                            });
+                                          },
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Container(
-                                          width: 350,
-                                          height: 30,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(1),
-                                            border:
-                                                Border.all(color: Colors.black),
-                                          ),
-                                          child: DropdownButtonHideUnderline(
-                                            child: DropdownButton2<String>(
-                                              value: skillvalue,
-                                              buttonStyleData: ButtonStyleData(
-                                                height: 30,
-                                                width: 200,
-                                                elevation: 1,
-                                                padding: const EdgeInsets.only(
-                                                    left: 14, right: 14),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(4),
-                                                  border: Border.all(
-                                                    color: Colors.black26,
-                                                  ),
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              iconStyleData:
-                                                  const IconStyleData(
-                                                icon: Icon(
-                                                  Icons.arrow_drop_down_sharp,
-                                                ),
-                                                iconSize: 25,
-                                                iconEnabledColor: Colors.white,
-                                                iconDisabledColor: null,
-                                              ),
-                                              dropdownStyleData:
-                                                  DropdownStyleData(
-                                                maxHeight: 210,
-                                                width: 350,
-                                                elevation: 0,
-                                                padding: EdgeInsets.only(
-                                                    left: 10,
-                                                    right: 10,
-                                                    top: 5,
-                                                    bottom: 15),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  border: Border.all(
-                                                      color: Colors.black),
-                                                  color: Colors.indigo.shade900,
-                                                ),
-                                                scrollPadding:
-                                                    EdgeInsets.all(5),
-                                                scrollbarTheme:
-                                                    ScrollbarThemeData(
-                                                  thickness:
-                                                      MaterialStateProperty.all<
-                                                          double>(6),
-                                                  thumbVisibility:
-                                                      MaterialStateProperty.all<
-                                                          bool>(true),
-                                                ),
-                                              ),
-                                              menuItemStyleData:
-                                                  const MenuItemStyleData(
-                                                height: 25,
-                                                padding: EdgeInsets.only(
-                                                    left: 14, right: 14),
-                                              ),
-                                              style: const TextStyle(
-                                                  color: Colors.white),
-                                              underline: Container(
-                                                height: 0,
-                                              ),
-                                              onChanged: (String? newValue) {
-                                                setState(() {
-                                                  int selectionLimit = 2;
-                                                  if (newValue != null &&
-                                                      controller.skills.length <
-                                                          selectionLimit) {
-                                                    if (!controller.skills
-                                                        .contains(newValue)) {
-                                                      controller.skills
-                                                          .add(newValue);
-                                                    }
-                                                  }
-                                                });
-                                              },
-                                              items: BlueSkill.map<
-                                                  DropdownMenuItem<String>>(
-                                                (String value) {
-                                                  return DropdownMenuItem<
-                                                      String>(
-                                                    value: value,
-                                                    child: Text(value),
-                                                  );
-                                                },
-                                              ).toList(),
-                                            ),
-                                          )),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              width: 60,
-                            ),
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 200,
-                                        child: Text(
-                                          translation(context).lookingWork,
+                                        Text(
+                                          translation(context).greyColler,
                                           style: TextStyle(
+                                              color: Colors.grey.shade800,
                                               fontFamily: 'Poppins',
+                                              fontSize: 2.sp,
                                               fontWeight: FontWeight.bold),
                                         ),
+                                      ],
+                                    )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(3.w, 0.6.h, 3.w, 0.5.h),
+                              child: Column(
+                                children: [
+                                  Divider(color: Colors.black),
+                                  SizedBox(
+                                    height: 3.h,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        translation(context).registerAsANewUser,
+                                        textScaleFactor:
+                                            ScaleSize.textScaleFactor(context),
+                                        style: TextStyle(
+                                            fontFamily: 'ColfaxBold',
+                                            fontSize: 2.sp,
+                                            color: Colors.black),
                                       ),
-                                      SizedBox(
-                                        width: 200,
-                                        child: Wrap(
-                                          spacing: 8.0,
-                                          runSpacing: 8.0,
-                                          children: controller.workins
-                                              .map(
-                                                (value) => Chip(
-                                                  backgroundColor:
-                                                      Colors.indigo.shade900,
-                                                  label: Text(
-                                                    value,
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                  onDeleted: () {
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 3.h,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                translation(context).name,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 2.sp),
+                                              ),
+                                              SizedBox(
+                                                height: 44.8,
+                                              ),
+                                              Text(
+                                                translation(context).age,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 2.sp),
+                                              ),
+                                              SizedBox(
+                                                height: 44.8,
+                                              ),
+                                              Text(
+                                                translation(context).email,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 2.sp),
+                                              ),
+                                              SizedBox(
+                                                height: 44.8,
+                                              ),
+                                              Text(
+                                                translation(context).address,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 2.sp),
+                                              ),
+                                              SizedBox(
+                                                height: 44.8,
+                                              ),
+                                              Text(
+                                                translation(context)
+                                                    .workExperience,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 2.sp),
+                                              ),
+                                              SizedBox(
+                                                height: 44.8,
+                                              ),
+                                              Text(
+                                                translation(context)
+                                                    .workdescription,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 2.sp),
+                                              ),
+                                              SizedBox(
+                                                height: 44.8,
+                                              ),
+                                              Text(
+                                                translation(context)
+                                                    .qualificationdescription,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 2.sp),
+                                              ),
+                                              SizedBox(
+                                                height: 44.8,
+                                              ),
+                                              Text(
+                                                translation(context).skills,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 2.sp),
+                                              ),
+                                              SizedBox(
+                                                height: 44.8,
+                                              ),
+                                              Text(
+                                                translation(context)
+                                                    .lookingWork,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 2.sp),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            width: 2.5.w,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                height: 45,
+                                                width: 23.w,
+                                                child: CustomTextfield(
+                                                  text: 'First Name',
+                                                  validator: nameValidator,
+                                                  controller: controller.name,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 1.8.h,
+                                              ),
+                                              SizedBox(
+                                                height: 45,
+                                                width: 23.w,
+                                                child: CustomTextfield(
+                                                  text: 'Age',
+                                                  validator: nameValidator,
+                                                  controller: controller.age,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 1.8.h,
+                                              ),
+                                              SizedBox(
+                                                height: 45,
+                                                width: 23.w,
+                                                child: CustomTextfield(
+                                                  text: 'Email address',
+                                                  controller: controller.email,
+                                                  validator: emailValidator,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 1.8.h,
+                                              ),
+                                              SizedBox(
+                                                height: 45,
+                                                width: 23.w,
+                                                child: CustomTextfield(
+                                                  text: 'Address',
+                                                  validator: nameValidator,
+                                                  controller:
+                                                      controller.address,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 1.8.h,
+                                              ),
+                                              DropdownButtonHideUnderline(
+                                                child: DropdownButton2<String>(
+                                                  value: controller.workexpcount
+                                                          .text.isNotEmpty
+                                                      ? controller
+                                                          .workexpcount.text
+                                                      : 'Select', // Provide a default value if it's empty
+                                                  items: <String>[
+                                                    'Select',
+                                                    '1 Month',
+                                                    '2 Months',
+                                                    '3 Months',
+                                                    '4 Months',
+                                                    '5 Months',
+                                                    '6 Months',
+                                                    '1 Year',
+                                                    '2 Years',
+                                                    'More than 2 Years'
+                                                  ].map<
+                                                          DropdownMenuItem<
+                                                              String>>(
+                                                      (String value) {
+                                                    return DropdownMenuItem<
+                                                        String>(
+                                                      value: value,
+                                                      child: Text(value,
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Poppins',
+                                                              fontSize: 2.sp)),
+                                                    );
+                                                  }).toList(),
+                                                  onChanged:
+                                                      (String? newValue) {
                                                     setState(() {
-                                                      controller.workins
-                                                          .remove(value);
+                                                      // Step 2: Update controller when dropdown value changes
+                                                      controller.workexpcount
+                                                          .text = newValue!;
                                                     });
                                                   },
+                                                  buttonStyleData:
+                                                      ButtonStyleData(
+                                                    height: 45,
+                                                    width: 23.w,
+                                                    padding: EdgeInsets.only(
+                                                        left: 14, right: 14),
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: Colors
+                                                              .grey.shade500),
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  5)),
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                  iconStyleData:
+                                                      const IconStyleData(
+                                                    icon: Icon(
+                                                      Icons
+                                                          .arrow_drop_down_sharp,
+                                                    ),
+                                                    iconSize: 25,
+                                                    iconEnabledColor:
+                                                        Colors.black,
+                                                    iconDisabledColor: null,
+                                                  ),
+                                                  dropdownStyleData:
+                                                      DropdownStyleData(
+                                                    elevation: 0,
+                                                    maxHeight: 200,
+                                                    width: 23.w,
+                                                    padding: EdgeInsets.only(
+                                                        left: 5,
+                                                        right: 5,
+                                                        top: 5,
+                                                        bottom: 5),
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: Colors
+                                                              .grey.shade500),
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(0),
+                                                        topRight:
+                                                            Radius.circular(0),
+                                                        bottomLeft:
+                                                            Radius.circular(5),
+                                                        bottomRight:
+                                                            Radius.circular(5),
+                                                      ),
+                                                      color: Colors.white,
+                                                    ),
+                                                    scrollPadding:
+                                                        EdgeInsets.all(5),
+                                                    scrollbarTheme:
+                                                        ScrollbarThemeData(
+                                                      thickness:
+                                                          MaterialStateProperty
+                                                              .all<double>(6),
+                                                      thumbVisibility:
+                                                          MaterialStateProperty
+                                                              .all<bool>(true),
+                                                    ),
+                                                  ),
+                                                  menuItemStyleData:
+                                                      MenuItemStyleData(
+                                                    height: 30,
+                                                    padding: EdgeInsets.only(
+                                                        left: 14, right: 14),
+                                                  ),
                                                 ),
+                                              ),
+                                              SizedBox(
+                                                height: 1.8.h,
+                                              ),
+                                              SizedBox(
+                                                height: 45,
+                                                width: 23.w,
+                                                child: CustomTextfield(
+                                                  validator: nameValidator,
+                                                  controller:
+                                                      controller.workexp,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 1.8.h,
+                                              ),
+                                              SizedBox(
+                                                height: 45,
+                                                width: 23.w,
+                                                child: CustomTextfield(
+                                                  validator: nameValidator,
+                                                  controller: controller
+                                                      .qualiDescription,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 1.8.h,
+                                              ),
+                                              widget.selectedOption == 'Blue'
+                                                  ? Column(
+                                                      children: [
+                                                        DropdownButtonHideUnderline(
+                                                          child:
+                                                              DropdownButton2<
+                                                                  String>(
+                                                            value:
+                                                                skillvalue, // Provide a default value if it's empty
+                                                            items: BlueSkill.map<
+                                                                DropdownMenuItem<
+                                                                    String>>((String
+                                                                value) {
+                                                              return DropdownMenuItem<
+                                                                  String>(
+                                                                value: value,
+                                                                child: Text(
+                                                                    value,
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Poppins',
+                                                                        fontSize:
+                                                                            2.sp)),
+                                                              );
+                                                            }).toList(),
+                                                            onChanged: (String?
+                                                                newValue) {
+                                                              setState(() {
+                                                                int selectionLimit =
+                                                                    2;
+                                                                if (newValue !=
+                                                                        null &&
+                                                                    controller
+                                                                            .skills
+                                                                            .length <
+                                                                        selectionLimit) {
+                                                                  if (!controller
+                                                                      .skills
+                                                                      .contains(
+                                                                          newValue)) {
+                                                                    controller
+                                                                        .skills
+                                                                        .add(
+                                                                            newValue);
+                                                                  }
+                                                                }
+                                                              });
+                                                            },
+                                                            buttonStyleData:
+                                                                ButtonStyleData(
+                                                              height: 45,
+                                                              width: 23.w,
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 14,
+                                                                      right:
+                                                                          14),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade500),
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            5)),
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                            ),
+                                                            iconStyleData:
+                                                                const IconStyleData(
+                                                              icon: Icon(
+                                                                Icons
+                                                                    .arrow_drop_down_sharp,
+                                                              ),
+                                                              iconSize: 25,
+                                                              iconEnabledColor:
+                                                                  Colors.black,
+                                                              iconDisabledColor:
+                                                                  null,
+                                                            ),
+                                                            dropdownStyleData:
+                                                                DropdownStyleData(
+                                                              elevation: 0,
+                                                              maxHeight: 200,
+                                                              width: 23.w,
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 5,
+                                                                      right: 5,
+                                                                      top: 5,
+                                                                      bottom:
+                                                                          5),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade500),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .only(
+                                                                  topLeft: Radius
+                                                                      .circular(
+                                                                          0),
+                                                                  topRight: Radius
+                                                                      .circular(
+                                                                          0),
+                                                                  bottomLeft: Radius
+                                                                      .circular(
+                                                                          5),
+                                                                  bottomRight: Radius
+                                                                      .circular(
+                                                                          5),
+                                                                ),
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                              scrollPadding:
+                                                                  EdgeInsets
+                                                                      .all(5),
+                                                              scrollbarTheme:
+                                                                  ScrollbarThemeData(
+                                                                thickness:
+                                                                    MaterialStateProperty
+                                                                        .all<double>(
+                                                                            6),
+                                                                thumbVisibility:
+                                                                    MaterialStateProperty
+                                                                        .all<bool>(
+                                                                            true),
+                                                              ),
+                                                            ),
+                                                            menuItemStyleData:
+                                                                MenuItemStyleData(
+                                                              height: 30,
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 14,
+                                                                      right:
+                                                                          14),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 1.8.h,
+                                                        ),
+                                                        DropdownButtonHideUnderline(
+                                                          child:
+                                                              DropdownButton2<
+                                                                  String>(
+                                                            value:
+                                                                wokinvalue, // Provide a default value if it's empty
+                                                            items: BlueWorkin.map<
+                                                                DropdownMenuItem<
+                                                                    String>>((String
+                                                                value) {
+                                                              return DropdownMenuItem<
+                                                                  String>(
+                                                                value: value,
+                                                                child: Text(
+                                                                    value,
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Poppins',
+                                                                        fontSize:
+                                                                            2.sp)),
+                                                              );
+                                                            }).toList(),
+                                                            onChanged: (String?
+                                                                newValue) {
+                                                              setState(() {
+                                                                int selectionLimit =
+                                                                    2;
+                                                                if (newValue !=
+                                                                        null &&
+                                                                    controller
+                                                                            .workins
+                                                                            .length <
+                                                                        selectionLimit) {
+                                                                  if (!controller
+                                                                      .workins
+                                                                      .contains(
+                                                                          newValue)) {
+                                                                    controller
+                                                                        .workins
+                                                                        .add(
+                                                                            newValue);
+                                                                  }
+                                                                }
+                                                              });
+                                                            },
+                                                            buttonStyleData:
+                                                                ButtonStyleData(
+                                                              height: 45,
+                                                              width: 23.w,
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 14,
+                                                                      right:
+                                                                          14),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade500),
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            5)),
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                            ),
+                                                            iconStyleData:
+                                                                const IconStyleData(
+                                                              icon: Icon(
+                                                                Icons
+                                                                    .arrow_drop_down_sharp,
+                                                              ),
+                                                              iconSize: 25,
+                                                              iconEnabledColor:
+                                                                  Colors.black,
+                                                              iconDisabledColor:
+                                                                  null,
+                                                            ),
+                                                            dropdownStyleData:
+                                                                DropdownStyleData(
+                                                              elevation: 0,
+                                                              maxHeight: 200,
+                                                              width: 23.w,
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 5,
+                                                                      right: 5,
+                                                                      top: 5,
+                                                                      bottom:
+                                                                          5),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade500),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .only(
+                                                                  topLeft: Radius
+                                                                      .circular(
+                                                                          0),
+                                                                  topRight: Radius
+                                                                      .circular(
+                                                                          0),
+                                                                  bottomLeft: Radius
+                                                                      .circular(
+                                                                          5),
+                                                                  bottomRight: Radius
+                                                                      .circular(
+                                                                          5),
+                                                                ),
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                              scrollPadding:
+                                                                  EdgeInsets
+                                                                      .all(5),
+                                                              scrollbarTheme:
+                                                                  ScrollbarThemeData(
+                                                                thickness:
+                                                                    MaterialStateProperty
+                                                                        .all<double>(
+                                                                            6),
+                                                                thumbVisibility:
+                                                                    MaterialStateProperty
+                                                                        .all<bool>(
+                                                                            true),
+                                                              ),
+                                                            ),
+                                                            menuItemStyleData:
+                                                                MenuItemStyleData(
+                                                              height: 30,
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 14,
+                                                                      right:
+                                                                          14),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  : Column(
+                                                      children: [
+                                                        DropdownButtonHideUnderline(
+                                                          child:
+                                                              DropdownButton2<
+                                                                  String>(
+                                                            value: controller
+                                                                .skills
+                                                                .first, // Provide a default value if it's empty
+                                                            items: GreySkill.map<
+                                                                DropdownMenuItem<
+                                                                    String>>((String
+                                                                value) {
+                                                              return DropdownMenuItem<
+                                                                  String>(
+                                                                value: value,
+                                                                child: Text(
+                                                                    value,
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Poppins',
+                                                                        fontSize:
+                                                                            2.sp)),
+                                                              );
+                                                            }).toList(),
+                                                            onChanged: (String?
+                                                                newValue) {
+                                                              setState(() {
+                                                                int selectionLimit =
+                                                                    2;
+                                                                if (newValue !=
+                                                                        null &&
+                                                                    controller
+                                                                            .skills
+                                                                            .length <
+                                                                        selectionLimit) {
+                                                                  if (!controller
+                                                                      .skills
+                                                                      .contains(
+                                                                          newValue)) {
+                                                                    controller
+                                                                        .skills
+                                                                        .add(
+                                                                            newValue);
+                                                                  }
+                                                                }
+                                                              });
+                                                            },
+                                                            buttonStyleData:
+                                                                ButtonStyleData(
+                                                              height: 45,
+                                                              width: 23.w,
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 14,
+                                                                      right:
+                                                                          14),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade500),
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            5)),
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                            ),
+                                                            iconStyleData:
+                                                                const IconStyleData(
+                                                              icon: Icon(
+                                                                Icons
+                                                                    .arrow_drop_down_sharp,
+                                                              ),
+                                                              iconSize: 25,
+                                                              iconEnabledColor:
+                                                                  Colors.black,
+                                                              iconDisabledColor:
+                                                                  null,
+                                                            ),
+                                                            dropdownStyleData:
+                                                                DropdownStyleData(
+                                                              elevation: 0,
+                                                              maxHeight: 200,
+                                                              width: 23.w,
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 5,
+                                                                      right: 5,
+                                                                      top: 5,
+                                                                      bottom:
+                                                                          5),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade500),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .only(
+                                                                  topLeft: Radius
+                                                                      .circular(
+                                                                          0),
+                                                                  topRight: Radius
+                                                                      .circular(
+                                                                          0),
+                                                                  bottomLeft: Radius
+                                                                      .circular(
+                                                                          5),
+                                                                  bottomRight: Radius
+                                                                      .circular(
+                                                                          5),
+                                                                ),
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                              scrollPadding:
+                                                                  EdgeInsets
+                                                                      .all(5),
+                                                              scrollbarTheme:
+                                                                  ScrollbarThemeData(
+                                                                thickness:
+                                                                    MaterialStateProperty
+                                                                        .all<double>(
+                                                                            6),
+                                                                thumbVisibility:
+                                                                    MaterialStateProperty
+                                                                        .all<bool>(
+                                                                            true),
+                                                              ),
+                                                            ),
+                                                            menuItemStyleData:
+                                                                MenuItemStyleData(
+                                                              height: 30,
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 14,
+                                                                      right:
+                                                                          14),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 3.h,
+                                                        ),
+                                                        DropdownButtonHideUnderline(
+                                                          child:
+                                                              DropdownButton2<
+                                                                  String>(
+                                                            value:
+                                                                wokinvalue, // Provide a default value if it's empty
+                                                            items: GreyWorkin.map<
+                                                                DropdownMenuItem<
+                                                                    String>>((String
+                                                                value) {
+                                                              return DropdownMenuItem<
+                                                                  String>(
+                                                                value: value,
+                                                                child: Text(
+                                                                    value,
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Poppins',
+                                                                        fontSize:
+                                                                            2.sp)),
+                                                              );
+                                                            }).toList(),
+                                                            onChanged: (String?
+                                                                newValue) {
+                                                              setState(() {
+                                                                int selectionLimit =
+                                                                    2;
+                                                                if (newValue !=
+                                                                        null &&
+                                                                    controller
+                                                                            .workins
+                                                                            .length <
+                                                                        selectionLimit) {
+                                                                  if (!controller
+                                                                      .workins
+                                                                      .contains(
+                                                                          newValue)) {
+                                                                    controller
+                                                                        .workins
+                                                                        .add(
+                                                                            newValue);
+                                                                  }
+                                                                }
+                                                              });
+                                                            },
+                                                            buttonStyleData:
+                                                                ButtonStyleData(
+                                                              height: 45,
+                                                              width: 23.w,
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 14,
+                                                                      right:
+                                                                          14),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade500),
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            5)),
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                            ),
+                                                            iconStyleData:
+                                                                const IconStyleData(
+                                                              icon: Icon(
+                                                                Icons
+                                                                    .arrow_drop_down_sharp,
+                                                              ),
+                                                              iconSize: 25,
+                                                              iconEnabledColor:
+                                                                  Colors.black,
+                                                              iconDisabledColor:
+                                                                  null,
+                                                            ),
+                                                            dropdownStyleData:
+                                                                DropdownStyleData(
+                                                              elevation: 0,
+                                                              maxHeight: 200,
+                                                              width: 23.w,
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 5,
+                                                                      right: 5,
+                                                                      top: 5,
+                                                                      bottom:
+                                                                          5),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade500),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .only(
+                                                                  topLeft: Radius
+                                                                      .circular(
+                                                                          0),
+                                                                  topRight: Radius
+                                                                      .circular(
+                                                                          0),
+                                                                  bottomLeft: Radius
+                                                                      .circular(
+                                                                          5),
+                                                                  bottomRight: Radius
+                                                                      .circular(
+                                                                          5),
+                                                                ),
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                              scrollPadding:
+                                                                  EdgeInsets
+                                                                      .all(5),
+                                                              scrollbarTheme:
+                                                                  ScrollbarThemeData(
+                                                                thickness:
+                                                                    MaterialStateProperty
+                                                                        .all<double>(
+                                                                            6),
+                                                                thumbVisibility:
+                                                                    MaterialStateProperty
+                                                                        .all<bool>(
+                                                                            true),
+                                                              ),
+                                                            ),
+                                                            menuItemStyleData:
+                                                                MenuItemStyleData(
+                                                              height: 30,
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 14,
+                                                                      right:
+                                                                          14),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            width: 2.5.w,
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    translation(context).aadhar,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 2.sp),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 44.8,
+                                                  ),
+                                                  Text(
+                                                    translation(context).mobile,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 2.sp),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 44.8,
+                                                  ),
+                                                  Text(
+                                                    translation(context)
+                                                        .password,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 2.sp),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 44.8,
+                                                  ),
+                                                  Text(
+                                                    translation(context)
+                                                        .workTitle,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 2.sp),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 44.8,
+                                                  ),
+                                                  Text(
+                                                    translation(context)
+                                                        .projectworked,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 2.sp),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 44.8,
+                                                  ),
+                                                  Text(
+                                                    translation(context)
+                                                        .qualification,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 2.sp),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 44.8,
+                                                  ),
+                                                  Text(
+                                                    translation(context)
+                                                        .certifiedcourses,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 2.sp),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                width: 2.5.w,
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  SizedBox(
+                                                    height: 45,
+                                                    width: 23.w,
+                                                    child: CustomTextfield(
+                                                      text: 'Aadhar',
+                                                      validator: (value) {
+                                                        if (value!.isEmpty) {
+                                                          return '*Required';
+                                                        } else if (value
+                                                                .length !=
+                                                            12) {
+                                                          return 'Aadhar Number must be of 12 digit';
+                                                        }
+                                                        return null;
+                                                      },
+                                                      controller:
+                                                          controller.aadharno,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 1.8.h,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 45,
+                                                    width: 23.w,
+                                                    child: CustomTextfield(
+                                                      text: 'Phone number',
+                                                      controller:
+                                                          controller.mobile,
+                                                      validator: (value) {
+                                                        if (value!.length != 10)
+                                                          return 'Mobile Number must be of 10 digit';
+                                                        else
+                                                          return null;
+                                                      },
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 1.8.h,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 45,
+                                                    width: 23.w,
+                                                    child: CustomTextfield(
+                                                      text: 'Password',
+                                                      validator:
+                                                          validatePassword,
+                                                      onsaved: (value) {
+                                                        setState(() {
+                                                          password = value;
+                                                        });
+                                                      },
+                                                      controller:
+                                                          controller.password,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 1.8.h,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 45,
+                                                    width: 23.w,
+                                                    child: CustomTextfield(
+                                                      text: 'Work title',
+                                                      validator: nameValidator,
+                                                      controller:
+                                                          controller.worktitle,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 1.8.h,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 45,
+                                                    width: 23.w,
+                                                    child: CustomTextfield(
+                                                      text: 'Project Worked',
+                                                      validator: nameValidator,
+                                                      controller:
+                                                          controller.project,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 1.8.h,
+                                                  ),
+                                                  DropdownButtonHideUnderline(
+                                                    child:
+                                                        DropdownButton2<String>(
+                                                      value: controller
+                                                              .qualification
+                                                              .text
+                                                              .isNotEmpty
+                                                          ? controller
+                                                              .qualification
+                                                              .text
+                                                          : 'Select', // Provide a default value if it's empty
+                                                      items: <String>[
+                                                        'Select',
+                                                        'Nill',
+                                                        'ITI',
+                                                        'Diploma',
+                                                        '10th Pass',
+                                                        '12th Pass',
+                                                        'Under Graduate',
+                                                        'Post Graduate'
+                                                      ].map<
+                                                              DropdownMenuItem<
+                                                                  String>>(
+                                                          (String value) {
+                                                        return DropdownMenuItem<
+                                                            String>(
+                                                          value: value,
+                                                          child: Text(value,
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Poppins',
+                                                                  fontSize:
+                                                                      2.sp)),
+                                                        );
+                                                      }).toList(),
+                                                      onChanged:
+                                                          (String? newValue) {
+                                                        setState(() {
+                                                          // Step 2: Update controller when dropdown value changes
+                                                          controller
+                                                              .qualification
+                                                              .text = newValue!;
+                                                        });
+                                                      },
+                                                      buttonStyleData:
+                                                          ButtonStyleData(
+                                                        height: 45,
+                                                        width: 23.w,
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 14,
+                                                                right: 14),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                              color: Colors.grey
+                                                                  .shade500),
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          5)),
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                      iconStyleData:
+                                                          const IconStyleData(
+                                                        icon: Icon(
+                                                          Icons
+                                                              .arrow_drop_down_sharp,
+                                                        ),
+                                                        iconSize: 25,
+                                                        iconEnabledColor:
+                                                            Colors.black,
+                                                        iconDisabledColor: null,
+                                                      ),
+                                                      dropdownStyleData:
+                                                          DropdownStyleData(
+                                                        elevation: 0,
+                                                        maxHeight: 200,
+                                                        width: 23.w,
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 5,
+                                                                right: 5,
+                                                                top: 5,
+                                                                bottom: 5),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                              color: Colors.grey
+                                                                  .shade500),
+                                                          borderRadius:
+                                                              BorderRadius.only(
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    0),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    0),
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    5),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    5),
+                                                          ),
+                                                          color: Colors.white,
+                                                        ),
+                                                        scrollPadding:
+                                                            EdgeInsets.all(5),
+                                                        scrollbarTheme:
+                                                            ScrollbarThemeData(
+                                                          thickness:
+                                                              MaterialStateProperty
+                                                                  .all<double>(
+                                                                      6),
+                                                          thumbVisibility:
+                                                              MaterialStateProperty
+                                                                  .all<bool>(
+                                                                      true),
+                                                        ),
+                                                      ),
+                                                      menuItemStyleData:
+                                                          MenuItemStyleData(
+                                                        height: 30,
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 14,
+                                                                right: 14),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 1.8.h,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 45,
+                                                    width: 23.w,
+                                                    child: CustomTextfield(
+                                                      text: 'Certified Courses',
+                                                      validator: nameValidator,
+                                                      controller:
+                                                          controller.course,
+                                                    ),
+                                                  ),
+                                                ],
                                               )
-                                              .toList(),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 1.8.h,
+                                          ),
+                                          Container(
+                                            height: 45,
+                                            width: 31.w,
+                                            padding: EdgeInsets.only(
+                                                top: 5, bottom: 5),
+                                            child: Wrap(
+                                              spacing: 8.0,
+                                              runSpacing: 8.0,
+                                              children: controller.skills
+                                                  .map(
+                                                    (value) => Chip(
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          20))),
+                                                      iconTheme: IconThemeData(
+                                                          color: Colors.black),
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      label: Text(
+                                                        value,
+                                                        style: TextStyle(
+                                                            fontSize: 2.sp,
+                                                            fontFamily:
+                                                                'SegoeItalic',
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                      onDeleted: () {
+                                                        setState(() {
+                                                          controller.skills
+                                                              .remove(value);
+                                                        });
+                                                      },
+                                                    ),
+                                                  )
+                                                  .toList(),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 1.8.h,
+                                          ),
+                                          Container(
+                                            height: 45,
+                                            width: 31.w,
+                                            padding: EdgeInsets.only(
+                                                top: 5, bottom: 5),
+                                            child: Wrap(
+                                              spacing: 8.0,
+                                              runSpacing: 8.0,
+                                              children: controller.workins
+                                                  .map(
+                                                    (value) => Chip(
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          20))),
+                                                      iconTheme: IconThemeData(
+                                                          color: Colors.black),
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      label: Text(
+                                                        value,
+                                                        style: TextStyle(
+                                                            fontSize: 2.sp,
+                                                            fontFamily:
+                                                                'SegoeItalic',
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                      onDeleted: () {
+                                                        setState(() {
+                                                          controller.workins
+                                                              .remove(value);
+                                                        });
+                                                      },
+                                                    ),
+                                                  )
+                                                  .toList(),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 1.8.h,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        height: 45,
+                                        child: ElevatedButton(
+                                          onPressed: () {},
+                                          style: ElevatedButton.styleFrom(
+                                            fixedSize: const Size.fromWidth(
+                                                double.infinity),
+                                            backgroundColor: Color.fromARGB(
+                                                255, 128, 123, 229),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(
+                                                  5), // Adjust border radius as needed
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'Create Account',
+                                            style: TextStyle(
+                                              fontFamily: 'Colfax',
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                       SizedBox(
-                                        width: 20,
+                                        width: 30,
                                       ),
-                                      Container(
-                                        height: 30,
-                                        width: 350,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(1),
-                                            border: Border.all(
-                                                color: Colors.black)),
-                                        child: DropdownButtonHideUnderline(
-                                          child: DropdownButton2<String>(
-                                            value: wokinvalue,
-                                            buttonStyleData: ButtonStyleData(
-                                              height: 30,
-                                              width: 200,
-                                              elevation: 1,
-                                              padding: const EdgeInsets.only(
-                                                  left: 14, right: 14),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(4),
-                                                border: Border.all(
-                                                  color: Colors.black26,
-                                                ),
-                                                color: Colors.white,
-                                              ),
+                                      SizedBox(
+                                        height: 45,
+                                        child: ElevatedButton(
+                                          onPressed: () {},
+                                          style: ElevatedButton.styleFrom(
+                                            fixedSize: const Size.fromWidth(
+                                                double.infinity),
+                                            backgroundColor:
+                                                Colors.grey.shade800,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(
+                                                  5), // Adjust border radius as needed
                                             ),
-                                            iconStyleData: const IconStyleData(
-                                              icon: Icon(
-                                                Icons.arrow_drop_down_sharp,
-                                              ),
-                                              iconSize: 25,
-                                              iconEnabledColor: Colors.white,
-                                              iconDisabledColor: null,
+                                          ),
+                                          child: Text(
+                                            'Cancel',
+                                            style: TextStyle(
+                                              fontFamily: 'Colfax',
+                                              fontSize: 16,
+                                              color: Colors.white,
                                             ),
-                                            dropdownStyleData:
-                                                DropdownStyleData(
-                                              maxHeight: 210,
-                                              width: 350,
-                                              elevation: 0,
-                                              padding: EdgeInsets.only(
-                                                  left: 10,
-                                                  right: 10,
-                                                  top: 5,
-                                                  bottom: 15),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                border: Border.all(
-                                                    color: Colors.black),
-                                                color: Colors.indigo.shade900,
-                                              ),
-                                              scrollPadding: EdgeInsets.all(5),
-                                              scrollbarTheme:
-                                                  ScrollbarThemeData(
-                                                thickness: MaterialStateProperty
-                                                    .all<double>(6),
-                                                thumbVisibility:
-                                                    MaterialStateProperty.all<
-                                                        bool>(true),
-                                              ),
-                                            ),
-                                            menuItemStyleData:
-                                                const MenuItemStyleData(
-                                              height: 25,
-                                              padding: EdgeInsets.only(
-                                                  left: 14, right: 14),
-                                            ),
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                            underline: Container(
-                                              height: 0,
-                                            ),
-                                            onChanged: (String? newValue) {
-                                              setState(() {
-                                                if (newValue != null &&
-                                                    !controller.workins
-                                                        .contains(newValue)) {
-                                                  controller.workins
-                                                      .add(newValue);
-                                                }
-                                              });
-                                            },
-                                            items: BlueWorkin.map<
-                                                    DropdownMenuItem<String>>(
-                                                (String value) {
-                                              return DropdownMenuItem<String>(
-                                                value: value,
-                                                child: Text(value),
-                                              );
-                                            }).toList(),
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                            )
-                          ],
-                        )
-                      : Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                children: [
                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      SizedBox(
-                                        width: 200,
-                                        child: Text(
-                                          translation(context).skills,
-                                          style: TextStyle(
-                                            fontFamily: 'Poppins',
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
+                                      CustomButton(
+                                        text: translation(context).back,
+                                        onPressed: () {},
                                       ),
-                                      SizedBox(
-                                        width: 200,
-                                        child: Wrap(
-                                          spacing: 8.0,
-                                          runSpacing: 8.0,
-                                          children: controller.skills
-                                              .map(
-                                                (value) => Chip(
-                                                  backgroundColor:
-                                                      Colors.indigo.shade900,
-                                                  label: Text(
-                                                    value,
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                  onDeleted: () {
-                                                    setState(() {
-                                                      controller.skills
-                                                          .remove(value);
-                                                    });
-                                                  },
+                                      SizedBox(width: 50),
+                                      CustomButton(
+                                        text: translation(context).next,
+                                        onPressed: () async {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            String name = controller.name.text;
+                                            String age = controller.name.text;
+                                            String email =
+                                                controller.email.text.trim();
+                                            String password =
+                                                controller.password.text;
+                                            String mobile =
+                                                controller.mobile.text;
+                                            String worktitle =
+                                                controller.worktitle.text;
+                                            String aboutYou =
+                                                controller.aboutYou.text;
+                                            String adharno =
+                                                controller.aadharno.text;
+                                            String gender =
+                                                controller.gender.text;
+                                            String workexp =
+                                                controller.workexp.text;
+                                            String workexpcount =
+                                                controller.workexpcount.text;
+                                            String qualification =
+                                                controller.qualification.text;
+                                            String qualiDescription = controller
+                                                .qualiDescription.text;
+                                            String address =
+                                                controller.address.text;
+                                            String course =
+                                                controller.course.text;
+                                            String project =
+                                                controller.project.text;
+                                            List<String> workins =
+                                                controller.workins;
+                                            List<String> skills =
+                                                controller.skills;
+                                            String? selectedOption =
+                                                widget.selectedOption;
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    NewUserUpload(
+                                                  name: name,
+                                                  email: email,
+                                                  password: password,
+                                                  mobile: mobile,
+                                                  workexp: workexp,
+                                                  workexpcount: workexpcount,
+                                                  workins: workins,
+                                                  worktitle: worktitle,
+                                                  skills: skills,
+                                                  address: address,
+                                                  project: project,
+                                                  course: course,
+                                                  age: age,
+                                                  aboutYou: aboutYou,
+                                                  qualiDescription:
+                                                      qualiDescription,
+                                                  aadharno: adharno,
+                                                  qualification: qualification,
+                                                  selectedOption:
+                                                      selectedOption,
+                                                  gender: gender,
                                                 ),
-                                              )
-                                              .toList(),
-                                        ),
+                                              ),
+                                            );
+                                          }
+                                        },
                                       ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Container(
-                                          height: 30,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(1),
-                                            border:
-                                                Border.all(color: Colors.black),
-                                          ),
-                                          child: DropdownButtonHideUnderline(
-                                            child: DropdownButton2<String>(
-                                              value: skillvalue,
-                                              buttonStyleData: ButtonStyleData(
-                                                height: 30,
-                                                width: 200,
-                                                elevation: 1,
-                                                padding: const EdgeInsets.only(
-                                                    left: 14, right: 14),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(4),
-                                                  border: Border.all(
-                                                    color: Colors.black26,
-                                                  ),
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              iconStyleData:
-                                                  const IconStyleData(
-                                                icon: Icon(
-                                                  Icons.arrow_drop_down_sharp,
-                                                ),
-                                                iconSize: 25,
-                                                iconEnabledColor: Colors.white,
-                                                iconDisabledColor: null,
-                                              ),
-                                              dropdownStyleData:
-                                                  DropdownStyleData(
-                                                maxHeight: 210,
-                                                width: 300,
-                                                elevation: 0,
-                                                padding: EdgeInsets.only(
-                                                    left: 10,
-                                                    right: 10,
-                                                    top: 5,
-                                                    bottom: 15),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  border: Border.all(
-                                                      color: Colors.black),
-                                                  color: Colors.indigo.shade900,
-                                                ),
-                                                scrollPadding:
-                                                    EdgeInsets.all(5),
-                                                scrollbarTheme:
-                                                    ScrollbarThemeData(
-                                                  thickness:
-                                                      MaterialStateProperty.all<
-                                                          double>(6),
-                                                  thumbVisibility:
-                                                      MaterialStateProperty.all<
-                                                          bool>(true),
-                                                ),
-                                              ),
-                                              menuItemStyleData:
-                                                  const MenuItemStyleData(
-                                                height: 25,
-                                                padding: EdgeInsets.only(
-                                                    left: 14, right: 14),
-                                              ),
-                                              style: const TextStyle(
-                                                  color: Colors.white),
-                                              underline: Container(
-                                                height: 0,
-                                              ),
-                                              onChanged: (String? newValue) {
-                                                setState(() {
-                                                  int selectionLimit = 2;
-                                                  if (newValue != null &&
-                                                      controller.skills.length <
-                                                          selectionLimit) {
-                                                    if (!controller.skills
-                                                        .contains(newValue)) {
-                                                      controller.skills
-                                                          .add(newValue);
-                                                    }
-                                                  }
-                                                });
-                                              },
-                                              items: GreySkill.map<
-                                                  DropdownMenuItem<String>>(
-                                                (String value) {
-                                                  return DropdownMenuItem<
-                                                      String>(
-                                                    value: value,
-                                                    child: Text(value),
-                                                  );
-                                                },
-                                              ).toList(),
-                                            ),
-                                          )),
                                     ],
+                                  ),
+                                  SizedBox(
+                                    height: 1.8.h,
                                   ),
                                 ],
                               ),
                             ),
-                            SizedBox(
-                              width: 60,
-                            ),
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 200,
-                                        child: Text(
-                                          translation(context).lookingWork,
-                                          style: TextStyle(
-                                              fontFamily: 'Poppins',
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 200,
-                                        child: Wrap(
-                                          spacing: 8.0,
-                                          runSpacing: 8.0,
-                                          children: controller.workins
-                                              .map(
-                                                (value) => Chip(
-                                                  backgroundColor:
-                                                      Colors.indigo.shade900,
-                                                  label: Text(
-                                                    value,
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                  onDeleted: () {
-                                                    setState(() {
-                                                      controller.workins
-                                                          .remove(value);
-                                                    });
-                                                  },
-                                                ),
-                                              )
-                                              .toList(),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Container(
-                                        height: 30,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(1),
-                                            border: Border.all(
-                                                color: Colors.black)),
-                                        child: DropdownButtonHideUnderline(
-                                          child: DropdownButton2<String>(
-                                            value: wokinvalue,
-                                            buttonStyleData: ButtonStyleData(
-                                              height: 30,
-                                              width: 200,
-                                              elevation: 1,
-                                              padding: const EdgeInsets.only(
-                                                  left: 14, right: 14),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(4),
-                                                border: Border.all(
-                                                  color: Colors.black26,
-                                                ),
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            iconStyleData: const IconStyleData(
-                                              icon: Icon(
-                                                Icons.arrow_drop_down_sharp,
-                                              ),
-                                              iconSize: 25,
-                                              iconEnabledColor: Colors.white,
-                                              iconDisabledColor: null,
-                                            ),
-                                            dropdownStyleData:
-                                                DropdownStyleData(
-                                              maxHeight: 210,
-                                              width: 300,
-                                              elevation: 0,
-                                              padding: EdgeInsets.only(
-                                                  left: 10,
-                                                  right: 10,
-                                                  top: 5,
-                                                  bottom: 15),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                border: Border.all(
-                                                    color: Colors.black),
-                                                color: Colors.indigo.shade900,
-                                              ),
-                                              scrollPadding: EdgeInsets.all(5),
-                                              scrollbarTheme:
-                                                  ScrollbarThemeData(
-                                                thickness: MaterialStateProperty
-                                                    .all<double>(6),
-                                                thumbVisibility:
-                                                    MaterialStateProperty.all<
-                                                        bool>(true),
-                                              ),
-                                            ),
-                                            menuItemStyleData:
-                                                const MenuItemStyleData(
-                                              height: 25,
-                                              padding: EdgeInsets.only(
-                                                  left: 14, right: 14),
-                                            ),
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                            underline: Container(
-                                              height: 0,
-                                            ),
-                                            onChanged: (String? newValue) {
-                                              setState(() {
-                                                if (newValue != null &&
-                                                    !controller.workins
-                                                        .contains(newValue)) {
-                                                  controller.workins
-                                                      .add(newValue);
-                                                }
-                                              });
-                                            },
-                                            items: GreyWorkin.map<
-                                                    DropdownMenuItem<String>>(
-                                                (String value) {
-                                              return DropdownMenuItem<String>(
-                                                value: value,
-                                                child: Text(value),
-                                              );
-                                            }).toList(),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            )
                           ],
                         ),
-                  SizedBox(
-                    height: 35,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      CustomButton(
-                        text: translation(context).back,
-                        onPressed: () {},
                       ),
-                      SizedBox(width: 50),
-                      CustomButton(
-                        text: translation(context).next,
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            String name = controller.name.text;
-                            String age = controller.name.text;
-                            String email = controller.email.text.trim();
-                            String password = controller.password.text;
-                            String mobile = controller.mobile.text;
-                            String worktitle = controller.worktitle.text;
-                            String aboutYou = controller.aboutYou.text;
-                            String adharno = controller.aadharno.text;
-                            String gender = controller.gender.text;
-                            String workexp = controller.workexp.text;
-                            String workexpcount = controller.workexpcount.text;
-                            String qualification =
-                                controller.qualification.text;
-                            String qualiDescription =
-                                controller.qualiDescription.text;
-                            String address = controller.address.text;
-                            String course = controller.course.text;
-                            String project = controller.project.text;
-                            List<String> workins = controller.workins;
-                            List<String> skills = controller.skills;
-                            String? selectedOption = widget.selectedOption;
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => NewUserUpload(
-                                  name: name,
-                                  email: email,
-                                  password: password,
-                                  mobile: mobile,
-                                  workexp: workexp,
-                                  workexpcount: workexpcount,
-                                  workins: workins,
-                                  worktitle: worktitle,
-                                  skills: skills,
-                                  address: address,
-                                  project: project,
-                                  course: course,
-                                  age: age,
-                                  aboutYou: aboutYou,
-                                  qualiDescription: qualiDescription,
-                                  aadharno: adharno,
-                                  qualification: qualification,
-                                  selectedOption: selectedOption,
-                                  gender: gender,
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ],
+                    ),
                   ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                ],
-              ),
-            ),
+                );
+              } else {
+                return Container(
+                  color: Colors.amber,
+                );
+              }
+            }),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 

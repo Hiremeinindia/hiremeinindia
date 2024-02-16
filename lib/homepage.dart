@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/corporateRegistration.dart';
@@ -21,15 +23,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    double h = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        leadingWidth: 2,
         automaticallyImplyLeading: false,
-        centerTitle: false,
-        toolbarHeight: 80,
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
+        surfaceTintColor: Colors.amber,
+        shadowColor: Colors.amber,
+        elevation: 5,
         title: Padding(
-          padding: const EdgeInsets.only(top: 40, left: 100),
+          padding: EdgeInsets.fromLTRB(h * 0.1, 0.2, 0.2, 0.2),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -133,6 +136,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   SizedBox(width: 20),
                   Container(
+                    width: MediaQuery.of(context).size.width / 13,
                     decoration: BoxDecoration(
                       color: Colors.indigo.shade900,
                     ),
@@ -155,7 +159,8 @@ class _HomePageState extends State<HomePage> {
                         },
                         hint: Text(
                           AppLocalizations.of(context)!.findaJob,
-                          style: TextStyle(color: Colors.white),
+                          textScaleFactor: ScaleSize.textScaleFactor(context),
+                          style: TextStyle(color: Colors.white, fontSize: 8),
                         ),
                         buttonStyleData: ButtonStyleData(
                           height: 30,
@@ -202,120 +207,132 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
+                  Container(
+                    width: MediaQuery.of(context).size.width / 13,
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.black,
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            child: Icon(
+                              Icons.person_outline_outlined,
+                              size: 35,
+                              color: Colors.indigo.shade900,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 15),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              translation(context).guest,
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.indigo.shade900,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              translation(context).user,
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.indigo.shade900,
+                                  height: 0),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ],
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 40, top: 35),
-            child: Row(
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(h * 0.1, 0.1, 0.1, 0.1),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  backgroundColor: Colors.black,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.person_outline_outlined,
-                      size: 35,
-                      color: Colors.indigo.shade900,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 15),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                Container(
+                  child: Column(children: [
                     Text(
-                      translation(context).guest,
+                      translation(context).indiasBestPortalforBlue,
+                      textScaleFactor: ScaleSize.textScaleFactor(context),
                       style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.indigo.shade900,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      translation(context).user,
-                      style: TextStyle(
-                          fontSize: 15,
                           color: Colors.indigo.shade900,
-                          height: 0),
+                          fontFamily: 'Poppins',
+                          fontSize: 30),
+                    ),
+                    Text(
+                      translation(context).andGreyCollarJob,
+                      textScaleFactor: ScaleSize.textScaleFactor(context),
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontFamily: 'Poppins',
+                          fontSize: 30),
+                    ),
+                  ]),
+                ),
+                SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        Image.network(
+                          'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/imgbuilding.jpeg?alt=media&token=000f8b21-f783-4c92-a475-767b75dab94c',
+                          height: 200,
+                          width: 200,
+                        ),
+                        SizedBox(
+                          width: 200,
+                          height: 50,
+                          child: CustomButton(
+                            text: translation(context).hireNow,
+                            onPressed: () {
+                              _showDialog();
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(width: 50),
+                    Column(
+                      children: [
+                        Image.network(
+                          'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/img.jpg?alt=media&token=4f013131-5ba4-4811-bfd3-f25c6ececb1e',
+                          height: 200,
+                          width: 200,
+                        ),
+                        SizedBox(
+                            width: 200,
+                            height: 50,
+                            child: CustomButton(
+                              text: translation(context).getJob,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Hired()),
+                                );
+                              },
+                            ))
+                      ],
                     ),
                   ],
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                translation(context).indiasBestPortalforBlue,
-                style: TextStyle(
-                    color: Colors.indigo.shade900,
-                    fontFamily: 'Poppins',
-                    fontSize: 60),
-              ),
-              Text(
-                translation(context).andGreyCollarJob,
-                style: TextStyle(
-                    color: Colors.grey, fontFamily: 'Poppins', fontSize: 60),
-              ),
-              SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    children: [
-                      Image.network(
-                        'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/imgbuilding.jpeg?alt=media&token=000f8b21-f783-4c92-a475-767b75dab94c',
-                        height: 200,
-                        width: 200,
-                      ),
-                      SizedBox(
-                        width: 200,
-                        height: 50,
-                        child: CustomButton(
-                          text: translation(context).hireNow,
-                          onPressed: () {
-                            _showDialog();
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(width: 50),
-                  Column(
-                    children: [
-                      Image.network(
-                        'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/img.jpg?alt=media&token=4f013131-5ba4-4811-bfd3-f25c6ececb1e',
-                        height: 200,
-                        width: 200,
-                      ),
-                      SizedBox(
-                          width: 200,
-                          height: 50,
-                          child: CustomButton(
-                            text: translation(context).getJob,
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Hired()),
-                              );
-                            },
-                          ))
-                    ],
-                  ),
-                ],
-              ),
-            ],
           ),
         ),
       ),
@@ -358,5 +375,14 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
+  }
+}
+
+class ScaleSize1 {
+  static double textScaleFactor(BuildContext context,
+      {double maxTextScaleFactor = 2}) {
+    final width = MediaQuery.of(context).size.width;
+    double val = (width / 1000) * maxTextScaleFactor;
+    return max(1, min(val, maxTextScaleFactor));
   }
 }

@@ -448,7 +448,7 @@ abstract class AppLocalizations {
   /// No description provided for @indiasBestPortalforBlue.
   ///
   /// In en, this message translates to:
-  /// **'India\'s best Portal for Blue'**
+  /// **'India\'s best Portal for Blue  '**
   String get indiasBestPortalforBlue;
 
   /// No description provided for @andGreyCollarJob.

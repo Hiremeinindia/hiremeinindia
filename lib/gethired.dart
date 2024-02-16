@@ -12,7 +12,7 @@ import 'gen_l10n/app_localizations.dart';
 import 'Widgets/customtextstyle.dart';
 
 class Hired extends StatefulWidget {
-  const Hired();
+  Hired();
   @override
   State<Hired> createState() => _HiredState();
 }
@@ -40,234 +40,231 @@ class _HiredState extends State<Hired> {
 
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
+    var w = MediaQuery.of(context).size.width;
+    var h = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        centerTitle: false,
-        toolbarHeight: 80,
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        title: Padding(
-          padding: const EdgeInsets.only(top: 40, left: 100),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              HireMeInIndia(),
-              Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.indigo.shade900,
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2<Language>(
-                        isExpanded: true,
-                        hint: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                translation(context).english,
-                                style: CustomTextStyle.dropdowntext,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        onChanged: (Language? language) async {
-                          if (language != null) {
-                            Locale _locale =
-                                await setLocale(language.languageCode);
-                            HireApp.setLocale(context, _locale);
-                          } else {
-                            language;
-                          }
-                        },
-                        items: Language.languageList()
-                            .map<DropdownMenuItem<Language>>(
-                              (e) => DropdownMenuItem<Language>(
-                                value: e,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: <Widget>[
-                                    Text(
-                                      e.flag,
-                                      style: CustomTextStyle.dropdowntext,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    Text(
-                                      e.langname,
-                                      style: CustomTextStyle.dropdowntext,
-                                      overflow: TextOverflow.ellipsis,
-                                    )
-                                  ],
+      appBar: PreferredSize(
+        preferredSize: Size(screenSize.height, 90),
+        child: Material(
+          elevation: 3,
+          child: Padding(
+            padding:
+                EdgeInsets.fromLTRB(w * 0.05, h * 0.005, w * 0.025, h * 0.005),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                HireMeInIndia(),
+                Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.indigo.shade900,
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton2<Language>(
+                          isExpanded: true,
+                          hint: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  translation(context).english,
+                                  style: CustomTextStyle.dropdowntext,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                            )
-                            .toList(),
-                        buttonStyleData: ButtonStyleData(
-                          height: 30,
-                          width: 150,
-                          elevation: 1,
-                          padding: const EdgeInsets.only(left: 14, right: 14),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(
-                              color: Colors.black26,
+                            ],
+                          ),
+                          onChanged: (Language? language) async {
+                            if (language != null) {
+                              Locale _locale =
+                                  await setLocale(language.languageCode);
+                              HireApp.setLocale(context, _locale);
+                            } else {
+                              language;
+                            }
+                          },
+                          items: Language.languageList()
+                              .map<DropdownMenuItem<Language>>(
+                                (e) => DropdownMenuItem<Language>(
+                                  value: e,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: <Widget>[
+                                      Text(
+                                        e.flag,
+                                        style: CustomTextStyle.dropdowntext,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Text(
+                                        e.langname,
+                                        style: CustomTextStyle.dropdowntext,
+                                        overflow: TextOverflow.ellipsis,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                          buttonStyleData: ButtonStyleData(
+                            height: 30,
+                            width: 150,
+                            elevation: 1,
+                            padding: const EdgeInsets.only(left: 14, right: 14),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: Colors.black26,
+                              ),
+                              color: Colors.indigo.shade900,
                             ),
-                            color: Colors.indigo.shade900,
                           ),
-                        ),
-                        iconStyleData: const IconStyleData(
-                          icon: Icon(
-                            Icons.arrow_drop_down_sharp,
+                          iconStyleData: const IconStyleData(
+                            icon: Icon(
+                              Icons.arrow_drop_down_sharp,
+                            ),
+                            iconSize: 25,
+                            iconEnabledColor: Colors.white,
+                            iconDisabledColor: null,
                           ),
-                          iconSize: 25,
-                          iconEnabledColor: Colors.white,
-                          iconDisabledColor: null,
-                        ),
-                        dropdownStyleData: DropdownStyleData(
-                          maxHeight: 210,
-                          elevation: 0,
-                          padding: EdgeInsets.only(
-                              left: 10, right: 10, top: 5, bottom: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Colors.black),
-                            color: Colors.indigo.shade900,
+                          dropdownStyleData: DropdownStyleData(
+                            maxHeight: 210,
+                            elevation: 0,
+                            padding: EdgeInsets.only(
+                                left: 10, right: 10, top: 5, bottom: 15),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(color: Colors.black),
+                              color: Colors.indigo.shade900,
+                            ),
+                            scrollPadding: EdgeInsets.all(5),
+                            scrollbarTheme: ScrollbarThemeData(
+                              thickness: MaterialStateProperty.all<double>(6),
+                              thumbVisibility:
+                                  MaterialStateProperty.all<bool>(true),
+                            ),
                           ),
-                          scrollPadding: EdgeInsets.all(5),
-                          scrollbarTheme: ScrollbarThemeData(
-                            thickness: MaterialStateProperty.all<double>(6),
-                            thumbVisibility:
-                                MaterialStateProperty.all<bool>(true),
+                          menuItemStyleData: const MenuItemStyleData(
+                            height: 25,
+                            padding: EdgeInsets.only(left: 14, right: 14),
                           ),
-                        ),
-                        menuItemStyleData: const MenuItemStyleData(
-                          height: 25,
-                          padding: EdgeInsets.only(left: 14, right: 14),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 20),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.indigo.shade900,
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2<String>(
-                        isExpanded: true,
-                        items: [
-                          DropdownMenuItem<String>(
-                            value: 'Option 1',
-                            child: Text('Option 1'),
-                          ),
-                          DropdownMenuItem<String>(
-                            value: 'Option 2',
-                            child: Text('Option 1'),
-                          ),
-                          // Add more options as needed
-                        ],
-                        onChanged: (value) {
-                          // Handle option selection
-                        },
-                        hint: Text(
-                          AppLocalizations.of(context)!.findaJob,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        buttonStyleData: ButtonStyleData(
-                          height: 30,
-                          width: 150,
-                          elevation: 1,
-                          padding: const EdgeInsets.only(left: 14, right: 14),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(
-                              color: Colors.black26,
-                            ),
-                            color: Colors.indigo.shade900,
-                          ),
-                        ),
-                        iconStyleData: const IconStyleData(
-                          icon: Icon(
-                            Icons.arrow_drop_down_sharp,
-                          ),
-                          iconSize: 25,
-                          iconEnabledColor: Colors.white,
-                          iconDisabledColor: null,
-                        ),
-                        dropdownStyleData: DropdownStyleData(
-                          maxHeight: 210,
-                          elevation: 0,
-                          padding: EdgeInsets.only(
-                              left: 10, right: 10, top: 5, bottom: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Colors.black),
-                            color: Colors.indigo.shade900,
-                          ),
-                          scrollPadding: EdgeInsets.all(5),
-                          scrollbarTheme: ScrollbarThemeData(
-                            thickness: MaterialStateProperty.all<double>(6),
-                            thumbVisibility:
-                                MaterialStateProperty.all<bool>(true),
-                          ),
-                        ),
-                        menuItemStyleData: const MenuItemStyleData(
-                          height: 25,
-                          padding: EdgeInsets.only(left: 14, right: 14),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 40, top: 35),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.black,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.person_outline_outlined,
-                      size: 35,
-                      color: Colors.indigo.shade900,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 15),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      translation(context).guest,
-                      style: TextStyle(
-                        fontSize: 18,
+                    SizedBox(width: 20),
+                    Container(
+                      decoration: BoxDecoration(
                         color: Colors.indigo.shade900,
-                        fontWeight: FontWeight.bold,
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton2<String>(
+                          isExpanded: true,
+                          items: [
+                            DropdownMenuItem<String>(
+                              value: 'Option 1',
+                              child: Text('Option 1'),
+                            ),
+                            DropdownMenuItem<String>(
+                              value: 'Option 2',
+                              child: Text('Option 1'),
+                            ),
+                            // Add more options as needed
+                          ],
+                          onChanged: (value) {
+                            // Handle option selection
+                          },
+                          hint: Text(
+                            AppLocalizations.of(context)!.findaJob,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          buttonStyleData: ButtonStyleData(
+                            height: 30,
+                            width: 150,
+                            elevation: 1,
+                            padding: const EdgeInsets.only(left: 14, right: 14),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: Colors.black26,
+                              ),
+                              color: Colors.indigo.shade900,
+                            ),
+                          ),
+                          iconStyleData: const IconStyleData(
+                            icon: Icon(
+                              Icons.arrow_drop_down_sharp,
+                            ),
+                            iconSize: 25,
+                            iconEnabledColor: Colors.white,
+                            iconDisabledColor: null,
+                          ),
+                          dropdownStyleData: DropdownStyleData(
+                            maxHeight: 210,
+                            elevation: 0,
+                            padding: EdgeInsets.only(
+                                left: 10, right: 10, top: 5, bottom: 15),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(color: Colors.black),
+                              color: Colors.indigo.shade900,
+                            ),
+                            scrollPadding: EdgeInsets.all(5),
+                            scrollbarTheme: ScrollbarThemeData(
+                              thickness: MaterialStateProperty.all<double>(6),
+                              thumbVisibility:
+                                  MaterialStateProperty.all<bool>(true),
+                            ),
+                          ),
+                          menuItemStyleData: const MenuItemStyleData(
+                            height: 25,
+                            padding: EdgeInsets.only(left: 14, right: 14),
+                          ),
+                        ),
                       ),
                     ),
-                    Text(
-                      translation(context).user,
-                      style: TextStyle(
-                          fontSize: 15,
+                    SizedBox(width: 20),
+                    CircleAvatar(
+                      backgroundColor: Colors.black,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.person_outline_outlined,
+                          size: 35,
                           color: Colors.indigo.shade900,
-                          height: 0),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: w * 0.01,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          translation(context).guest,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.indigo.shade900,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          translation(context).user,
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.indigo.shade900,
+                              height: 0),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ],
             ),
           ),
-        ],
+        ),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -302,7 +299,15 @@ class _HiredState extends State<Hired> {
                           child: CustomButton(
                             text: translation(context).blueCollerJobs,
                             onPressed: () {
-                              _showblueDialog();
+                              String selectedOption = 'Blue';
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Registration(
+                                    selectedOption: selectedOption,
+                                  );
+                                },
+                              );
                             },
                           )),
                       SizedBox(
@@ -409,12 +414,13 @@ class _HiredState extends State<Hired> {
               text: translation(context).signup,
               onPressed: () {
                 String selectedOption = 'Blue';
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Registration(
-                            selectedOption: selectedOption,
-                          )),
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Registration(
+                      selectedOption: selectedOption,
+                    );
+                  },
                 );
               },
             )

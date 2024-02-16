@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
         automaticallyImplyLeading: false,
         centerTitle: false,
         toolbarHeight: 80,
-        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         elevation: 0.0,
         title: Padding(
           padding: const EdgeInsets.only(top: 40, left: 100),
@@ -261,6 +261,9 @@ class _LoginPageState extends State<LoginPage> {
                         color: Colors.indigo.shade900,
                         fontWeight: FontWeight.bold,
                       ),
+                    ),
+                    SizedBox(
+                      height: 10,
                     ),
                     Text(
                       translation(context).user,

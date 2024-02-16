@@ -179,7 +179,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get getHiredFromTheBest => 'சிறந்தவர்களிடமிருந்து பணியமர்த்தப்படுங்கள்';
 
   @override
-  String get indiasBestPortalforBlue => 'இந்தியாவின் நீலத்திற்கான சிறந்த போர்டல்';
+  String get indiasBestPortalforBlue => 'இந்தியாவின் நீலத்திற்கான சிறந்த போர்டல்  ';
 
   @override
   String get andGreyCollarJob => 'மற்றும் கிரே காலர் வேலை';

@@ -70,7 +70,7 @@ class _UserDashboard extends State<UserDashboard> {
           title: HireMeInIndia(),
           centerTitle: false,
           toolbarHeight: 80,
-          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
           elevation: 0.0,
           actions: [
             Padding(
@@ -296,6 +296,9 @@ class _UserDashboard extends State<UserDashboard> {
                                   color: Colors.indigo.shade900,
                                   fontWeight: FontWeight.bold,
                                 ),
+                              ),
+                              SizedBox(
+                                height: 10,
                               ),
                               Text(
                                 '${_skills![0]}',

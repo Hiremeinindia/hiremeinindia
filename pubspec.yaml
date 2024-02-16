@@ -83,6 +83,7 @@ dependencies:
   url_launcher: ^6.2.4
   image_picker: ^1.0.7
   omni_datetime_picker: ^1.0.9
+  sizer: ^2.0.15
   
 
 dev_dependencies:
@@ -128,7 +129,12 @@ flutter:
     - family: Poppins
       fonts:
         - asset: fonts/Poppins-Regular.ttf
-    
+    - family: SegoeItalic
+      fonts:
+        - asset: fonts/Segoe_UI_Italic.ttf    
+    - family: ColfaxBold
+      fonts:
+        - asset: fonts/Colfax-Bold.otf  
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

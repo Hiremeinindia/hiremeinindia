@@ -163,20 +163,21 @@ class _FullPagePopupState extends State<FullPagePopup> {
                       CustomRectButton(
                         onPressed: () {
                           setState(() {
+                            labelText = translation(context).curated;
                             _updateCandidateLabelText(
                                 translation(context).curated,
-                                Colors.yellow.shade200);
+                                Colors.green.shade200);
                           });
                         },
                         child: SizedBox(
-                          height: 50,
+                          width: 50,
                           child: Icon(
-                            Icons.question_mark,
+                            Icons.question_mark_outlined,
                             color: Colors.indigo.shade900,
                             size: 30,
                           ),
                         ),
-                        colors: Colors.yellow.shade200,
+                        colors: Colors.green.shade200,
                         bottomleft: Radius.zero,
                         topleft: Radius.zero,
                         bottomright: Radius.zero,
@@ -266,52 +267,51 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                 ),
                                 Row(
                                   children: [
-                                    SizedBox(
-                                      height: 25,
-                                      child: Container(
-                                        padding: EdgeInsets.all(3),
-                                        child: Text(
-                                          '${widget.candidate.skills![0]}',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.indigo.shade900,
-                                              height: 0),
+                                    Container(
+                                      padding: EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey,
+                                            spreadRadius: 1,
+                                            blurRadius:
+                                                2, // changes position of shadow
+                                          ),
+                                        ],
+                                        color:
+                                            Color.fromARGB(255, 166, 189, 229),
+                                        border: Border.all(
+                                          color: Colors.black,
                                         ),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: const Color(0xFF000000),
-                                              style: BorderStyle
-                                                  .solid), //Border.all
-                                          /*** The BorderRadius widget  is here ***/
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(15),
-                                          ), //BorderRadius.all
-                                        ), //BoxDecoration
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Text(
+                                        '${widget.candidate.skills![0]}',
                                       ),
                                     ),
                                     SizedBox(
-                                      width: 5,
+                                      width: 7,
                                     ),
-                                    SizedBox(
-                                      height: 25,
-                                      child: Container(
-                                        child: Text(
-                                          '${widget.candidate.skills![1]}',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.indigo.shade900,
-                                              height: 0),
+                                    Container(
+                                      padding: EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey,
+                                            spreadRadius: 1,
+                                            blurRadius:
+                                                2, // changes position of shadow
+                                          ),
+                                        ],
+                                        color:
+                                            Color.fromARGB(255, 166, 189, 229),
+                                        border: Border.all(
+                                          color: Colors.black,
                                         ),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: const Color(0xFF000000),
-                                              style: BorderStyle
-                                                  .solid), //Border.all
-                                          /*** The BorderRadius widget  is here ***/
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(15),
-                                          ), //BorderRadius.all
-                                        ), //BoxDecoration
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Text(
+                                        '${widget.candidate.skills![1]}',
                                       ),
                                     ),
                                   ],
@@ -321,55 +321,56 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                 ),
                                 Row(
                                   children: [
-                                    SizedBox(
-                                      height: 25,
-                                      child: Container(
-                                        padding: EdgeInsets.all(5),
-                                        child: Text(
-                                          '${widget.candidate.workins![0]}',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.indigo.shade900,
-                                              height: 0),
+                                    Container(
+                                      padding: EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey,
+                                            spreadRadius: 1,
+                                            blurRadius:
+                                                2, // changes position of shadow
+                                          ),
+                                        ],
+                                        color:
+                                            Color.fromARGB(255, 166, 189, 229),
+                                        border: Border.all(
+                                          color: Colors.black,
                                         ),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: const Color(0xFF000000),
-                                              style: BorderStyle
-                                                  .solid), //Border.all
-                                          /*** The BorderRadius widget  is here ***/
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(15),
-                                          ), //BorderRadius.all
-                                        ), //BoxDecoration
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Text(
+                                        '${widget.candidate.workins![0]}',
                                       ),
                                     ),
                                     SizedBox(
                                       width: 5,
                                     ),
-                                    SizedBox(
-                                      height: 25,
-                                      child: Container(
-                                        padding: EdgeInsets.all(5),
-                                        child: Text(
-                                          '',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.indigo.shade900,
-                                              height: 0),
-                                        ),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: const Color(0xFF000000),
-                                              style: BorderStyle
-                                                  .solid), //Border.all
-                                          /*** The BorderRadius widget  is here ***/
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(15),
-                                          ), //BorderRadius.all
-                                        ), //BoxDecoration
-                                      ),
-                                    ),
+                                    widget.candidate.workins![1] != null
+                                        ? Container(
+                                            padding: EdgeInsets.all(3),
+                                            decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey,
+                                                  spreadRadius: 1,
+                                                  blurRadius:
+                                                      2, // changes position of shadow
+                                                ),
+                                              ],
+                                              color: Color.fromARGB(
+                                                  255, 166, 189, 229),
+                                              border: Border.all(
+                                                color: Colors.black,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Text(
+                                              '${widget.candidate.workins![1]}',
+                                            ),
+                                          )
+                                        : Container(),
                                   ],
                                 ),
                                 SizedBox(
@@ -537,6 +538,9 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              SizedBox(
+                                height: 10,
+                              ),
                               Text(
                                 '${widget.candidate.skills![0]}',
                                 style: TextStyle(
@@ -605,6 +609,9 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       Text(
                                         '${widget.candidate.age}',
                                         style: TextStyle(
@@ -622,6 +629,9 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                           color: Colors.indigo.shade900,
                                           fontWeight: FontWeight.bold,
                                         ),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
                                       ),
                                       Text(
                                         '${widget.candidate.workexpcount}',
@@ -683,6 +693,9 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       Text(
                                         '${widget.candidate.mobile}',
                                         style: TextStyle(
@@ -700,6 +713,9 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                           color: Colors.indigo.shade900,
                                           fontWeight: FontWeight.bold,
                                         ),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
                                       ),
                                       Text(
                                         '${widget.candidate.ctc}',
@@ -767,6 +783,9 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       Text(
                                         '${widget.candidate.email}',
                                         style: TextStyle(
@@ -784,6 +803,9 @@ class _FullPagePopupState extends State<FullPagePopup> {
                                           color: Colors.indigo.shade900,
                                           fontWeight: FontWeight.bold,
                                         ),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
                                       ),
                                       Text(
                                         '${widget.candidate.address}',

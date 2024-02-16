@@ -179,7 +179,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get getHiredFromTheBest => 'Get Hired from the best';
 
   @override
-  String get indiasBestPortalforBlue => 'India\'s best Portal for Blue';
+  String get indiasBestPortalforBlue => 'India\'s best Portal for Blue  ';
 
   @override
   String get andGreyCollarJob => 'and Grey Collar Job';

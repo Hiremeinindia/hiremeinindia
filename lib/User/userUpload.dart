@@ -6,6 +6,7 @@ import 'package:hiremeinindiaapp/User/user.dart';
 import 'package:hiremeinindiaapp/User/userRegistration.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
 import 'package:hiremeinindiaapp/User/userPayment.dart';
+import '../widgets/customtextfield.dart';
 import '../widgets/hiremeinindia.dart';
 import 'userFormState.dart';
 import '../classes/language.dart';
@@ -144,7 +145,7 @@ class _NewUserUpload extends State<NewUserUpload> {
           automaticallyImplyLeading: false,
           centerTitle: false,
           toolbarHeight: 80,
-          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
           elevation: 0.0,
           title: Padding(
             padding: const EdgeInsets.only(top: 40, left: 100),
@@ -353,6 +354,9 @@ class _NewUserUpload extends State<NewUserUpload> {
                           color: Colors.indigo.shade900,
                           fontWeight: FontWeight.bold,
                         ),
+                      ),
+                      SizedBox(
+                        height: 10,
                       ),
                       Text(
                         translation(context).user,
@@ -692,35 +696,40 @@ class _NewUserUpload extends State<NewUserUpload> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              translation(context).currentCountry,
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold),
+                            SizedBox(
+                              width: 200,
+                              child: Text(
+                                translation(context).currentCountry,
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                             SizedBox(height: 60),
-                            Text(
-                              translation(context).currentState,
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold),
+                            SizedBox(
+                              width: 200,
+                              child: Text(
+                                translation(context).currentState,
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                             SizedBox(
                               height: 60,
                             ),
-                            Text(
-                              translation(context).currentCity,
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold),
+                            SizedBox(
+                              width: 200,
+                              child: Text(
+                                translation(context).currentCity,
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ],
                         ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        SizedBox(
-                          width: 200,
+                        Expanded(
                           child: CountryStateCityPicker(
                               country: controller.country,
                               state: controller.state,
@@ -737,73 +746,61 @@ class _NewUserUpload extends State<NewUserUpload> {
                                           BorderSide(color: Colors.black)))),
                         ),
                         SizedBox(
-                          width: 20,
+                          width: 70,
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              translation(context).expectedWage,
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold),
+                            SizedBox(
+                              width: 200,
+                              child: Text(
+                                translation(context).expectedWage,
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                             SizedBox(height: 60),
-                            Text(
-                              translation(context).currentWage,
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold),
+                            SizedBox(
+                              width: 200,
+                              child: Text(
+                                translation(context).currentWage,
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
-                            Text(
-                              'CTC',
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold),
+                            SizedBox(height: 60),
+                            SizedBox(
+                              width: 200,
+                              child: Text(
+                                'CTC',
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ],
                         ),
-                        SizedBox(
-                          width: 40,
-                        ),
-                        Column(
-                          children: [
-                            SizedBox(
-                              width: 400,
-                              height: 40,
-                              child: TextField(
+                        Expanded(
+                          child: Column(
+                            children: [
+                              CustomTextfield(
                                 controller:
                                     controller.expectedwage, // Set controller
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                ),
                               ),
-                            ),
-                            SizedBox(height: 40),
-                            SizedBox(
-                              width: 400,
-                              height: 40,
-                              child: TextField(
+                              SizedBox(height: 40),
+                              CustomTextfield(
                                 controller: controller.currentwage,
                                 // Set controller
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                ),
                               ),
-                            ),
-                            SizedBox(height: 40),
-                            SizedBox(
-                              width: 400,
-                              height: 40,
-                              child: TextField(
+                              SizedBox(height: 40),
+                              CustomTextfield(
                                 controller: controller.ctc,
                                 // Set controller
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ],
                     ),
