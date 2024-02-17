@@ -12,6 +12,7 @@ import 'classes/language.dart';
 import 'classes/language_constants.dart';
 import 'gen_l10n/app_localizations.dart';
 import 'widgets/custombutton.dart';
+import 'package:sizer/sizer.dart';
 import 'widgets/hiremeinindia.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,194 +24,191 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    double h = MediaQuery.of(context).size.width;
-    return Scaffold(
-      appBar: AppBar(
-        leadingWidth: 2,
-        automaticallyImplyLeading: false,
-        surfaceTintColor: Colors.amber,
-        shadowColor: Colors.amber,
-        elevation: 5,
-        title: Padding(
-          padding: EdgeInsets.fromLTRB(h * 0.1, 0.2, 0.2, 0.2),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              HireMeInIndia(),
-              Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.indigo.shade900,
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2<Language>(
-                        isExpanded: true,
-                        hint: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                translation(context).english,
-                                style: CustomTextStyle.dropdowntext,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        onChanged: (Language? language) async {
-                          if (language != null) {
-                            Locale _locale =
-                                await setLocale(language.languageCode);
-                            HireApp.setLocale(context, _locale);
-                          } else {
-                            language;
-                          }
-                        },
-                        items: Language.languageList()
-                            .map<DropdownMenuItem<Language>>(
-                              (e) => DropdownMenuItem<Language>(
-                                value: e,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: <Widget>[
-                                    Text(
-                                      e.flag,
+    return Sizer(builder: (context, orientation, deviceType) {
+      return Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(75),
+            child: Material(
+              elevation: 3,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(5.w, 0, 2.5.w, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    HireMeInIndia(),
+                    Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.indigo.shade900,
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton2<Language>(
+                              isExpanded: true,
+                              hint: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      translation(context).english,
                                       style: CustomTextStyle.dropdowntext,
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    Text(
-                                      e.langname,
-                                      style: CustomTextStyle.dropdowntext,
-                                      overflow: TextOverflow.ellipsis,
-                                    )
-                                  ],
+                                  ),
+                                ],
+                              ),
+                              onChanged: (Language? language) async {
+                                if (language != null) {
+                                  Locale _locale =
+                                      await setLocale(language.languageCode);
+                                  HireApp.setLocale(context, _locale);
+                                } else {
+                                  language;
+                                }
+                              },
+                              items: Language.languageList()
+                                  .map<DropdownMenuItem<Language>>(
+                                    (e) => DropdownMenuItem<Language>(
+                                      value: e,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: <Widget>[
+                                          Text(
+                                            e.flag,
+                                            style: CustomTextStyle.dropdowntext,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Text(
+                                            e.langname,
+                                            style: CustomTextStyle.dropdowntext,
+                                            overflow: TextOverflow.ellipsis,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                              buttonStyleData: ButtonStyleData(
+                                height: 30,
+                                width: 150,
+                                elevation: 1,
+                                padding:
+                                    const EdgeInsets.only(left: 14, right: 14),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(
+                                    color: Colors.black26,
+                                  ),
+                                  color: Colors.indigo.shade900,
                                 ),
                               ),
-                            )
-                            .toList(),
-                        buttonStyleData: ButtonStyleData(
-                          height: 30,
-                          width: 150,
-                          elevation: 1,
-                          padding: const EdgeInsets.only(left: 14, right: 14),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(
-                              color: Colors.black26,
+                              iconStyleData: const IconStyleData(
+                                icon: Icon(
+                                  Icons.arrow_drop_down_sharp,
+                                ),
+                                iconSize: 25,
+                                iconEnabledColor: Colors.white,
+                                iconDisabledColor: null,
+                              ),
+                              dropdownStyleData: DropdownStyleData(
+                                maxHeight: 210,
+                                elevation: 0,
+                                padding: EdgeInsets.only(
+                                    left: 10, right: 10, top: 5, bottom: 15),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  border: Border.all(color: Colors.black),
+                                  color: Colors.indigo.shade900,
+                                ),
+                                scrollPadding: EdgeInsets.all(5),
+                                scrollbarTheme: ScrollbarThemeData(
+                                  thickness:
+                                      MaterialStateProperty.all<double>(6),
+                                  thumbVisibility:
+                                      MaterialStateProperty.all<bool>(true),
+                                ),
+                              ),
+                              menuItemStyleData: const MenuItemStyleData(
+                                height: 25,
+                                padding: EdgeInsets.only(left: 14, right: 14),
+                              ),
                             ),
+                          ),
+                        ),
+                        SizedBox(width: 20),
+                        Container(
+                          decoration: BoxDecoration(
                             color: Colors.indigo.shade900,
                           ),
-                        ),
-                        iconStyleData: const IconStyleData(
-                          icon: Icon(
-                            Icons.arrow_drop_down_sharp,
-                          ),
-                          iconSize: 25,
-                          iconEnabledColor: Colors.white,
-                          iconDisabledColor: null,
-                        ),
-                        dropdownStyleData: DropdownStyleData(
-                          maxHeight: 210,
-                          elevation: 0,
-                          padding: EdgeInsets.only(
-                              left: 10, right: 10, top: 5, bottom: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Colors.black),
-                            color: Colors.indigo.shade900,
-                          ),
-                          scrollPadding: EdgeInsets.all(5),
-                          scrollbarTheme: ScrollbarThemeData(
-                            thickness: MaterialStateProperty.all<double>(6),
-                            thumbVisibility:
-                                MaterialStateProperty.all<bool>(true),
-                          ),
-                        ),
-                        menuItemStyleData: const MenuItemStyleData(
-                          height: 25,
-                          padding: EdgeInsets.only(left: 14, right: 14),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  Container(
-                    width: MediaQuery.of(context).size.width / 13,
-                    decoration: BoxDecoration(
-                      color: Colors.indigo.shade900,
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2<String>(
-                        isExpanded: true,
-                        items: [
-                          DropdownMenuItem<String>(
-                            value: 'Option 1',
-                            child: Text('Option 1'),
-                          ),
-                          DropdownMenuItem<String>(
-                            value: 'Option 2',
-                            child: Text('Option 1'),
-                          ),
-                          // Add more options as needed
-                        ],
-                        onChanged: (value) {
-                          // Handle option selection
-                        },
-                        hint: Text(
-                          AppLocalizations.of(context)!.findaJob,
-                          textScaleFactor: ScaleSize.textScaleFactor(context),
-                          style: TextStyle(color: Colors.white, fontSize: 8),
-                        ),
-                        buttonStyleData: ButtonStyleData(
-                          height: 30,
-                          width: 150,
-                          elevation: 1,
-                          padding: const EdgeInsets.only(left: 14, right: 14),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(
-                              color: Colors.black26,
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton2<String>(
+                              isExpanded: true,
+                              items: [
+                                DropdownMenuItem<String>(
+                                  value: 'Option 1',
+                                  child: Text('Option 1'),
+                                ),
+                                DropdownMenuItem<String>(
+                                  value: 'Option 2',
+                                  child: Text('Option 1'),
+                                ),
+                                // Add more options as needed
+                              ],
+                              onChanged: (value) {
+                                // Handle option selection
+                              },
+                              hint: Text(
+                                AppLocalizations.of(context)!.findaJob,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              buttonStyleData: ButtonStyleData(
+                                height: 30,
+                                width: 150,
+                                elevation: 1,
+                                padding:
+                                    const EdgeInsets.only(left: 14, right: 14),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(
+                                    color: Colors.black26,
+                                  ),
+                                  color: Colors.indigo.shade900,
+                                ),
+                              ),
+                              iconStyleData: const IconStyleData(
+                                icon: Icon(
+                                  Icons.arrow_drop_down_sharp,
+                                ),
+                                iconSize: 25,
+                                iconEnabledColor: Colors.white,
+                                iconDisabledColor: null,
+                              ),
+                              dropdownStyleData: DropdownStyleData(
+                                maxHeight: 210,
+                                elevation: 0,
+                                padding: EdgeInsets.only(
+                                    left: 10, right: 10, top: 5, bottom: 15),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  border: Border.all(color: Colors.black),
+                                  color: Colors.indigo.shade900,
+                                ),
+                                scrollPadding: EdgeInsets.all(5),
+                                scrollbarTheme: ScrollbarThemeData(
+                                  thickness:
+                                      MaterialStateProperty.all<double>(6),
+                                  thumbVisibility:
+                                      MaterialStateProperty.all<bool>(true),
+                                ),
+                              ),
+                              menuItemStyleData: const MenuItemStyleData(
+                                height: 25,
+                                padding: EdgeInsets.only(left: 14, right: 14),
+                              ),
                             ),
-                            color: Colors.indigo.shade900,
                           ),
                         ),
-                        iconStyleData: const IconStyleData(
-                          icon: Icon(
-                            Icons.arrow_drop_down_sharp,
-                          ),
-                          iconSize: 25,
-                          iconEnabledColor: Colors.white,
-                          iconDisabledColor: null,
-                        ),
-                        dropdownStyleData: DropdownStyleData(
-                          maxHeight: 210,
-                          elevation: 0,
-                          padding: EdgeInsets.only(
-                              left: 10, right: 10, top: 5, bottom: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Colors.black),
-                            color: Colors.indigo.shade900,
-                          ),
-                          scrollPadding: EdgeInsets.all(5),
-                          scrollbarTheme: ScrollbarThemeData(
-                            thickness: MaterialStateProperty.all<double>(6),
-                            thumbVisibility:
-                                MaterialStateProperty.all<bool>(true),
-                          ),
-                        ),
-                        menuItemStyleData: const MenuItemStyleData(
-                          height: 25,
-                          padding: EdgeInsets.only(left: 14, right: 14),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width / 13,
-                    child: Row(
-                      children: [
+                        SizedBox(width: 20),
                         CircleAvatar(
                           backgroundColor: Colors.black,
                           child: CircleAvatar(
@@ -222,7 +220,9 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 15),
+                        SizedBox(
+                          width: 0.5.w,
+                        ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -235,9 +235,6 @@ class _HomePageState extends State<HomePage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
                             Text(
                               translation(context).user,
                               style: TextStyle(
@@ -249,46 +246,119 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(h * 0.1, 0.1, 0.1, 0.1),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  child: Column(children: [
-                    Text(
-                      translation(context).indiasBestPortalforBlue,
-                      textScaleFactor: ScaleSize.textScaleFactor(context),
-                      style: TextStyle(
-                          color: Colors.indigo.shade900,
-                          fontFamily: 'Poppins',
-                          fontSize: 30),
-                    ),
-                    Text(
-                      translation(context).andGreyCollarJob,
-                      textScaleFactor: ScaleSize.textScaleFactor(context),
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontFamily: 'Poppins',
-                          fontSize: 30),
-                    ),
-                  ]),
+                  ],
                 ),
-                SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
+              ),
+            ),
+          ),
+          body: LayoutBuilder(
+              builder: (BuildContext ctx, BoxConstraints constraints) {
+            if (constraints.maxWidth >= 850) {
+              return Center(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(0.1.w, 0.1.h, 0.1.w, 0.1.h),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Column(children: [
+                          Text(
+                            translation(context).indiasBestPortalforBlue,
+                            style: TextStyle(
+                                color: Colors.indigo.shade900,
+                                fontFamily: 'Poppins',
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            translation(context).andGreyCollarJob,
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontFamily: 'Poppins',
+                              fontSize: 11.sp,
+                            ),
+                          ),
+                        ]),
+                        SizedBox(height: 30),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Column(
+                              children: [
+                                Image.network(
+                                  'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/imgbuilding.jpeg?alt=media&token=000f8b21-f783-4c92-a475-767b75dab94c',
+                                  height: 200,
+                                  width: 200,
+                                ),
+                                SizedBox(
+                                  width: 200,
+                                  height: 50,
+                                  child: CustomButton(
+                                    text: translation(context).hireNow,
+                                    onPressed: () {
+                                      _showDialog();
+                                    },
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(width: 50),
+                            Column(
+                              children: [
+                                Image.network(
+                                  'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/img.jpg?alt=media&token=4f013131-5ba4-4811-bfd3-f25c6ececb1e',
+                                  height: 200,
+                                  width: 200,
+                                ),
+                                SizedBox(
+                                    width: 200,
+                                    height: 50,
+                                    child: CustomButton(
+                                      text: translation(context).getJob,
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Hired()),
+                                        );
+                                      },
+                                    ))
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            } else {
+              return Center(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(0.1.w, 0.1.h, 0.1.w, 0.1.h),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(children: [
+                          Text(
+                            translation(context).indiasBestPortalforBlue,
+                            style: TextStyle(
+                                color: Colors.indigo.shade900,
+                                fontFamily: 'Poppins',
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            translation(context).andGreyCollarJob,
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontFamily: 'Poppins',
+                              fontSize: 11.sp,
+                            ),
+                          ),
+                        ]),
+                        SizedBox(height: 30),
                         Image.network(
                           'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/imgbuilding.jpeg?alt=media&token=000f8b21-f783-4c92-a475-767b75dab94c',
                           height: 200,
@@ -303,12 +373,8 @@ class _HomePageState extends State<HomePage> {
                               _showDialog();
                             },
                           ),
-                        )
-                      ],
-                    ),
-                    SizedBox(width: 50),
-                    Column(
-                      children: [
+                        ),
+                        SizedBox(height: 50),
                         Image.network(
                           'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/img.jpg?alt=media&token=4f013131-5ba4-4811-bfd3-f25c6ececb1e',
                           height: 200,
@@ -329,14 +395,12 @@ class _HomePageState extends State<HomePage> {
                             ))
                       ],
                     ),
-                  ],
+                  ),
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+              );
+            }
+          }));
+    });
   }
 
   void _showDialog() {
@@ -375,14 +439,5 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
-  }
-}
-
-class ScaleSize1 {
-  static double textScaleFactor(BuildContext context,
-      {double maxTextScaleFactor = 2}) {
-    final width = MediaQuery.of(context).size.width;
-    double val = (width / 1000) * maxTextScaleFactor;
-    return max(1, min(val, maxTextScaleFactor));
   }
 }

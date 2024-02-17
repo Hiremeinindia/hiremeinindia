@@ -93,7 +93,7 @@ class _HireAppState extends State<HireApp> {
         supportedLocales: AppLocalizations.supportedLocales,
         locale: _locale,
         debugShowCheckedModeBanner: false,
-        home: Hired(),
+        home: HomePage(),
       ),
     );
   }
