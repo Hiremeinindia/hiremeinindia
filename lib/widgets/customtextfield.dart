@@ -28,7 +28,7 @@ final class CustomTextfield extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: dynamicHeight ?? 50.0,
+      height: dynamicHeight ?? 45.0,
       child: TextFormField(
         style: TextStyle(height: 1),
         validator: validator,
