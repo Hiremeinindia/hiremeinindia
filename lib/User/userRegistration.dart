@@ -687,14 +687,17 @@ class _RegistrationState extends State<Registration> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                SizedBox(
-                                  height: 40,
-                                  width: 40,
-                                  child: ImageIcon(
-                                    NetworkImage(
-                                      'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/cancel.png?alt=media&token=951094e2-a6f9-46a3-96bc-ddbb3362f08c',
+                                GestureDetector(
+                                  onTap: Navigator.of(context).pop,
+                                  child: SizedBox(
+                                    height: 40,
+                                    width: 40,
+                                    child: ImageIcon(
+                                      NetworkImage(
+                                        'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/cancel.png?alt=media&token=951094e2-a6f9-46a3-96bc-ddbb3362f08c',
+                                      ),
+                                      size: 25,
                                     ),
-                                    size: 25,
                                   ),
                                 ),
                               ],
@@ -929,7 +932,7 @@ class _RegistrationState extends State<Registration> {
                                           children: [
                                             CustomTextfield(
                                               text: 'First Name',
-                                              validator: nameValidator,
+                                              //                 validator: nameValidator,
                                               controller: controller.name,
                                             ),
                                             SizedBox(
@@ -937,7 +940,7 @@ class _RegistrationState extends State<Registration> {
                                             ),
                                             CustomTextfield(
                                               text: 'Age',
-                                              validator: nameValidator,
+                                              //                validator: nameValidator,
                                               controller: controller.age,
                                             ),
                                             SizedBox(
@@ -946,14 +949,14 @@ class _RegistrationState extends State<Registration> {
                                             CustomTextfield(
                                               text: 'Email address',
                                               controller: controller.email,
-                                              validator: emailValidator,
+                                              //              validator: emailValidator,
                                             ),
                                             SizedBox(
                                               height: 17,
                                             ),
                                             CustomTextfield(
                                               text: 'Address',
-                                              validator: nameValidator,
+                                              //                   validator: nameValidator,
                                               controller: controller.address,
                                             ),
                                             SizedBox(
@@ -1072,14 +1075,14 @@ class _RegistrationState extends State<Registration> {
                                               height: 17,
                                             ),
                                             CustomTextfield(
-                                              validator: nameValidator,
+                                              //       validator: nameValidator,
                                               controller: controller.workexp,
                                             ),
                                             SizedBox(
                                               height: 17,
                                             ),
                                             CustomTextfield(
-                                              validator: nameValidator,
+                                              //     validator: nameValidator,
                                               controller:
                                                   controller.qualiDescription,
                                             ),
@@ -1170,14 +1173,14 @@ class _RegistrationState extends State<Registration> {
                                           children: [
                                             CustomTextfield(
                                               text: 'Aadhar',
-                                              validator: (value) {
-                                                if (value!.isEmpty) {
-                                                  return '*Required';
-                                                } else if (value.length != 12) {
-                                                  return 'Aadhar Number must be of 12 digit';
-                                                }
-                                                return null;
-                                              },
+                                              // validator: (value) {
+                                              //   if (value!.isEmpty) {
+                                              //     return '*Required';
+                                              //   } else if (value.length != 12) {
+                                              //     return 'Aadhar Number must be of 12 digit';
+                                              //   }
+                                              //   return null;
+                                              // },
                                               controller: controller.aadharno,
                                             ),
                                             SizedBox(
@@ -1186,19 +1189,19 @@ class _RegistrationState extends State<Registration> {
                                             CustomTextfield(
                                               text: 'Phone number',
                                               controller: controller.mobile,
-                                              validator: (value) {
-                                                if (value!.length != 10)
-                                                  return 'Mobile Number must be of 10 digit';
-                                                else
-                                                  return null;
-                                              },
+                                              // validator: (value) {
+                                              //   if (value!.length != 10)
+                                              //     return 'Mobile Number must be of 10 digit';
+                                              //   else
+                                              //     return null;
+                                              // },
                                             ),
                                             SizedBox(
                                               height: 17,
                                             ),
                                             CustomTextfield(
                                               text: 'Password',
-                                              validator: validatePassword,
+                                              //     validator: validatePassword,
                                               onsaved: (value) {
                                                 setState(() {
                                                   password = value;
@@ -1211,7 +1214,7 @@ class _RegistrationState extends State<Registration> {
                                             ),
                                             CustomTextfield(
                                               text: 'Work title',
-                                              validator: nameValidator,
+                                              //        validator: nameValidator,
                                               controller: controller.worktitle,
                                             ),
                                             SizedBox(
@@ -1219,7 +1222,7 @@ class _RegistrationState extends State<Registration> {
                                             ),
                                             CustomTextfield(
                                               text: 'Project Worked',
-                                              validator: nameValidator,
+                                              //       validator: nameValidator,
                                               controller: controller.project,
                                             ),
                                             SizedBox(
@@ -1337,7 +1340,7 @@ class _RegistrationState extends State<Registration> {
                                             ),
                                             CustomTextfield(
                                               text: 'Certified Courses',
-                                              validator: nameValidator,
+                                              //      validator: nameValidator,
                                               controller: controller.course,
                                             ),
                                           ],
@@ -2041,7 +2044,7 @@ class _RegistrationState extends State<Registration> {
                                         child: TextFormField(
                                           maxLines: 5,
                                           style: TextStyle(height: 1),
-                                          validator: nameValidator,
+                                          //      validator: nameValidator,
                                           controller: controller.aboutYou,
                                           decoration: InputDecoration(
                                             contentPadding: EdgeInsets.only(
@@ -2107,10 +2110,11 @@ class _RegistrationState extends State<Registration> {
                                         List<String> skills = controller.skills;
                                         String? selectedOption =
                                             widget.selectedOption;
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => NewUserUpload(
+                                        showDialog(
+                                          barrierColor: Color(0x00ffffff),
+                                          context: context,
+                                          builder: (context) {
+                                            return NewUserUpload(
                                               name: name,
                                               email: email,
                                               password: password,
@@ -2131,16 +2135,15 @@ class _RegistrationState extends State<Registration> {
                                               qualification: qualification,
                                               selectedOption: selectedOption,
                                               gender: gender,
-                                            ),
-                                          ),
+                                            );
+                                          },
                                         );
                                       }
                                     },
                                     style: ElevatedButton.styleFrom(
                                       fixedSize:
                                           const Size.fromWidth(double.infinity),
-                                      backgroundColor:
-                                          Color.fromARGB(255, 128, 123, 229),
+                                      backgroundColor: Colors.indigo.shade900,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(
                                             5), // Adjust border radius as needed
@@ -2180,14 +2183,17 @@ class _RegistrationState extends State<Registration> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                SizedBox(
-                                  height: 40,
-                                  width: 40,
-                                  child: ImageIcon(
-                                    NetworkImage(
-                                      'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/cancel.png?alt=media&token=951094e2-a6f9-46a3-96bc-ddbb3362f08c',
+                                GestureDetector(
+                                  onTap: Navigator.of(context).pop,
+                                  child: SizedBox(
+                                    height: 40,
+                                    width: 40,
+                                    child: ImageIcon(
+                                      NetworkImage(
+                                        'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/cancel.png?alt=media&token=951094e2-a6f9-46a3-96bc-ddbb3362f08c',
+                                      ),
+                                      size: 25,
                                     ),
-                                    size: 25,
                                   ),
                                 ),
                               ],
@@ -2343,7 +2349,7 @@ class _RegistrationState extends State<Registration> {
                                       Expanded(
                                         child: CustomTextfield(
                                           text: 'First Name',
-                                          validator: nameValidator,
+                                          //   validator: nameValidator,
                                           controller: controller.name,
                                         ),
                                       ),
@@ -2366,7 +2372,7 @@ class _RegistrationState extends State<Registration> {
                                       Expanded(
                                         child: CustomTextfield(
                                           text: 'Age',
-                                          validator: nameValidator,
+                                          //   validator: nameValidator,
                                           controller: controller.age,
                                         ),
                                       ),
@@ -2389,7 +2395,7 @@ class _RegistrationState extends State<Registration> {
                                         child: CustomTextfield(
                                           text: 'Email address',
                                           controller: controller.email,
-                                          validator: emailValidator,
+                                          //     validator: emailValidator,
                                         ),
                                       ),
                                     ],
@@ -2410,7 +2416,7 @@ class _RegistrationState extends State<Registration> {
                                       Expanded(
                                         child: CustomTextfield(
                                           text: 'Address',
-                                          validator: nameValidator,
+                                          // validator: nameValidator,
                                           controller: controller.address,
                                         ),
                                       ),
@@ -2545,7 +2551,7 @@ class _RegistrationState extends State<Registration> {
                                           )),
                                       Expanded(
                                         child: CustomTextfield(
-                                          validator: nameValidator,
+                                          //          validator: nameValidator,
                                           controller: controller.workexp,
                                         ),
                                       ),
@@ -2568,7 +2574,7 @@ class _RegistrationState extends State<Registration> {
                                       ),
                                       Expanded(
                                         child: CustomTextfield(
-                                          validator: nameValidator,
+                                          //        validator: nameValidator,
                                           controller:
                                               controller.qualiDescription,
                                         ),
@@ -3352,14 +3358,14 @@ class _RegistrationState extends State<Registration> {
                                       Expanded(
                                         child: CustomTextfield(
                                           text: 'Aadhar',
-                                          validator: (value) {
-                                            if (value!.isEmpty) {
-                                              return '*Required';
-                                            } else if (value.length != 12) {
-                                              return 'Aadhar Number must be of 12 digit';
-                                            }
-                                            return null;
-                                          },
+                                          // validator: (value) {
+                                          //   if (value!.isEmpty) {
+                                          //     return '*Required';
+                                          //   } else if (value.length != 12) {
+                                          //     return 'Aadhar Number must be of 12 digit';
+                                          //   }
+                                          //   return null;
+                                          // },
                                           controller: controller.aadharno,
                                         ),
                                       ),
@@ -3382,12 +3388,12 @@ class _RegistrationState extends State<Registration> {
                                         child: CustomTextfield(
                                           text: 'Phone number',
                                           controller: controller.mobile,
-                                          validator: (value) {
-                                            if (value!.length != 10)
-                                              return 'Mobile Number must be of 10 digit';
-                                            else
-                                              return null;
-                                          },
+                                          // validator: (value) {
+                                          //   if (value!.length != 10)
+                                          //     return 'Mobile Number must be of 10 digit';
+                                          //   else
+                                          //     return null;
+                                          // },
                                         ),
                                       ),
                                     ],
@@ -3408,7 +3414,7 @@ class _RegistrationState extends State<Registration> {
                                       Expanded(
                                         child: CustomTextfield(
                                           text: 'Password',
-                                          validator: validatePassword,
+                                          //   validator: validatePassword,
                                           onsaved: (value) {
                                             setState(() {
                                               password = value;
@@ -3435,7 +3441,7 @@ class _RegistrationState extends State<Registration> {
                                       Expanded(
                                         child: CustomTextfield(
                                           text: 'Work title',
-                                          validator: nameValidator,
+                                          //           validator: nameValidator,
                                           controller: controller.worktitle,
                                         ),
                                       ),
@@ -3457,7 +3463,7 @@ class _RegistrationState extends State<Registration> {
                                       Expanded(
                                         child: CustomTextfield(
                                           text: 'Project Worked',
-                                          validator: nameValidator,
+                                          //            validator: nameValidator,
                                           controller: controller.project,
                                         ),
                                       ),
@@ -3591,7 +3597,7 @@ class _RegistrationState extends State<Registration> {
                                       Expanded(
                                         child: CustomTextfield(
                                           text: 'Certified Courses',
-                                          validator: nameValidator,
+                                          //    validator: nameValidator,
                                           controller: controller.course,
                                         ),
                                       ),
@@ -3618,7 +3624,7 @@ class _RegistrationState extends State<Registration> {
                                         child: CustomTextfield(
                                           dynamicHeight: 80,
                                           text: 'About You',
-                                          validator: nameValidator,
+                                          //              validator: nameValidator,
                                           controller: controller.name,
                                         ),
                                       ),
@@ -3674,11 +3680,11 @@ class _RegistrationState extends State<Registration> {
                                                   controller.skills;
                                               String? selectedOption =
                                                   widget.selectedOption;
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      NewUserUpload(
+                                              showDialog(
+                                                context: context,
+                                                barrierColor: Color(0x00ffffff),
+                                                builder: (context) {
+                                                  return NewUserUpload(
                                                     name: name,
                                                     email: email,
                                                     password: password,
@@ -3701,16 +3707,16 @@ class _RegistrationState extends State<Registration> {
                                                     selectedOption:
                                                         selectedOption,
                                                     gender: gender,
-                                                  ),
-                                                ),
+                                                  );
+                                                },
                                               );
                                             }
                                           },
                                           style: ElevatedButton.styleFrom(
                                             fixedSize: const Size.fromWidth(
                                                 double.infinity),
-                                            backgroundColor: Color.fromARGB(
-                                                255, 128, 123, 229),
+                                            backgroundColor:
+                                                Colors.indigo.shade900,
                                             shape: RoundedRectangleBorder(
                                               borderRadius: BorderRadius.circular(
                                                   5), // Adjust border radius as needed

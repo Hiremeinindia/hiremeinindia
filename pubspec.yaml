@@ -84,6 +84,8 @@ dependencies:
   image_picker: ^1.0.7
   omni_datetime_picker: ^1.0.9
   sizer: ^2.0.15
+  ionicons: ^0.2.2
+  font_awesome_flutter: ^10.7.0
   
 
 dev_dependencies:
@@ -135,7 +137,9 @@ flutter:
     - family: ColfaxBold
       fonts:
         - asset: fonts/Colfax-Bold.otf  
-  #       - asset: fonts/Schyler-Italic.ttf
+    - family: Colfax
+      fonts:
+        - asset: fonts/Colfax-Regular.otf    #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:
