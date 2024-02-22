@@ -1,19 +1,13 @@
 import 'package:country_state_city_pro/country_state_city_pro.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hiremeinindiaapp/User/user.dart';
-import 'package:hiremeinindiaapp/User/userRegistration.dart';
-import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
 import 'package:hiremeinindiaapp/User/userPayment.dart';
 import 'package:sizer/sizer.dart';
 import '../widgets/customtextfield.dart';
 import '../widgets/hiremeinindia.dart';
 import 'userFormState.dart';
-import '../classes/language.dart';
 import '../classes/language_constants.dart';
-import '../Widgets/customtextstyle.dart';
-import '../main.dart';
 import '../widgets/custombutton.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -602,7 +596,6 @@ class _NewUserUpload extends State<NewUserUpload> {
                                                     .currentCountry,
                                                 style: TextStyle(
                                                     fontFamily: 'Poppins',
-                                                    fontWeight: FontWeight.bold,
                                                     fontSize: 12),
                                               ),
                                               SizedBox(
@@ -613,7 +606,6 @@ class _NewUserUpload extends State<NewUserUpload> {
                                                     .currentState,
                                                 style: TextStyle(
                                                     fontFamily: 'Poppins',
-                                                    fontWeight: FontWeight.bold,
                                                     fontSize: 12),
                                               ),
                                               SizedBox(
@@ -624,7 +616,6 @@ class _NewUserUpload extends State<NewUserUpload> {
                                                     .currentCity,
                                                 style: TextStyle(
                                                     fontFamily: 'Poppins',
-                                                    fontWeight: FontWeight.bold,
                                                     fontSize: 12),
                                               ),
                                             ],
@@ -665,7 +656,6 @@ class _NewUserUpload extends State<NewUserUpload> {
                                                     .expectedWage,
                                                 style: TextStyle(
                                                     fontFamily: 'Poppins',
-                                                    fontWeight: FontWeight.bold,
                                                     fontSize: 12),
                                               ),
                                               SizedBox(
@@ -676,7 +666,6 @@ class _NewUserUpload extends State<NewUserUpload> {
                                                     .currentWage,
                                                 style: TextStyle(
                                                     fontFamily: 'Poppins',
-                                                    fontWeight: FontWeight.bold,
                                                     fontSize: 12),
                                               ),
                                               SizedBox(
@@ -686,7 +675,6 @@ class _NewUserUpload extends State<NewUserUpload> {
                                                 'CTC',
                                                 style: TextStyle(
                                                     fontFamily: 'Poppins',
-                                                    fontWeight: FontWeight.bold,
                                                     fontSize: 12),
                                               ),
                                             ],
@@ -977,7 +965,8 @@ class _NewUserUpload extends State<NewUserUpload> {
                                               ScaleSize.textScaleFactor(
                                                   context),
                                           style: TextStyle(
-                                              fontFamily: 'ColfaxBold',
+                                              fontFamily: 'Colfax',
+                                              fontWeight: FontWeight.bold,
                                               fontSize: 14,
                                               color: Colors.black),
                                         ),

@@ -8,17 +8,12 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:hiremeinindiaapp/User/user.dart';
 import 'package:hiremeinindiaapp/User/userFormState.dart';
 import 'package:hiremeinindiaapp/User/userUpload.dart';
-import 'package:hiremeinindiaapp/classes/language.dart';
 import 'package:hiremeinindiaapp/classes/language_constants.dart';
-import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
-import 'package:hiremeinindiaapp/main.dart';
 import 'package:hiremeinindiaapp/widgets/customtextfield.dart';
-import 'package:hiremeinindiaapp/widgets/customtextstyle.dart';
 import 'package:hiremeinindiaapp/widgets/hiremeinindia.dart';
 import 'package:mailer/mailer.dart' as mailer;
 import 'package:sizer/sizer.dart';
 import '../loginpage.dart';
-import '../widgets/custombutton.dart';
 import 'package:mailer/smtp_server.dart' as smtp;
 
 class Registration extends StatefulWidget {
@@ -837,8 +832,9 @@ class _RegistrationState extends State<Registration> {
                                         textScaleFactor:
                                             ScaleSize.textScaleFactor(context),
                                         style: TextStyle(
-                                            fontFamily: 'ColfaxBold',
+                                            fontFamily: 'Colfax',
                                             fontSize: 16,
+                                            fontWeight: FontWeight.bold,
                                             color: Colors.black),
                                       ),
                                     ],
@@ -1361,11 +1357,15 @@ class _RegistrationState extends State<Registration> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            translation(context).skills,
-                                            style: TextStyle(
-                                                fontFamily: 'Poppins',
-                                                fontSize: 12),
+                                          Container(
+                                            color: Colors.indigo.shade200,
+                                            width: 152,
+                                            child: Text(
+                                              translation(context).skills,
+                                              style: TextStyle(
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 12),
+                                            ),
                                           ),
                                           SizedBox(
                                             height: 44.8,
@@ -1379,10 +1379,7 @@ class _RegistrationState extends State<Registration> {
                                         ],
                                       ),
                                       SizedBox(
-                                        width: 4.5.w,
-                                      ),
-                                      SizedBox(
-                                        width: 10,
+                                        width: 2.5.w,
                                       ),
                                       widget.selectedOption == 'Blue'
                                           ? Expanded(
@@ -1906,14 +1903,21 @@ class _RegistrationState extends State<Registration> {
                                               ),
                                             ),
                                       SizedBox(
-                                        width: 4.5.w,
+                                        width: 2.5.w,
                                       ),
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
-                                        children: [Text('')],
+                                        children: [
+                                          Text(
+                                            translation(context).aadhar,
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12),
+                                          ),
+                                        ],
                                       ),
                                       SizedBox(
                                         width: 2.5.w,
@@ -1926,9 +1930,7 @@ class _RegistrationState extends State<Registration> {
                                               MainAxisAlignment.start,
                                           children: [
                                             Container(
-                                              color: Colors.brown.shade300,
                                               height: 45,
-                                              width: 30.w,
                                               padding: EdgeInsets.only(
                                                   top: 5, bottom: 5),
                                               child: Wrap(
@@ -1974,8 +1976,6 @@ class _RegistrationState extends State<Registration> {
                                             ),
                                             Container(
                                               height: 45,
-                                              width: 30.w,
-                                              color: Colors.brown.shade300,
                                               padding: EdgeInsets.only(
                                                   top: 5, bottom: 5),
                                               child: Wrap(
@@ -2038,7 +2038,7 @@ class _RegistrationState extends State<Registration> {
                                         ],
                                       ),
                                       SizedBox(
-                                        width: 2.5.w,
+                                        width: 2.7.w,
                                       ),
                                       Expanded(
                                         child: TextFormField(
@@ -2326,7 +2326,8 @@ class _RegistrationState extends State<Registration> {
                                         textScaleFactor:
                                             ScaleSize.textScaleFactor(context),
                                         style: TextStyle(
-                                            fontFamily: 'ColfaxBold',
+                                            fontFamily: 'Colfax',
+                                            fontWeight: FontWeight.bold,
                                             fontSize: 14,
                                             color: Colors.black),
                                       ),

@@ -12,14 +12,9 @@ import 'package:hiremeinindiaapp/User/user.dart';
 import 'package:hiremeinindiaapp/User/userFormState.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:sizer/sizer.dart';
-import '../Widgets/customtextstyle.dart';
 import '../classes/language_constants.dart';
 import '../widgets/custombutton.dart';
 import '../widgets/hiremeinindia.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import '../classes/language.dart';
-import '../gen_l10n/app_localizations.dart';
-import '../main.dart';
 import 'package:http/http.dart' as http;
 
 class NewUserPayment extends StatefulWidget {
@@ -929,7 +924,8 @@ class _NewUserPayment extends State<NewUserPayment> {
                                                 ScaleSize.textScaleFactor(
                                                     context),
                                             style: TextStyle(
-                                                fontFamily: 'ColfaxBold',
+                                                fontFamily: 'Colfax',
+                                                fontWeight: FontWeight.bold,
                                                 fontSize: 14,
                                                 color: Colors.black),
                                           ),

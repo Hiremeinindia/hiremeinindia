@@ -1,15 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/corporate.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/corporateFormState.dart';
-import 'package:hiremeinindiaapp/Widgets/customTextstyle.dart';
-import 'package:hiremeinindiaapp/classes/language.dart';
-import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
-import 'package:hiremeinindiaapp/main.dart';
+import 'package:sizer/sizer.dart';
 
 import '../classes/language_constants.dart';
 import '../widgets/custombutton.dart';
@@ -68,429 +64,612 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        centerTitle: false,
-        toolbarHeight: 80,
-        surfaceTintColor: Colors.transparent,
-        elevation: 0.0,
-        title: Padding(
-          padding: const EdgeInsets.only(top: 40, left: 100),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              HireMeInIndia(),
-              Row(
-                children: [
-                  Container(
+    return Sizer(builder: (context, orientation, deviceType) {
+      return Padding(
+        padding: EdgeInsets.fromLTRB(2.w, 2.h, 2.w, 2.h),
+        child: Dialog(
+          // The Dialog widget provides a full-page overlay
+          child: Material(
+            elevation: 4,
+            child: LayoutBuilder(
+                builder: (BuildContext ctx, BoxConstraints constraints) {
+              if (constraints.maxWidth >= 633) {
+                return SingleChildScrollView(
+                  child: Container(
+                    height: 91.h,
                     decoration: BoxDecoration(
-                      color: Colors.indigo.shade900,
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2<Language>(
-                        isExpanded: true,
-                        hint: Row(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30)),
+                    child: Form(
+                      key: _formKey,
+                      child: Padding(
+                        padding:
+                            EdgeInsets.fromLTRB(2.5.w, 2.5.h, 2.5.w, 2.5.h),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(
-                              child: Text(
-                                translation(context).english,
-                                style: CustomTextStyle.dropdowntext,
-                                overflow: TextOverflow.ellipsis,
+                            Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: Navigator.of(context).pop,
+                                      child: SizedBox(
+                                        height: 40,
+                                        width: 40,
+                                        child: ImageIcon(
+                                          NetworkImage(
+                                            'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/cancel.png?alt=media&token=951094e2-a6f9-46a3-96bc-ddbb3362f08c',
+                                          ),
+                                          size: 25,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Already have an account?',
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins', fontSize: 15),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoginPage()),
+                                        );
+                                      },
+                                      child: Text(
+                                        'Sign in',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            color: Colors.indigo.shade900,
+                                            fontSize: 13),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                      3.w, 0.6.h, 3.w, 0.5.h),
+                                  child: Column(
+                                    children: [
+                                      Divider(color: Colors.black),
+                                      SizedBox(
+                                        height: 3.h,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            translation(context)
+                                                .registerAsANewUser,
+                                            textScaleFactor:
+                                                ScaleSize.textScaleFactor(
+                                                    context),
+                                            style: TextStyle(
+                                                fontFamily: 'Colfax',
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                                color: Colors.black),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 3.h,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                translation(context).name,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 12),
+                                              ),
+                                              SizedBox(
+                                                height: 44.8,
+                                              ),
+                                              Text(
+                                                translation(context)
+                                                    .companyName,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 12),
+                                              ),
+                                              SizedBox(
+                                                height: 44.8,
+                                              ),
+                                              Text(
+                                                translation(context).email,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 12),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            width: 2.5.w,
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                CustomTextfield(
+                                                  text: 'First Name',
+                                                  validator: nameValidator,
+                                                  controller: controller.name,
+                                                ),
+                                                SizedBox(
+                                                  height: 17,
+                                                ),
+                                                CustomTextfield(
+                                                  validator: nameValidator,
+                                                  text: 'Company Name',
+                                                  controller:
+                                                      controller.companyName,
+                                                ),
+                                                SizedBox(
+                                                  height: 17,
+                                                ),
+                                                CustomTextfield(
+                                                  text: 'Email ID',
+                                                  validator: MultiValidator([
+                                                    RequiredValidator(
+                                                        errorText:
+                                                            "* Required"),
+                                                    EmailValidator(
+                                                        errorText:
+                                                            "Enter valid email id"),
+                                                  ]),
+                                                  controller: controller.email,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 2.5.w,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                translation(context)
+                                                    .designation,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 12),
+                                              ),
+                                              SizedBox(
+                                                height: 44.8,
+                                              ),
+                                              Text(
+                                                translation(context).password,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 12),
+                                              ),
+                                              SizedBox(
+                                                height: 44.8,
+                                              ),
+                                              Text(
+                                                translation(context)
+                                                    .confirmPassword,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 12),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            width: 2.5.w,
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                CustomTextfield(
+                                                  text: 'Designation',
+                                                  validator: nameValidator,
+                                                  controller:
+                                                      controller.designation,
+                                                ),
+                                                SizedBox(
+                                                  height: 17,
+                                                ),
+                                                CustomTextfield(
+                                                  text: 'Password',
+                                                  validator: validatePassword,
+                                                  controller:
+                                                      controller.password,
+                                                ),
+                                                SizedBox(
+                                                  height: 17,
+                                                ),
+                                                CustomTextfield(
+                                                  text: 'Re-enter Password',
+                                                  validator: (value) {
+                                                    if (controller
+                                                            .password.text !=
+                                                        controller
+                                                            .confirmPassword
+                                                            .text) {
+                                                      return "Password did not match";
+                                                    } else {
+                                                      return null;
+                                                    }
+                                                  },
+                                                  controller: controller
+                                                      .confirmPassword,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 1.8.h,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 30,
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                SizedBox(width: 50),
+                                CustomButton(
+                                  text: translation(context).next,
+                                  onPressed: () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      // Sign up with email and password
+                                      UserCredential userCredential =
+                                          await _auth
+                                              .createUserWithEmailAndPassword(
+                                        email: controller.email.text,
+                                        password: controller.password.text,
+                                      );
+
+                                      // Assign the admin role to the user
+                                      await assignUserRole(
+                                          userCredential.user!.uid, 'Admin');
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => LoginPage()),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return Container(
+                  height: 91.h,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30)),
+                  child: Form(
+                    key: _formKey,
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding:
+                            EdgeInsets.fromLTRB(2.5.w, 2.5.h, 2.5.w, 2.5.h),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                GestureDetector(
+                                  onTap: Navigator.of(context).pop,
+                                  child: SizedBox(
+                                    height: 40,
+                                    width: 40,
+                                    child: ImageIcon(
+                                      NetworkImage(
+                                        'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/cancel.png?alt=media&token=951094e2-a6f9-46a3-96bc-ddbb3362f08c',
+                                      ),
+                                      size: 25,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Already have an account?',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins', fontSize: 15),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => LoginPage()),
+                                    );
+                                  },
+                                  child: Text(
+                                    'Sign in',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        color: Colors.indigo.shade900,
+                                        fontSize: 13),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 2.8.h,
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsets.fromLTRB(3.w, 0.6.h, 3.w, 0.5.h),
+                              child: Column(
+                                children: [
+                                  Divider(color: Colors.black),
+                                  SizedBox(
+                                    height: 3.h,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        translation(context).registerAsANewUser,
+                                        textScaleFactor:
+                                            ScaleSize.textScaleFactor(context),
+                                        style: TextStyle(
+                                            fontFamily: 'Colfax',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 3.h,
+                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 20.w,
+                                        child: Text(
+                                          translation(context).name,
+                                          style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontSize: 12),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: CustomTextfield(
+                                          text: 'First Name',
+                                          validator: nameValidator,
+                                          controller: controller.name,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 20.w,
+                                        child: Text(
+                                          translation(context).companyName,
+                                          style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontSize: 12),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: CustomTextfield(
+                                          text: 'Company Name',
+                                          validator: nameValidator,
+                                          controller: controller.companyName,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 20.w,
+                                        child: Text(
+                                          translation(context).email,
+                                          style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontSize: 12),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: CustomTextfield(
+                                          text: 'Email ID',
+                                          validator: MultiValidator([
+                                            RequiredValidator(
+                                                errorText: "* Required"),
+                                            EmailValidator(
+                                                errorText:
+                                                    "Enter valid email id"),
+                                          ]),
+                                          controller: controller.email,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 20.w,
+                                        child: Text(
+                                          translation(context).designation,
+                                          style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontSize: 12),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: CustomTextfield(
+                                          text: 'Designation',
+                                          validator: nameValidator,
+                                          controller: controller.designation,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 20.w,
+                                        child: Text(
+                                          translation(context).password,
+                                          style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontSize: 12),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: CustomTextfield(
+                                          text: 'Password',
+                                          validator: validatePassword,
+                                          controller: controller.password,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                          width: 20.w,
+                                          child: Text(
+                                            translation(context)
+                                                .confirmPassword,
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12),
+                                          )),
+                                      Expanded(
+                                        child: CustomTextfield(
+                                          text: 'Re-enter Password',
+                                          validator: (value) {
+                                            if (controller.password.text !=
+                                                controller
+                                                    .confirmPassword.text) {
+                                              return "Password did not match";
+                                            } else {
+                                              return null;
+                                            }
+                                          },
+                                          controller:
+                                              controller.confirmPassword,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      SizedBox(width: 50),
+                                      CustomButton(
+                                        text: translation(context).next,
+                                        onPressed: () async {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            // Sign up with email and password
+                                            UserCredential userCredential =
+                                                await _auth
+                                                    .createUserWithEmailAndPassword(
+                                              email: controller.email.text,
+                                              password:
+                                                  controller.password.text,
+                                            );
+
+                                            // Assign the admin role to the user
+                                            await assignUserRole(
+                                                userCredential.user!.uid,
+                                                'Admin');
+
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      LoginPage()),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  )
+                                ],
                               ),
+                            ),
+                            SizedBox(
+                              height: 30,
                             ),
                           ],
                         ),
-                        onChanged: (Language? language) async {
-                          if (language != null) {
-                            Locale _locale =
-                                await setLocale(language.languageCode);
-                            HireApp.setLocale(context, _locale);
-                          } else {
-                            language;
-                          }
-                        },
-                        items: Language.languageList()
-                            .map<DropdownMenuItem<Language>>(
-                              (e) => DropdownMenuItem<Language>(
-                                value: e,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: <Widget>[
-                                    Text(
-                                      e.flag,
-                                      style: CustomTextStyle.dropdowntext,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    Text(
-                                      e.langname,
-                                      style: CustomTextStyle.dropdowntext,
-                                      overflow: TextOverflow.ellipsis,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            )
-                            .toList(),
-                        buttonStyleData: ButtonStyleData(
-                          height: 30,
-                          width: 150,
-                          elevation: 1,
-                          padding: const EdgeInsets.only(left: 14, right: 14),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(
-                              color: Colors.black26,
-                            ),
-                            color: Colors.indigo.shade900,
-                          ),
-                        ),
-                        iconStyleData: const IconStyleData(
-                          icon: Icon(
-                            Icons.arrow_drop_down_sharp,
-                          ),
-                          iconSize: 25,
-                          iconEnabledColor: Colors.white,
-                          iconDisabledColor: null,
-                        ),
-                        dropdownStyleData: DropdownStyleData(
-                          maxHeight: 210,
-                          elevation: 0,
-                          padding: EdgeInsets.only(
-                              left: 10, right: 10, top: 5, bottom: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Colors.black),
-                            color: Colors.indigo.shade900,
-                          ),
-                          scrollPadding: EdgeInsets.all(5),
-                          scrollbarTheme: ScrollbarThemeData(
-                            thickness: MaterialStateProperty.all<double>(6),
-                            thumbVisibility:
-                                MaterialStateProperty.all<bool>(true),
-                          ),
-                        ),
-                        menuItemStyleData: const MenuItemStyleData(
-                          height: 25,
-                          padding: EdgeInsets.only(left: 14, right: 14),
-                        ),
                       ),
                     ),
                   ),
-                  SizedBox(width: 20),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.indigo.shade900,
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2<String>(
-                        isExpanded: true,
-                        items: [
-                          DropdownMenuItem<String>(
-                            value: 'Option 1',
-                            child: Text('Option 1'),
-                          ),
-                          DropdownMenuItem<String>(
-                            value: 'Option 2',
-                            child: Text('Option 1'),
-                          ),
-                          // Add more options as needed
-                        ],
-                        onChanged: (value) {
-                          // Handle option selection
-                        },
-                        hint: Text(
-                          AppLocalizations.of(context)!.findaJob,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        buttonStyleData: ButtonStyleData(
-                          height: 30,
-                          width: 150,
-                          elevation: 1,
-                          padding: const EdgeInsets.only(left: 14, right: 14),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(
-                              color: Colors.black26,
-                            ),
-                            color: Colors.indigo.shade900,
-                          ),
-                        ),
-                        iconStyleData: const IconStyleData(
-                          icon: Icon(
-                            Icons.arrow_drop_down_sharp,
-                          ),
-                          iconSize: 25,
-                          iconEnabledColor: Colors.white,
-                          iconDisabledColor: null,
-                        ),
-                        dropdownStyleData: DropdownStyleData(
-                          maxHeight: 210,
-                          elevation: 0,
-                          padding: EdgeInsets.only(
-                              left: 10, right: 10, top: 5, bottom: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Colors.black),
-                            color: Colors.indigo.shade900,
-                          ),
-                          scrollPadding: EdgeInsets.all(5),
-                          scrollbarTheme: ScrollbarThemeData(
-                            thickness: MaterialStateProperty.all<double>(6),
-                            thumbVisibility:
-                                MaterialStateProperty.all<bool>(true),
-                          ),
-                        ),
-                        menuItemStyleData: const MenuItemStyleData(
-                          height: 25,
-                          padding: EdgeInsets.only(left: 14, right: 14),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                );
+              }
+            }),
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 40, top: 35),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.black,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.person_outline_outlined,
-                      size: 35,
-                      color: Colors.indigo.shade900,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 15),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      translation(context).newuser,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.indigo.shade900,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      translation(context).user,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.indigo.shade900,
-                          height: 0),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: 37),
-              Padding(
-                padding: const EdgeInsets.only(left: 160),
-                child: Row(
-                  children: [
-                    Text(
-                      translation(context).registerAsANewUser,
-                      style: TextStyle(fontSize: 30, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 40),
-              Padding(
-                padding: const EdgeInsets.only(left: 170, right: 170),
-                child: Container(
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                translation(context).name,
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(height: 60),
-                              Text(
-                                translation(context).companyName,
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(height: 60),
-                              Text(
-                                translation(context).email,
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            width: 40,
-                          ),
-                          Expanded(
-                            child: Column(
-                              children: [
-                                CustomTextfield(
-                                  validator: nameValidator,
-                                  controller: controller.name,
-                                ),
-                                SizedBox(
-                                  height: 40,
-                                ),
-                                CustomTextfield(
-                                  validator: nameValidator,
-                                  controller: controller.companyName,
-                                ),
-                                SizedBox(
-                                  height: 40,
-                                ),
-                                CustomTextfield(
-                                  validator: MultiValidator([
-                                    RequiredValidator(errorText: "* Required"),
-                                    EmailValidator(
-                                        errorText: "Enter valid email id"),
-                                  ]),
-                                  controller: controller.email,
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: 43,
-                            height: 30,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                translation(context).designation,
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(height: 60),
-                              Text(
-                                translation(context).password,
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(height: 60),
-                              Text(
-                                translation(context).confirmPassword,
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(height: 60),
-                            ],
-                          ),
-                          SizedBox(
-                            width: 28,
-                          ),
-                          Expanded(
-                            child: Column(
-                              children: [
-                                CustomTextfield(
-                                  validator: nameValidator,
-                                  controller: controller.designation,
-                                ),
-                                SizedBox(
-                                  height: 40,
-                                ),
-                                CustomTextfield(
-                                  validator: validatePassword,
-                                  controller: controller.password,
-                                ),
-                                SizedBox(
-                                  height: 40,
-                                ),
-                                CustomTextfield(
-                                  validator: (value) {
-                                    if (controller.password.text !=
-                                        controller.confirmPassword.text) {
-                                      return "Password did not match";
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                  controller: controller.confirmPassword,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 35,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          SizedBox(width: 50),
-                          CustomButton(
-                            text: translation(context).next,
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                // Sign up with email and password
-                                UserCredential userCredential =
-                                    await _auth.createUserWithEmailAndPassword(
-                                  email: controller.email.text,
-                                  password: controller.password.text,
-                                );
-
-                                // Assign the admin role to the user
-                                await assignUserRole(
-                                    userCredential.user!.uid, 'Admin');
-
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginPage()),
-                                );
-                              }
-                            },
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+      );
+    });
   }
 
   Future<void> assignUserRole(String uid, String role) async {

@@ -1,12 +1,9 @@
-import 'dart:math';
-
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/corporateRegistration.dart';
 import 'package:hiremeinindiaapp/gethired.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:hiremeinindiaapp/main.dart';
-import 'package:get/get.dart';
 import 'Widgets/customtextstyle.dart';
 import 'classes/language.dart';
 import 'classes/language_constants.dart';
@@ -298,7 +295,12 @@ class _HomePageState extends State<HomePage> {
                                 child: CustomButton(
                                   text: translation(context).hireNow,
                                   onPressed: () {
-                                    _showDialog();
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return CorporateRegistration();
+                                      },
+                                    );
                                   },
                                 ),
                               )
@@ -502,7 +504,12 @@ class _HomePageState extends State<HomePage> {
                         child: CustomButton(
                           text: translation(context).hireNow,
                           onPressed: () {
-                            _showDialog();
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return CorporateRegistration();
+                              },
+                            );
                           },
                         ),
                       ),
