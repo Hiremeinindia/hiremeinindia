@@ -5,7 +5,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get findaJob => 'FindaJob';
+  String get findaJob => 'Find a Job';
 
   @override
   String get english => 'English';
@@ -98,7 +98,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gender => 'Gender';
 
   @override
-  String get workExperience => 'work Experience';
+  String get workExperience => 'Work Experience';
 
   @override
   String get state => 'State';
@@ -152,7 +152,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noOfDaysOpen => 'Number Of Days Open';
 
   @override
-  String get cvDoc => 'CV Doc';
+  String get cvDocs => 'CV Docs';
 
   @override
   String get hello => 'Hello';
@@ -179,7 +179,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get getHiredFromTheBest => 'Get Hired from the best';
 
   @override
-  String get indiasBestPortalforBlue => 'India\'s best Portal for Blue';
+  String get indiasBestPortalforBlue => 'India\'s best Portal for Blue  ';
 
   @override
   String get andGreyCollarJob => 'and Grey Collar Job';
@@ -197,7 +197,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noOfProfileVisits => 'Number of Profile Visits';
 
   @override
-  String get registerforOther => 'register for Other';
+  String get registerforOther => 'Register for Other';
 
   @override
   String get noOfCandidates => 'Number of Candidates';
@@ -252,4 +252,109 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get designation => 'Designation';
+
+  @override
+  String get guest => 'Guest';
+
+  @override
+  String get user => 'User';
+
+  @override
+  String get corporateconsole => 'Corporate Console';
+
+  @override
+  String get candidate => 'Candidate';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get loginorpleaseregister => 'Login or Please Register';
+
+  @override
+  String get login => 'Login';
+
+  @override
+  String get signup => 'SignUp';
+
+  @override
+  String get age => 'Age';
+
+  @override
+  String get certifiedcourses => 'Certified Courses';
+
+  @override
+  String get projectworked => 'Project Worked';
+
+  @override
+  String get qualificationdescription => 'Qualification Description';
+
+  @override
+  String get newuser => 'New';
+
+  @override
+  String get columnview => 'Column View';
+
+  @override
+  String get multiplefilter => 'Multiple Filter';
+
+  @override
+  String get clear => 'Clear';
+
+  @override
+  String get describeaboutyourself => 'Describe about yourself';
+
+  @override
+  String get workdescription => 'Work Description';
+
+  @override
+  String get male => 'Male';
+
+  @override
+  String get female => 'Female';
+
+  @override
+  String get others => 'Others';
+
+  @override
+  String get nocandidateswereadded => 'No candidates were added';
+
+  @override
+  String get notverified => 'Not Verified';
+
+  @override
+  String get selected => 'Selected';
+
+  @override
+  String get curated => 'Curated';
+
+  @override
+  String get rejected => 'Rejected';
+
+  @override
+  String get scheduleaninterview => 'Schedule an Interview';
+
+  @override
+  String get makeacall => 'Make a call';
+
+  @override
+  String get basicdetails => 'Basic Details';
+
+  @override
+  String get contactnumber => 'Contact Number';
+
+  @override
+  String get emailaddress => 'Email Address';
+
+  @override
+  String get location => 'Location';
+
+  @override
+  String get downloadcv => 'Download CV';
+
+  @override
+  String get downloaddoc => 'Download Documents';
+
+  @override
+  String get educationalqualification => 'Educational Qualification';
 }

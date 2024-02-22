@@ -1,17 +1,13 @@
 import 'package:country_state_city_pro/country_state_city_pro.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hiremeinindiaapp/User/user.dart';
-import 'package:hiremeinindiaapp/User/userRegistration.dart';
-import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
 import 'package:hiremeinindiaapp/User/userPayment.dart';
+import 'package:sizer/sizer.dart';
+import '../widgets/customtextfield.dart';
 import '../widgets/hiremeinindia.dart';
 import 'userFormState.dart';
-import '../classes/language.dart';
 import '../classes/language_constants.dart';
-import '../Widgets/customtextstyle.dart';
-import '../main.dart';
 import '../widgets/custombutton.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -39,29 +35,33 @@ class NewUserUpload extends StatefulWidget {
   final String? project;
   final List<String>? skills;
   final List<String>? workins;
-  const NewUserUpload({
-    this.handleForm,
-    this.candidate,
-    this.selectedOption,
-    this.password,
-    this.name,
-    this.email,
-    this.address,
-    this.aadharno,
-    this.gender,
-    this.course,
-    this.project,
-    this.worktitle,
-    this.aboutYou,
-    this.age,
-    this.qualiDescription,
-    this.mobile,
-    this.qualification,
-    this.skills,
-    this.workexpcount,
-    this.workexp,
-    this.workins,
-  }) : assert(name != null && email != null && password != null);
+  final int? index;
+  final PageController? pageController;
+  const NewUserUpload(
+      {this.handleForm,
+      this.candidate,
+      this.selectedOption,
+      this.password,
+      this.name,
+      this.email,
+      this.address,
+      this.aadharno,
+      this.gender,
+      this.course,
+      this.project,
+      this.worktitle,
+      this.aboutYou,
+      this.age,
+      this.qualiDescription,
+      this.mobile,
+      this.qualification,
+      this.skills,
+      this.workexpcount,
+      this.workexp,
+      this.workins,
+      this.index,
+      this.pageController})
+      : assert(name != null && email != null && password != null);
 
   @override
   State<NewUserUpload> createState() => _NewUserUpload();
@@ -139,710 +139,1340 @@ class _NewUserUpload extends State<NewUserUpload> {
   }
 
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: HireMeInIndia(),
-          automaticallyImplyLeading: false,
-          centerTitle: false,
-          toolbarHeight: 80,
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 50.0, top: 10),
-              child: Row(
-                children: [
-                  SizedBox(
-                    height: 30,
-                    width: 170,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.indigo.shade900,
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton2<Language>(
-                            isExpanded: true,
-                            hint: Row(
+    return Sizer(builder: (context, orientation, deviceType) {
+      return Padding(
+        padding: EdgeInsets.fromLTRB(2.w, 2.h, 2.w, 2.h),
+        child: Dialog(
+          child: Material(
+            elevation: 4,
+            child: LayoutBuilder(
+                builder: (BuildContext ctx, BoxConstraints constraints) {
+              if (constraints.maxWidth >= 633) {
+                return SingleChildScrollView(
+                  child: Container(
+                    height: 91.h,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30)),
+                    child: Form(
+                      key: _formKey,
+                      child: Padding(
+                        padding:
+                            EdgeInsets.fromLTRB(2.5.w, 2.5.h, 2.5.w, 2.5.h),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
                               children: [
-                                Expanded(
-                                  child: Text(
-                                    translation(context).english,
-                                    style: CustomTextStyle.dropdowntext,
-                                    overflow: TextOverflow.ellipsis,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: Navigator.of(context).pop,
+                                      child: SizedBox(
+                                        height: 40,
+                                        width: 40,
+                                        child: ImageIcon(
+                                          NetworkImage(
+                                            'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/cancel.png?alt=media&token=951094e2-a6f9-46a3-96bc-ddbb3362f08c',
+                                          ),
+                                          size: 25,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Already have an account?',
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins', fontSize: 15),
+                                    ),
+                                    InkWell(
+                                      onTap: () {},
+                                      child: Text(
+                                        'Sign in',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            color: Colors.indigo.shade900,
+                                            fontSize: 13),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 2.8.h,
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.fromLTRB(3.w, 0, 3.w, 0.5.h),
+                                  child: Row(
+                                    children: [
+                                      if (widget.selectedOption == 'Blue')
+                                        Row(
+                                          children: [
+                                            Radio(
+                                              value: widget.selectedOption,
+                                              groupValue: widget.selectedOption,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  controller.selectedOption
+                                                      .text = value.toString();
+                                                });
+                                              },
+                                            ),
+                                            Text(
+                                              translation(context).blueColler,
+                                              style: TextStyle(
+                                                  color: Colors.grey.shade800,
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            IgnorePointer(
+                                              child: Radio(
+                                                  value: widget.selectedOption,
+                                                  groupValue: controller
+                                                      .selectedOption.text,
+                                                  onChanged: null),
+                                            ),
+                                            IgnorePointer(
+                                              child: Text(
+                                                translation(context).greyColler,
+                                                style: TextStyle(
+                                                    color: Colors.grey.shade500,
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      else if (widget.selectedOption == 'Grey')
+                                        Row(
+                                          children: [
+                                            IgnorePointer(
+                                              child: Radio(
+                                                  value: widget.selectedOption,
+                                                  groupValue: controller
+                                                      .selectedOption.text,
+                                                  onChanged: null),
+                                            ),
+                                            IgnorePointer(
+                                              child: Text(
+                                                translation(context).blueColler,
+                                                style: TextStyle(
+                                                    color: Colors.grey.shade500,
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                            Radio(
+                                              value: widget.selectedOption,
+                                              groupValue: widget.selectedOption,
+                                              onChanged: (value) {
+                                                // Handle radio button state change if needed
+                                                setState(() {
+                                                  controller.selectedOption
+                                                      .text = value.toString();
+                                                });
+                                              },
+                                            ),
+                                            Text(
+                                              translation(context).greyColler,
+                                              style: TextStyle(
+                                                  color: Colors.grey.shade800,
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                      3.w, 0.6.h, 3.w, 0.5.h),
+                                  child: Column(
+                                    children: [
+                                      Divider(color: Colors.black),
+                                      SizedBox(
+                                        height: 3.h,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            translation(context)
+                                                .uploadEssentialDocument,
+                                            textScaleFactor:
+                                                ScaleSize.textScaleFactor(
+                                                    context),
+                                            style: TextStyle(
+                                                fontFamily: 'Colfax',
+                                                fontSize: 16,
+                                                color: Colors.black),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 3.h,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                if (controller.imagePic != null)
+                                                  Container(
+                                                    width: 150,
+                                                    height: 150,
+                                                    decoration: BoxDecoration(
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.grey,
+                                                          spreadRadius: 1,
+                                                          blurRadius:
+                                                              2, // changes position of shadow
+                                                        ),
+                                                      ],
+                                                      color: Color.fromARGB(
+                                                          255, 180, 197, 226),
+                                                      border: Border.all(
+                                                        color: Colors.black,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    child: Image.memory(
+                                                      Uint8List.fromList(controller
+                                                          .imagePic!
+                                                          .files
+                                                          .first
+                                                          .bytes!), // Accessing bytes property
+                                                    ),
+                                                  ),
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                SizedBox(
+                                                  width: double.infinity,
+                                                  child: CustomButton(
+                                                    text: translation(context)
+                                                        .picture,
+                                                    onPressed: () => selectFile(
+                                                        controller, 'imgpic'),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(width: 4.w),
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                if (controller.imageAadhar !=
+                                                    null)
+                                                  Container(
+                                                    width: 150,
+                                                    height: 150,
+                                                    decoration: BoxDecoration(
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.grey,
+                                                          spreadRadius: 1,
+                                                          blurRadius:
+                                                              2, // changes position of shadow
+                                                        ),
+                                                      ],
+                                                      color: Color.fromARGB(
+                                                          255, 180, 197, 226),
+                                                      border: Border.all(
+                                                        color: Colors.black,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    child: Image.memory(
+                                                      Uint8List.fromList(controller
+                                                          .imageAadhar!
+                                                          .files
+                                                          .first
+                                                          .bytes!), // Accessing bytes property
+                                                    ),
+                                                  ),
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                SizedBox(
+                                                  width: double.infinity,
+                                                  child: CustomButton(
+                                                    text: translation(context)
+                                                        .aadhar,
+                                                    onPressed: () => selectFile(
+                                                        controller,
+                                                        'imgaadhar'),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(width: 4.w),
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                if (controller.imageVoter !=
+                                                    null)
+                                                  Container(
+                                                    width: 150,
+                                                    height: 150,
+                                                    decoration: BoxDecoration(
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.grey,
+                                                          spreadRadius: 1,
+                                                          blurRadius:
+                                                              2, // changes position of shadow
+                                                        ),
+                                                      ],
+                                                      color: Color.fromARGB(
+                                                          255, 180, 197, 226),
+                                                      border: Border.all(
+                                                        color: Colors.black,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    child: Image.memory(
+                                                      Uint8List.fromList(controller
+                                                          .imageVoter!
+                                                          .files
+                                                          .first
+                                                          .bytes!), // Accessing bytes property
+                                                    ),
+                                                  ),
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                SizedBox(
+                                                  width: double.infinity,
+                                                  child: CustomButton(
+                                                    text: translation(context)
+                                                        .voterId,
+                                                    onPressed: () => selectFile(
+                                                        controller, 'imgvoter'),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(width: 4.w),
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                if (controller.imageCv != null)
+                                                  Container(
+                                                    width: 150,
+                                                    height: 150,
+                                                    decoration: BoxDecoration(
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.grey,
+                                                          spreadRadius: 1,
+                                                          blurRadius:
+                                                              2, // changes position of shadow
+                                                        ),
+                                                      ],
+                                                      color: Color.fromARGB(
+                                                          255, 180, 197, 226),
+                                                      border: Border.all(
+                                                        color: Colors.black,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    child: Image.memory(
+                                                      Uint8List.fromList(controller
+                                                          .imageCv!
+                                                          .files
+                                                          .first
+                                                          .bytes!), // Accessing bytes property
+                                                    ),
+                                                  ),
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                SizedBox(
+                                                  width: double.infinity,
+                                                  child: CustomButton(
+                                                    text:
+                                                        translation(context).cv,
+                                                    onPressed: () => selectFile(
+                                                        controller, 'imgcv'),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(width: 4.w),
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                if (controller.imageExp != null)
+                                                  Container(
+                                                    width: 150,
+                                                    height: 150,
+                                                    decoration: BoxDecoration(
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.grey,
+                                                          spreadRadius: 1,
+                                                          blurRadius:
+                                                              2, // changes position of shadow
+                                                        ),
+                                                      ],
+                                                      color: Color.fromARGB(
+                                                          255, 180, 197, 226),
+                                                      border: Border.all(
+                                                        color: Colors.black,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    child: Image.memory(
+                                                      Uint8List.fromList(controller
+                                                          .imageExp!
+                                                          .files
+                                                          .first
+                                                          .bytes!), // Accessing bytes property
+                                                    ),
+                                                  ),
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                SizedBox(
+                                                  width: double.infinity,
+                                                  child: CustomButton(
+                                                    text: translation(context)
+                                                        .experienceProof,
+                                                    onPressed: () => selectFile(
+                                                        controller, 'imgexp'),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 50,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                translation(context)
+                                                    .currentCountry,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 12),
+                                              ),
+                                              SizedBox(
+                                                height: 44.8,
+                                              ),
+                                              Text(
+                                                translation(context)
+                                                    .currentState,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 12),
+                                              ),
+                                              SizedBox(
+                                                height: 44.8,
+                                              ),
+                                              Text(
+                                                translation(context)
+                                                    .currentCity,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 12),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            width: 2.5.w,
+                                          ),
+                                          Expanded(
+                                            child: CountryStateCityPicker(
+                                                country: controller.country,
+                                                state: controller.state,
+                                                city: controller.city,
+                                                textFieldDecoration:
+                                                    InputDecoration(
+                                                        fillColor: Colors.white,
+                                                        filled: true,
+                                                        suffixIcon: const Icon(
+                                                          Icons
+                                                              .arrow_downward_rounded,
+                                                          size: 20,
+                                                        ),
+                                                        border: const OutlineInputBorder(
+                                                            borderSide: BorderSide(
+                                                                color: Colors
+                                                                    .black)))),
+                                          ),
+                                          SizedBox(
+                                            width: 2.5.w,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                translation(context)
+                                                    .expectedWage,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 12),
+                                              ),
+                                              SizedBox(
+                                                height: 44.8,
+                                              ),
+                                              Text(
+                                                translation(context)
+                                                    .currentWage,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 12),
+                                              ),
+                                              SizedBox(
+                                                height: 44.8,
+                                              ),
+                                              Text(
+                                                'CTC',
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 12),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            width: 2.5.w,
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                CustomTextfield(
+                                                  controller: controller
+                                                      .expectedwage, // Set controller
+                                                ),
+                                                SizedBox(
+                                                  height: 17,
+                                                ),
+                                                CustomTextfield(
+                                                  controller:
+                                                      controller.currentwage,
+                                                  // Set controller
+                                                ),
+                                                SizedBox(
+                                                  height: 17,
+                                                ),
+                                                CustomTextfield(
+                                                  controller: controller.ctc,
+                                                  // Set controller
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 3.5.h,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
-                            onChanged: (Language? language) async {
-                              if (language != null) {
-                                Locale _locale =
-                                    await setLocale(language.languageCode);
-                                HireApp.setLocale(context, _locale);
-                              } else {
-                                language;
-                              }
-                            },
-                            items: Language.languageList()
-                                .map<DropdownMenuItem<Language>>(
-                                  (e) => DropdownMenuItem<Language>(
-                                    value: e,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: <Widget>[
-                                        Text(
-                                          e.flag,
-                                          style: CustomTextStyle.dropdowntext,
-                                          overflow: TextOverflow.ellipsis,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                CustomButton(
+                                  text: translation(context).back,
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                SizedBox(width: 50),
+                                CustomButton(
+                                  text: translation(context).next,
+                                  onPressed: () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      String state = controller.state.text;
+                                      String city = controller.city.text;
+                                      String country = controller.country.text;
+                                      String ctc = controller.ctc.text;
+                                      String expectedwage =
+                                          controller.expectedwage.text;
+                                      String? imgpic = await uploadFile(
+                                          controller, 'imgpic');
+                                      String? imgaadhar = await uploadFile(
+                                          controller, 'imgaadhar');
+                                      String? imgcv =
+                                          await uploadFile(controller, 'imgcv');
+                                      String? imgexp = await uploadFile(
+                                          controller, 'imgexp');
+                                      String? imgvoter = await uploadFile(
+                                          controller, 'imgvoter');
+                                      String currentwage =
+                                          controller.currentwage.text;
+                                      showDialog(
+                                        barrierColor: Color(0x00ffffff),
+                                        context: context,
+                                        builder: (context) {
+                                          return NewUserPayment(
+                                            name: widget.name,
+                                            email: widget.email,
+                                            password: widget.password,
+                                            mobile: widget.mobile,
+                                            workexp: widget.workexp,
+                                            workexpcount: widget.workexpcount,
+                                            workins: widget.workins,
+                                            worktitle: widget.worktitle,
+                                            skills: widget.skills,
+                                            address: widget.address,
+                                            age: widget.age,
+                                            aboutYou: widget.aboutYou,
+                                            qualiDescription:
+                                                widget.qualiDescription,
+                                            course: widget.course,
+                                            project: widget.project,
+                                            aadharno: widget.aadharno,
+                                            qualification: widget.qualification,
+                                            selectedOption:
+                                                widget.selectedOption,
+                                            imgpic: imgpic,
+                                            imgaadhar: imgaadhar,
+                                            imgcv: imgcv,
+                                            imgexp: imgexp,
+                                            imgvoter: imgvoter,
+                                            gender: widget.gender,
+                                            state: state,
+                                            city: city,
+                                            ctc: ctc,
+                                            country: country,
+                                            currentwage: currentwage,
+                                            expectedwage: expectedwage,
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return SingleChildScrollView(
+                  child: Container(
+                    height: 91.h,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30)),
+                    child: Form(
+                      key: _formKey,
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding:
+                              EdgeInsets.fromLTRB(2.5.w, 2.5.h, 2.5.w, 2.5.h),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  GestureDetector(
+                                    onTap: Navigator.of(context).pop,
+                                    child: SizedBox(
+                                      height: 40,
+                                      width: 40,
+                                      child: ImageIcon(
+                                        NetworkImage(
+                                          'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/cancel.png?alt=media&token=951094e2-a6f9-46a3-96bc-ddbb3362f08c',
                                         ),
-                                        Text(
-                                          e.langname,
-                                          style: CustomTextStyle.dropdowntext,
-                                          overflow: TextOverflow.ellipsis,
-                                        )
-                                      ],
+                                        size: 25,
+                                      ),
                                     ),
                                   ),
-                                )
-                                .toList(),
-                            buttonStyleData: ButtonStyleData(
-                              height: 30,
-                              width: 200,
-                              elevation: 1,
-                              padding:
-                                  const EdgeInsets.only(left: 14, right: 14),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                  color: Colors.black26,
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Already have an account?',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins', fontSize: 15),
+                                  ),
+                                  InkWell(
+                                    onTap: () {},
+                                    child: Text(
+                                      'Sign in',
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          color: Colors.indigo.shade900,
+                                          fontSize: 13),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 2.8.h,
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsets.fromLTRB(3.w, 0, 3.w, 0.5.h),
+                                child: Row(
+                                  children: [
+                                    if (widget.selectedOption == 'Blue')
+                                      Row(
+                                        children: [
+                                          Radio(
+                                            value: widget.selectedOption,
+                                            groupValue: widget.selectedOption,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                controller.selectedOption.text =
+                                                    value.toString();
+                                              });
+                                            },
+                                          ),
+                                          Text(
+                                            translation(context).blueColler,
+                                            style: TextStyle(
+                                                color: Colors.grey.shade800,
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          IgnorePointer(
+                                            child: Radio(
+                                                value: widget.selectedOption,
+                                                groupValue: controller
+                                                    .selectedOption.text,
+                                                onChanged: null),
+                                          ),
+                                          IgnorePointer(
+                                            child: Text(
+                                              translation(context).greyColler,
+                                              style: TextStyle(
+                                                  color: Colors.grey.shade500,
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    else if (widget.selectedOption == 'Grey')
+                                      Row(
+                                        children: [
+                                          IgnorePointer(
+                                            child: Radio(
+                                                value: widget.selectedOption,
+                                                groupValue: controller
+                                                    .selectedOption.text,
+                                                onChanged: null),
+                                          ),
+                                          IgnorePointer(
+                                            child: Text(
+                                              translation(context).blueColler,
+                                              style: TextStyle(
+                                                  color: Colors.grey.shade500,
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          Radio(
+                                            value: widget.selectedOption,
+                                            groupValue: widget.selectedOption,
+                                            onChanged: (value) {
+                                              // Handle radio button state change if needed
+                                              setState(() {
+                                                controller.selectedOption.text =
+                                                    value.toString();
+                                              });
+                                            },
+                                          ),
+                                          Text(
+                                            translation(context).greyColler,
+                                            style: TextStyle(
+                                                color: Colors.grey.shade800,
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      )
+                                  ],
                                 ),
-                                color: Colors.indigo.shade900,
                               ),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              icon: Icon(
-                                Icons.arrow_drop_down_sharp,
+                              Padding(
+                                padding:
+                                    EdgeInsets.fromLTRB(3.w, 0.6.h, 3.w, 0.5.h),
+                                child: Column(
+                                  children: [
+                                    Divider(color: Colors.black),
+                                    SizedBox(
+                                      height: 3.h,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          translation(context)
+                                              .uploadEssentialDocument,
+                                          textScaleFactor:
+                                              ScaleSize.textScaleFactor(
+                                                  context),
+                                          style: TextStyle(
+                                              fontFamily: 'Colfax',
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                              color: Colors.black),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 3.h,
+                                    ),
+                                    if (controller.imagePic != null)
+                                      Container(
+                                        width: 150,
+                                        height: 150,
+                                        decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey,
+                                              spreadRadius: 1,
+                                              blurRadius:
+                                                  2, // changes position of shadow
+                                            ),
+                                          ],
+                                          color: Color.fromARGB(
+                                              255, 180, 197, 226),
+                                          border: Border.all(
+                                            color: Colors.black,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Image.memory(
+                                          Uint8List.fromList(controller
+                                              .imagePic!
+                                              .files
+                                              .first
+                                              .bytes!), // Accessing bytes property
+                                        ),
+                                      ),
+                                    SizedBox(
+                                      height: 25,
+                                    ),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: CustomButton(
+                                        text: translation(context).picture,
+                                        onPressed: () =>
+                                            selectFile(controller, 'imgpic'),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 25,
+                                    ),
+                                    if (controller.imageAadhar != null)
+                                      Container(
+                                        width: 150,
+                                        height: 150,
+                                        decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey,
+                                              spreadRadius: 1,
+                                              blurRadius:
+                                                  2, // changes position of shadow
+                                            ),
+                                          ],
+                                          color: Color.fromARGB(
+                                              255, 180, 197, 226),
+                                          border: Border.all(
+                                            color: Colors.black,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Image.memory(
+                                          Uint8List.fromList(controller
+                                              .imageAadhar!
+                                              .files
+                                              .first
+                                              .bytes!), // Accessing bytes property
+                                        ),
+                                      ),
+                                    SizedBox(
+                                      height: 25,
+                                    ),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: CustomButton(
+                                        text: translation(context).aadhar,
+                                        onPressed: () =>
+                                            selectFile(controller, 'imgaadhar'),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 25,
+                                    ),
+                                    if (controller.imageVoter != null)
+                                      Container(
+                                        width: 150,
+                                        height: 150,
+                                        decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey,
+                                              spreadRadius: 1,
+                                              blurRadius:
+                                                  2, // changes position of shadow
+                                            ),
+                                          ],
+                                          color: Color.fromARGB(
+                                              255, 180, 197, 226),
+                                          border: Border.all(
+                                            color: Colors.black,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Image.memory(
+                                          Uint8List.fromList(controller
+                                              .imageVoter!
+                                              .files
+                                              .first
+                                              .bytes!), // Accessing bytes property
+                                        ),
+                                      ),
+                                    SizedBox(
+                                      height: 25,
+                                    ),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: CustomButton(
+                                        text: translation(context).voterId,
+                                        onPressed: () =>
+                                            selectFile(controller, 'imgvoter'),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 25,
+                                    ),
+                                    if (controller.imageCv != null)
+                                      Container(
+                                        width: 150,
+                                        height: 150,
+                                        decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey,
+                                              spreadRadius: 1,
+                                              blurRadius:
+                                                  2, // changes position of shadow
+                                            ),
+                                          ],
+                                          color: Color.fromARGB(
+                                              255, 180, 197, 226),
+                                          border: Border.all(
+                                            color: Colors.black,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Image.memory(
+                                          Uint8List.fromList(controller
+                                              .imageCv!
+                                              .files
+                                              .first
+                                              .bytes!), // Accessing bytes property
+                                        ),
+                                      ),
+                                    SizedBox(
+                                      height: 25,
+                                    ),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: CustomButton(
+                                        text: translation(context).cv,
+                                        onPressed: () =>
+                                            selectFile(controller, 'imgcv'),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 25,
+                                    ),
+                                    if (controller.imageExp != null)
+                                      Container(
+                                        width: 150,
+                                        height: 150,
+                                        decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey,
+                                              spreadRadius: 1,
+                                              blurRadius:
+                                                  2, // changes position of shadow
+                                            ),
+                                          ],
+                                          color: Color.fromARGB(
+                                              255, 180, 197, 226),
+                                          border: Border.all(
+                                            color: Colors.black,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Image.memory(
+                                          Uint8List.fromList(controller
+                                              .imageExp!
+                                              .files
+                                              .first
+                                              .bytes!), // Accessing bytes property
+                                        ),
+                                      ),
+                                    SizedBox(
+                                      height: 25,
+                                    ),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: CustomButton(
+                                        text: translation(context)
+                                            .experienceProof,
+                                        onPressed: () =>
+                                            selectFile(controller, 'imgexp'),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 25,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                              width: 20.w,
+                                              child: Text(
+                                                translation(context)
+                                                    .currentCountry,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 12),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 44,
+                                            ),
+                                            SizedBox(
+                                              width: 20.w,
+                                              child: Text(
+                                                translation(context)
+                                                    .currentState,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 12),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 45,
+                                            ),
+                                            SizedBox(
+                                              width: 20.w,
+                                              child: Text(
+                                                translation(context)
+                                                    .currentCity,
+                                                style: TextStyle(
+                                                    fontFamily: 'Poppins',
+                                                    fontSize: 12),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        CountryStateCityPicker(
+                                            country: controller.country,
+                                            state: controller.state,
+                                            city: controller.city,
+                                            textFieldDecoration:
+                                                InputDecoration(
+                                                    fillColor: Colors.white,
+                                                    filled: true,
+                                                    suffixIcon: const Icon(
+                                                      Icons
+                                                          .arrow_downward_rounded,
+                                                      size: 20,
+                                                    ),
+                                                    border:
+                                                        const OutlineInputBorder(
+                                                            borderSide: BorderSide(
+                                                                color: Colors
+                                                                    .black)))),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 20.w,
+                                          child: Text(
+                                            translation(context).expectedWage,
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: CustomTextfield(
+                                            controller: controller
+                                                .expectedwage, // Set controller
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 20.w,
+                                          child: Text(
+                                            translation(context).currentWage,
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: CustomTextfield(
+                                            controller: controller.currentwage,
+                                            // Set controller
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 20.w,
+                                          child: Text(
+                                            'CTC',
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: CustomTextfield(
+                                            controller: controller.ctc,
+                                            // Set controller
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        SizedBox(
+                                          height: 45,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              fixedSize: const Size.fromWidth(
+                                                  double.infinity),
+                                              backgroundColor:
+                                                  Colors.indigo.shade900,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(
+                                                    5), // Adjust border radius as needed
+                                              ),
+                                            ),
+                                            child: Text(
+                                              'Back',
+                                              style: TextStyle(
+                                                fontFamily: 'Colfax',
+                                                fontSize: 16,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 50),
+                                        SizedBox(
+                                          height: 45,
+                                          child: ElevatedButton(
+                                            onPressed: () async {
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                String state =
+                                                    controller.state.text;
+                                                String city =
+                                                    controller.city.text;
+                                                String country =
+                                                    controller.country.text;
+                                                String ctc =
+                                                    controller.ctc.text;
+                                                String expectedwage = controller
+                                                    .expectedwage.text;
+                                                String? imgpic =
+                                                    await uploadFile(
+                                                        controller, 'imgpic');
+                                                String? imgaadhar =
+                                                    await uploadFile(controller,
+                                                        'imgaadhar');
+                                                String? imgcv =
+                                                    await uploadFile(
+                                                        controller, 'imgcv');
+                                                String? imgexp =
+                                                    await uploadFile(
+                                                        controller, 'imgexp');
+                                                String? imgvoter =
+                                                    await uploadFile(
+                                                        controller, 'imgvoter');
+                                                String currentwage =
+                                                    controller.currentwage.text;
+                                                showDialog(
+                                                  barrierColor:
+                                                      Color(0x00ffffff),
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return NewUserPayment(
+                                                      name: widget.name,
+                                                      email: widget.email,
+                                                      password: widget.password,
+                                                      mobile: widget.mobile,
+                                                      workexp: widget.workexp,
+                                                      workexpcount:
+                                                          widget.workexpcount,
+                                                      workins: widget.workins,
+                                                      worktitle:
+                                                          widget.worktitle,
+                                                      skills: widget.skills,
+                                                      address: widget.address,
+                                                      age: widget.age,
+                                                      aboutYou: widget.aboutYou,
+                                                      qualiDescription: widget
+                                                          .qualiDescription,
+                                                      course: widget.course,
+                                                      project: widget.project,
+                                                      aadharno: widget.aadharno,
+                                                      qualification:
+                                                          widget.qualification,
+                                                      selectedOption:
+                                                          widget.selectedOption,
+                                                      imgpic: imgpic,
+                                                      imgaadhar: imgaadhar,
+                                                      imgcv: imgcv,
+                                                      imgexp: imgexp,
+                                                      imgvoter: imgvoter,
+                                                      gender: widget.gender,
+                                                      state: state,
+                                                      city: city,
+                                                      ctc: ctc,
+                                                      country: country,
+                                                      currentwage: currentwage,
+                                                      expectedwage:
+                                                          expectedwage,
+                                                    );
+                                                  },
+                                                );
+                                              }
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              fixedSize: const Size.fromWidth(
+                                                  double.infinity),
+                                              backgroundColor:
+                                                  Colors.indigo.shade900,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(
+                                                    5), // Adjust border radius as needed
+                                              ),
+                                            ),
+                                            child: Text(
+                                              'Next',
+                                              style: TextStyle(
+                                                fontFamily: 'Colfax',
+                                                fontSize: 16,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
                               ),
-                              iconSize: 25,
-                              iconEnabledColor: Colors.white,
-                              iconDisabledColor: null,
-                            ),
-                            dropdownStyleData: DropdownStyleData(
-                              maxHeight: 210,
-                              width: 156,
-                              elevation: 0,
-                              padding: EdgeInsets.only(
-                                  left: 10, right: 10, top: 5, bottom: 15),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(color: Colors.black),
-                                color: Colors.indigo.shade900,
-                              ),
-                              scrollPadding: EdgeInsets.all(5),
-                              scrollbarTheme: ScrollbarThemeData(
-                                thickness: MaterialStateProperty.all<double>(6),
-                                thumbVisibility:
-                                    MaterialStateProperty.all<bool>(true),
-                              ),
-                            ),
-                            menuItemStyleData: const MenuItemStyleData(
-                              height: 25,
-                              padding: EdgeInsets.only(left: 14, right: 14),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  SizedBox(
-                    height: 30,
-                    width: 170,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 13),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.indigo.shade900,
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton2<String>(
-                            isExpanded: true,
-                            items: [
-                              DropdownMenuItem<String>(
-                                value: 'Option 1',
-                                child: Text('Option 1'),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: 'Option 2',
-                                child: Text('Option 1'),
-                              ),
-                              // Add more options as needed
                             ],
-                            onChanged: (value) {
-                              // Handle option selection
-                            },
-                            hint: Text(
-                              AppLocalizations.of(context)!.findaJob,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            buttonStyleData: ButtonStyleData(
-                              height: 30,
-                              width: 200,
-                              elevation: 1,
-                              padding:
-                                  const EdgeInsets.only(left: 14, right: 14),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                  color: Colors.black26,
-                                ),
-                                color: Colors.indigo.shade900,
-                              ),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              icon: Icon(
-                                Icons.arrow_drop_down_sharp,
-                              ),
-                              iconSize: 25,
-                              iconEnabledColor: Colors.white,
-                              iconDisabledColor: null,
-                            ),
-                            dropdownStyleData: DropdownStyleData(
-                              maxHeight: 210,
-                              width: 156,
-                              elevation: 0,
-                              padding: EdgeInsets.only(
-                                  left: 10, right: 10, top: 5, bottom: 15),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(color: Colors.black),
-                                color: Colors.indigo.shade900,
-                              ),
-                              scrollPadding: EdgeInsets.all(5),
-                              scrollbarTheme: ScrollbarThemeData(
-                                thickness: MaterialStateProperty.all<double>(6),
-                                thumbVisibility:
-                                    MaterialStateProperty.all<bool>(true),
-                              ),
-                            ),
-                            menuItemStyleData: const MenuItemStyleData(
-                              height: 25,
-                              padding: EdgeInsets.only(left: 14, right: 14),
-                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(width: 40),
-                  SizedBox(
-                    height: 38,
-                    width: 38,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.black,
-                      child: SizedBox(
-                        width: 36,
-                        height: 36,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.person_outline_outlined,
-                            size: 35,
-                            color: Colors.indigo.shade900,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 8.0),
-                  Padding(
-                    padding: EdgeInsets.only(top: 15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'New',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.indigo.shade900,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          'User',
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.indigo.shade900,
-                              height: 0),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        body: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Container(
-              padding:
-                  EdgeInsets.only(left: 125, right: 125, top: 20, bottom: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 35),
-                    child: Row(
-                      children: [
-                        if (widget.selectedOption == 'Blue')
-                          Row(
-                            children: [
-                              Radio(
-                                value: widget.selectedOption,
-                                groupValue: widget.selectedOption,
-                                onChanged: (value) {
-                                  // Handle radio button state change if needed
-                                  setState(() {
-                                    controller.selectedOption.text =
-                                        value.toString();
-                                  });
-                                },
-                              ),
-                              Text(
-                                'Blue Collar',
-                                style: TextStyle(
-                                    color: Colors.grey.shade500,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              IgnorePointer(
-                                child: Radio(
-                                    value: widget.selectedOption,
-                                    groupValue: controller.selectedOption.text,
-                                    onChanged: null),
-                              ),
-                              IgnorePointer(
-                                child: Text(
-                                  'Grey Collar',
-                                  style: TextStyle(
-                                      color: Colors.grey.shade800,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ],
-                          )
-                        else if (widget.selectedOption == 'Grey')
-                          Row(
-                            children: [
-                              IgnorePointer(
-                                child: Radio(
-                                    value: widget.selectedOption,
-                                    groupValue: controller.selectedOption.text,
-                                    onChanged: null),
-                              ),
-                              IgnorePointer(
-                                child: Text(
-                                  'Blue Collar',
-                                  style: TextStyle(
-                                      color: Colors.grey.shade500,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Radio(
-                                value: widget.selectedOption,
-                                groupValue: widget.selectedOption,
-                                onChanged: (value) {
-                                  // Handle radio button state change if needed
-                                  setState(() {
-                                    controller.selectedOption.text =
-                                        value.toString();
-                                  });
-                                },
-                              ),
-                              Text(
-                                'Grey Collar',
-                                style: TextStyle(
-                                    color: Colors.grey.shade800,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          )
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 37),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      translation(context).uploadEssentialDocument,
-                      style: TextStyle(
-                          color: Colors.indigo.shade900,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        children: [
-                          if (controller.imagePic != null)
-                            Container(
-                              width: 100,
-                              height: 150,
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.black, width: 2),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Image.memory(
-                                Uint8List.fromList(controller.imagePic!.files
-                                    .first.bytes!), // Accessing bytes property
-                              ),
-                            ),
-                          CustomButton(
-                            text: translation(context).picture,
-                            onPressed: () => selectFile(controller, 'imgpic'),
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: 40),
-                      Column(
-                        children: [
-                          if (controller.imageAadhar != null)
-                            Container(
-                              width: 100,
-                              height: 150,
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.black, width: 2),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Image.memory(
-                                Uint8List.fromList(controller.imageAadhar!.files
-                                    .first.bytes!), // Accessing bytes property
-                              ),
-                            ),
-                          CustomButton(
-                            text: translation(context).aadhar,
-                            onPressed: () =>
-                                selectFile(controller, 'imgaadhar'),
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: 40),
-                      Column(
-                        children: [
-                          if (controller.imageVoter != null)
-                            Container(
-                              width: 100,
-                              height: 150,
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.black, width: 2),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Image.memory(
-                                Uint8List.fromList(controller.imageVoter!.files
-                                    .first.bytes!), // Accessing bytes property
-                              ),
-                            ),
-                          CustomButton(
-                            text: translation(context).voterId,
-                            onPressed: () => selectFile(controller, 'imgvoter'),
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: 40),
-                      Column(
-                        children: [
-                          if (controller.imageCv != null)
-                            Container(
-                              width: 100,
-                              height: 150,
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.black, width: 2),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Image.memory(
-                                Uint8List.fromList(controller.imageCv!.files
-                                    .first.bytes!), // Accessing bytes property
-                              ),
-                            ),
-                          CustomButton(
-                            text: translation(context).cv,
-                            onPressed: () => selectFile(controller, 'imgcv'),
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: 40),
-                      Column(
-                        children: [
-                          if (controller.imageExp != null)
-                            Container(
-                              width: 100,
-                              height: 150,
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.black, width: 2),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Image.memory(
-                                Uint8List.fromList(controller.imageExp!.files
-                                    .first.bytes!), // Accessing bytes property
-                              ),
-                            ),
-                          CustomButton(
-                            text: translation(context).experienceProof,
-                            onPressed: () => selectFile(controller, 'imgexp'),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            translation(context).currentCountry,
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 60),
-                          Text(
-                            translation(context).currentState,
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            height: 60,
-                          ),
-                          Text(
-                            translation(context).currentCity,
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      SizedBox(
-                        width: 200,
-                        child: CountryStateCityPicker(
-                            country: controller.country,
-                            state: controller.state,
-                            city: controller.city,
-                            textFieldDecoration: InputDecoration(
-                                fillColor: Colors.white,
-                                filled: true,
-                                suffixIcon: const Icon(
-                                  Icons.arrow_downward_rounded,
-                                  size: 20,
-                                ),
-                                border: const OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.black)))),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            translation(context).expectedWage,
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 60),
-                          Text(
-                            translation(context).currentWage,
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            'CTC',
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 40,
-                      ),
-                      Column(
-                        children: [
-                          SizedBox(
-                            width: 400,
-                            height: 40,
-                            child: TextField(
-                              controller:
-                                  controller.expectedwage, // Set controller
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 40),
-                          SizedBox(
-                            width: 400,
-                            height: 40,
-                            child: TextField(
-                              controller: controller.currentwage,
-                              // Set controller
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 40),
-                          SizedBox(
-                            width: 400,
-                            height: 40,
-                            child: TextField(
-                              controller: controller.ctc,
-                              // Set controller
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 250,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      CustomButton(
-                        text: translation(context).back,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Registration()),
-                          );
-                        },
-                      ),
-                      SizedBox(width: 50),
-                      CustomButton(
-                        text: translation(context).next,
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            String state = controller.state.text;
-                            String city = controller.city.text;
-                            String country = controller.country.text;
-                            String ctc = controller.ctc.text;
-                            String expectedwage = controller.expectedwage.text;
-                            String? imgpic =
-                                await uploadFile(controller, 'imgpic');
-                            String? imgaadhar =
-                                await uploadFile(controller, 'imgaadhar');
-                            String? imgcv =
-                                await uploadFile(controller, 'imgcv');
-                            String? imgexp =
-                                await uploadFile(controller, 'imgexp');
-                            String? imgvoter =
-                                await uploadFile(controller, 'imgvoter');
-                            String currentwage = controller.currentwage.text;
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => NewUserPayment(
-                                  name: widget.name,
-                                  email: widget.email,
-                                  password: widget.password,
-                                  mobile: widget.mobile,
-                                  workexp: widget.workexp,
-                                  workexpcount: widget.workexpcount,
-                                  workins: widget.workins,
-                                  worktitle: widget.worktitle,
-                                  skills: widget.skills,
-                                  address: widget.address,
-                                  age: widget.age,
-                                  aboutYou: widget.aboutYou,
-                                  qualiDescription: widget.qualiDescription,
-                                  course: widget.course,
-                                  project: widget.project,
-                                  aadharno: widget.aadharno,
-                                  qualification: widget.qualification,
-                                  selectedOption: widget.selectedOption,
-                                  imgpic: imgpic,
-                                  imgaadhar: imgaadhar,
-                                  imgcv: imgcv,
-                                  imgexp: imgexp,
-                                  imgvoter: imgvoter,
-                                  gender: widget.gender,
-                                  state: state,
-                                  city: city,
-                                  ctc: ctc,
-                                  country: country,
-                                  currentwage: currentwage,
-                                  expectedwage: expectedwage,
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
+                );
+              }
+            }),
           ),
-        ));
+        ),
+      );
+    });
   }
-
-  // Future<void> uploadImageUrlsToFirestore(List<String> imageUrls, String imgpic,
-  //     String impaadhar, String imgexp, String imgcv, String imgvoter) async {
-  //   try {
-  //     final DocumentReference documentReference =
-  //         FirebaseFirestore.instance.collection('registeruser').doc();
-
-  //     await documentReference.set({
-  //       'imgVoter': imgvoter,
-  //       'imgAadhar': impaadhar,
-  //       'imageCV': imgcv,
-  //       'imagePicture': imgpic,
-  //       'imgExperience': imgexp,
-  //       'imageUrls': imageUrls,
-  //       // Add additional fields if needed
-  //     });
-
-  //     print('Data including image URLs uploaded to Firestore successfully.');
-  //   } catch (error) {
-  //     print('Error uploading data to Firestore: $error');
-  //     throw error;
-  //   }
-  // }
 
   Widget buildProgress() => StreamBuilder<TaskSnapshot>(
       stream:
@@ -877,3 +1507,28 @@ class _NewUserUpload extends State<NewUserUpload> {
         }
       });
 }
+
+  // Future<void> uploadImageUrlsToFirestore(List<String> imageUrls, String imgpic,
+  //     String impaadhar, String imgexp, String imgcv, String imgvoter) async {
+  //   try {
+  //     final DocumentReference documentReference =
+  //         FirebaseFirestore.instance.collection('registeruser').doc();
+
+  //     await documentReference.set({
+  //       'imgVoter': imgvoter,
+  //       'imgAadhar': impaadhar,
+  //       'imageCV': imgcv,
+  //       'imagePicture': imgpic,
+  //       'imgExperience': imgexp,
+  //       'imageUrls': imageUrls,
+  //       // Add additional fields if needed
+  //     });
+
+  //     print('Data including image URLs uploaded to Firestore successfully.');
+  //   } catch (error) {
+  //     print('Error uploading data to Firestore: $error');
+  //     throw error;
+  //   }
+  // }
+
+ 

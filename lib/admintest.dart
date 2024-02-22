@@ -35,7 +35,7 @@ class _AdminDashboard extends State<AdminConsole1> {
         appBar: AppBar(
           centerTitle: false,
           toolbarHeight: 80,
-          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
           elevation: 0.0,
           title: HireMeInIndia(),
           actions: [

@@ -70,7 +70,7 @@ class _UserDashboard extends State<UserDashboard> {
           title: HireMeInIndia(),
           centerTitle: false,
           toolbarHeight: 80,
-          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
           elevation: 0.0,
           actions: [
             Padding(
@@ -297,6 +297,9 @@ class _UserDashboard extends State<UserDashboard> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              SizedBox(
+                                height: 10,
+                              ),
                               Text(
                                 '${_skills![0]}',
                                 style: TextStyle(
@@ -334,7 +337,7 @@ class _UserDashboard extends State<UserDashboard> {
                   maxRadius: 66,
                   minRadius: 60,
                   child: CircleAvatar(
-                    backgroundImage: AssetImage('imguser.jpg'),
+                    backgroundImage: NetworkImage('$_image'),
                     maxRadius: 59,
                     minRadius: 56,
                   ),

@@ -22,7 +22,7 @@ final class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 30,
+      height: 45,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -30,13 +30,13 @@ final class CustomButton extends StatelessWidget {
           primary: Colors.indigo.shade900,
           shape: RoundedRectangleBorder(
             borderRadius:
-                BorderRadius.circular(0.1), // Adjust border radius as needed
+                BorderRadius.circular(5), // Adjust border radius as needed
           ),
         ),
         child: Text(
           text!,
           style: TextStyle(
-            fontSize: 18,
+            fontFamily: 'Poppins',
             fontWeight: FontWeight.normal,
             color: Colors.white,
           ),
