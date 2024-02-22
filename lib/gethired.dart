@@ -415,138 +415,129 @@ class _HiredState extends State<Hired> {
         } else {
           return Scaffold(
               endDrawer: Drawer(
-                child: ListView(padding: EdgeInsets.zero, children: <Widget>[
-                  DrawerHeader(
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
+                child: ListView(
+                    padding: EdgeInsets.only(
+                      top: 3.h,
                     ),
-                    child: Text(
-                      'Drawer Header',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                      ),
-                    ),
-                  ),
-                  DropdownButtonHideUnderline(
-                    child: DropdownButton2<Language>(
-                      isExpanded: true,
-                      hint: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              translation(context).english,
-                              style: CustomTextStyle.dropdowntext,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                    children: <Widget>[
+                      CircleAvatar(
+                        maxRadius: 41,
+                        minRadius: 41,
+                        backgroundColor: Colors.black,
+                        child: CircleAvatar(
+                          maxRadius: 40,
+                          minRadius: 40,
+                          backgroundColor: Colors.white,
+                          child: Icon(
+                            Icons.person_outline_outlined,
+                            size: 60,
+                            color: Colors.indigo.shade900,
                           ),
-                        ],
+                        ),
                       ),
-                      onChanged: (Language? language) async {
-                        if (language != null) {
-                          Locale _locale =
-                              await setLocale(language.languageCode);
-                          HireApp.setLocale(context, _locale);
-                        } else {
-                          language;
-                        }
-                      },
-                      items: Language.languageList()
-                          .map<DropdownMenuItem<Language>>(
-                            (e) => DropdownMenuItem<Language>(
-                              value: e,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: <Widget>[
-                                  Text(
-                                    e.flag,
-                                    style: CustomTextStyle.dropdowntext,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    e.langname,
-                                    style: CustomTextStyle.dropdowntext,
-                                    overflow: TextOverflow.ellipsis,
-                                  )
-                                ],
+                      SizedBox(
+                        height: 2.h,
+                      ),
+                      Center(
+                        child: Text(
+                          translation(context).guest,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.indigo.shade900,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: Text(
+                          translation(context).user,
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.indigo.shade900,
+                              height: 0),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 2.h,
+                      ),
+                      ExpansionTile(
+                        collapsedBackgroundColor: Colors.indigo.shade900,
+                        collapsedIconColor: Colors.white,
+                        collapsedTextColor: Colors.white,
+                        textColor: Colors.black,
+                        iconColor: Colors.black,
+                        title: Text(
+                          AppLocalizations.of(context)!.english,
+                        ),
+                        children: Language.languageList().map((language) {
+                          return ListTile(
+                            hoverColor: Colors.indigo.shade100,
+                            title: Text(
+                              language.langname,
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            onTap: () async {
+                              // Handle language selection
+                              Locale _locale =
+                                  await setLocale(language.languageCode);
+                              HireApp.setLocale(context, _locale);
+                            },
+                          );
+                        }).toList(),
+                      ),
+                      ExpansionTile(
+                          collapsedBackgroundColor: Colors.indigo.shade900,
+                          collapsedIconColor: Colors.white,
+                          collapsedTextColor: Colors.white,
+                          iconColor: Colors.black,
+                          textColor: Colors.black,
+                          title: Text(
+                            AppLocalizations.of(context)!.findaJob,
+                          ),
+                          children: [
+                            ListTile(
+                              hoverColor: Colors.indigo.shade100,
+                              title: Text(
+                                'option1',
+                                style: TextStyle(color: Colors.black),
                               ),
+                              onTap: () {},
                             ),
-                          )
-                          .toList(),
-                      buttonStyleData: ButtonStyleData(
-                        height: 30,
-                        width: 150,
-                        elevation: 1,
-                        padding: const EdgeInsets.only(left: 14, right: 14),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(
-                            color: Colors.black26,
-                          ),
-                          color: Colors.indigo.shade900,
-                        ),
-                      ),
-                      iconStyleData: const IconStyleData(
-                        icon: Icon(
-                          Icons.arrow_drop_down_sharp,
-                        ),
-                        iconSize: 25,
-                        iconEnabledColor: Colors.white,
-                        iconDisabledColor: null,
-                      ),
-                      dropdownStyleData: DropdownStyleData(
-                        maxHeight: 210,
-                        elevation: 0,
-                        padding: EdgeInsets.only(
-                            left: 10, right: 10, top: 5, bottom: 15),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(color: Colors.black),
-                          color: Colors.indigo.shade900,
-                        ),
-                        scrollPadding: EdgeInsets.all(5),
-                        scrollbarTheme: ScrollbarThemeData(
-                          thickness: MaterialStateProperty.all<double>(6),
-                          thumbVisibility:
-                              MaterialStateProperty.all<bool>(true),
-                        ),
-                      ),
-                      menuItemStyleData: const MenuItemStyleData(
-                        height: 25,
-                        padding: EdgeInsets.only(left: 14, right: 14),
-                      ),
-                    ),
-                  ),
-                  ListTile(
-                    title: Text('Item 2'),
-                    onTap: () {
-                      // Add your onTap logic here
-                    },
-                  ),
-                ]),
+                            ListTile(
+                              hoverColor: Colors.indigo.shade100,
+                              title: Text(
+                                'option2',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              onTap: () {},
+                            )
+                          ]),
+                    ]),
               ),
               appBar: PreferredSize(
-                preferredSize: Size.fromHeight(90),
-                child: Material(
-                  elevation: 3,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(5.w, 0, 2.5.w, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        HireMeInIndia(),
-                        Builder(
-                            builder: (context) => IconButton(
-                                  onPressed: () {
-                                    Scaffold.of(context).openEndDrawer();
-                                  },
-                                  icon: Icon(
-                                    Icons.menu_rounded,
-                                    color: Colors.indigo.shade900,
-                                  ),
-                                ))
-                      ],
+                preferredSize: Size.fromHeight(80),
+                child: Container(
+                  height: 80,
+                  child: Material(
+                    elevation: 3,
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(5.w, 0, 2.5.w, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          HireMeInIndia(),
+                          Builder(
+                              builder: (context) => IconButton(
+                                    onPressed: () {
+                                      Scaffold.of(context).openEndDrawer();
+                                    },
+                                    icon: Icon(
+                                      Icons.menu_rounded,
+                                      color: Colors.indigo.shade900,
+                                    ),
+                                  ))
+                        ],
+                      ),
                     ),
                   ),
                 ),

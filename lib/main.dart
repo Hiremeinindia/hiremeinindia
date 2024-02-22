@@ -7,6 +7,7 @@ import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
 import 'package:hiremeinindiaapp/gethired.dart';
 import 'package:hiremeinindiaapp/User/userPayment.dart';
 import 'package:hiremeinindiaapp/homepage.dart';
+import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:hiremeinindiaapp/sample.dart';
 import 'package:provider/provider.dart';
 import 'classes/language_constants.dart';
@@ -93,7 +94,7 @@ class _HireAppState extends State<HireApp> {
         supportedLocales: AppLocalizations.supportedLocales,
         locale: _locale,
         debugShowCheckedModeBanner: false,
-        home: HomePage(),
+        home: LoginPage(),
       ),
     );
   }
