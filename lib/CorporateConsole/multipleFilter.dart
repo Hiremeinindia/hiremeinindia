@@ -107,87 +107,135 @@ class _MultipleFilterState extends State<MultipleFilter> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
         builder: (BuildContext ctx, BoxConstraints constraints) {
-      if (constraints.maxWidth >= 633) {
-        return Padding(
-          padding: EdgeInsets.fromLTRB(2.5.w, 2.5.h, 2.5.w, 2.5.h),
-          child: Column(children: [
-            Container(
-              height: 165,
+      if (constraints.maxWidth >= 770) {
+        return Column(children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(30, 2.5.h, 30, 2.5.h),
+            child: Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.black),
                 color: Colors.white,
               ),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(
+                    left: 10, right: 10, top: 10, bottom: 10),
                 child: Column(
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        IconButton(
-                          hoverColor: Colors.transparent,
-                          icon: Icon(Icons.add),
-                          iconSize: 30,
-                          color: Colors.black,
-                          onPressed: () {
-                            // When the icon button is clicked, add a new item to the list
-                            setState(() {
-                              itemList.add(" ${itemList.length + 2}");
-                            });
-                          },
-                        ),
-                        SizedBox(
-                          height: 30,
-                          width: 125,
-                          child: CustomDropDown(
-                            value: operator,
-                            onChanged: (item) {
-                              setState(() {
-                                operator = item;
-                              });
-                            },
-                            items: AppSession()
-                                .candidates
-                                .map((skill1Iterable) =>
-                                    DropdownMenuItem<Candidate?>(
-                                      value: skill1Iterable,
-                                      child: Text(skill1Iterable
-                                          .skills![0]), // Update this line
-                                    ))
-                                .followedBy([
-                              const DropdownMenuItem<Candidate?>(
-                                value: null,
-                                child: Text('And'),
-                              )
-                            ]).toList(),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        SizedBox(
-                          height: 30,
-                          width: 125,
-                          child: CustomDropDown<Candidate?>(
-                            value: verified,
-                            onChanged: (Candidate? item) {
-                              setState(() {
-                                verified = item;
-                              });
-                            },
-                            items: [
-                              DropdownMenuItem<Candidate?>(
-                                value: Candidate(
-                                    /* your verified candidate instance */),
-                                child: Text(
-                                  translation(context).verified,
-                                ),
+                        // IconButton(
+                        //   hoverColor: Colors.transparent,
+                        //   icon: Icon(Icons.add),
+                        //   iconSize: 30,
+                        //   color: Colors.black,
+                        //   onPressed: () {
+                        //     // When the icon button is clicked, add a new item to the list
+                        //     setState(() {
+                        //       itemList.add(" ${itemList.length + 2}");
+                        //     });
+                        //   },
+                        // ),
+                        // SizedBox(
+                        //   height: 30,
+                        //   width: 125,
+                        //   child: CustomDropDown(
+                        //     value: operator,
+                        //     onChanged: (item) {
+                        //       setState(() {
+                        //         operator = item;
+                        //       });
+                        //     },
+                        //     items: AppSession()
+                        //         .candidates
+                        //         .map((skill1Iterable) =>
+                        //             DropdownMenuItem<Candidate?>(
+                        //               value: skill1Iterable,
+                        //               child: Text(skill1Iterable
+                        //                   .skills![0]), // Update this line
+                        //             ))
+                        //         .followedBy([
+                        //       const DropdownMenuItem<Candidate?>(
+                        //         value: null,
+                        //         child: Text('And'),
+                        //       )
+                        //     ]).toList(),
+                        //   ),
+                        // ),
+                        // SizedBox(
+                        //   width: 15,
+                        // ),
+                        // SizedBox(
+                        //   height: 30,
+                        //   width: 125,
+                        //   child: CustomDropDown<Candidate?>(
+                        //     value: verified,
+                        //     onChanged: (Candidate? item) {
+                        //       setState(() {
+                        //         verified = item;
+                        //       });
+                        //     },
+                        //     items: [
+                        //       DropdownMenuItem<Candidate?>(
+                        //         value: Candidate(
+                        //             /* your verified candidate instance */),
+                        //         child: Text(
+                        //           translation(context).verified,
+                        //         ),
+                        //       ),
+                        //       DropdownMenuItem<Candidate?>(
+                        //         value:
+                        //             null, // You can set this to represent "Not Verified"
+                        //         child: Text(
+                        //           translation(context).notverified,
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        // SizedBox(
+                        //   width: 15,
+                        // ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                translation(context).jobClassification,
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold),
                               ),
-                              DropdownMenuItem<Candidate?>(
-                                value:
-                                    null, // You can set this to represent "Not Verified"
-                                child: Text(
-                                  translation(context).notverified,
-                                ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              CustomDropDown(
+                                value: skills,
+                                onChanged: (item) {
+                                  setState(() {
+                                    skills = item;
+                                  });
+                                },
+                                items: AppSession()
+                                    .candidates
+                                    .map((skill1Iterable) =>
+                                        DropdownMenuItem<Candidate?>(
+                                          value: skill1Iterable,
+                                          child: Text(skill1Iterable
+                                              .skills![0]), // Update this line
+                                        ))
+                                    .followedBy([
+                                  const DropdownMenuItem<Candidate?>(
+                                    value: null,
+                                    child: Text(
+                                      'Job Classification',
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontFamily: 'SegoeItalic'),
+                                    ),
+                                  )
+                                ]).toList(),
                               ),
                             ],
                           ),
@@ -195,132 +243,119 @@ class _MultipleFilterState extends State<MultipleFilter> {
                         SizedBox(
                           width: 15,
                         ),
-                        SizedBox(
-                          height: 30,
-                          width: 250,
-                          child: CustomDropDown(
-                            value: skills,
-                            onChanged: (item) {
-                              setState(() {
-                                skills = item;
-                              });
-                            },
-                            items: AppSession()
-                                .candidates
-                                .map((skill1Iterable) =>
-                                    DropdownMenuItem<Candidate?>(
-                                      value: skill1Iterable,
-                                      child: Text(skill1Iterable
-                                          .skills![0]), // Update this line
-                                    ))
-                                .followedBy([
-                              const DropdownMenuItem<Candidate?>(
-                                value: null,
-                                child: Text('Job Classification'),
-                              )
-                            ]).toList(),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        SizedBox(
-                          height: 30,
-                          width: 250,
-                          child: CustomDropDown(
-                            value: qualification,
-                            items: AppSession()
-                                .candidates
-                                .map((skill2Iterable) =>
-                                    DropdownMenuItem<Candidate?>(
-                                      value: skill2Iterable,
-                                      child:
-                                          Text(skill2Iterable.qualification!),
-                                    ))
-                                .followedBy([
-                              const DropdownMenuItem<Candidate?>(
-                                value: null,
-                                child: Text('Qualification Set'),
-                              )
-                            ]).toList(),
-                            onChanged: (item) {
-                              setState(() {
-                                qualification = item;
-                              });
-                            },
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30,
-                          width: 125,
-                          child: CustomDropDown(
-                            value: operator,
-                            onChanged: (item) {
-                              setState(() {
-                                operator = item;
-                              });
-                            },
-                            items: AppSession()
-                                .candidates
-                                .map((skill1Iterable) =>
-                                    DropdownMenuItem<Candidate?>(
-                                      value: skill1Iterable,
-                                      child: Text(skill1Iterable
-                                          .skills![0]), // Update this line
-                                    ))
-                                .followedBy([
-                              const DropdownMenuItem<Candidate?>(
-                                value: null,
-                                child: Text('Query'),
-                              )
-                            ]).toList(),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.indigo.shade900,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    2), // Adjust border radius as needed
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                translation(context).qualificationSet,
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold),
                               ),
-                            ),
-                            onPressed: () {},
-                            child: ImageIcon(
-                              AssetImage("account.png"),
-                              size: 25,
-                              color: Colors.white,
-                            ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              CustomDropDown(
+                                value: qualification,
+                                items: AppSession()
+                                    .candidates
+                                    .map((skill2Iterable) =>
+                                        DropdownMenuItem<Candidate?>(
+                                          value: skill2Iterable,
+                                          child: Text(
+                                              skill2Iterable.qualification!),
+                                        ))
+                                    .followedBy([
+                                  const DropdownMenuItem<Candidate?>(
+                                    value: null,
+                                    child: Text(
+                                      'Qualification Set',
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontFamily: 'SegoeItalic'),
+                                    ),
+                                  )
+                                ]).toList(),
+                                onChanged: (item) {
+                                  setState(() {
+                                    qualification = item;
+                                  });
+                                },
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        SizedBox(
-                          width: 40,
-                        ),
-                        CustomButton(
-                          text: translation(context).save,
-                          onPressed: () async {
-                            // Execute the query and get the result
-                            QuerySnapshot queryResult = await query.get();
-
-                            // Convert the query result to a list of data
-                            List<Map<String, dynamic>> dataList = queryResult
-                                .docs
-                                .map(
-                                    (doc) => doc.data() as Map<String, dynamic>)
-                                .toList();
-
-                            // Save the current query data when the "Save" button is pressed
-                            setState(() {
-                              savedQueries.add(dataList);
-                              print('Saved query: ${savedQueries}');
-                            });
-                          },
-                        ),
+                        // SizedBox(
+                        //   height: 30,
+                        //   width: 125,
+                        //   child: CustomDropDown(
+                        //     value: operator,
+                        //     onChanged: (item) {
+                        //       setState(() {
+                        //         operator = item;
+                        //       });
+                        //     },
+                        //     items: AppSession()
+                        //         .candidates
+                        //         .map((skill1Iterable) =>
+                        //             DropdownMenuItem<Candidate?>(
+                        //               value: skill1Iterable,
+                        //               child: Text(skill1Iterable
+                        //                   .skills![0]), // Update this line
+                        //             ))
+                        //         .followedBy([
+                        //       const DropdownMenuItem<Candidate?>(
+                        //         value: null,
+                        //         child: Text('Query'),
+                        //       )
+                        //     ]).toList(),
+                        //   ),
+                        // ),
+                        // SizedBox(
+                        //   height: 40,
+                        //   width: 40,
+                        //   child: ElevatedButton(
+                        //     style: ElevatedButton.styleFrom(
+                        //       backgroundColor: Colors.indigo.shade900,
+                        //       shape: RoundedRectangleBorder(
+                        //         borderRadius: BorderRadius.circular(
+                        //             2), // Adjust border radius as needed
+                        //       ),
+                        //     ),
+                        //     onPressed: () {},
+                        //     child: ImageIcon(
+                        //       AssetImage("account.png"),
+                        //       size: 25,
+                        //       color: Colors.white,
+                        //     ),
+                        //   ),
+                        // ),
+                        // SizedBox(
+                        //   width: 15,
+                        // ),
+                        // SizedBox(
+                        //   width: 40,
+                        // ),
+                        // CustomButton(
+                        //   text: translation(context).save,
+                        //   onPressed: () async {
+                        //     // Execute the query and get the result
+                        //     QuerySnapshot queryResult = await query.get();
+                        //     // Convert the query result to a list of data
+                        //     List<Map<String, dynamic>> dataList = queryResult
+                        //         .docs
+                        //         .map(
+                        //             (doc) => doc.data() as Map<String, dynamic>)
+                        //         .toList();
+                        //     // Save the current query data when the "Save" button is pressed
+                        //     setState(() {
+                        //       savedQueries.add(dataList);
+                        //       print('Saved query: ${savedQueries}');
+                        //     });
+                        //   },
+                        // ),
                         SizedBox(
                           width: 15,
                         ),
@@ -344,224 +379,224 @@ class _MultipleFilterState extends State<MultipleFilter> {
                             });
                           },
                         ),
-                        SizedBox(
-                          width: 15,
-                        ),
                       ],
                     ),
-                    Container(
-                      height: 100,
-                      constraints: BoxConstraints(
-                        maxWidth: 600, // Set your desired maximum width here
-                      ),
-                      child: ListView.builder(
-                        itemCount: itemList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          Candidate? skills =
-                              skillsList[index]; // Use skillsList for each item
-                          Candidate? qualification = qualificationList[
-                              index]; // Use qualificationList for each item
+                    // Container(
+                    //   height: 50,
+                    //   constraints: BoxConstraints(
+                    //     maxWidth: 600, // Set your desired maximum width here
+                    //   ),
+                    //   child: ListView.builder(
+                    //     itemCount: itemList.length,
+                    //     itemBuilder: (BuildContext context, int index) {
+                    //       Candidate? skills =
+                    //           skillsList[index]; // Use skillsList for each item
+                    //       Candidate? qualification = qualificationList[
+                    //           index]; // Use qualificationList for each item
 
-                          return ListTile(
-                            title: Row(
-                              children: [
-                                SizedBox(
-                                  height: 30,
-                                  width: 250,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                    ),
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton2<Candidate?>(
-                                        value: skills,
-                                        isExpanded: true,
-                                        items: AppSession()
-                                            .candidates
-                                            .map((agentIterable) =>
-                                                DropdownMenuItem<Candidate>(
-                                                  value: agentIterable,
-                                                  child: Text(
-                                                      agentIterable.skills![0]),
-                                                ))
-                                            .followedBy([
-                                          DropdownMenuItem<Candidate>(
-                                            value: null,
-                                            child: Text(
-                                                '${translation(context).jobClassification} ${itemList[index]}'),
-                                          )
-                                        ]).toList(),
-                                        onChanged: (item) {
-                                          setState(() {
-                                            skillsList[index] =
-                                                item; // Update skillsList
-                                          });
-                                        },
-                                        buttonStyleData: ButtonStyleData(
-                                          height: 30,
-                                          width: 200,
-                                          elevation: 2,
-                                          padding: const EdgeInsets.only(
-                                              left: 14, right: 14),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                            border: Border.all(
-                                              color: Colors.black26,
-                                            ),
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        iconStyleData: const IconStyleData(
-                                          icon: Icon(
-                                            Icons.arrow_drop_down_sharp,
-                                          ),
-                                          iconSize: 25,
-                                          iconEnabledColor: Colors.black,
-                                          iconDisabledColor: null,
-                                        ),
-                                        dropdownStyleData: DropdownStyleData(
-                                          maxHeight: 210,
-                                          width: 250,
-                                          elevation: 1,
-                                          padding: EdgeInsets.only(
-                                              left: 5,
-                                              right: 5,
-                                              top: 5,
-                                              bottom: 5),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            border:
-                                                Border.all(color: Colors.black),
-                                            color: Colors.white,
-                                          ),
-                                          scrollPadding: EdgeInsets.all(5),
-                                          scrollbarTheme: ScrollbarThemeData(
-                                            thickness: MaterialStateProperty
-                                                .all<double>(6),
-                                            thumbVisibility:
-                                                MaterialStateProperty.all<bool>(
-                                                    true),
-                                          ),
-                                        ),
-                                        menuItemStyleData:
-                                            const MenuItemStyleData(
-                                          height: 25,
-                                          padding: EdgeInsets.only(
-                                              left: 14, right: 14),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                SizedBox(
-                                  height: 30,
-                                  width: 250,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                    ),
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton2<Candidate?>(
-                                        value: qualification,
-                                        isExpanded: true,
-                                        items: AppSession()
-                                            .candidates
-                                            .map((agentIterable) =>
-                                                DropdownMenuItem<Candidate>(
-                                                  value: agentIterable,
-                                                  child: Text(agentIterable
-                                                      .qualification!),
-                                                ))
-                                            .followedBy([
-                                          DropdownMenuItem<Candidate>(
-                                            value: null,
-                                            child: Text(
-                                                '${translation(context).qualificationSet} ${itemList[index]}'),
-                                          )
-                                        ]).toList(),
-                                        onChanged: (item) {
-                                          setState(() {
-                                            qualificationList[index] =
-                                                item; // Update qualificationList
-                                          });
-                                        },
-                                        buttonStyleData: ButtonStyleData(
-                                          height: 30,
-                                          width: 200,
-                                          elevation: 2,
-                                          padding: const EdgeInsets.only(
-                                              left: 14, right: 14),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                            border: Border.all(
-                                              color: Colors.black26,
-                                            ),
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        iconStyleData: const IconStyleData(
-                                          icon: Icon(
-                                            Icons.arrow_drop_down_sharp,
-                                          ),
-                                          iconSize: 25,
-                                          iconEnabledColor: Colors.black,
-                                          iconDisabledColor: null,
-                                        ),
-                                        dropdownStyleData: DropdownStyleData(
-                                          maxHeight: 210,
-                                          width: 250,
-                                          elevation: 1,
-                                          padding: EdgeInsets.only(
-                                              left: 5,
-                                              right: 5,
-                                              top: 5,
-                                              bottom: 5),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            border:
-                                                Border.all(color: Colors.black),
-                                            color: Colors.white,
-                                          ),
-                                          scrollPadding: EdgeInsets.all(5),
-                                          scrollbarTheme: ScrollbarThemeData(
-                                            thickness: MaterialStateProperty
-                                                .all<double>(6),
-                                            thumbVisibility:
-                                                MaterialStateProperty.all<bool>(
-                                                    true),
-                                          ),
-                                        ),
-                                        menuItemStyleData:
-                                            const MenuItemStyleData(
-                                          height: 25,
-                                          padding: EdgeInsets.only(
-                                              left: 14, right: 14),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                    //       return ListTile(
+                    //         title: Row(
+                    //           children: [
+                    //             SizedBox(
+                    //               height: 30,
+                    //               width: 250,
+                    //               child: Container(
+                    //                 decoration: BoxDecoration(
+                    //                   color: Colors.white,
+                    //                 ),
+                    //                 child: DropdownButtonHideUnderline(
+                    //                   child: DropdownButton2<Candidate?>(
+                    //                     value: skills,
+                    //                     isExpanded: true,
+                    //                     items: AppSession()
+                    //                         .candidates
+                    //                         .map((agentIterable) =>
+                    //                             DropdownMenuItem<Candidate>(
+                    //                               value: agentIterable,
+                    //                               child: Text(
+                    //                                   agentIterable.skills![0]),
+                    //                             ))
+                    //                         .followedBy([
+                    //                       DropdownMenuItem<Candidate>(
+                    //                         value: null,
+                    //                         child: Text(
+                    //                             '${translation(context).jobClassification} ${itemList[index]}'),
+                    //                       )
+                    //                     ]).toList(),
+                    //                     onChanged: (item) {
+                    //                       setState(() {
+                    //                         skillsList[index] =
+                    //                             item; // Update skillsList
+                    //                       });
+                    //                     },
+                    //                     buttonStyleData: ButtonStyleData(
+                    //                       height: 30,
+                    //                       width: 200,
+                    //                       elevation: 2,
+                    //                       padding: const EdgeInsets.only(
+                    //                           left: 14, right: 14),
+                    //                       decoration: BoxDecoration(
+                    //                         borderRadius:
+                    //                             BorderRadius.circular(4),
+                    //                         border: Border.all(
+                    //                           color: Colors.black26,
+                    //                         ),
+                    //                         color: Colors.white,
+                    //                       ),
+                    //                     ),
+                    //                     iconStyleData: const IconStyleData(
+                    //                       icon: Icon(
+                    //                         Icons.arrow_drop_down_sharp,
+                    //                       ),
+                    //                       iconSize: 25,
+                    //                       iconEnabledColor: Colors.black,
+                    //                       iconDisabledColor: null,
+                    //                     ),
+                    //                     dropdownStyleData: DropdownStyleData(
+                    //                       maxHeight: 210,
+                    //                       width: 250,
+                    //                       elevation: 1,
+                    //                       padding: EdgeInsets.only(
+                    //                           left: 5,
+                    //                           right: 5,
+                    //                           top: 5,
+                    //                           bottom: 5),
+                    //                       decoration: BoxDecoration(
+                    //                         borderRadius:
+                    //                             BorderRadius.circular(5),
+                    //                         border:
+                    //                             Border.all(color: Colors.black),
+                    //                         color: Colors.white,
+                    //                       ),
+                    //                       scrollPadding: EdgeInsets.all(5),
+                    //                       scrollbarTheme: ScrollbarThemeData(
+                    //                         thickness: MaterialStateProperty
+                    //                             .all<double>(6),
+                    //                         thumbVisibility:
+                    //                             MaterialStateProperty.all<bool>(
+                    //                                 true),
+                    //                       ),
+                    //                     ),
+                    //                     menuItemStyleData:
+                    //                         const MenuItemStyleData(
+                    //                       height: 25,
+                    //                       padding: EdgeInsets.only(
+                    //                           left: 14, right: 14),
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //             SizedBox(
+                    //               width: 15,
+                    //             ),
+                    //             SizedBox(
+                    //               height: 30,
+                    //               width: 250,
+                    //               child: Container(
+                    //                 decoration: BoxDecoration(
+                    //                   color: Colors.white,
+                    //                 ),
+                    //                 child: DropdownButtonHideUnderline(
+                    //                   child: DropdownButton2<Candidate?>(
+                    //                     value: qualification,
+                    //                     isExpanded: true,
+                    //                     items: AppSession()
+                    //                         .candidates
+                    //                         .map((agentIterable) =>
+                    //                             DropdownMenuItem<Candidate>(
+                    //                               value: agentIterable,
+                    //                               child: Text(agentIterable
+                    //                                   .qualification!),
+                    //                             ))
+                    //                         .followedBy([
+                    //                       DropdownMenuItem<Candidate>(
+                    //                         value: null,
+                    //                         child: Text(
+                    //                             '${translation(context).qualificationSet} ${itemList[index]}'),
+                    //                       )
+                    //                     ]).toList(),
+                    //                     onChanged: (item) {
+                    //                       setState(() {
+                    //                         qualificationList[index] =
+                    //                             item; // Update qualificationList
+                    //                       });
+                    //                     },
+                    //                     buttonStyleData: ButtonStyleData(
+                    //                       height: 30,
+                    //                       width: 200,
+                    //                       elevation: 2,
+                    //                       padding: const EdgeInsets.only(
+                    //                           left: 14, right: 14),
+                    //                       decoration: BoxDecoration(
+                    //                         borderRadius:
+                    //                             BorderRadius.circular(4),
+                    //                         border: Border.all(
+                    //                           color: Colors.black26,
+                    //                         ),
+                    //                         color: Colors.white,
+                    //                       ),
+                    //                     ),
+                    //                     iconStyleData: const IconStyleData(
+                    //                       icon: Icon(
+                    //                         Icons.arrow_drop_down_sharp,
+                    //                       ),
+                    //                       iconSize: 25,
+                    //                       iconEnabledColor: Colors.black,
+                    //                       iconDisabledColor: null,
+                    //                     ),
+                    //                     dropdownStyleData: DropdownStyleData(
+                    //                       maxHeight: 210,
+                    //                       width: 250,
+                    //                       elevation: 1,
+                    //                       padding: EdgeInsets.only(
+                    //                           left: 5,
+                    //                           right: 5,
+                    //                           top: 5,
+                    //                           bottom: 5),
+                    //                       decoration: BoxDecoration(
+                    //                         borderRadius:
+                    //                             BorderRadius.circular(5),
+                    //                         border:
+                    //                             Border.all(color: Colors.black),
+                    //                         color: Colors.white,
+                    //                       ),
+                    //                       scrollPadding: EdgeInsets.all(5),
+                    //                       scrollbarTheme: ScrollbarThemeData(
+                    //                         thickness: MaterialStateProperty
+                    //                             .all<double>(6),
+                    //                         thumbVisibility:
+                    //                             MaterialStateProperty.all<bool>(
+                    //                                 true),
+                    //                       ),
+                    //                     ),
+                    //                     menuItemStyleData:
+                    //                         const MenuItemStyleData(
+                    //                       height: 25,
+                    //                       padding: EdgeInsets.only(
+                    //                           left: 14, right: 14),
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
             ),
-            SizedBox(
-              height: 30,
-            ),
-            Container(
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 2.5.h),
+            child: Container(
                 height: 550,
                 child: SizedBox(
                   child: StreamBuilder<List<Candidate>>(
@@ -629,463 +664,504 @@ class _MultipleFilterState extends State<MultipleFilter> {
                       }
                     },
                   ),
-                ))
-          ]),
-        );
+                )),
+          )
+        ]);
       } else {
-        return Padding(
-          padding: EdgeInsets.fromLTRB(2.w, 2.h, 2.w, 2.h),
-          child: Column(children: [
-            Container(
+        return Column(children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(1.5.w, 2.5.h, 1.5.w, 2.5.h),
+            child: Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.black),
                 color: Colors.white,
               ),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.only(
+                    left: 3.w, right: 3.w, top: 3.h, bottom: 3.h),
                 child: Column(
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        IconButton(
-                          hoverColor: Colors.transparent,
-                          icon: Icon(Icons.add),
-                          iconSize: 30,
-                          color: Colors.black,
-                          onPressed: () {
-                            // When the icon button is clicked, add a new item to the list
-                            setState(() {
-                              itemList.add(" ${itemList.length + 2}");
-                            });
-                          },
-                        ),
-                        SizedBox(
-                          height: 30,
-                          width: 125,
-                          child: CustomDropDown(
-                            value: operator,
-                            onChanged: (item) {
-                              setState(() {
-                                operator = item;
-                              });
-                            },
-                            items: AppSession()
-                                .candidates
-                                .map((skill1Iterable) =>
-                                    DropdownMenuItem<Candidate?>(
-                                      value: skill1Iterable,
-                                      child: Text(skill1Iterable
-                                          .skills![0]), // Update this line
-                                    ))
-                                .followedBy([
-                              const DropdownMenuItem<Candidate?>(
-                                value: null,
-                                child: Text('And'),
-                              )
-                            ]).toList(),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        SizedBox(
-                          height: 30,
-                          width: 125,
-                          child: CustomDropDown<Candidate?>(
-                            value: verified,
-                            onChanged: (Candidate? item) {
-                              setState(() {
-                                verified = item;
-                              });
-                            },
-                            items: [
-                              DropdownMenuItem<Candidate?>(
-                                value: Candidate(
-                                    /* your verified candidate instance */),
-                                child: Text(
-                                  translation(context).verified,
-                                ),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                translation(context).jobClassification,
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold),
                               ),
-                              DropdownMenuItem<Candidate?>(
-                                value:
-                                    null, // You can set this to represent "Not Verified"
-                                child: Text(
-                                  translation(context).notverified,
-                                ),
+                              SizedBox(
+                                height: 15,
                               ),
+                              CustomDropDown(
+                                value: skills,
+                                onChanged: (item) {
+                                  setState(() {
+                                    skills = item;
+                                  });
+                                },
+                                items: AppSession()
+                                    .candidates
+                                    .map((skill1Iterable) =>
+                                        DropdownMenuItem<Candidate?>(
+                                          value: skill1Iterable,
+                                          child: Text(skill1Iterable
+                                              .skills![0]), // Update this line
+                                        ))
+                                    .followedBy([
+                                  const DropdownMenuItem<Candidate?>(
+                                    value: null,
+                                    child: Text(
+                                      'Job Classification',
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontFamily: 'SegoeItalic'),
+                                    ),
+                                  )
+                                ]).toList(),
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Text(
+                                translation(context).qualificationSet,
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              CustomDropDown(
+                                value: qualification,
+                                items: AppSession()
+                                    .candidates
+                                    .map((skill2Iterable) =>
+                                        DropdownMenuItem<Candidate?>(
+                                          value: skill2Iterable,
+                                          child: Text(
+                                              skill2Iterable.qualification!),
+                                        ))
+                                    .followedBy([
+                                  const DropdownMenuItem<Candidate?>(
+                                    value: null,
+                                    child: Text(
+                                      'Qualification Set',
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontFamily: 'SegoeItalic'),
+                                    ),
+                                  )
+                                ]).toList(),
+                                onChanged: (item) {
+                                  setState(() {
+                                    qualification = item;
+                                  });
+                                },
+                              ),
+                              // IconButton(
+                              //   hoverColor: Colors.transparent,
+                              //   icon: Icon(Icons.add),
+                              //   iconSize: 30,
+                              //   color: Colors.black,
+                              //   onPressed: () {
+                              //     // When the icon button is clicked, add a new item to the list
+                              //     setState(() {
+                              //       itemList.add(" ${itemList.length + 2}");
+                              //     });
+                              //   },
+                              // ),
+                              // SizedBox(
+                              //   height: 30,
+                              //   width: 125,
+                              //   child: CustomDropDown(
+                              //     value: operator,
+                              //     onChanged: (item) {
+                              //       setState(() {
+                              //         operator = item;
+                              //       });
+                              //     },
+                              //     items: AppSession()
+                              //         .candidates
+                              //         .map((skill1Iterable) =>
+                              //             DropdownMenuItem<Candidate?>(
+                              //               value: skill1Iterable,
+                              //               child: Text(skill1Iterable
+                              //                   .skills![0]), // Update this line
+                              //             ))
+                              //         .followedBy([
+                              //       const DropdownMenuItem<Candidate?>(
+                              //         value: null,
+                              //         child: Text('And'),
+                              //       )
+                              //     ]).toList(),
+                              //   ),
+                              // ),
+                              // SizedBox(
+                              //   width: 15,
+                              // ),
+                              // SizedBox(
+                              //   height: 30,
+                              //   width: 125,
+                              //   child: CustomDropDown<Candidate?>(
+                              //     value: verified,
+                              //     onChanged: (Candidate? item) {
+                              //       setState(() {
+                              //         verified = item;
+                              //       });
+                              //     },
+                              //     items: [
+                              //       DropdownMenuItem<Candidate?>(
+                              //         value: Candidate(
+                              //             /* your verified candidate instance */),
+                              //         child: Text(
+                              //           translation(context).verified,
+                              //         ),
+                              //       ),
+                              //       DropdownMenuItem<Candidate?>(
+                              //         value:
+                              //             null, // You can set this to represent "Not Verified"
+                              //         child: Text(
+                              //           translation(context).notverified,
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
+                              // SizedBox(
+                              //   width: 15,
+                              // ),
+
+                              // SizedBox(
+                              //   height: 30,
+                              //   width: 125,
+                              //   child: CustomDropDown(
+                              //     value: operator,
+                              //     onChanged: (item) {
+                              //       setState(() {
+                              //         operator = item;
+                              //       });
+                              //     },
+                              //     items: AppSession()
+                              //         .candidates
+                              //         .map((skill1Iterable) =>
+                              //             DropdownMenuItem<Candidate?>(
+                              //               value: skill1Iterable,
+                              //               child: Text(skill1Iterable
+                              //                   .skills![0]), // Update this line
+                              //             ))
+                              //         .followedBy([
+                              //       const DropdownMenuItem<Candidate?>(
+                              //         value: null,
+                              //         child: Text('Query'),
+                              //       )
+                              //     ]).toList(),
+                              //   ),
+                              // ),
+                              // SizedBox(
+                              //   height: 40,
+                              //   width: 40,
+                              //   child: ElevatedButton(
+                              //     style: ElevatedButton.styleFrom(
+                              //       backgroundColor: Colors.indigo.shade900,
+                              //       shape: RoundedRectangleBorder(
+                              //         borderRadius: BorderRadius.circular(
+                              //             2), // Adjust border radius as needed
+                              //       ),
+                              //     ),
+                              //     onPressed: () {},
+                              //     child: ImageIcon(
+                              //       AssetImage("account.png"),
+                              //       size: 25,
+                              //       color: Colors.white,
+                              //     ),
+                              //   ),
+                              // ),
+                              // SizedBox(
+                              //   width: 15,
+                              // ),
+                              // SizedBox(
+                              //   width: 40,
+                              // ),
+                              // CustomButton(
+                              //   text: translation(context).save,
+                              //   onPressed: () async {
+                              //     // Execute the query and get the result
+                              //     QuerySnapshot queryResult = await query.get();
+                              //     // Convert the query result to a list of data
+                              //     List<Map<String, dynamic>> dataList = queryResult
+                              //         .docs
+                              //         .map(
+                              //             (doc) => doc.data() as Map<String, dynamic>)
+                              //         .toList();
+                              //     // Save the current query data when the "Save" button is pressed
+                              //     setState(() {
+                              //       savedQueries.add(dataList);
+                              //       print('Saved query: ${savedQueries}');
+                              //     });
+                              //   },
+                              // ),
                             ],
                           ),
                         ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        SizedBox(
-                          height: 30,
-                          width: 250,
-                          child: CustomDropDown(
-                            value: skills,
-                            onChanged: (item) {
-                              setState(() {
-                                skills = item;
-                              });
-                            },
-                            items: AppSession()
-                                .candidates
-                                .map((skill1Iterable) =>
-                                    DropdownMenuItem<Candidate?>(
-                                      value: skill1Iterable,
-                                      child: Text(skill1Iterable
-                                          .skills![0]), // Update this line
-                                    ))
-                                .followedBy([
-                              const DropdownMenuItem<Candidate?>(
-                                value: null,
-                                child: Text('Job Classification'),
-                              )
-                            ]).toList(),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        SizedBox(
-                          height: 30,
-                          width: 250,
-                          child: CustomDropDown(
-                            value: qualification,
-                            items: AppSession()
-                                .candidates
-                                .map((skill2Iterable) =>
-                                    DropdownMenuItem<Candidate?>(
-                                      value: skill2Iterable,
-                                      child:
-                                          Text(skill2Iterable.qualification!),
-                                    ))
-                                .followedBy([
-                              const DropdownMenuItem<Candidate?>(
-                                value: null,
-                                child: Text('Qualification Set'),
-                              )
-                            ]).toList(),
-                            onChanged: (item) {
-                              setState(() {
-                                qualification = item;
-                              });
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CustomButton(
+                            text: translation(context).run,
+                            onPressed: () {
+                              runQueries();
                             },
                           ),
                         ),
                         SizedBox(
-                          height: 30,
-                          width: 125,
-                          child: CustomDropDown(
-                            value: operator,
-                            onChanged: (item) {
+                          width: 2.5.w,
+                        ),
+                        Expanded(
+                          child: CustomButton(
+                            text: translation(context).clear,
+                            onPressed: () {
                               setState(() {
-                                operator = item;
+                                skills = null;
+                                qualification = null;
+                                itemList.clear();
+                                query = originalQuery;
                               });
                             },
-                            items: AppSession()
-                                .candidates
-                                .map((skill1Iterable) =>
-                                    DropdownMenuItem<Candidate?>(
-                                      value: skill1Iterable,
-                                      child: Text(skill1Iterable
-                                          .skills![0]), // Update this line
-                                    ))
-                                .followedBy([
-                              const DropdownMenuItem<Candidate?>(
-                                value: null,
-                                child: Text('Query'),
-                              )
-                            ]).toList(),
                           ),
-                        ),
-                        SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.indigo.shade900,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    2), // Adjust border radius as needed
-                              ),
-                            ),
-                            onPressed: () {},
-                            child: ImageIcon(
-                              AssetImage("account.png"),
-                              size: 25,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        SizedBox(
-                          width: 40,
-                        ),
-                        CustomButton(
-                          text: translation(context).save,
-                          onPressed: () async {
-                            // Execute the query and get the result
-                            QuerySnapshot queryResult = await query.get();
-
-                            // Convert the query result to a list of data
-                            List<Map<String, dynamic>> dataList = queryResult
-                                .docs
-                                .map(
-                                    (doc) => doc.data() as Map<String, dynamic>)
-                                .toList();
-
-                            // Save the current query data when the "Save" button is pressed
-                            setState(() {
-                              savedQueries.add(dataList);
-                              print('Saved query: ${savedQueries}');
-                            });
-                          },
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        CustomButton(
-                          text: translation(context).run,
-                          onPressed: () {
-                            runQueries();
-                          },
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        CustomButton(
-                          text: translation(context).clear,
-                          onPressed: () {
-                            setState(() {
-                              skills = null;
-                              qualification = null;
-                              itemList.clear();
-                              query = originalQuery;
-                            });
-                          },
-                        ),
-                        SizedBox(
-                          width: 15,
                         ),
                       ],
                     ),
-                    Container(
-                      height: 100,
-                      constraints: BoxConstraints(
-                        maxWidth: 600, // Set your desired maximum width here
-                      ),
-                      child: ListView.builder(
-                        itemCount: itemList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          Candidate? skills =
-                              skillsList[index]; // Use skillsList for each item
-                          Candidate? qualification = qualificationList[
-                              index]; // Use qualificationList for each item
 
-                          return ListTile(
-                            title: Row(
-                              children: [
-                                SizedBox(
-                                  height: 30,
-                                  width: 250,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                    ),
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton2<Candidate?>(
-                                        value: skills,
-                                        isExpanded: true,
-                                        items: AppSession()
-                                            .candidates
-                                            .map((agentIterable) =>
-                                                DropdownMenuItem<Candidate>(
-                                                  value: agentIterable,
-                                                  child: Text(
-                                                      agentIterable.skills![0]),
-                                                ))
-                                            .followedBy([
-                                          DropdownMenuItem<Candidate>(
-                                            value: null,
-                                            child: Text(
-                                                '${translation(context).jobClassification} ${itemList[index]}'),
-                                          )
-                                        ]).toList(),
-                                        onChanged: (item) {
-                                          setState(() {
-                                            skillsList[index] =
-                                                item; // Update skillsList
-                                          });
-                                        },
-                                        buttonStyleData: ButtonStyleData(
-                                          height: 30,
-                                          width: 200,
-                                          elevation: 2,
-                                          padding: const EdgeInsets.only(
-                                              left: 14, right: 14),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                            border: Border.all(
-                                              color: Colors.black26,
-                                            ),
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        iconStyleData: const IconStyleData(
-                                          icon: Icon(
-                                            Icons.arrow_drop_down_sharp,
-                                          ),
-                                          iconSize: 25,
-                                          iconEnabledColor: Colors.black,
-                                          iconDisabledColor: null,
-                                        ),
-                                        dropdownStyleData: DropdownStyleData(
-                                          maxHeight: 210,
-                                          width: 250,
-                                          elevation: 1,
-                                          padding: EdgeInsets.only(
-                                              left: 5,
-                                              right: 5,
-                                              top: 5,
-                                              bottom: 5),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            border:
-                                                Border.all(color: Colors.black),
-                                            color: Colors.white,
-                                          ),
-                                          scrollPadding: EdgeInsets.all(5),
-                                          scrollbarTheme: ScrollbarThemeData(
-                                            thickness: MaterialStateProperty
-                                                .all<double>(6),
-                                            thumbVisibility:
-                                                MaterialStateProperty.all<bool>(
-                                                    true),
-                                          ),
-                                        ),
-                                        menuItemStyleData:
-                                            const MenuItemStyleData(
-                                          height: 25,
-                                          padding: EdgeInsets.only(
-                                              left: 14, right: 14),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                SizedBox(
-                                  height: 30,
-                                  width: 250,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                    ),
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton2<Candidate?>(
-                                        value: qualification,
-                                        isExpanded: true,
-                                        items: AppSession()
-                                            .candidates
-                                            .map((agentIterable) =>
-                                                DropdownMenuItem<Candidate>(
-                                                  value: agentIterable,
-                                                  child: Text(agentIterable
-                                                      .qualification!),
-                                                ))
-                                            .followedBy([
-                                          DropdownMenuItem<Candidate>(
-                                            value: null,
-                                            child: Text(
-                                                '${translation(context).qualificationSet} ${itemList[index]}'),
-                                          )
-                                        ]).toList(),
-                                        onChanged: (item) {
-                                          setState(() {
-                                            qualificationList[index] =
-                                                item; // Update qualificationList
-                                          });
-                                        },
-                                        buttonStyleData: ButtonStyleData(
-                                          height: 30,
-                                          width: 200,
-                                          elevation: 2,
-                                          padding: const EdgeInsets.only(
-                                              left: 14, right: 14),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                            border: Border.all(
-                                              color: Colors.black26,
-                                            ),
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        iconStyleData: const IconStyleData(
-                                          icon: Icon(
-                                            Icons.arrow_drop_down_sharp,
-                                          ),
-                                          iconSize: 25,
-                                          iconEnabledColor: Colors.black,
-                                          iconDisabledColor: null,
-                                        ),
-                                        dropdownStyleData: DropdownStyleData(
-                                          maxHeight: 210,
-                                          width: 250,
-                                          elevation: 1,
-                                          padding: EdgeInsets.only(
-                                              left: 5,
-                                              right: 5,
-                                              top: 5,
-                                              bottom: 5),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            border:
-                                                Border.all(color: Colors.black),
-                                            color: Colors.white,
-                                          ),
-                                          scrollPadding: EdgeInsets.all(5),
-                                          scrollbarTheme: ScrollbarThemeData(
-                                            thickness: MaterialStateProperty
-                                                .all<double>(6),
-                                            thumbVisibility:
-                                                MaterialStateProperty.all<bool>(
-                                                    true),
-                                          ),
-                                        ),
-                                        menuItemStyleData:
-                                            const MenuItemStyleData(
-                                          height: 25,
-                                          padding: EdgeInsets.only(
-                                              left: 14, right: 14),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                    // Container(
+                    //   height: 50,
+                    //   constraints: BoxConstraints(
+                    //     maxWidth: 600, // Set your desired maximum width here
+                    //   ),
+                    //   child: ListView.builder(
+                    //     itemCount: itemList.length,
+                    //     itemBuilder: (BuildContext context, int index) {
+                    //       Candidate? skills =
+                    //           skillsList[index]; // Use skillsList for each item
+                    //       Candidate? qualification = qualificationList[
+                    //           index]; // Use qualificationList for each item
+
+                    //       return ListTile(
+                    //         title: Row(
+                    //           children: [
+                    //             SizedBox(
+                    //               height: 30,
+                    //               width: 250,
+                    //               child: Container(
+                    //                 decoration: BoxDecoration(
+                    //                   color: Colors.white,
+                    //                 ),
+                    //                 child: DropdownButtonHideUnderline(
+                    //                   child: DropdownButton2<Candidate?>(
+                    //                     value: skills,
+                    //                     isExpanded: true,
+                    //                     items: AppSession()
+                    //                         .candidates
+                    //                         .map((agentIterable) =>
+                    //                             DropdownMenuItem<Candidate>(
+                    //                               value: agentIterable,
+                    //                               child: Text(
+                    //                                   agentIterable.skills![0]),
+                    //                             ))
+                    //                         .followedBy([
+                    //                       DropdownMenuItem<Candidate>(
+                    //                         value: null,
+                    //                         child: Text(
+                    //                             '${translation(context).jobClassification} ${itemList[index]}'),
+                    //                       )
+                    //                     ]).toList(),
+                    //                     onChanged: (item) {
+                    //                       setState(() {
+                    //                         skillsList[index] =
+                    //                             item; // Update skillsList
+                    //                       });
+                    //                     },
+                    //                     buttonStyleData: ButtonStyleData(
+                    //                       height: 30,
+                    //                       width: 200,
+                    //                       elevation: 2,
+                    //                       padding: const EdgeInsets.only(
+                    //                           left: 14, right: 14),
+                    //                       decoration: BoxDecoration(
+                    //                         borderRadius:
+                    //                             BorderRadius.circular(4),
+                    //                         border: Border.all(
+                    //                           color: Colors.black26,
+                    //                         ),
+                    //                         color: Colors.white,
+                    //                       ),
+                    //                     ),
+                    //                     iconStyleData: const IconStyleData(
+                    //                       icon: Icon(
+                    //                         Icons.arrow_drop_down_sharp,
+                    //                       ),
+                    //                       iconSize: 25,
+                    //                       iconEnabledColor: Colors.black,
+                    //                       iconDisabledColor: null,
+                    //                     ),
+                    //                     dropdownStyleData: DropdownStyleData(
+                    //                       maxHeight: 210,
+                    //                       width: 250,
+                    //                       elevation: 1,
+                    //                       padding: EdgeInsets.only(
+                    //                           left: 5,
+                    //                           right: 5,
+                    //                           top: 5,
+                    //                           bottom: 5),
+                    //                       decoration: BoxDecoration(
+                    //                         borderRadius:
+                    //                             BorderRadius.circular(5),
+                    //                         border:
+                    //                             Border.all(color: Colors.black),
+                    //                         color: Colors.white,
+                    //                       ),
+                    //                       scrollPadding: EdgeInsets.all(5),
+                    //                       scrollbarTheme: ScrollbarThemeData(
+                    //                         thickness: MaterialStateProperty
+                    //                             .all<double>(6),
+                    //                         thumbVisibility:
+                    //                             MaterialStateProperty.all<bool>(
+                    //                                 true),
+                    //                       ),
+                    //                     ),
+                    //                     menuItemStyleData:
+                    //                         const MenuItemStyleData(
+                    //                       height: 25,
+                    //                       padding: EdgeInsets.only(
+                    //                           left: 14, right: 14),
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //             SizedBox(
+                    //               width: 15,
+                    //             ),
+                    //             SizedBox(
+                    //               height: 30,
+                    //               width: 250,
+                    //               child: Container(
+                    //                 decoration: BoxDecoration(
+                    //                   color: Colors.white,
+                    //                 ),
+                    //                 child: DropdownButtonHideUnderline(
+                    //                   child: DropdownButton2<Candidate?>(
+                    //                     value: qualification,
+                    //                     isExpanded: true,
+                    //                     items: AppSession()
+                    //                         .candidates
+                    //                         .map((agentIterable) =>
+                    //                             DropdownMenuItem<Candidate>(
+                    //                               value: agentIterable,
+                    //                               child: Text(agentIterable
+                    //                                   .qualification!),
+                    //                             ))
+                    //                         .followedBy([
+                    //                       DropdownMenuItem<Candidate>(
+                    //                         value: null,
+                    //                         child: Text(
+                    //                             '${translation(context).qualificationSet} ${itemList[index]}'),
+                    //                       )
+                    //                     ]).toList(),
+                    //                     onChanged: (item) {
+                    //                       setState(() {
+                    //                         qualificationList[index] =
+                    //                             item; // Update qualificationList
+                    //                       });
+                    //                     },
+                    //                     buttonStyleData: ButtonStyleData(
+                    //                       height: 30,
+                    //                       width: 200,
+                    //                       elevation: 2,
+                    //                       padding: const EdgeInsets.only(
+                    //                           left: 14, right: 14),
+                    //                       decoration: BoxDecoration(
+                    //                         borderRadius:
+                    //                             BorderRadius.circular(4),
+                    //                         border: Border.all(
+                    //                           color: Colors.black26,
+                    //                         ),
+                    //                         color: Colors.white,
+                    //                       ),
+                    //                     ),
+                    //                     iconStyleData: const IconStyleData(
+                    //                       icon: Icon(
+                    //                         Icons.arrow_drop_down_sharp,
+                    //                       ),
+                    //                       iconSize: 25,
+                    //                       iconEnabledColor: Colors.black,
+                    //                       iconDisabledColor: null,
+                    //                     ),
+                    //                     dropdownStyleData: DropdownStyleData(
+                    //                       maxHeight: 210,
+                    //                       width: 250,
+                    //                       elevation: 1,
+                    //                       padding: EdgeInsets.only(
+                    //                           left: 5,
+                    //                           right: 5,
+                    //                           top: 5,
+                    //                           bottom: 5),
+                    //                       decoration: BoxDecoration(
+                    //                         borderRadius:
+                    //                             BorderRadius.circular(5),
+                    //                         border:
+                    //                             Border.all(color: Colors.black),
+                    //                         color: Colors.white,
+                    //                       ),
+                    //                       scrollPadding: EdgeInsets.all(5),
+                    //                       scrollbarTheme: ScrollbarThemeData(
+                    //                         thickness: MaterialStateProperty
+                    //                             .all<double>(6),
+                    //                         thumbVisibility:
+                    //                             MaterialStateProperty.all<bool>(
+                    //                                 true),
+                    //                       ),
+                    //                     ),
+                    //                     menuItemStyleData:
+                    //                         const MenuItemStyleData(
+                    //                       height: 25,
+                    //                       padding: EdgeInsets.only(
+                    //                           left: 14, right: 14),
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
             ),
-            SizedBox(
-              height: 30,
-            ),
-            Container(
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(1.5.w, 0, 1.5.w, 2.5.h),
+            child: Container(
                 height: 550,
                 child: SizedBox(
                   child: StreamBuilder<List<Candidate>>(
@@ -1153,9 +1229,9 @@ class _MultipleFilterState extends State<MultipleFilter> {
                       }
                     },
                   ),
-                ))
-          ]),
-        );
+                )),
+          )
+        ]);
       }
     });
   }

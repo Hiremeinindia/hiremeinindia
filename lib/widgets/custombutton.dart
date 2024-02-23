@@ -47,77 +47,6 @@ final class CustomButton extends StatelessWidget {
 }
 
 @immutable
-final class CustomButtonLogin extends StatelessWidget {
-  late final String? text;
-  Widget? child;
-  late final Function()? onPressed;
-
-  late final List<Color>? colors;
-  late final double? dynamicHeight;
-  CustomButtonLogin({
-    super.key,
-    this.text,
-    this.onPressed,
-    this.colors,
-    this.dynamicHeight,
-    this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 30,
-      child: ElevatedButton(
-          onPressed: onPressed,
-          style: ElevatedButton.styleFrom(
-            fixedSize: const Size.fromWidth(double.infinity),
-            primary: Colors.indigo.shade900,
-            shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.circular(0.1), // Adjust border radius as needed
-            ),
-          ),
-          child: child),
-    );
-  }
-}
-
-@immutable
-final class ViewButton extends StatelessWidget {
-  Widget? child;
-  final Function()? onPressed;
-  IconData? icon;
-  final Color? colors;
-
-  ViewButton({
-    super.key,
-    this.onPressed,
-    this.icon,
-    this.child,
-    this.colors,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 55,
-      width: 100,
-      child: ElevatedButton(
-          onPressed: onPressed,
-          style: ElevatedButton.styleFrom(
-            fixedSize: const Size.fromWidth(double.infinity),
-            backgroundColor: colors,
-            shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.circular(0.5), // Adjust border radius as needed
-            ),
-          ),
-          child: child),
-    );
-  }
-}
-
-@immutable
 final class CustomRectButton extends StatelessWidget {
   Widget? child;
   late final Function()? onPressed;
@@ -126,11 +55,13 @@ final class CustomRectButton extends StatelessWidget {
   final Radius? bottomleft;
   final Radius? topright;
   final Color? colors;
+  final ImageIcon? image;
 
   CustomRectButton({
     Key? key,
     this.onPressed,
     this.colors,
+    this.image,
     this.child,
     this.topleft,
     this.bottomright,
@@ -153,7 +84,7 @@ final class CustomRectButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 40,
-      width: 60,
+      width: 40,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ButtonStyle(
@@ -174,7 +105,7 @@ final class CustomRectButton extends StatelessWidget {
             (Set<MaterialState> states) => _getColor(states),
           ),
         ),
-        child: child,
+        child: image,
       ),
     );
   }

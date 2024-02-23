@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:hiremeinindiaapp/User/user.dart';
 import 'package:hiremeinindiaapp/User/userPayment.dart';
 import 'package:sizer/sizer.dart';
+import '../gethired.dart';
+import '../loginpage.dart';
 import '../widgets/customtextfield.dart';
 import '../widgets/hiremeinindia.dart';
 import 'userFormState.dart';
@@ -150,6 +152,7 @@ class _NewUserUpload extends State<NewUserUpload> {
               if (constraints.maxWidth >= 633) {
                 return SingleChildScrollView(
                   child: Container(
+                    padding: EdgeInsets.all(30),
                     height: 91.h,
                     decoration: BoxDecoration(
                         color: Colors.white,
@@ -168,7 +171,10 @@ class _NewUserUpload extends State<NewUserUpload> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     GestureDetector(
-                                      onTap: Navigator.of(context).pop,
+                                      onTap: () {
+                                        Navigator.of(context).popUntil(
+                                            ModalRoute.withName('/hired'));
+                                      },
                                       child: SizedBox(
                                         height: 40,
                                         width: 40,
@@ -191,7 +197,14 @@ class _NewUserUpload extends State<NewUserUpload> {
                                           fontFamily: 'Poppins', fontSize: 15),
                                     ),
                                     InkWell(
-                                      onTap: () {},
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoginPage()),
+                                        );
+                                      },
                                       child: Text(
                                         'Sign in',
                                         style: TextStyle(
@@ -803,6 +816,7 @@ class _NewUserUpload extends State<NewUserUpload> {
               } else {
                 return SingleChildScrollView(
                   child: Container(
+                    padding: EdgeInsets.all(30),
                     height: 91.h,
                     decoration: BoxDecoration(
                         color: Colors.white,
@@ -842,7 +856,13 @@ class _NewUserUpload extends State<NewUserUpload> {
                                         fontFamily: 'Poppins', fontSize: 15),
                                   ),
                                   InkWell(
-                                    onTap: () {},
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => LoginPage()),
+                                      );
+                                    },
                                     child: Text(
                                       'Sign in',
                                       style: TextStyle(

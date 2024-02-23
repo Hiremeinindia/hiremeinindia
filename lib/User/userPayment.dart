@@ -13,6 +13,7 @@ import 'package:hiremeinindiaapp/User/userFormState.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:sizer/sizer.dart';
 import '../classes/language_constants.dart';
+import '../gethired.dart';
 import '../widgets/custombutton.dart';
 import '../widgets/hiremeinindia.dart';
 import 'package:http/http.dart' as http;
@@ -443,6 +444,7 @@ class _NewUserPayment extends State<NewUserPayment> {
               if (constraints.maxWidth >= 633) {
                 return SingleChildScrollView(
                   child: Container(
+                      padding: EdgeInsets.all(30),
                       height: 91.h,
                       decoration: BoxDecoration(
                           color: Colors.white,
@@ -463,7 +465,14 @@ class _NewUserPayment extends State<NewUserPayment> {
                                             MainAxisAlignment.end,
                                         children: [
                                           GestureDetector(
-                                            onTap: Navigator.of(context).pop,
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Hired()),
+                                              );
+                                            },
                                             child: SizedBox(
                                               height: 40,
                                               width: 40,
@@ -762,6 +771,7 @@ class _NewUserPayment extends State<NewUserPayment> {
               } else {
                 return SingleChildScrollView(
                   child: Container(
+                      padding: EdgeInsets.all(30),
                       height: 91.h,
                       decoration: BoxDecoration(
                           color: Colors.white,
@@ -777,7 +787,13 @@ class _NewUserPayment extends State<NewUserPayment> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     GestureDetector(
-                                      onTap: Navigator.of(context).pop,
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Hired()),
+                                        );
+                                      },
                                       child: SizedBox(
                                         height: 40,
                                         width: 40,
@@ -800,7 +816,14 @@ class _NewUserPayment extends State<NewUserPayment> {
                                           fontFamily: 'Poppins', fontSize: 15),
                                     ),
                                     InkWell(
-                                      onTap: () {},
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoginPage()),
+                                        );
+                                      },
                                       child: Text(
                                         'Sign in',
                                         style: TextStyle(
