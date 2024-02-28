@@ -99,147 +99,77 @@ class _NewUserPayment extends State<NewUserPayment> {
   Map<String, dynamic> dataMap = {};
   bool isChecked = false;
   bool isProcessing = false;
+  bool isRequestReceived = true;
   PlatformFile? _cashReceipt;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   CandidateFormController controller = CandidateFormController();
 
-  Future<void> showFileUploadSuccessDialog() async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('File Upload Successful'),
-          content: Text('The cash receipt has been uploaded successfully.'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // Future<void> showFileUploadSuccessDialog() async {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('File Upload Successful'),
+  //         content: Text('The cash receipt has been uploaded successfully.'),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.of(context).pop(); // Close the dialog
+  //             },
+  //             child: Text('OK'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
-  Future<void> uploadImageToFirebase(
-      List<int> fileBytes, String fileName) async {
-    try {
-      Reference reference = FirebaseStorage.instance.ref().child(fileName);
-      await reference.putData(Uint8List.fromList(fileBytes));
-      print('Image uploaded to Firebase Storage with filename: $fileName');
-    } catch (error) {
-      print('Error uploading image: $error');
-    }
-  }
+  // Future<void> uploadImageToFirebase(
+  //     List<int> fileBytes, String fileName) async {
+  //   try {
+  //     Reference reference = FirebaseStorage.instance.ref().child(fileName);
+  //     await reference.putData(Uint8List.fromList(fileBytes));
+  //     print('Image uploaded to Firebase Storage with filename: $fileName');
+  //   } catch (error) {
+  //     print('Error uploading image: $error');
+  //   }
+  // }
 
-  Future<void> uploadImageUrlToFirestore(String imageUrl) async {
-    try {
-      final DocumentReference documentReference =
-          FirebaseFirestore.instance.collection('greyusercollar').doc();
+  // Future<void> uploadImageUrlToFirestore(String imageUrl) async {
+  //   try {
+  //     final DocumentReference documentReference =
+  //         FirebaseFirestore.instance.collection('greycollaruser').doc();
 
-      // Save only the imageUrl to Firestore
-      await documentReference.set({
-        'imageUrl': imageUrl,
-        // You can add more fields if needed
-      });
-      controller.cashrecipt.text = imageUrl;
-      print('Image URL uploaded to Firestore successfully.');
-    } catch (error) {
-      print('Error uploading image URL to Firestore: $error');
-      throw error;
-    }
-  }
-
-  Future<void> getCashReceipt() async {
-    final String serverUrl = 'http://localhost:3019';
-    final String endpoint = '/getCashReceipt';
-
-    try {
-      final response = await http.get(Uri.parse('$serverUrl$endpoint'));
-
-      if (response.statusCode == 200) {
-        String cashReceiptData = response.body;
-        // Display or process the received cash receipt data as needed
-        print('Received Cash Receipt: $cashReceiptData');
-      } else {
-        print(
-          'Failed to retrieve cash receipt. Status code: ${response.statusCode}',
-        );
-      }
-    } catch (error) {
-      print('Error retrieving cash receipt: $error');
-    }
-  }
-
-  Future<String> uploadImageToFirestore(List<int> fileBytes) async {
-    try {
-      Reference reference =
-          FirebaseStorage.instance.ref().child('cash_receipt.jpg');
-      await reference.putData(Uint8List.fromList(fileBytes));
-      String imageUrl = await reference.getDownloadURL();
-
-      // Upload the image URL to Firestore
-      // await uploadImageUrlToFirestore(
-      //     imageUrl); // Pass the imageUrl to this method
-
-      await imageUrl; // Pass the imageUrl to this method
-
-      controller.cashrecipt.text = imageUrl;
-      // Return the image URL
-      return imageUrl;
-    } catch (error) {
-      print('Error uploading image: $error');
-      throw error;
-    }
-  }
-
-  Future<void> uploadCashReceipt() async {
-    try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-      if (result != null) {
-        setState(() {
-          _cashReceipt = result.files.first;
-        });
-
-        List<int> fileBytes = kIsWeb
-            ? _cashReceipt!.bytes!
-            : await _readFileAsBytes(_cashReceipt!.path!);
-
-        // Upload the cash receipt image URL to Firestore
-        String imageUrl = await uploadImageToFirestore(fileBytes);
-        print('Image URL: $imageUrl');
-
-        // Show success dialog or handle success scenario as needed
-      } else {
-        print('No file selected');
-      }
-    } catch (e) {
-      print('Error picking file: $e');
-      // Handle error scenario
-    }
-  }
-
-  Future<List<String>> uploadImages(CandidateFormController controller) async {
-    List<String> imageUrls = [];
-    try {
-      for (File image in controller.images) {
-        final ref = FirebaseStorage.instance
-            .ref()
-            .child('candidate_images/${DateTime.now().millisecondsSinceEpoch}');
-        await ref.putFile(image);
-        final urlDownload = await ref.getDownloadURL();
-        imageUrls.add(urlDownload);
-      }
-    } catch (error) {
-      print('Error uploading images: $error');
-      throw error;
-    }
-    return imageUrls;
-  }
+  //     // Save only the imageUrl to Firestore
+  //     await documentReference.set({
+  //       'cashreceipt': imageUrl,
+  //       // You can add more fields if needed
+  //     });
+  //     controller.cashreceipt.text = imageUrl;
+  //     print('Image URL uploaded to Firestore successfully.');
+  //   } catch (error) {
+  //     print('Error uploading image URL to Firestore: $error');
+  //     throw error;
+  //   }
+  // }
+  // Future<List<String>> uploadImages(CandidateFormController controller) async {
+  //   List<String> imageUrls = [];
+  //   try {
+  //     for (File image in controller.images) {
+  //       final ref = FirebaseStorage.instance
+  //           .ref()
+  //           .child('candidate_images/${DateTime.now().millisecondsSinceEpoch}');
+  //       await ref.putFile(image);
+  //       final urlDownload = await ref.getDownloadURL();
+  //       imageUrls.add(urlDownload);
+  //     }
+  //   } catch (error) {
+  //     print('Error uploading images: $error');
+  //     throw error;
+  //   }
+  //   return imageUrls;
+  // }
 
   // Future<void> addCandidate(CandidateFormController controller) async {
   //   try {
@@ -327,6 +257,90 @@ class _NewUserPayment extends State<NewUserPayment> {
   //   }
   // }
 
+  Future<void> getCashReceipt() async {
+    final String serverUrl = 'http://localhost:3019';
+    final String endpoint = '/getCashReceipt';
+
+    try {
+      final response = await http.get(Uri.parse('$serverUrl$endpoint'));
+
+      if (response.statusCode == 200) {
+        String cashReceiptData = response.body;
+        // Display or process the received cash receipt data as needed
+        print('Received Cash Receipt: $cashReceiptData');
+      } else {
+        print(
+          'Failed to retrieve cash receipt. Status code: ${response.statusCode}',
+        );
+      }
+    } catch (error) {
+      print('Error retrieving cash receipt: $error');
+    }
+  }
+
+  Future<String> uploadImageToFirestore(List<int> fileBytes, String uid) async {
+    try {
+      String userCollection = 'greycollaruser';
+      // Get the user ID from somewhere
+      await FirebaseFirestore.instance.collection(userCollection).doc(uid).set({
+        "cashreceipt": controller.cashreceipt.text,
+        // Add additional user-related fields as needed
+      });
+
+      // Upload image to Firebase Storage
+      Reference reference =
+          FirebaseStorage.instance.ref().child('cash_receipt.jpg');
+      await reference.putData(Uint8List.fromList(fileBytes));
+      String imageUrl = await reference.getDownloadURL();
+
+      // Store image URL in Firestore
+      await FirebaseFirestore.instance
+          .collection(userCollection)
+          .doc(uid)
+          .update({
+        "cashreceiptUrl": imageUrl,
+      });
+
+      // Update text field with image URL
+      controller.cashreceipt.text = imageUrl;
+
+      // Return the image URL
+      return imageUrl;
+    } catch (error) {
+      print('Error uploading image: $error');
+      throw error;
+    }
+  }
+
+  Future<String?> uploadCashReceipt(String uid) async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+      if (result != null) {
+        setState(() {
+          _cashReceipt = result.files.first;
+        });
+
+        List<int> fileBytes = kIsWeb
+            ? _cashReceipt!.bytes!
+            : await _readFileAsBytes(_cashReceipt!.path!);
+
+        // Upload the cash receipt image URL to Firestore
+        String imageUrl = await uploadImageToFirestore(fileBytes, uid);
+        print('Image URL: $imageUrl');
+        return imageUrl;
+        // Show success dialog or handle success scenario as needed
+      } else {
+        print('No file selected');
+      }
+    } catch (e) {
+      print('Error picking file: $e');
+      return null;
+      // Handle error scenario
+    }
+    return null;
+  }
+
   Future<List<int>> _readFileAsBytes(String path) async {
     // Read the content of the file as bytes
     final file = File(path);
@@ -379,23 +393,26 @@ class _NewUserPayment extends State<NewUserPayment> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, dynamic>{
-          'imageUrl': imageUrl, // Pass imageUrl as a parameter
+          // Pass imageUrl as a parameter
+          'cashreceipt':
+              imageUrl, // Convert image to base64 or fetch image data
         }),
       );
 
       print('Response status code: ${response.statusCode}');
-
       if (response.statusCode == 200) {
+        isRequestReceived = true;
         print("cash3");
-        print('Waiting for 1 minutes before showing verification result...');
-        // Wait for 3 minutes before showing verification result
-        await Future.delayed(Duration(minutes: 1));
+        print('Waiting for 30 seconds before showing verification result...');
+        // Wait for 30 seconds before showing verification result
+        await Future.delayed(Duration(seconds: 30));
 
         // Dismiss the "Sending Cash Notification" dialog
         Navigator.of(context).pop();
 
         setState(() {
           isProcessing = false;
+          isRequestReceived = true;
         });
 
         // Display a popup message
@@ -421,13 +438,16 @@ class _NewUserPayment extends State<NewUserPayment> {
           'Failed to send notification. Status code: ${response.statusCode}',
         );
         setState(() {
-          isProcessing = false; // Set the flag to indicate processing is done
+          isProcessing = false;
+          isRequestReceived = true;
+          // Set the flag to indicate processing is done
         });
       }
     } catch (error) {
       print('Error sending notification: $error');
       setState(() {
-        isProcessing = false; // Set the flag to indicate processing is done
+        isProcessing = false;
+        isRequestReceived = true; // Set the flag to indicate processing is done
       });
     }
   }
@@ -693,13 +713,24 @@ class _NewUserPayment extends State<NewUserPayment> {
                                                         .cash,
                                                     onPressed: () async {
                                                       print("cash1");
-
                                                       // Call the method to upload cash receipt
-                                                      await uploadCashReceipt();
-
+                                                      UserCredential
+                                                          userCredential =
+                                                          await _auth
+                                                              .createUserWithEmailAndPassword(
+                                                        email: widget.email!,
+                                                        password:
+                                                            widget.password!,
+                                                      );
+                                                      // Call the method to upload cash receipt
+                                                      String? imageUrl =
+                                                          await uploadCashReceipt(
+                                                              userCredential
+                                                                  .user!.uid);
                                                       // Display the pop-up dialog only if the receipt is uploaded successfully
                                                       if (_cashReceipt !=
-                                                          null) {
+                                                              null &&
+                                                          imageUrl != null) {
                                                         showDialog(
                                                           context: context,
                                                           builder: (BuildContext
@@ -710,7 +741,6 @@ class _NewUserPayment extends State<NewUserPayment> {
                                                         );
 
                                                         try {
-                                                          String? imageUrl = '';
                                                           // Call the method to send cash notification
                                                           await sendCashNotification(
                                                               imageUrl);
@@ -994,9 +1024,15 @@ class _NewUserPayment extends State<NewUserPayment> {
                                           text: translation(context).cash,
                                           onPressed: () async {
                                             print("cash1");
-
+                                            UserCredential userCredential =
+                                                await _auth
+                                                    .createUserWithEmailAndPassword(
+                                              email: widget.email!,
+                                              password: widget.password!,
+                                            );
                                             // Call the method to upload cash receipt
-                                            await uploadCashReceipt();
+                                            await uploadCashReceipt(
+                                                userCredential.user!.uid);
 
                                             // Display the pop-up dialog only if the receipt is uploaded successfully
                                             if (_cashReceipt != null) {
@@ -1075,8 +1111,6 @@ class _NewUserPayment extends State<NewUserPayment> {
       );
       // User creation successful
       print("User created: ${userCredential.user!.email}");
-      print(
-          'ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss          ${widget.imgpic}               sssssssssssssssssssssssssssssssssssssssssss');
       await assignUserRole(userCredential.user!.uid, 'Blue');
     } catch (e) {
       print("Error creating user: $e");
@@ -1118,7 +1152,7 @@ class _NewUserPayment extends State<NewUserPayment> {
         "expectedwage": widget.expectedwage,
         "currentwage": widget.currentwage,
         'label': widget.selectedOption,
-        "cashrecipt": controller.cashrecipt.text
+        "cashreceipt": controller.cashreceipt.text,
         // Add additional user-related fields as needed
       });
     } catch (e) {

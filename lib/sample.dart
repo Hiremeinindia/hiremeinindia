@@ -1,76 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:hiremeinindiaapp/widgets/custombutton.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Sample extends StatelessWidget {
+  final TextEditingController _controller = TextEditingController();
+
+  void sendMessage(String message) {
+    FirebaseFirestore.instance.collection('messages').add({
+      'sender': 'user',
+      'message': message,
+      'timestamp': DateTime.now(),
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Drawer Example'),
-        ),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                ),
-                child: Text(
-                  'Drawer Header',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                  ),
-                ),
-              ),
-              ListTile(
-                title: Text('Item 1'),
-                onTap: () {
-                  // Add your onTap logic here
-                },
-              ),
-              ListTile(
-                title: Text('Item 2'),
-                onTap: () {
-                  // Add your onTap logic here
-                },
-              ),
-            ],
-          ),
-        ),
+        appBar: AppBar(title: Text('Sender App')),
         body: Center(
-          child: Row(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        7), // Adjust border radius as needed
-                  ),
-                ),
-                onPressed: () {},
-                child: ImageIcon(
-                  NetworkImage(
-                    'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/filter.png?alt=media&token=fb12f309-716f-4b68-94b0-2c551dd998b5',
-                  ),
-                  size: 25,
-                  color: Colors.indigo.shade900,
-                ),
+              TextField(
+                controller: _controller,
+                decoration: InputDecoration(labelText: 'Enter Message'),
               ),
-              CustomRectButton(
-                  topright: Radius.circular(5),
-                  bottomright: Radius.circular(5),
-                  onPressed: () {},
-                  image: ImageIcon(
-                    NetworkImage(
-                      'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/table.png?alt=media&token=75eaa626-2b1f-4faf-8ce5-73480c3141df',
-                    ),
-                    size: 25,
-                    color: Colors.indigo.shade900,
-                  )),
+              ElevatedButton(
+                onPressed: () {
+                  sendMessage(_controller.text);
+                },
+                child: Text('Send Message'),
+              ),
             ],
           ),
         ),

@@ -40,7 +40,7 @@ class CandidateFormController {
   final imgexp = TextEditingController();
   final imgaadhar = TextEditingController();
   final imgvoter = TextEditingController();
-  final cashrecipt = TextEditingController();
+  final cashreceipt = TextEditingController();
   final selectedOption = TextEditingController();
   List<File> images = [];
   List<String> skills = [];
