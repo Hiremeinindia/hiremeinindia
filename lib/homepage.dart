@@ -237,6 +237,9 @@ class _HomePageState extends State<HomePage> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              SizedBox(
+                                height: 5,
+                              ),
                               Text(
                                 translation(context).user,
                                 style: TextStyle(
@@ -372,6 +375,9 @@ class _HomePageState extends State<HomePage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                    ),
+                    SizedBox(
+                      height: 5,
                     ),
                     Center(
                       child: Text(

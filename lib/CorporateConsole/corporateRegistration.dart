@@ -8,6 +8,7 @@ import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:sizer/sizer.dart';
 
 import '../classes/language_constants.dart';
+import '../gethired.dart';
 import '../widgets/custombutton.dart';
 import '../widgets/customtextfield.dart';
 import '../widgets/hiremeinindia.dart';
@@ -94,7 +95,13 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     GestureDetector(
-                                      onTap: Navigator.of(context).pop,
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Hired()),
+                                        );
+                                      },
                                       child: SizedBox(
                                         height: 40,
                                         width: 40,
@@ -395,7 +402,13 @@ class _CorporateRegistrationState extends State<CorporateRegistration> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 GestureDetector(
-                                  onTap: Navigator.of(context).pop,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Hired()),
+                                    );
+                                  },
                                   child: SizedBox(
                                     height: 40,
                                     width: 40,

@@ -31,7 +31,6 @@ class _LoginPageState extends State<LoginPage> {
   String password = '';
   String name = '';
   bool login = false;
-  final _formKey = GlobalKey<FormState>();
   String? validatePassword(String? value) {
     RegExp regex =
         RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
@@ -264,6 +263,9 @@ class _LoginPageState extends State<LoginPage> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              SizedBox(
+                                height: 5,
+                              ),
                               Text(
                                 translation(context).user,
                                 style: TextStyle(
@@ -304,7 +306,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       SizedBox(
-                        height: 30,
+                        height: 28,
                       ),
                       Text(
                         translation(context).email,
@@ -353,62 +355,50 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(
                         height: 40,
                       ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: CustomButtonLogin(
-                          child: Text(
-                            login
-                                ? translation(context).login
-                                : translation(context).signIn,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.white,
-                            ),
-                          ),
-                          onPressed: () async {
-                            try {
-                              // Sign in with email and password
-                              UserCredential userCredential =
-                                  await _auth.signInWithEmailAndPassword(
-                                email: controller.email.text,
-                                password: controller.password.text,
+                      CustomButton(
+                        text: translation(context).login,
+                        onPressed: () async {
+                          try {
+                            // Sign in with email and password
+                            UserCredential userCredential =
+                                await _auth.signInWithEmailAndPassword(
+                              email: controller.email.text,
+                              password: controller.password.text,
+                            );
+
+                            // Check the user's role after successful sign-in
+                            String userRole =
+                                await getUserRole(userCredential.user!.uid);
+
+                            // Navigate to the appropriate dashboard based on the user's role
+                            if (userRole == 'Admin') {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CorporateDashboard(
+                                      user: userCredential.user!),
+                                ),
                               );
-
-                              // Check the user's role after successful sign-in
-                              String userRole =
-                                  await getUserRole(userCredential.user!.uid);
-
-                              // Navigate to the appropriate dashboard based on the user's role
-                              if (userRole == 'Admin') {
-                                Navigator.pushReplacement(
+                            } else if (userRole == 'Blue' ||
+                                userRole == 'Grey') {
+                              Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => CorporateDashboard(
+                                    builder: (context) => UserDashboard(
                                         user: userCredential.user!),
-                                  ),
-                                );
-                              } else if (userRole == 'Blue' ||
-                                  userRole == 'Grey') {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => UserDashboard(
-                                          user: userCredential.user!),
-                                    ));
-                              } else {
-                                print('Unknown user role');
-                              }
-                            } on FirebaseAuthException catch (e) {
-                              // Handle authentication exceptions
-                              if (e.code == 'user-not-found') {
-                                print('No user found for that email.');
-                              } else if (e.code == 'wrong-password') {
-                                print('Wrong password provided.');
-                              }
+                                  ));
+                            } else {
+                              print('Unknown user role');
                             }
-                          },
-                        ),
+                          } on FirebaseAuthException catch (e) {
+                            // Handle authentication exceptions
+                            if (e.code == 'user-not-found') {
+                              print('No user found for that email.');
+                            } else if (e.code == 'wrong-password') {
+                              print('Wrong password provided.');
+                            }
+                          }
+                        },
                       )
                     ],
                   ),
@@ -451,6 +441,9 @@ class _LoginPageState extends State<LoginPage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                    ),
+                    SizedBox(
+                      height: 5,
                     ),
                     Center(
                       child: Text(
@@ -621,17 +614,8 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         Align(
                           alignment: Alignment.center,
-                          child: CustomButtonLogin(
-                            child: Text(
-                              login
-                                  ? translation(context).login
-                                  : translation(context).signIn,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.white,
-                              ),
-                            ),
+                          child: CustomButton(
+                            text: translation(context).login,
                             onPressed: () async {
                               try {
                                 // Sign in with email and password

@@ -24,7 +24,6 @@ class _CorporateDashboard extends State<CorporateDashboard> {
 
   bool isPressed = false;
 
-  @override
   late Stream<Map<String, dynamic>?> userStream;
   String _userName = '';
   String _designation = '';
@@ -121,6 +120,9 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
                                       Text(
                                         '$_designation',
                                         style: TextStyle(
@@ -146,117 +148,67 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                 ),
               ),
               body: Material(
-                elevation: 4,
-                child: LayoutBuilder(
-                    builder: (BuildContext ctx, BoxConstraints constraints) {
-                  if (constraints.maxWidth >= 633) {
-                    return SingleChildScrollView(
-                      child: Container(
-                        padding:
-                            EdgeInsets.fromLTRB(2.5.w, 2.5.h, 2.5.w, 2.5.h),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: Text(
-                                  isPressed
-                                      ? translation(context).multiplefilter
-                                      : translation(context).columnview,
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                  elevation: 4,
+                  child: SingleChildScrollView(
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(2.5.w, 2.5.h, 2.5.w, 2.5.h),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Text(
+                                isPressed
+                                    ? translation(context).multiplefilter
+                                    : translation(context).columnview,
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: StreamBuilder<
-                                            Map<String, dynamic>?>(
-                                          stream: userStream,
-                                          builder: (context, snapshot) {
-                                            if (snapshot.hasData &&
-                                                snapshot.data != null) {
-                                              // Display the user's name
-                                              return Center(
-                                                child: Row(
-                                                  children: [
-                                                    Text(
-                                                      "${translation(context).hello} $_userName",
-                                                      style: CustomTextStyle
-                                                          .nameOfUser,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                    IconButton(
-                                                      hoverColor:
-                                                          Colors.transparent,
-                                                      icon: Icon(Icons
-                                                          .arrow_drop_down_sharp),
-                                                      iconSize: 30,
-                                                      color: Colors
-                                                          .indigo.shade900,
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          isArrowClick =
-                                                              !isArrowClick;
-                                                        });
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            } else {
-                                              // Loading or error state
-                                              return Center(
-                                                child:
-                                                    CircularProgressIndicator(),
-                                              );
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                      StreamBuilder<Map<String, dynamic>?>(
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child:
+                                          StreamBuilder<Map<String, dynamic>?>(
                                         stream: userStream,
                                         builder: (context, snapshot) {
                                           if (snapshot.hasData &&
                                               snapshot.data != null) {
                                             // Display the user's name
-                                            return Visibility(
-                                              visible: isArrowClick,
+                                            return Center(
                                               child: Row(
                                                 children: [
                                                   Text(
-                                                    '$_designation',
-                                                    style: TextStyle(
-                                                        fontSize: 15,
-                                                        color: Colors
-                                                            .indigo.shade900,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontFamily: 'Poppins'),
+                                                    "${translation(context).hello} $_userName",
+                                                    style: CustomTextStyle
+                                                        .nameOfUser,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
-                                                  Text('|'),
-                                                  Text(
-                                                    '$_companyName',
-                                                    style: TextStyle(
-                                                        fontSize: 15,
-                                                        color: Colors
-                                                            .indigo.shade900,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontFamily: 'Poppins'),
+                                                  IconButton(
+                                                    hoverColor:
+                                                        Colors.transparent,
+                                                    icon: Icon(Icons
+                                                        .arrow_drop_down_sharp),
+                                                    iconSize: 30,
+                                                    color:
+                                                        Colors.indigo.shade900,
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        isArrowClick =
+                                                            !isArrowClick;
+                                                      });
+                                                    },
                                                   ),
                                                 ],
                                               ),
@@ -270,304 +222,134 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                                           }
                                         },
                                       ),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                            height: 40,
-                                            width: 70,
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: isPressed
-                                                    ? Colors.indigo.shade900
-                                                    : Colors.grey,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          7), // Adjust border radius as needed
-                                                ),
-                                              ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  isPressed = !isPressed;
-                                                });
-                                              },
-                                              child: SizedBox(
-                                                height: 40,
-                                                width: 40,
-                                                child: ImageIcon(
-                                                  NetworkImage(
-                                                    'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/filter.png?alt=media&token=fb12f309-716f-4b68-94b0-2c551dd998b5',
-                                                  ),
-                                                  size: 25,
-                                                  color: isPressed
-                                                      ? Colors.white
-                                                      : Colors.indigo.shade900,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 40,
-                                            width: 70,
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: isPressed
-                                                    ? Colors.white
-                                                    : Colors.indigo.shade900,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          7), // Adjust border radius as needed
-                                                ),
-                                              ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  isPressed = !isPressed;
-                                                });
-                                              },
-                                              child: SizedBox(
-                                                height: 40,
-                                                width: 40,
-                                                child: ImageIcon(
-                                                  NetworkImage(
-                                                    'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/table.png?alt=media&token=75eaa626-2b1f-4faf-8ce5-73480c3141df',
-                                                  ),
-                                                  size: 25,
-                                                  color: isPressed
-                                                      ? Colors.indigo.shade900
-                                                      : Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              isPressed ? MultipleFilter() : ColumnView(),
-                            ]),
-                      ),
-                    );
-                  } else {
-                    return SingleChildScrollView(
-                      child: Container(
-                        padding:
-                            EdgeInsets.fromLTRB(2.5.w, 2.5.h, 2.5.w, 2.5.h),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: Text(
-                                  isPressed
-                                      ? translation(context).multiplefilter
-                                      : translation(context).columnview,
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: StreamBuilder<
-                                            Map<String, dynamic>?>(
-                                          stream: userStream,
-                                          builder: (context, snapshot) {
-                                            if (snapshot.hasData &&
-                                                snapshot.data != null) {
-                                              // Display the user's name
-                                              return Center(
-                                                child: Row(
-                                                  children: [
-                                                    Text(
-                                                      "${translation(context).hello} $_userName",
-                                                      style: CustomTextStyle
-                                                          .nameOfUser,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                    IconButton(
-                                                      hoverColor:
-                                                          Colors.transparent,
-                                                      icon: Icon(Icons
-                                                          .arrow_drop_down_sharp),
-                                                      iconSize: 30,
+                                    ),
+                                    StreamBuilder<Map<String, dynamic>?>(
+                                      stream: userStream,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData &&
+                                            snapshot.data != null) {
+                                          // Display the user's name
+                                          return Visibility(
+                                            visible: isArrowClick,
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  '$_designation',
+                                                  style: TextStyle(
+                                                      fontSize: 15,
                                                       color: Colors
                                                           .indigo.shade900,
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          isArrowClick =
-                                                              !isArrowClick;
-                                                        });
-                                                      },
-                                                    ),
-                                                  ],
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Poppins'),
                                                 ),
-                                              );
-                                            } else {
-                                              // Loading or error state
-                                              return Center(
-                                                child:
-                                                    CircularProgressIndicator(),
-                                              );
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                      StreamBuilder<Map<String, dynamic>?>(
-                                        stream: userStream,
-                                        builder: (context, snapshot) {
-                                          if (snapshot.hasData &&
-                                              snapshot.data != null) {
-                                            // Display the user's name
-                                            return Visibility(
-                                              visible: isArrowClick,
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                    '$_designation',
-                                                    style: TextStyle(
-                                                        fontSize: 15,
-                                                        color: Colors
-                                                            .indigo.shade900,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontFamily: 'Poppins'),
-                                                  ),
-                                                  Text('|'),
-                                                  Text(
-                                                    '$_companyName',
-                                                    style: TextStyle(
-                                                        fontSize: 15,
-                                                        color: Colors
-                                                            .indigo.shade900,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontFamily: 'Poppins'),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          } else {
-                                            // Loading or error state
-                                            return Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            );
-                                          }
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                            height: 40,
-                                            width: 70,
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: isPressed
-                                                    ? Colors.indigo.shade900
-                                                    : Colors.grey,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          7), // Adjust border radius as needed
+                                                Text('|'),
+                                                Text(
+                                                  '$_companyName',
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      color: Colors
+                                                          .indigo.shade900,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Poppins'),
                                                 ),
-                                              ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  isPressed = !isPressed;
-                                                });
-                                              },
-                                              child: SizedBox(
-                                                height: 40,
-                                                width: 40,
-                                                child: ImageIcon(
-                                                  NetworkImage(
-                                                    'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/filter.png?alt=media&token=fb12f309-716f-4b68-94b0-2c551dd998b5',
-                                                  ),
-                                                  size: 25,
-                                                  color: isPressed
-                                                      ? Colors.white
-                                                      : Colors.indigo.shade900,
-                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        } else {
+                                          // Loading or error state
+                                          return Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          height: 40,
+                                          width: 70,
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: isPressed
+                                                  ? Colors.indigo.shade900
+                                                  : Colors.grey,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(
+                                                    7), // Adjust border radius as needed
                                               ),
                                             ),
-                                          ),
-                                          SizedBox(
-                                            height: 40,
-                                            width: 70,
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: isPressed
+                                            onPressed: () {
+                                              setState(() {
+                                                isPressed = !isPressed;
+                                              });
+                                            },
+                                            child: SizedBox(
+                                              height: 40,
+                                              width: 40,
+                                              child: ImageIcon(
+                                                NetworkImage(
+                                                  'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/filter.png?alt=media&token=fb12f309-716f-4b68-94b0-2c551dd998b5',
+                                                ),
+                                                size: 25,
+                                                color: isPressed
                                                     ? Colors.white
                                                     : Colors.indigo.shade900,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          7), // Adjust border radius as needed
-                                                ),
-                                              ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  isPressed = !isPressed;
-                                                });
-                                              },
-                                              child: SizedBox(
-                                                height: 40,
-                                                width: 40,
-                                                child: ImageIcon(
-                                                  NetworkImage(
-                                                    'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/table.png?alt=media&token=75eaa626-2b1f-4faf-8ce5-73480c3141df',
-                                                  ),
-                                                  size: 25,
-                                                  color: isPressed
-                                                      ? Colors.indigo.shade900
-                                                      : Colors.white,
-                                                ),
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              isPressed ? MultipleFilter() : ColumnView(),
-                            ]),
-                      ),
-                    );
-                  }
-                }),
-              ));
+                                        ),
+                                        SizedBox(
+                                          height: 40,
+                                          width: 70,
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: isPressed
+                                                  ? Colors.white
+                                                  : Colors.indigo.shade900,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(
+                                                    7), // Adjust border radius as needed
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                isPressed = !isPressed;
+                                              });
+                                            },
+                                            child: SizedBox(
+                                              height: 40,
+                                              width: 40,
+                                              child: ImageIcon(
+                                                NetworkImage(
+                                                  'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/table.png?alt=media&token=75eaa626-2b1f-4faf-8ce5-73480c3141df',
+                                                ),
+                                                size: 25,
+                                                color: isPressed
+                                                    ? Colors.indigo.shade900
+                                                    : Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            isPressed ? MultipleFilter() : ColumnView(),
+                          ]),
+                    ),
+                  )));
         } else {
           return Scaffold(
             endDrawer: Drawer(
@@ -610,6 +392,9 @@ class _CorporateDashboard extends State<CorporateDashboard> {
                                   color: Colors.indigo.shade900,
                                   fontWeight: FontWeight.bold,
                                 ),
+                              ),
+                              SizedBox(
+                                height: 5,
                               ),
                               Text(
                                 '$_designation',
@@ -672,416 +457,175 @@ class _CorporateDashboard extends State<CorporateDashboard> {
               ),
             ),
             body: Material(
-              elevation: 4,
-              child: LayoutBuilder(
-                  builder: (BuildContext ctx, BoxConstraints constraints) {
-                if (constraints.maxWidth >= 633) {
-                  return SingleChildScrollView(
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(2.5.w, 2.5.h, 2.5.w, 2.5.h),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: Text(
-                                isPressed
-                                    ? translation(context).multiplefilter
-                                    : translation(context).columnview,
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                elevation: 4,
+                child: SingleChildScrollView(
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(5.w, 2.5.h, 5.w, 2.5.h),
+                    child: Column(children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: StreamBuilder<Map<String, dynamic>?>(
+                          stream: userStream,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData && snapshot.data != null) {
+                              // Display the user's name
+                              return Center(
+                                child: Row(
                                   children: [
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child:
-                                          StreamBuilder<Map<String, dynamic>?>(
-                                        stream: userStream,
-                                        builder: (context, snapshot) {
-                                          if (snapshot.hasData &&
-                                              snapshot.data != null) {
-                                            // Display the user's name
-                                            return Center(
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                    "${translation(context).hello} $_userName",
-                                                    style: CustomTextStyle
-                                                        .nameOfUser,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                  IconButton(
-                                                    hoverColor:
-                                                        Colors.transparent,
-                                                    icon: Icon(Icons
-                                                        .arrow_drop_down_sharp),
-                                                    iconSize: 30,
-                                                    color:
-                                                        Colors.indigo.shade900,
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        isArrowClick =
-                                                            !isArrowClick;
-                                                      });
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          } else {
-                                            // Loading or error state
-                                            return Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            );
-                                          }
-                                        },
-                                      ),
+                                    Text(
+                                      "${translation(context).hello} $_userName",
+                                      style: CustomTextStyle.nameOfUser,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    StreamBuilder<Map<String, dynamic>?>(
-                                      stream: userStream,
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasData &&
-                                            snapshot.data != null) {
-                                          // Display the user's name
-                                          return Visibility(
-                                            visible: isArrowClick,
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  '$_designation',
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      color: Colors
-                                                          .indigo.shade900,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Poppins'),
-                                                ),
-                                                Text('|'),
-                                                Text(
-                                                  '$_companyName',
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      color: Colors
-                                                          .indigo.shade900,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Poppins'),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        } else {
-                                          // Loading or error state
-                                          return Center(
-                                            child: CircularProgressIndicator(),
-                                          );
-                                        }
+                                    IconButton(
+                                      hoverColor: Colors.transparent,
+                                      icon: Icon(Icons.arrow_drop_down_sharp),
+                                      iconSize: 30,
+                                      color: Colors.indigo.shade900,
+                                      onPressed: () {
+                                        setState(() {
+                                          isArrowClick = !isArrowClick;
+                                        });
                                       },
                                     ),
                                   ],
                                 ),
-                                Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          height: 40,
-                                          width: 70,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: isPressed
-                                                  ? Colors.indigo.shade900
-                                                  : Colors.grey,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(
-                                                    7), // Adjust border radius as needed
-                                              ),
-                                            ),
-                                            onPressed: () {
-                                              setState(() {
-                                                isPressed = !isPressed;
-                                              });
-                                            },
-                                            child: SizedBox(
-                                              height: 40,
-                                              width: 40,
-                                              child: ImageIcon(
-                                                NetworkImage(
-                                                  'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/filter.png?alt=media&token=fb12f309-716f-4b68-94b0-2c551dd998b5',
-                                                ),
-                                                size: 25,
-                                                color: isPressed
-                                                    ? Colors.white
-                                                    : Colors.indigo.shade900,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 40,
-                                          width: 70,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: isPressed
-                                                  ? Colors.white
-                                                  : Colors.indigo.shade900,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(
-                                                    7), // Adjust border radius as needed
-                                              ),
-                                            ),
-                                            onPressed: () {
-                                              setState(() {
-                                                isPressed = !isPressed;
-                                              });
-                                            },
-                                            child: SizedBox(
-                                              height: 40,
-                                              width: 40,
-                                              child: ImageIcon(
-                                                NetworkImage(
-                                                  'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/table.png?alt=media&token=75eaa626-2b1f-4faf-8ce5-73480c3141df',
-                                                ),
-                                                size: 25,
-                                                color: isPressed
-                                                    ? Colors.indigo.shade900
-                                                    : Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                              );
+                            } else {
+                              // Loading or error state
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                      StreamBuilder<Map<String, dynamic>?>(
+                        stream: userStream,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData && snapshot.data != null) {
+                            // Display the user's name
+                            return Visibility(
+                              visible: isArrowClick,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '$_designation',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.indigo.shade900,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Poppins'),
+                                  ),
+                                  Text('|'),
+                                  Text(
+                                    '$_companyName',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.indigo.shade900,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Poppins'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          } else {
+                            // Loading or error state
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        },
+                      ),
+                      Text(
+                        isPressed
+                            ? translation(context).multiplefilter
+                            : translation(context).columnview,
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          SizedBox(
+                            height: 40,
+                            width: 70,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: isPressed
+                                    ? Colors.indigo.shade900
+                                    : Colors.grey,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      7), // Adjust border radius as needed
                                 ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            isPressed ? MultipleFilter() : ColumnView(),
-                          ]),
-                    ),
-                  );
-                } else {
-                  return SingleChildScrollView(
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(2.5.w, 2.5.h, 2.5.w, 2.5.h),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: Text(
-                                isPressed
-                                    ? translation(context).multiplefilter
-                                    : translation(context).columnview,
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.bold,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  isPressed = !isPressed;
+                                });
+                              },
+                              child: SizedBox(
+                                height: 40,
+                                width: 40,
+                                child: ImageIcon(
+                                  NetworkImage(
+                                    'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/filter.png?alt=media&token=fb12f309-716f-4b68-94b0-2c551dd998b5',
+                                  ),
+                                  size: 25,
+                                  color: isPressed
+                                      ? Colors.white
+                                      : Colors.indigo.shade900,
                                 ),
                               ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child:
-                                          StreamBuilder<Map<String, dynamic>?>(
-                                        stream: userStream,
-                                        builder: (context, snapshot) {
-                                          if (snapshot.hasData &&
-                                              snapshot.data != null) {
-                                            // Display the user's name
-                                            return Center(
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                    "${translation(context).hello} $_userName",
-                                                    style: CustomTextStyle
-                                                        .nameOfUser,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                  IconButton(
-                                                    hoverColor:
-                                                        Colors.transparent,
-                                                    icon: Icon(Icons
-                                                        .arrow_drop_down_sharp),
-                                                    iconSize: 30,
-                                                    color:
-                                                        Colors.indigo.shade900,
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        isArrowClick =
-                                                            !isArrowClick;
-                                                      });
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          } else {
-                                            // Loading or error state
-                                            return Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            );
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                    StreamBuilder<Map<String, dynamic>?>(
-                                      stream: userStream,
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasData &&
-                                            snapshot.data != null) {
-                                          // Display the user's name
-                                          return Visibility(
-                                            visible: isArrowClick,
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  '$_designation',
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      color: Colors
-                                                          .indigo.shade900,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Poppins'),
-                                                ),
-                                                Text('|'),
-                                                Text(
-                                                  '$_companyName',
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      color: Colors
-                                                          .indigo.shade900,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Poppins'),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        } else {
-                                          // Loading or error state
-                                          return Center(
-                                            child: CircularProgressIndicator(),
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  ],
+                          ),
+                          SizedBox(
+                            height: 40,
+                            width: 70,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: isPressed
+                                    ? Colors.white
+                                    : Colors.indigo.shade900,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      7), // Adjust border radius as needed
                                 ),
-                                Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          height: 40,
-                                          width: 70,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: isPressed
-                                                  ? Colors.indigo.shade900
-                                                  : Colors.grey,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(
-                                                    7), // Adjust border radius as needed
-                                              ),
-                                            ),
-                                            onPressed: () {
-                                              setState(() {
-                                                isPressed = !isPressed;
-                                              });
-                                            },
-                                            child: SizedBox(
-                                              height: 40,
-                                              width: 40,
-                                              child: ImageIcon(
-                                                NetworkImage(
-                                                  'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/filter.png?alt=media&token=fb12f309-716f-4b68-94b0-2c551dd998b5',
-                                                ),
-                                                size: 25,
-                                                color: isPressed
-                                                    ? Colors.white
-                                                    : Colors.indigo.shade900,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 40,
-                                          width: 70,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: isPressed
-                                                  ? Colors.white
-                                                  : Colors.indigo.shade900,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(
-                                                    7), // Adjust border radius as needed
-                                              ),
-                                            ),
-                                            onPressed: () {
-                                              setState(() {
-                                                isPressed = !isPressed;
-                                              });
-                                            },
-                                            child: SizedBox(
-                                              height: 40,
-                                              width: 40,
-                                              child: ImageIcon(
-                                                NetworkImage(
-                                                  'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/table.png?alt=media&token=75eaa626-2b1f-4faf-8ce5-73480c3141df',
-                                                ),
-                                                size: 25,
-                                                color: isPressed
-                                                    ? Colors.indigo.shade900
-                                                    : Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  isPressed = !isPressed;
+                                });
+                              },
+                              child: SizedBox(
+                                height: 40,
+                                width: 40,
+                                child: ImageIcon(
+                                  NetworkImage(
+                                    'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/table.png?alt=media&token=75eaa626-2b1f-4faf-8ce5-73480c3141df',
+                                  ),
+                                  size: 25,
+                                  color: isPressed
+                                      ? Colors.indigo.shade900
+                                      : Colors.white,
                                 ),
-                              ],
+                              ),
                             ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            isPressed ? MultipleFilter() : ColumnView(),
-                          ]),
-                    ),
-                  );
-                }
-              }),
-            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      isPressed ? MultipleFilter() : ColumnView(),
+                    ]),
+                  ),
+                )),
           );
         }
       });

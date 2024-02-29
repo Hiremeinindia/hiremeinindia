@@ -16,9 +16,7 @@ class CustomDropDown<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-      ),
+      height: 35,
       child: DropdownButtonHideUnderline(
         child: DropdownButton2<T>(
           value: value,
@@ -27,7 +25,6 @@ class CustomDropDown<T> extends StatelessWidget {
           onChanged: onChanged,
           buttonStyleData: ButtonStyleData(
             height: 30,
-            width: 200,
             elevation: 2,
             padding: const EdgeInsets.only(left: 14, right: 14),
             decoration: BoxDecoration(
@@ -47,13 +44,17 @@ class CustomDropDown<T> extends StatelessWidget {
             iconDisabledColor: null,
           ),
           dropdownStyleData: DropdownStyleData(
-            maxHeight: 210,
-            width: 250,
-            elevation: 1,
+            elevation: 0,
+            maxHeight: 200,
             padding: EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              border: Border.all(color: Colors.black),
+              border: Border.all(color: Colors.grey.shade500),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(0),
+                topRight: Radius.circular(0),
+                bottomLeft: Radius.circular(5),
+                bottomRight: Radius.circular(5),
+              ),
               color: Colors.white,
             ),
             scrollPadding: EdgeInsets.all(5),
@@ -62,8 +63,8 @@ class CustomDropDown<T> extends StatelessWidget {
               thumbVisibility: MaterialStateProperty.all<bool>(true),
             ),
           ),
-          menuItemStyleData: const MenuItemStyleData(
-            height: 25,
+          menuItemStyleData: MenuItemStyleData(
+            height: 30,
             padding: EdgeInsets.only(left: 14, right: 14),
           ),
         ),
