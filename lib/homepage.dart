@@ -1,6 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:hiremeinindiaapp/CorporateConsole/corporateRegistration.dart';
+import 'package:hiremeinindiaapp/CorporateConsole/corporate_registration.dart';
 import 'package:hiremeinindiaapp/gethired.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:hiremeinindiaapp/main.dart';

@@ -6,7 +6,7 @@ import 'package:sizer/sizer.dart';
 import '../Widgets/hiremeinindia.dart';
 import '../Widgets/customTextstyle.dart';
 import '../classes/language_constants.dart';
-import 'columnView.dart';
+import 'column_view.dart';
 
 class CorporateDashboard extends StatefulWidget {
   final User user;

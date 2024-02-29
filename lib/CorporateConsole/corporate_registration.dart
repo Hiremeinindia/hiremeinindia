@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/corporate.dart';
-import 'package:hiremeinindiaapp/CorporateConsole/corporateFormState.dart';
+import 'package:hiremeinindiaapp/CorporateConsole/corporate_form_state.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:sizer/sizer.dart';
 

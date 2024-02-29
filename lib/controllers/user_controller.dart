@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:hiremeinindiaapp/User/userFormState.dart';
+import 'package:hiremeinindiaapp/User/user_form_state.dart';
 import '../User/user.dart';
 
 class CandidateController {

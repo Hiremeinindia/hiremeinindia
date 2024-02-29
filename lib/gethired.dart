@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:hiremeinindiaapp/User/userRegistration.dart';
+import 'package:hiremeinindiaapp/User/user_registration.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:hiremeinindiaapp/widgets/hiremeinindia.dart';
 import 'package:sizer/sizer.dart';
