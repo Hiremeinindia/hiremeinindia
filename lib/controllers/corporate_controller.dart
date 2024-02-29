@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/corporate.dart';
-import 'package:hiremeinindiaapp/CorporateConsole/corporateFormState.dart';
+import 'package:hiremeinindiaapp/CorporateConsole/corporate_form_state.dart';
 
 class CorporateController {
   CorporateController({

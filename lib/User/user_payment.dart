@@ -9,7 +9,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hiremeinindiaapp/User/user.dart';
-import 'package:hiremeinindiaapp/User/userFormState.dart';
+import 'package:hiremeinindiaapp/User/user_form_state.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
 import 'package:sizer/sizer.dart';
 import '../classes/language_constants.dart';
