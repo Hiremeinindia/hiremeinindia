@@ -401,6 +401,7 @@ class _NewUserPayment extends State<NewUserPayment> {
 
       print('Response status code: ${response.statusCode}');
       if (response.statusCode == 200) {
+        // Cash verification was successful
         isRequestReceived = true;
         print("cash3");
         print('Waiting for 30 seconds before showing verification result...');
@@ -435,6 +436,7 @@ class _NewUserPayment extends State<NewUserPayment> {
         );
       } else {
         print(
+          // Cash verification failed
           'Failed to send notification. Status code: ${response.statusCode}',
         );
         setState(() {
