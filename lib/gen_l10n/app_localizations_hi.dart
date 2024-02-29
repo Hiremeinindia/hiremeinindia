@@ -83,7 +83,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get aadharNo => 'आधार संख्या';
 
   @override
-  String get address => 'Address';
+  String get address => 'पता';
 
   @override
   String get mobile => 'गतिमान';
@@ -152,7 +152,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get noOfDaysOpen => 'खुले दिनों की संख्या';
 
   @override
-  String get cvDoc => 'पाठ्यचर्या जीवन दस्तावेज़';
+  String get cvDocs => 'पाठ्यचर्या जीवन दस्तावेज़';
 
   @override
   String get hello => 'नमस्ते';
@@ -179,7 +179,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get getHiredFromTheBest => 'सर्वश्रेष्ठ से नियुक्ति पाएं';
 
   @override
-  String get indiasBestPortalforBlue => 'ब्लू के लिए भारत का सर्वश्रेष्ठ पोर्टल';
+  String get indiasBestPortalforBlue => 'ब्लू के लिए भारत का सर्वश्रेष्ठ पोर्टल  ';
 
   @override
   String get andGreyCollarJob => 'और ग्रे कॉलर जॉब';
@@ -239,10 +239,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get meIn => 'mein';
 
   @override
-  String get india => 'India';
+  String get india => 'india';
 
   @override
-  String get currentCountry => 'Current Country';
+  String get currentCountry => 'वर्तमान देश';
 
   @override
   String get confirmPassword => 'Confirm Password';
@@ -251,5 +251,110 @@ class AppLocalizationsHi extends AppLocalizations {
   String get companyName => 'Company Name';
 
   @override
-  String get designation => 'Designation';
+  String get designation => 'पद का नाम';
+
+  @override
+  String get guest => 'अतिथि';
+
+  @override
+  String get user => 'उपयोगकर्ता';
+
+  @override
+  String get corporateconsole => 'कॉर्पोरेट कंसोल';
+
+  @override
+  String get candidate => 'उम्मीदवार';
+
+  @override
+  String get status => 'स्थिति';
+
+  @override
+  String get loginorpleaseregister => 'लॉग इन करें या कृपया रजिस्टर करें';
+
+  @override
+  String get login => 'लॉग इन करें';
+
+  @override
+  String get signup => 'साइन अप करें';
+
+  @override
+  String get age => 'आयु';
+
+  @override
+  String get certifiedcourses => 'प्रमाणित पाठ्यक्रम';
+
+  @override
+  String get projectworked => 'परियोजना पर काम हुआ';
+
+  @override
+  String get qualificationdescription => 'योग्यता विवरण';
+
+  @override
+  String get newuser => 'नया';
+
+  @override
+  String get columnview => 'स्तंभ दृश्य';
+
+  @override
+  String get multiplefilter => 'एकाधिक फ़िल्टर';
+
+  @override
+  String get clear => 'स्पष्ट';
+
+  @override
+  String get describeaboutyourself => 'अपने बारे में बताएं';
+
+  @override
+  String get workdescription => 'कार्य विवरण';
+
+  @override
+  String get male => 'पुरुष';
+
+  @override
+  String get female => 'महिला';
+
+  @override
+  String get others => 'अन्य';
+
+  @override
+  String get nocandidateswereadded => 'कोई उम्मीदवार नहीं जोड़ा गया';
+
+  @override
+  String get notverified => 'सत्यापित नहीं है';
+
+  @override
+  String get selected => 'चयनित';
+
+  @override
+  String get curated => 'क्यूरेटेड';
+
+  @override
+  String get rejected => 'अस्वीकार कर दिया';
+
+  @override
+  String get scheduleaninterview => 'एक साक्षात्कार शेड्यूल करें';
+
+  @override
+  String get makeacall => 'फोन करें';
+
+  @override
+  String get basicdetails => 'बुनियादी विवरण';
+
+  @override
+  String get contactnumber => 'संपर्क संख्या';
+
+  @override
+  String get emailaddress => 'मेल पता';
+
+  @override
+  String get location => 'जगह';
+
+  @override
+  String get downloadcv => 'सीवी डाउनलोड करें';
+
+  @override
+  String get downloaddoc => 'Download Documents';
+
+  @override
+  String get educationalqualification => 'शैक्षणिक योग्यता';
 }

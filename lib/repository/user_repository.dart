@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:hiremeinindiaapp/Models/candidated.dart';
+import 'package:hiremeinindiaapp/User/user.dart';
 import 'package:hiremeinindiaapp/Models/register_model.dart';
 
 class UserRepository extends GetxController {
@@ -19,6 +17,7 @@ class UserRepository extends GetxController {
               backgroundColor: Colors.green.withOpacity(0.1),
               colorText: Colors.green),
         )
+        // ignore: body_might_complete_normally_catch_error
         .catchError((error, stackTrace) {
       Get.snackbar("Error", "Something went wrong. Try again",
           snackPosition: SnackPosition.BOTTOM,

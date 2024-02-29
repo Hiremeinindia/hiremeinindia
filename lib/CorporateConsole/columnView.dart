@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:hiremeinindiaapp/homepage.dart';
+import 'package:hiremeinindiaapp/CorporateConsole/viewUser.dart';
+import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-import '../Models/candidated.dart';
+import '../User/user.dart';
 import '../classes/language_constants.dart';
-import '../widgets/customcard.dart';
 
 class ColumnView extends StatefulWidget {
   @override
@@ -14,12 +16,39 @@ class ColumnView extends StatefulWidget {
 class _ColumnViewState extends State<ColumnView> {
   Widget? child;
   IconData? icon;
+  Candidate? verified;
+  Candidate? candidate;
+  Stream<QuerySnapshot<Map<String, dynamic>>>? _currentStream;
+  late Stream<Map<String, dynamic>?> userStream;
+  bool scheduledata = false;
+  bool expandWork = false;
+  bool expandCertificate = false;
+  bool expandCourse = false;
+  final ScrollController _scrollController = ScrollController();
+  bool expandProject = false;
+  late Query<Map<String, dynamic>> query;
+  final agentsRef = FirebaseFirestore.instance
+      .collection("greycollaruser")
+      .where('label', isEqualTo: 'Blue');
+  final fireStore =
+      FirebaseFirestore.instance.collection('greycollaruser').snapshots();
+
   void initState() {
     query = agentsRef;
     super.initState();
+    _currentStream = AllCandidates();
   }
 
-  late Query<Map<String, dynamic>> query;
+  void _callNumber(String? mobile) async {
+    String url = "tel://$mobile";
+    print('Mobile Number:$mobile');
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not call $mobile';
+    }
+  }
+
   Future<int> totalCandidatesCount() async {
     int blueCount = await BlueResult();
     int greyCount = await GreyResult();
@@ -27,8 +56,37 @@ class _ColumnViewState extends State<ColumnView> {
     return blueCount + greyCount;
   }
 
-  final fireStore =
-      FirebaseFirestore.instance.collection('greycollaruser').snapshots();
+  Stream<QuerySnapshot<Map<String, dynamic>>> AllCandidates() {
+    return FirebaseFirestore.instance.collection("greycollaruser").snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> BlueCandidates() {
+    return FirebaseFirestore.instance
+        .collection("greycollaruser")
+        .where('label', isEqualTo: 'Blue')
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> GreyCandidates() {
+    return FirebaseFirestore.instance
+        .collection("greycollaruser")
+        .where('label', isEqualTo: 'Grey')
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> CuratedCandidates() {
+    return FirebaseFirestore.instance
+        .collection("greycollaruser")
+        .where('labelText', isEqualTo: 'Curated')
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> SelectedCandidates() {
+    return FirebaseFirestore.instance
+        .collection("greycollaruser")
+        .where('labelText', isEqualTo: 'Selected')
+        .snapshots();
+  }
 
   Future<int> BlueResult() async {
     var query = await FirebaseFirestore.instance
@@ -48,355 +106,900 @@ class _ColumnViewState extends State<ColumnView> {
     return count; // Add this line to return the count
   }
 
-  final agentsRef = FirebaseFirestore.instance.collection("greycollaruser");
+  Future<int> CuratedResult() async {
+    var query = await FirebaseFirestore.instance
+        .collection("greycollaruser")
+        .where('labelText', isEqualTo: 'Curated');
+    var snapshot = await query.get();
+    var count = snapshot.size;
+    return count; // Add this line to return the count
+  }
+
+  Future<int> SelectedResult() async {
+    var query = await FirebaseFirestore.instance
+        .collection("greycollaruser")
+        .where('labelText', isEqualTo: 'Selected');
+    var snapshot = await query.get();
+    var count = snapshot.size;
+    return count; // Add this line to return the count
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Column(children: [
-      Padding(
-        padding: const EdgeInsets.only(left: 170, right: 170),
-        child: Row(
-          children: [
-            InkWell(
-              onTap: () {},
+    return LayoutBuilder(
+        builder: (BuildContext ctx, BoxConstraints constraints) {
+      if (constraints.maxWidth >= 770) {
+        return Padding(
+          padding: EdgeInsets.fromLTRB(2.5.w, 2.5.h, 2.5.w, 2.5.h),
+          child: Column(children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(2.5.w, 0, 2.5.w, 0),
               child: Container(
-                height: 100,
-                width: 200,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color.fromARGB(255, 140, 138, 138),
-                      spreadRadius: 0.5, //spread radius
-                      blurRadius: 4, // blu
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: Color.fromARGB(255, 153, 51, 49),
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        translation(context).noOfCandidates,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      FutureBuilder<int>(
-                        future: totalCandidatesCount(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return CircularProgressIndicator();
-                          } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          } else {
-                            int totalDocCount = snapshot.data ?? 0;
-                            return Text(
-                              ' $totalDocCount',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.white,
-                              ),
-                            );
-                          }
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _currentStream = AllCandidates();
+                          });
                         },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 60,
-            ),
-            InkWell(
-              onTap: () {},
-              child: Container(
-                height: 100,
-                width: 200,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color.fromARGB(255, 140, 138, 138),
-                      spreadRadius: 0.5, //spread radius
-                      blurRadius: 4, // blu
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: Colors.indigo.shade900,
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        translation(context).blueColler,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      FutureBuilder<int>(
-                        future: BlueResult(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return CircularProgressIndicator();
-                          } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          } else {
-                            int docCount = snapshot.data ?? 0;
-                            return Text(
-                              '$docCount',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.white,
+                        child: Container(
+                          height: 12.h,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color.fromARGB(255, 140, 138, 138),
+                                spreadRadius: 0.5, //spread radius
+                                blurRadius: 4, // blu
                               ),
-                            );
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 60,
-            ),
-            InkWell(
-              onTap: () {},
-              child: Container(
-                height: 100,
-                width: 200,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color.fromARGB(255, 140, 138, 138),
-                      spreadRadius: 0.5, //spread radius
-                      blurRadius: 4, // blu
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: Colors.indigo.shade900,
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        translation(context).greyColler,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      FutureBuilder<int>(
-                        future: GreyResult(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return CircularProgressIndicator();
-                          } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          } else {
-                            int docCount = snapshot.data ?? 0;
-                            return Text(
-                              ' $docCount',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.white,
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 60,
-            ),
-            Expanded(
-              child: CustomCard(
-                color: Color.fromARGB(223, 251, 217, 84),
-                title1: translation(context).curatedCandidates,
-                title2: '50',
-              ),
-            ),
-            SizedBox(
-              width: 60,
-            ),
-            Expanded(
-              child: CustomCard(
-                color: Color.fromARGB(224, 92, 181, 95),
-                title1: translation(context).selectedCandidates,
-                title2: '50',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
-                  );
-                },
-              ),
-            )
-          ],
-        ),
-      ),
-      SizedBox(
-        height: 30,
-      ),
-      Container(
-        height: 550,
-        child: StreamBuilder(
-          stream: query.snapshots(),
-          builder: (BuildContext context,
-              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-            if (snapshot.connectionState == ConnectionState.active ||
-                snapshot.hasData) {
-              List<Candidate> candidates = [];
-              candidates = snapshot.data!.docs
-                  .map((e) => Candidate.fromSnapshot(e))
-                  .toList();
-              if (candidates.isEmpty) {
-                return const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(32.0),
-                    child: Text("No candidates are added yet"),
-                  ),
-                );
-              } else {
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Card(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  offset: Offset(0.0, 1.0), //(x,y)
-                                  blurRadius: 2,
+                            ],
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Color.fromARGB(255, 153, 51, 49),
+                          ),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  translation(context).noOfCandidates,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                FutureBuilder<int>(
+                                  future: totalCandidatesCount(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return CircularProgressIndicator();
+                                    } else if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}');
+                                    } else {
+                                      int totalDocCount = snapshot.data ?? 0;
+                                      return Text(
+                                        ' $totalDocCount',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.white,
+                                        ),
+                                      );
+                                    }
+                                  },
                                 ),
                               ],
-                              borderRadius: BorderRadius.circular(1),
-                              border: Border.all(color: Colors.black12),
-                              color: Colors.white,
                             ),
-                            child: SizedBox(
-                              // height: double.maxFinite,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 5.w,
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _currentStream = BlueCandidates();
+                          });
+                        },
+                        child: Container(
+                          height: 12.h,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color.fromARGB(255, 140, 138, 138),
+                                spreadRadius: 0.5, //spread radius
+                                blurRadius: 4, // blu
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Colors.indigo.shade900,
+                          ),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  translation(context).blueColler,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                FutureBuilder<int>(
+                                  future: BlueResult(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return CircularProgressIndicator();
+                                    } else if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}');
+                                    } else {
+                                      int docCount = snapshot.data ?? 0;
+                                      return Text(
+                                        '$docCount',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.white,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 5.w,
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _currentStream = GreyCandidates();
+                          });
+                        },
+                        child: Container(
+                          height: 12.h,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color.fromARGB(255, 140, 138, 138),
+                                spreadRadius: 0.5, //spread radius
+                                blurRadius: 4, // blu
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Color.fromARGB(255, 197, 197, 197),
+                          ),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  translation(context).greyColler,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                FutureBuilder<int>(
+                                  future: GreyResult(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return CircularProgressIndicator();
+                                    } else if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}');
+                                    } else {
+                                      int docCount = snapshot.data ?? 0;
+                                      return Text(
+                                        ' $docCount',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.white,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 5.w,
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _currentStream = CuratedCandidates();
+                          });
+                        },
+                        child: Container(
+                          height: 12.h,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color.fromARGB(255, 140, 138, 138),
+                                spreadRadius: 0.5, //spread radius
+                                blurRadius: 4, // blu
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Color.fromARGB(223, 251, 217, 84),
+                          ),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  translation(context).curatedCandidates,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                FutureBuilder<int>(
+                                  future: CuratedResult(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return CircularProgressIndicator();
+                                    } else if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}');
+                                    } else {
+                                      int docCount = snapshot.data ?? 0;
+                                      return Text(
+                                        ' $docCount',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.white,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 5.w,
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _currentStream = SelectedCandidates();
+                          });
+                        },
+                        child: Container(
+                          height: 12.h,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color.fromARGB(255, 140, 138, 138),
+                                spreadRadius: 0.5, //spread radius
+                                blurRadius: 4, // blu
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Color.fromARGB(224, 92, 181, 95),
+                          ),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  translation(context).selectedCandidates,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                FutureBuilder<int>(
+                                  future: SelectedResult(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return CircularProgressIndicator();
+                                    } else if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}');
+                                    } else {
+                                      int docCount = snapshot.data ?? 0;
+                                      return Text(
+                                        ' $docCount',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.white,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: _currentStream, // Use the BlueCandidates query's stream
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Center(
+                      child: Text(translation(context).nocandidateswereadded));
+                } else {
+                  // Map documents to Candidate objects
+                  List<Candidate> blueCandidates = snapshot.data!.docs
+                      .map((doc) => Candidate.fromSnapshot(doc))
+                      .toList();
+
+                  return Listener(
+                    onPointerSignal: (event) {
+                      if (event is PointerScrollEvent) {
+                        final offset = event.scrollDelta.dy;
+                        _scrollController
+                            .jumpTo(_scrollController.offset + offset);
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            SizedBox(
                               width: double.maxFinite,
                               child: PaginatedDataTable(
-                                headingRowColor: MaterialStateColor.resolveWith(
-                                    (states) =>
-                                        Color.fromARGB(255, 104, 104, 208)),
                                 showFirstLastButtons: true,
-                                rowsPerPage: 20,
-                                // (Get.height ~/ kMinInteractiveDimension) -
-                                //     4,
-                                columns: CandidateListSource.getColumns(),
-
-                                source: CandidateListSource(candidates,
-                                    context: context),
+                                controller: _scrollController,
+                                rowsPerPage: 8,
+                                columns: CandidateListSource.getColumns(
+                                    context), // Pass context here
+                                source: CandidateListSource(
+                                  blueCandidates,
+                                  context: context,
+                                  onSelect: (candidate) {
+                                    // Show details dialog when a row is selected
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return FullPagePopup(
+                                            candidate: candidate);
+                                      },
+                                    );
+                                  },
+                                ),
                               ),
                             ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
+          ]),
+        );
+      } else {
+        return Padding(
+          padding: EdgeInsets.fromLTRB(2.w, 2.h, 2.w, 2.h),
+          child: Column(children: [
+            SizedBox(
+              height: 30,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _currentStream = BlueCandidates();
+                      });
+                    },
+                    child: Container(
+                      height: 100,
+                      width: 200,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color.fromARGB(255, 140, 138, 138),
+                            spreadRadius: 0.5, //spread radius
+                            blurRadius: 4, // blu
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: Colors.indigo.shade900,
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              translation(context).blueColler,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            FutureBuilder<int>(
+                              future: BlueResult(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else {
+                                  int docCount = snapshot.data ?? 0;
+                                  return Text(
+                                    '$docCount',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.white,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 5.w,
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _currentStream = GreyCandidates();
+                      });
+                    },
+                    child: Container(
+                      height: 100,
+                      width: 200,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color.fromARGB(255, 140, 138, 138),
+                            spreadRadius: 0.5, //spread radius
+                            blurRadius: 4, // blu
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: Color.fromARGB(255, 197, 197, 197),
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              translation(context).greyColler,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            FutureBuilder<int>(
+                              future: GreyResult(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else {
+                                  int docCount = snapshot.data ?? 0;
+                                  return Text(
+                                    ' $docCount',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.white,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 60,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _currentStream = CuratedCandidates();
+                      });
+                    },
+                    child: Container(
+                      height: 12.h,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color.fromARGB(255, 140, 138, 138),
+                            spreadRadius: 0.5, //spread radius
+                            blurRadius: 4, // blu
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: Color.fromARGB(223, 251, 217, 84),
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              translation(context).curatedCandidates,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            FutureBuilder<int>(
+                              future: CuratedResult(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else {
+                                  int docCount = snapshot.data ?? 0;
+                                  return Text(
+                                    ' $docCount',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.white,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 5.w,
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _currentStream = SelectedCandidates();
+                      });
+                    },
+                    child: Container(
+                      height: 100,
+                      width: 200,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color.fromARGB(255, 140, 138, 138),
+                            spreadRadius: 0.5, //spread radius
+                            blurRadius: 4, // blu
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: Color.fromARGB(224, 92, 181, 95),
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              translation(context).selectedCandidates,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            FutureBuilder<int>(
+                              future: SelectedResult(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else {
+                                  int docCount = snapshot.data ?? 0;
+                                  return Text(
+                                    ' $docCount',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.white,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 60,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      _currentStream = AllCandidates();
+                    });
+                  },
+                  child: Container(
+                    height: 100,
+                    width: 200,
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color.fromARGB(255, 140, 138, 138),
+                          spreadRadius: 0.5, //spread radius
+                          blurRadius: 4, // blu
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: Color.fromARGB(255, 153, 51, 49),
+                    ),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            translation(context).noOfCandidates,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          FutureBuilder<int>(
+                            future: totalCandidatesCount(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                int totalDocCount = snapshot.data ?? 0;
+                                return Text(
+                                  ' $totalDocCount',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.white,
+                                  ),
+                                );
+                              }
+                            },
                           ),
                         ],
                       ),
                     ),
                   ),
-                );
-              }
-            }
-            if (snapshot.hasError) {
-              return Center(
-                child: SelectableText(snapshot.data.toString()),
-              );
-            }
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
-        ),
-      )
-    ]));
+                ),
+              ],
+            ),
+            Container(
+              height: 550,
+              child: SizedBox(
+                child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                  stream:
+                      _currentStream, // Use the BlueCandidates query's stream
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData ||
+                        snapshot.data!.docs.isEmpty) {
+                      return Center(
+                          child:
+                              Text(translation(context).nocandidateswereadded));
+                    } else {
+                      // Map documents to Candidate objects
+                      List<Candidate> blueCandidates = snapshot.data!.docs
+                          .map((doc) => Candidate.fromSnapshot(doc))
+                          .toList();
+
+                      return Listener(
+                        onPointerSignal: (event) {
+                          if (event is PointerScrollEvent) {
+                            final offset = event.scrollDelta.dy;
+                            _scrollController
+                                .jumpTo(_scrollController.offset + offset);
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  width: double.maxFinite,
+                                  child: PaginatedDataTable(
+                                    showFirstLastButtons: true,
+                                    controller: _scrollController,
+                                    rowsPerPage: 8,
+                                    columns: CandidateListSource.getColumns(
+                                        context), // Pass context here
+                                    source: CandidateListSource(
+                                      blueCandidates,
+                                      context: context,
+                                      onSelect: (candidate) {
+                                        // Show details dialog when a row is selected
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return FullPagePopup(
+                                                candidate: candidate);
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
+          ]),
+        );
+      }
+    });
   }
 }
 
 class CandidateListSource extends DataTableSource {
   final List<Candidate> candidates;
   final BuildContext context;
-  CandidateListSource(this.candidates, {required this.context});
+  final Function(Candidate) onSelect;
+
+  CandidateListSource(this.candidates,
+      {required this.context, required this.onSelect});
 
   @override
   DataRow? getRow(int index) {
-    // TODO: implement getRow
-    final e = candidates[(index)];
+    final e = candidates[index];
 
     return DataRow.byIndex(
       index: index,
       cells: [
-        // DataCell(Text((index + 1).toString())),
-        DataCell(Text(e.name.toString())),
-        DataCell(Text(e.mobile.toString())),
-        DataCell(Text(e.qualification.toString())),
         DataCell(
-          Text(e.selectedSkills!.isNotEmpty ? e.selectedSkills![0] : ''),
+          Text(e.name.toString()),
+          onTap: () {
+            onSelect(e);
+          },
         ),
         DataCell(
-          Text(e.selectedSkills!.isNotEmpty ? e.selectedSkills![1] : ''),
+          SizedBox(
+            width: 27,
+            height: 27,
+            child: CircleAvatar(
+              backgroundColor: const Color.fromARGB(255, 51, 116, 53),
+            ),
+          ),
         ),
-        DataCell(Text(e.selectedOption?.toString() ?? 'No Option')),
+        DataCell(Text(e.qualification?.toString() ?? 'nill')),
+        DataCell(Text(e.skills!.isNotEmpty ? e.skills![0] : '')),
+        DataCell(Text(e.skills!.isNotEmpty ? e.skills![1] : '')),
+        DataCell(Text(e.selectedOption?.toString() ?? '- - - -')),
         DataCell(Text(e.mobile.toString())),
         DataCell(Text(e.name.toString())),
       ],
     );
   }
 
-  static List<DataColumn> getColumns() {
-    List<DataColumn> list = [];
-    list.addAll([
-      // const DataColumn(label: Text("S.No")),
-      const DataColumn(label: Text('Candidate')),
-      const DataColumn(label: Text('Verified')),
-      const DataColumn(label: Text('Qualification')),
-      const DataColumn(label: Text('Job Classification 1')),
-      const DataColumn(label: Text('Job Classification 2')),
-      const DataColumn(label: Text('Label')),
-      const DataColumn(label: Text('No of Days Open')),
-      const DataColumn(label: Text('CV Docs')),
-    ]);
-    return list;
+  static List<DataColumn> getColumns(BuildContext context) {
+    return [
+      DataColumn(label: Text(translation(context).candidate)),
+      DataColumn(label: Text(translation(context).verified)),
+      DataColumn(label: Text(translation(context).qualification)),
+      DataColumn(label: Text(translation(context).jobClassification)),
+      DataColumn(label: Text(translation(context).jobClassification)),
+      DataColumn(label: Text(translation(context).label)),
+      DataColumn(label: Text(translation(context).noOfDaysOpen)),
+      DataColumn(label: Text(translation(context).cvDocs)),
+    ];
   }
 
   @override
-  // TODO: implement isRowCountApproximate
   bool get isRowCountApproximate => false;
 
   @override
-  // TODO: implement rowCount
-  int get rowCount => (candidates.length);
+  int get rowCount => candidates.length;
 
   @override
-  // TODO: implement selectedRowCount
   int get selectedRowCount => 0;
 }

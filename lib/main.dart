@@ -1,12 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:hiremeinindiaapp/CorporateConsole/corporateRegistration.dart';
-import 'package:hiremeinindiaapp/User/GreyUser/greyRegistration.dart';
+import 'package:hiremeinindiaapp/User/userRegistration.dart';
+import 'package:hiremeinindiaapp/User/userUpload.dart';
 import 'package:hiremeinindiaapp/functions/firestoreservice.dart';
 import 'package:hiremeinindiaapp/gen_l10n/app_localizations.dart';
 import 'package:hiremeinindiaapp/gethired.dart';
+import 'package:hiremeinindiaapp/User/userPayment.dart';
+import 'package:hiremeinindiaapp/homepage.dart';
 import 'package:hiremeinindiaapp/loginpage.dart';
+import 'package:hiremeinindiaapp/sample.dart';
 import 'package:provider/provider.dart';
 import 'classes/language_constants.dart';
 
@@ -19,7 +22,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   print("Initializing Firebase...");
   await Firebase.initializeApp(
-      options: FirebaseOptions(
+      options: const FirebaseOptions(
     apiKey: 'AIzaSyBKUuhUeiA2DpvZD4od15RdHEBZyjsuVlA',
     appId: '1:316659430730:web:1afaddd5a3f41be5cffdb3',
     messagingSenderId: '316659430730',
@@ -83,16 +86,30 @@ class _HireAppState extends State<HireApp> {
         ChangeNotifierProvider(create: (_) => FirebaseService()),
       ],
       child: MaterialApp(
-        // routes: {
-        //   '/newUserPayment': (context) => const NewUserPayment(),
-        // },
-        // initialRoute: '/newUserPayment', // Change the initialRoute
+        initialRoute: '/',
+        routes: {
+          '/document': (context) => NewUserUpload(),
+          '/payment': (context) => NewUserPayment(),
+          '/details': (context) => Registration(),
+          '/hired': (context) => Hired(),
+        },
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: _locale,
         debugShowCheckedModeBanner: false,
-        home: LoginPage(),
+        home: Hired(),
       ),
     );
+  }
+}
+
+class MyImageWidget extends StatelessWidget {
+  final String imageUrl;
+
+  const MyImageWidget({required this.imageUrl, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(imageUrl);
   }
 }

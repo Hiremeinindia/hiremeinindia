@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 
 @immutable
@@ -20,7 +22,7 @@ final class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 30,
+      height: 45,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -28,13 +30,13 @@ final class CustomButton extends StatelessWidget {
           primary: Colors.indigo.shade900,
           shape: RoundedRectangleBorder(
             borderRadius:
-                BorderRadius.circular(0.1), // Adjust border radius as needed
+                BorderRadius.circular(5), // Adjust border radius as needed
           ),
         ),
         child: Text(
           text!,
           style: TextStyle(
-            fontSize: 18,
+            fontFamily: 'Poppins',
             fontWeight: FontWeight.normal,
             color: Colors.white,
           ),
@@ -45,73 +47,65 @@ final class CustomButton extends StatelessWidget {
 }
 
 @immutable
-final class CustomButtonLogin extends StatelessWidget {
-  late final String? text;
+final class CustomRectButton extends StatelessWidget {
   Widget? child;
   late final Function()? onPressed;
+  final Radius? topleft;
+  final Radius? bottomright;
+  final Radius? bottomleft;
+  final Radius? topright;
+  final Color? colors;
+  final ImageIcon? image;
 
-  late final List<Color>? colors;
-  late final double? dynamicHeight;
-  CustomButtonLogin({
-    super.key,
-    this.text,
+  CustomRectButton({
+    Key? key,
     this.onPressed,
     this.colors,
-    this.dynamicHeight,
+    this.image,
     this.child,
-  });
+    this.topleft,
+    this.bottomright,
+    this.bottomleft,
+    this.topright,
+  }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 30,
-      child: ElevatedButton(
-          onPressed: onPressed,
-          style: ElevatedButton.styleFrom(
-            fixedSize: const Size.fromWidth(double.infinity),
-            primary: Colors.indigo.shade900,
-            shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.circular(0.1), // Adjust border radius as needed
-            ),
-          ),
-          child: child),
-    );
+  Color _getColor(Set<MaterialState> states) {
+    if (states.contains(MaterialState.hovered)) {
+      return colors ?? Colors.transparent; // Change to your hover color
+    }
+    return Colors.white; // Default color
   }
-}
 
-@immutable
-final class ViewButton extends StatelessWidget {
-  Widget? child;
-  final Function()? onPressed;
-  IconData? icon;
-
-  ViewButton({
-    super.key,
-    this.onPressed,
-    this.icon,
-    this.child,
-  });
+  Radius _getRadius(Radius? radius) {
+    return radius ?? Radius.zero;
+  }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 50,
-      width: 50,
+      height: 40,
+      width: 40,
       child: ElevatedButton(
         onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          fixedSize: const Size.fromWidth(double.infinity),
-          primary: Colors.indigo.shade900,
-          shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.circular(0.1), // Adjust border radius as needed
+        style: ButtonStyle(
+          shape: MaterialStateProperty.resolveWith<OutlinedBorder?>(
+            (Set<MaterialState> states) {
+              return RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: _getRadius(bottomleft),
+                  topLeft: _getRadius(topleft),
+                  bottomRight: _getRadius(bottomright),
+                  topRight: _getRadius(topright),
+                ),
+                side: BorderSide(width: 1, color: Colors.black),
+              );
+            },
+          ),
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) => _getColor(states),
           ),
         ),
-        child: Icon(
-          icon,
-          color: Colors.white,
-        ),
+        child: image,
       ),
     );
   }

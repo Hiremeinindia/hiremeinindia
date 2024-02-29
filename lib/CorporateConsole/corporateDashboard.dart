@@ -1,18 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:hiremeinindiaapp/CorporateConsole/corporate.dart';
 import 'package:hiremeinindiaapp/CorporateConsole/multipleFilter.dart';
-import 'package:hiremeinindiaapp/Providers/session.dart';
-import '../Classes/language.dart';
-import '../Classes/language_constants.dart';
+import 'package:sizer/sizer.dart';
 import '../Widgets/hiremeinindia.dart';
-import 'columnView.dart';
 import '../Widgets/customTextstyle.dart';
-import '../gen_l10n/app_localizations.dart';
-import '../main.dart';
+import '../classes/language_constants.dart';
+import 'columnView.dart';
 
 class CorporateDashboard extends StatefulWidget {
   final User user;
@@ -22,50 +16,40 @@ class CorporateDashboard extends StatefulWidget {
 }
 
 class _CorporateDashboard extends State<CorporateDashboard> {
-  final List<String> items = [
-    'Item1',
-    'Item2',
-    'Item3',
-    'Item4',
-    'Item5',
-    'Item6',
-    'Item7',
-    'Item8',
-  ];
   String? selectedValue;
 
   bool dropdownValue = false;
-
+  bool isArrowClick = false;
   bool val1 = false;
 
   bool isPressed = false;
 
-  String? _userName;
-  late Stream<DocumentSnapshot<Map<String, dynamic>>> userStream;
+  late Stream<Map<String, dynamic>?> userStream;
+  String _userName = '';
+  String _designation = '';
+  String _companyName = '';
 
   @override
   void initState() {
     super.initState();
-    userStream = FirebaseFirestore.instance
-        .collection('greycollaruser')
-        .doc(widget.user.uid)
-        .snapshots();
+    userStream = fetchData().map((data) => data);
   }
 
   Stream<Map<String, dynamic>?> fetchData() {
     try {
-      // Replace 'your_collection' and 'your_document' with your actual collection and document names
       return FirebaseFirestore.instance
-          .collection('greycollaruser')
+          .collection('corporateuser')
           .doc(widget.user.uid)
           .snapshots()
           .map((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
         if (documentSnapshot.exists) {
-          // Access the data using documentSnapshot.data()
           Map<String, dynamic> data = documentSnapshot.data()!;
           String name = data['name'];
-          print('Name: $name');
+          String designation = data['designation'];
+          String companyName = data['companyname'];
+          _companyName = companyName;
           _userName = name;
+          _designation = designation;
           return data;
         } else {
           print('Document does not exist');
@@ -79,415 +63,572 @@ class _CorporateDashboard extends State<CorporateDashboard> {
   }
 
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: HireMeInIndia(),
-          centerTitle: false,
-          toolbarHeight: 80,
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 50.0, top: 10),
-              child: Row(
-                children: [
-                  SizedBox(
-                    height: 30,
-                    width: 170,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.indigo.shade900,
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton2<Language>(
-                            isExpanded: true,
-                            hint: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    translation(context).english,
-                                    style: CustomTextStyle.dropdowntext,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            onChanged: (Language? language) async {
-                              if (language != null) {
-                                Locale _locale =
-                                    await setLocale(language.languageCode);
-                                HireApp.setLocale(context, _locale);
-                              } else {
-                                language;
-                              }
-                            },
-                            items: Language.languageList()
-                                .map<DropdownMenuItem<Language>>(
-                                  (e) => DropdownMenuItem<Language>(
-                                    value: e,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: <Widget>[
-                                        Text(
-                                          e.flag,
-                                          style: CustomTextStyle.dropdowntext,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        Text(
-                                          e.langname,
-                                          style: CustomTextStyle.dropdowntext,
-                                          overflow: TextOverflow.ellipsis,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                            buttonStyleData: ButtonStyleData(
-                              height: 30,
-                              width: 200,
-                              elevation: 1,
-                              padding:
-                                  const EdgeInsets.only(left: 14, right: 14),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                  color: Colors.black26,
-                                ),
-                                color: Colors.indigo.shade900,
-                              ),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              icon: Icon(
-                                Icons.arrow_drop_down_sharp,
-                              ),
-                              iconSize: 25,
-                              iconEnabledColor: Colors.white,
-                              iconDisabledColor: null,
-                            ),
-                            dropdownStyleData: DropdownStyleData(
-                              maxHeight: 210,
-                              width: 156,
-                              elevation: 0,
-                              padding: EdgeInsets.only(
-                                  left: 10, right: 10, top: 5, bottom: 15),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(color: Colors.black),
-                                color: Colors.indigo.shade900,
-                              ),
-                              scrollPadding: EdgeInsets.all(5),
-                              scrollbarTheme: ScrollbarThemeData(
-                                thickness: MaterialStateProperty.all<double>(6),
-                                thumbVisibility:
-                                    MaterialStateProperty.all<bool>(true),
-                              ),
-                            ),
-                            menuItemStyleData: const MenuItemStyleData(
-                              height: 25,
-                              padding: EdgeInsets.only(left: 14, right: 14),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  SizedBox(
-                    height: 30,
-                    width: 170,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 13),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.indigo.shade900,
-                        ),
-                        child: DropdownButton2<String>(
-                          isExpanded: true,
-                          items: [
-                            DropdownMenuItem<String>(
-                              value: 'Option 1',
-                              child: Text('Option 1'),
-                            ),
-                            DropdownMenuItem<String>(
-                              value: 'Option 2',
-                              child: Text('Option 1'),
-                            ),
-                            // Add more options as needed
-                          ],
-                          onChanged: (value) {
-                            // Handle option selection
-                          },
-                          hint: Text(
-                            AppLocalizations.of(context)!.findaJob,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          buttonStyleData: ButtonStyleData(
-                            height: 30,
-                            width: 200,
-                            elevation: 1,
-                            padding: const EdgeInsets.only(left: 14, right: 14),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(
-                                color: Colors.black26,
-                              ),
-                              color: Colors.indigo.shade900,
-                            ),
-                          ),
-                          iconStyleData: const IconStyleData(
-                            icon: Icon(
-                              Icons.arrow_drop_down_sharp,
-                            ),
-                            iconSize: 25,
-                            iconEnabledColor: Colors.white,
-                            iconDisabledColor: null,
-                          ),
-                          dropdownStyleData: DropdownStyleData(
-                            maxHeight: 210,
-                            width: 156,
-                            elevation: 0,
-                            padding: EdgeInsets.only(
-                                left: 10, right: 10, top: 5, bottom: 15),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(color: Colors.black),
-                              color: Colors.indigo.shade900,
-                            ),
-                            scrollPadding: EdgeInsets.all(5),
-                            scrollbarTheme: ScrollbarThemeData(
-                              thickness: MaterialStateProperty.all<double>(6),
-                              thumbVisibility:
-                                  MaterialStateProperty.all<bool>(true),
-                            ),
-                          ),
-                          menuItemStyleData: const MenuItemStyleData(
-                            height: 25,
-                            padding: EdgeInsets.only(left: 14, right: 14),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 40),
-                  SizedBox(
-                    height: 30,
-                    width: 30,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.black,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.person,
-                          color: Colors.indigo.shade900,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 8.0),
-                  Text(
-                    AppSession().candidate?.name ?? "No Username",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        body: Column(
-          children: [
-            Container(
-              padding:
-                  EdgeInsets.only(left: 170, right: 170, top: 20, bottom: 20),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Text(
-                        isPressed ? 'Multiple View' : 'Column View',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Row(
+    return Sizer(builder: (context, orientation, deviceType) {
+      return LayoutBuilder(
+          builder: (BuildContext ctx, BoxConstraints constraints) {
+        if (constraints.maxWidth >= 850) {
+          return Scaffold(
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(75),
+                child: Material(
+                  elevation: 3,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(5.w, 0, 2.5.w, 0),
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        HireMeInIndia(),
+                        Row(
                           children: [
-                            DropdownButtonHideUnderline(
-                              child: DropdownButton2<String>(
-                                isExpanded: true,
-                                hint: const Row(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        'Hello Krithick',
-                                        style: CustomTextStyle.nameOfUser,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                items: items
-                                    .map((String item) =>
-                                        DropdownMenuItem<String>(
-                                          value: item,
-                                          child: Text(
-                                            item,
-                                            style: CustomTextStyle.nameOflist,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ))
-                                    .toList(),
-                                value: selectedValue,
-                                onChanged: (String? value) {
-                                  setState(() {
-                                    selectedValue = value;
-                                  });
-                                },
-                                buttonStyleData: ButtonStyleData(
-                                  height: 50,
-                                  width: 270,
-                                  elevation: 1,
-                                ),
-                                iconStyleData: const IconStyleData(
-                                  icon: Icon(
-                                    Icons.arrow_drop_down_sharp,
-                                  ),
-                                  iconSize: 45,
-                                  iconEnabledColor: Colors.indigo,
-                                  iconDisabledColor: null,
-                                ),
-                                dropdownStyleData: DropdownStyleData(
-                                  maxHeight: 210,
-                                  width: 270,
-                                  elevation: 0,
-                                  padding: EdgeInsets.only(
-                                      left: 10, right: 10, top: 5, bottom: 15),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(color: Colors.black),
-                                    color: Colors.white,
-                                  ),
-                                  scrollPadding: EdgeInsets.all(5),
-                                  scrollbarTheme: ScrollbarThemeData(
-                                    thickness:
-                                        MaterialStateProperty.all<double>(6),
-                                    thumbVisibility:
-                                        MaterialStateProperty.all<bool>(true),
-                                  ),
-                                ),
-                                menuItemStyleData: const MenuItemStyleData(
-                                  height: 50,
-                                  padding: EdgeInsets.only(left: 14, right: 14),
+                            Text(
+                              translation(context).corporateconsole,
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  color: Colors.indigo.shade900,
+                                  fontFamily: 'Poppins'),
+                            ),
+                            SizedBox(width: 20),
+                            CircleAvatar(
+                              backgroundColor: Colors.black,
+                              child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                child: Icon(
+                                  Icons.person_outline_outlined,
+                                  size: 35,
+                                  color: Colors.indigo.shade900,
                                 ),
                               ),
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  'HR Manager',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.indigo.shade900,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Poppins'),
-                                ),
-                                Text('|'),
-                                Text(
-                                  'Tata Salt',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.indigo.shade900,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Poppins'),
-                                ),
-                              ],
+                            SizedBox(
+                              width: 0.5.w,
                             ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                SizedBox(
-                                  height: 40,
-                                  width: 73,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: isPressed
-                                          ? Colors.indigo.shade900
-                                          : Colors.grey,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            7), // Adjust border radius as needed
+                            StreamBuilder<Map<String, dynamic>?>(
+                              stream: userStream,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData && snapshot.data != null) {
+                                  // Display the user's name
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '$_userName',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.indigo.shade900,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        isPressed = !isPressed;
-                                      });
-                                    },
-                                    child: ImageIcon(
-                                      AssetImage("filter.png"),
-                                      size: 25,
-                                      color: isPressed
-                                          ? Colors.white
-                                          : Colors.indigo.shade900,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 40,
-                                  width: 73,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: isPressed
-                                          ? Colors.white
-                                          : Colors.indigo.shade900,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            7), // Adjust border radius as needed
+                                      SizedBox(
+                                        height: 5,
                                       ),
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        isPressed = !isPressed;
-                                      });
-                                    },
-                                    child: ImageIcon(
-                                      AssetImage("column.png"),
-                                      size: 25,
-                                      color: isPressed
-                                          ? Colors.indigo.shade900
-                                          : Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                      Text(
+                                        '$_designation',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.indigo.shade900,
+                                            height: 0),
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  // Loading or error state
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                              },
                             ),
                           ],
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 50,
+                  ),
+                ),
+              ),
+              body: Material(
+                  elevation: 4,
+                  child: SingleChildScrollView(
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(2.5.w, 2.5.h, 2.5.w, 2.5.h),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Text(
+                                isPressed
+                                    ? translation(context).multiplefilter
+                                    : translation(context).columnview,
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child:
+                                          StreamBuilder<Map<String, dynamic>?>(
+                                        stream: userStream,
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData &&
+                                              snapshot.data != null) {
+                                            // Display the user's name
+                                            return Center(
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "${translation(context).hello} $_userName",
+                                                    style: CustomTextStyle
+                                                        .nameOfUser,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                  IconButton(
+                                                    hoverColor:
+                                                        Colors.transparent,
+                                                    icon: Icon(Icons
+                                                        .arrow_drop_down_sharp),
+                                                    iconSize: 30,
+                                                    color:
+                                                        Colors.indigo.shade900,
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        isArrowClick =
+                                                            !isArrowClick;
+                                                      });
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          } else {
+                                            // Loading or error state
+                                            return Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    StreamBuilder<Map<String, dynamic>?>(
+                                      stream: userStream,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData &&
+                                            snapshot.data != null) {
+                                          // Display the user's name
+                                          return Visibility(
+                                            visible: isArrowClick,
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  '$_designation',
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      color: Colors
+                                                          .indigo.shade900,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Poppins'),
+                                                ),
+                                                Text('|'),
+                                                Text(
+                                                  '$_companyName',
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      color: Colors
+                                                          .indigo.shade900,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Poppins'),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        } else {
+                                          // Loading or error state
+                                          return Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          height: 40,
+                                          width: 70,
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: isPressed
+                                                  ? Colors.indigo.shade900
+                                                  : Colors.grey,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(
+                                                    7), // Adjust border radius as needed
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                isPressed = !isPressed;
+                                              });
+                                            },
+                                            child: SizedBox(
+                                              height: 40,
+                                              width: 40,
+                                              child: ImageIcon(
+                                                NetworkImage(
+                                                  'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/filter.png?alt=media&token=fb12f309-716f-4b68-94b0-2c551dd998b5',
+                                                ),
+                                                size: 25,
+                                                color: isPressed
+                                                    ? Colors.white
+                                                    : Colors.indigo.shade900,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 40,
+                                          width: 70,
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: isPressed
+                                                  ? Colors.white
+                                                  : Colors.indigo.shade900,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(
+                                                    7), // Adjust border radius as needed
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                isPressed = !isPressed;
+                                              });
+                                            },
+                                            child: SizedBox(
+                                              height: 40,
+                                              width: 40,
+                                              child: ImageIcon(
+                                                NetworkImage(
+                                                  'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/table.png?alt=media&token=75eaa626-2b1f-4faf-8ce5-73480c3141df',
+                                                ),
+                                                size: 25,
+                                                color: isPressed
+                                                    ? Colors.indigo.shade900
+                                                    : Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            isPressed ? MultipleFilter() : ColumnView(),
+                          ]),
                     ),
-                    isPressed ? MultipleFilter() : ColumnView(),
+                  )));
+        } else {
+          return Scaffold(
+            endDrawer: Drawer(
+              child: ListView(
+                  padding: EdgeInsets.only(
+                    top: 3.h,
+                  ),
+                  children: <Widget>[
+                    CircleAvatar(
+                      maxRadius: 41,
+                      minRadius: 41,
+                      backgroundColor: Colors.black,
+                      child: CircleAvatar(
+                        maxRadius: 40,
+                        minRadius: 40,
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.person_outline_outlined,
+                          size: 60,
+                          color: Colors.indigo.shade900,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 2.h,
+                    ),
+                    StreamBuilder<Map<String, dynamic>?>(
+                      stream: userStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData && snapshot.data != null) {
+                          // Display the user's name
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '$_userName',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.indigo.shade900,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                '$_designation',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.indigo.shade900,
+                                    height: 0),
+                              ),
+                            ],
+                          );
+                        } else {
+                          // Loading or error state
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      },
+                    ),
+                    SizedBox(
+                      height: 2.h,
+                    ),
+                    ListTile(
+                      hoverColor: Colors.indigo.shade100,
+                      title: Text(
+                        translation(context).corporateconsole,
+                        style: TextStyle(
+                            fontSize: 25,
+                            color: Colors.indigo.shade900,
+                            fontFamily: 'Poppins'),
+                      ),
+                    ),
                   ]),
             ),
-          ],
-        ));
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(80),
+              child: Container(
+                height: 80,
+                child: Material(
+                  elevation: 3,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(5.w, 0, 2.5.w, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        HireMeInIndia(),
+                        Builder(
+                            builder: (context) => IconButton(
+                                  onPressed: () {
+                                    Scaffold.of(context).openEndDrawer();
+                                  },
+                                  icon: Icon(
+                                    Icons.menu_rounded,
+                                    color: Colors.indigo.shade900,
+                                  ),
+                                ))
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            body: Material(
+                elevation: 4,
+                child: SingleChildScrollView(
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(5.w, 2.5.h, 5.w, 2.5.h),
+                    child: Column(children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: StreamBuilder<Map<String, dynamic>?>(
+                          stream: userStream,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData && snapshot.data != null) {
+                              // Display the user's name
+                              return Center(
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "${translation(context).hello} $_userName",
+                                      style: CustomTextStyle.nameOfUser,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    IconButton(
+                                      hoverColor: Colors.transparent,
+                                      icon: Icon(Icons.arrow_drop_down_sharp),
+                                      iconSize: 30,
+                                      color: Colors.indigo.shade900,
+                                      onPressed: () {
+                                        setState(() {
+                                          isArrowClick = !isArrowClick;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            } else {
+                              // Loading or error state
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                      StreamBuilder<Map<String, dynamic>?>(
+                        stream: userStream,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData && snapshot.data != null) {
+                            // Display the user's name
+                            return Visibility(
+                              visible: isArrowClick,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '$_designation',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.indigo.shade900,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Poppins'),
+                                  ),
+                                  Text('|'),
+                                  Text(
+                                    '$_companyName',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.indigo.shade900,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Poppins'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          } else {
+                            // Loading or error state
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        },
+                      ),
+                      Text(
+                        isPressed
+                            ? translation(context).multiplefilter
+                            : translation(context).columnview,
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          SizedBox(
+                            height: 40,
+                            width: 70,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: isPressed
+                                    ? Colors.indigo.shade900
+                                    : Colors.grey,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      7), // Adjust border radius as needed
+                                ),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  isPressed = !isPressed;
+                                });
+                              },
+                              child: SizedBox(
+                                height: 40,
+                                width: 40,
+                                child: ImageIcon(
+                                  NetworkImage(
+                                    'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/filter.png?alt=media&token=fb12f309-716f-4b68-94b0-2c551dd998b5',
+                                  ),
+                                  size: 25,
+                                  color: isPressed
+                                      ? Colors.white
+                                      : Colors.indigo.shade900,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 40,
+                            width: 70,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: isPressed
+                                    ? Colors.white
+                                    : Colors.indigo.shade900,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      7), // Adjust border radius as needed
+                                ),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  isPressed = !isPressed;
+                                });
+                              },
+                              child: SizedBox(
+                                height: 40,
+                                width: 40,
+                                child: ImageIcon(
+                                  NetworkImage(
+                                    'https://firebasestorage.googleapis.com/v0/b/hiremeinindia-14695.appspot.com/o/table.png?alt=media&token=75eaa626-2b1f-4faf-8ce5-73480c3141df',
+                                  ),
+                                  size: 25,
+                                  color: isPressed
+                                      ? Colors.indigo.shade900
+                                      : Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      isPressed ? MultipleFilter() : ColumnView(),
+                    ]),
+                  ),
+                )),
+          );
+        }
+      });
+    });
   }
 }

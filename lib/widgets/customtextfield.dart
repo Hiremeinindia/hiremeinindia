@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 
 @immutable
@@ -9,6 +11,7 @@ final class CustomTextfield extends StatelessWidget {
   final List<Color>? colors;
   final double? dynamicHeight;
   String? Function(String?)? validator;
+  final Function(String)? handleForm;
 
   CustomTextfield({
     this.controller,
@@ -19,26 +22,24 @@ final class CustomTextfield extends StatelessWidget {
     this.dynamicHeight,
     this.onsaved,
     this.validator,
+    this.handleForm,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: 30,
-        child: TextFormField(
-          style: TextStyle(height: 1),
-          validator: validator,
-          controller: controller,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.all(5.0),
-            hintText: text,
-            errorText: text1,
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(1))),
-          ),
-        ),
+    return TextFormField(
+      style: TextStyle(height: 1),
+      validator: validator,
+      controller: controller,
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.only(left: 12),
+        hintStyle: TextStyle(fontSize: 12, fontFamily: 'SegoeItalic'),
+        hintText: text,
+        errorText: text1,
+        errorStyle: TextStyle(height: 0, fontSize: 8.5),
+        errorMaxLines: 2,
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5))),
       ),
     );
   }

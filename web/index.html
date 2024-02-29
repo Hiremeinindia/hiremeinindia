@@ -54,9 +54,81 @@
         }
       });
     });
+      // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: 'AIzaSyBKUuhUeiA2DpvZD4od15RdHEBZyjsuVlA',
+    appId: '1:316659430730:web:1afaddd5a3f41be5cffdb3',
+    messagingSenderId: '316659430730',
+    projectId: 'hiremeinindia-14695',
+    authDomain: 'hiremeinindia-14695.firebaseapp.com',
+    databaseURL:
+        'https://hiremeinindia-14695-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'hiremeinindia-14695.appspot.com',
+    measurementId: 'G-KVMWVJ99JL',
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  // Function to save user data to Firestore
+  function saveDataToFirestore(data) {
+    firebase.firestore().collection('greycollaruser').doc().set(data);
+  }
+
+  // Event listener for registration form submission
+  document.getElementById('Registration').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const formData = {
+      name: document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      gender: document.getElementById('worktitle').value,
+      gender: document.getElementById('aadharno').value,
+      gender: document.getElementById('gender').value,
+      gender: document.getElementById('workexp').value,
+      gender: document.getElementById('qualification').value,
+      gender: document.getElementById('address').value,
+      gender: document.getElementById('selectedWorkins').value,
+      gender: document.getElementById('selectedSkills').value,
+      gender: document.getElementById('label').value,
+      gender: document.getElementById('mobile').value,
+      
+
+      // Add more fields as needed
+    };
+    saveDataToFirestore(formData);
+    this.reset();
+  });
+
+  // Event listener for document upload form submission
+  document.getElementById('NewUserUpload').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const formData = {
+      documentType: document.getElementById('imageUrls').value,
+      documentType: document.getElementById('expectedwage').value,
+      documentType: document.getElementById('currentwage').value,
+      documentType: document.getElementById('city').value,
+      documentType: document.getElementById('country').value,
+      documentType: document.getElementById('state').value,
+      // Add more fields as needed
+    };
+    saveDataToFirestore(formData);
+    this.reset();
+  });
+
+  // Event listener for payment form submission
+  document.getElementById('NewUserPayment').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const formData = {
+      paymentMethod: document.getElementById('cash').value,
+      // Add more fields as needed
+    };
+    saveDataToFirestore(formData);
+    this.reset();
+  });
+
+  // Similar event listeners for other forms (document upload, payment method)
   </script>
   <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-auth.js"></script>
-  
+  <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-firestore.js"></script>
 </body>
 </html>

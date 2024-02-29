@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../Models/candidated.dart';
+import '../User/user.dart';
 
 import 'package:flutter/material.dart';
 
@@ -28,8 +28,7 @@ class FirebaseService with ChangeNotifier {
         name: doc['name'].toString(),
         mobile: doc['mobile'].toString(),
         qualification: doc['qualification'].toString(),
-        selectedSkills: (doc['selectedSkills'] as List<dynamic>).cast<String>(),
-        selectedOption: doc['selectedOption']?.toString(),
+        selectedOption: doc['label'].toString(),
         // Add other fields as needed
       );
     }).toList();
